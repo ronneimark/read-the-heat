@@ -1,0 +1,34 @@
+# Deploys the work-rest-cycles site to GreenGeeks over FTPS on every push to main.
+# Needs three repository secrets: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD.
+# The FTP account's home directory should be the site's folder on the server
+# (e.g. public_html/work-rest-cycles), so server-dir ./ lands files there.
+name: Deploy to GreenGeeks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v6
+
+      - name: Sync files over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./work-rest-cycles/
+          server-dir: ./
+          dry-run: true
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
