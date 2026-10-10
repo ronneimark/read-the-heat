@@ -1,0 +1,27 @@
+{
+  "newWorker": {
+    "label": "New Workers",
+    "description": "7–14 day graduated ramp (≤20% of usual duration on day 1, +20% per day)",
+    "note": "Maximum increase: 20% per day. Continue at 100% through day 14 before considering fully acclimatized.",
+    "schedule": [
+      { "day": "Day 1",  "pct": 20,  "type": "partial" },
+      { "day": "Day 2",  "pct": 40,  "type": "partial" },
+      { "day": "Day 3",  "pct": 60,  "type": "partial" },
+      { "day": "Day 4",  "pct": 80,  "type": "partial" },
+      { "day": "Day 5+", "pct": 100, "type": "full"    }
+    ]
+  },
+  "returningWorker": {
+    "label": "Returning Workers",
+    "description": "4-day ramp (50% → 60% → 80% → 100%)",
+    "note": "After 4 days at 100%, worker may be considered re-acclimatized under close monitoring.",
+    "schedule": [
+      { "day": "Day 1",  "pct": 50,  "type": "return" },
+      { "day": "Day 2",  "pct": 60,  "type": "return" },
+      { "day": "Day 3",  "pct": 80,  "type": "return" },
+      { "day": "Day 4+", "pct": 100, "type": "full"   }
+    ]
+  },
+  "monitoringNote": "Environmental monitoring required throughout acclimatization. The schedule above controls when workers are in the heat (% of shift). It does not replace monitoring of what conditions those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure. WBGT measurement or an equivalent heat stress index should be used to verify that conditions remain within the RAL for the worker's activity level throughout the entire acclimatization period. As acclimatization progresses and is confirmed, transition to monitoring against the Recommended Exposure Limits (REL).",
+  "ralNote": "Once the progressive exposure schedule is complete and workers are at full shift exposure, apply the following Recommended Alert Limit (RAL)-based work-rest cycles for the remainder of the 14-day acclimatization period. Continue environmental monitoring (see note below)."
+}

@@ -1520,186 +1520,34 @@
 
   // WBGT unit toggle
   // Store the C and F values for each row
-  const wbgtRows = {
-    acclim: [
-      { c: 'Below 25.0°C', f: 'Below 77.0°F' },
-      { c: '25.0–25.9°C', f: '77.0–78.6°F' },
-      { c: '26.0–27.4°C', f: '78.8–81.3°F' },
-      { c: '27.5–28.3°C', f: '81.5–82.9°F' },
-      { c: '28.4–29.4°C', f: '83.1–84.9°F' },
-      { c: '29.5–30.8°C', f: '85.1–87.4°F' },
-      { c: '30.9–31.7°C', f: '87.6–89.1°F' },
-      { c: '31.8–32.8°C', f: '89.2–91.0°F' },
-      { c: '≥ 32.9°C', f: '≥ 91.2°F' },
-    ],
-    unacclim: [
-      { c: 'Below 21.0°C', f: 'Below 69.8°F' },
-      { c: '21.0–22.2°C', f: '69.8–72.0°F' },
-      { c: '22.3–23.9°C', f: '72.1–75.0°F' },
-      { c: '24.0–25.7°C', f: '75.2–78.3°F' },
-      { c: '25.8–26.4°C', f: '78.4–79.5°F' },
-      { c: '26.5–28.2°C', f: '79.7–82.8°F' },
-      { c: '28.3–29.3°C', f: '82.9–84.7°F' },
-      { c: '29.4–30.7°C', f: '84.9–87.3°F' },
-      { c: '≥ 30.8°C', f: '≥ 87.4°F' },
-    ]
-  };
+  // ── Data loaded from external JSON files ──
+  let wbgtRows = { acclim: [], unacclim: [] };
+  let trhRows = [];
+  let hiRowsAcclim = [];
+  let hiRowsUnacclim = [];
+  let sectorData = {};
 
-  function setUnit(unit) {
-    document.getElementById('btn-c').classList.toggle('active', unit === 'C');
-    document.getElementById('btn-f').classList.toggle('active', unit === 'F');
-
-    ['acclim', 'unacclim'].forEach(type => {
-      const prefix = type === 'acclim' ? 'wr-r' : 'wr-u';
-      wbgtRows[type].forEach((row, i) => {
-        const cell = document.getElementById(prefix + (i + 1));
-        if (!cell) return;
-        cell.innerHTML = unit === 'C' ? row.c : row.f;
-      });
-    });
+  async function initData() {
+    const base = 'data/';
+    const [wbgt, trh, hi, sectors] = await Promise.all([
+      fetch(base + 'wbgt-rows.json').then(r => r.json()),
+      fetch(base + 'trh-rows.json').then(r => r.json()),
+      fetch(base + 'hi-rows.json').then(r => r.json()),
+      fetch(base + 'sectors.json').then(r => r.json()),
+    ]);
+    wbgtRows = wbgt;
+    trhRows = trh;
+    hiRowsAcclim = hi.acclim;
+    hiRowsUnacclim = hi.unacclim;
+    sectorData = sectors;
+    // Initialize display after data loads
+    setUnit('F');
+    setTrhUnit('F');
+    setHiUnit('F');
+    setSector('restaurant');
+    requestAnimationFrame(updateLayout);
+    window.addEventListener('resize', updateLayout);
   }
-
-  // ── Temperature unit toggles for T+RH and Heat Index tabs ──
-  const trhRows = [
-    { id:'trh-r1', f:'70.0°F',  c:'21.1°C' },
-    { id:'trh-r2', f:'75.0°F',  c:'23.9°C' },
-    { id:'trh-r3', f:'80.0°F',  c:'26.7°C' },
-    { id:'trh-r4', f:'85.0°F',  c:'29.4°C' },
-    { id:'trh-r5', f:'90.0°F',  c:'32.2°C' },
-    { id:'trh-r6', f:'95.0°F',  c:'35.0°C' },
-    { id:'trh-r7', f:'100.0°F', c:'37.8°C' },
-    { id:'trh-r8', f:'105.0°F', c:'40.6°C' },
-    { id:'trh-r9', f:'110.0°F', c:'43.3°C' }
-  ];
-
-  const hiRowsAcclim = [
-    { id:'hi-a-r1', f:'Below 80.0°F',    c:'Below 26.7°C' },
-    { id:'hi-a-r2', f:'80.0–90.0°F',     c:'26.7–32.2°C'  },
-    { id:'hi-a-r3', f:'91.0–103.0°F',    c:'32.8–39.4°C'  },
-    { id:'hi-a-r4', f:'103.0–115.0°F',   c:'39.4–46.1°C'  },
-    { id:'hi-a-r5', f:'115.0–130.0°F',   c:'46.1–54.4°C'  },
-    { id:'hi-a-r6', f:'Above 130.0°F',   c:'Above 54.4°C' }
-  ];
-
-  const hiRowsUnacclim = [
-    { id:'hi-u-r1', f:'Below 72.0°F',    c:'Below 22.2°C' },
-    { id:'hi-u-r2', f:'72.0–82.0°F',     c:'22.2–27.8°C'  },
-    { id:'hi-u-r3', f:'83.0–95.0°F',     c:'28.3–35.0°C'  },
-    { id:'hi-u-r4', f:'95.0–107.0°F',    c:'35.0–41.7°C'  },
-    { id:'hi-u-r5', f:'107.0–122.0°F',   c:'41.7–50.0°C'  },
-    { id:'hi-u-r6', f:'Above 122.0°F',   c:'Above 50.0°C' }
-  ];
-
-  function applyUnitToRows(rows, unit) {
-    rows.forEach(row => {
-      const cell = document.getElementById(row.id);
-      if (!cell) return;
-      cell.innerHTML = unit === 'C' ? row.c : row.f;
-    });
-  }
-
-  function setTrhUnit(unit) {
-    trhUnit = unit;
-    document.getElementById('btn-trh-f').classList.toggle('active', unit === 'F');
-    document.getElementById('btn-trh-c').classList.toggle('active', unit === 'C');
-    const header = document.getElementById('trh-header');
-    header.innerHTML = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
-    applyUnitToRows(trhRows, unit);
-    // Re-render HI values in all cells with updated unit
-    const currentLevel = document.querySelector('.act-btn.active')?.dataset.level || 'moderate';
-    setActivity(currentLevel);
-  }
-
-  function setHiUnit(unit) {
-    document.getElementById('btn-hi-f').classList.toggle('active', unit === 'F');
-    document.getElementById('btn-hi-c').classList.toggle('active', unit === 'C');
-    applyUnitToRows(hiRowsAcclim, unit);
-    applyUnitToRows(hiRowsUnacclim, unit);
-  }
-
-
-
-  // ── Sector selector for Activity Levels tab ──
-  const sectorData = {
-    "restaurant": {
-      light: ["Cashiering, hosting, and expediting", "Light prep work (chopping while seated, shelling, garnishing)", "Bartending at low volume", "Counter service and order taking", "Food running short distances on the same floor", "Restocking condiment stations and service areas"],
-      moderate: ["Line cooking: continuous standing, stirring, and lifting pots", "Dishwashing — sustained standing with repeated lifts", "Bussing tables at volume", "Stocking walk-in coolers and dry storage", "Food delivery runs between floors", "Pizza dough handling and oven loading", "Prep cooking — sustained standing with repetitive cuts and mixing"],
-      heavy: ["Rolling and lifting full kegs (≥50 kg / 110 lb)", "Sustained heavy pot handling in high-volume kitchens", "Manual bulk supply unloading from delivery vehicles", "Cleaning hood systems overhead with heavy equipment", "Scrubbing floors and equipment in full kitchen gear"],
-      vh: ["Sustained heavy manual cleaning in boiler rooms or grease traps", "Intensive physical setup and breakdown for large banquet or catering events involving repeated heavy lifting"],
-    },
-    "warehouse": {
-      light: ["Scanning and inventory counting on foot", "Light picking from conveyors or low shelves", "Quality inspection at a fixed station", "Clerical, dispatch, or supervisory work on the floor"],
-      moderate: ["Order picking on foot across a large floor", "Pushing loaded pallet jacks with moderate loads", "Stocking mid-height shelves", "Receiving, sorting, and staging packages", "Operating a stand-up or sit-down forklift"],
-      heavy: ["Manual unloading of freight trucks — carrying boxes piece-by-piece from trailer to dock", "Hand-stacking heavy cases on high shelves", "Breaking down and redistributing heavy pallets without mechanical assist", "Intensive order picking with loads over 30 kg (65 lb)", "Manual movement of large rolls, coils, or machinery components"],
-      vh: ["Sustained manual unloading of extremely heavy bulk freight without conveyor assist", "Continuous hand-stacking of maximum-weight loads at full overhead reach", "Intensive freight handling in non-climate-controlled dock areas during summer"],
-    },
-    "factory": {
-      light: ["Machine monitoring and troubleshooting from a fixed position", "Light bench assembly of small components", "Quality control inspection at a station", "Packaging small parts or finished goods", "Data entry and production logging on the floor"],
-      moderate: ["Assembly line work requiring walking and sustained arm exertion", "Operating hand tools continuously while standing", "Loading and unloading semi-automated equipment", "Spray painting or coating while standing and moving", "Textile or garment machine operation"],
-      heavy: ["Heavy manual assembly with large or bulky components", "Sustained operation of heavy power tools (jackhammers, large grinders, compactors)", "Loading and unloading industrial kilns, ovens, or presses", "Foundry floor work — mold handling and pouring assist", "Heavy pressing, die work, and stamping operations"],
-      vh: ["Foundry floor work — manual mold-breaking, tapping, slagging, and raking", "Heavy forging assist — sustained exertion with hot metals", "Sustained shoveling of materials into hoppers or conveyors", "Intensive indoor demolition of structures or equipment", "Heavy steel or aluminum fabrication — sustained cutting and shaping"],
-    },
-    "healthcare": {
-      light: ["Charting, documentation, and computer work", "Medication dispensing and preparation", "Patient observation and monitoring from a station", "Reception, admissions, and clerical work", "Lab bench work and specimen processing", "Phone triage and care coordination"],
-      moderate: ["Assisting and ambulating patients on the floor", "Making and changing occupied beds", "Transporting patients by wheelchair or stretcher", "Sustained floor nursing — walking and standing throughout a shift", "Phlebotomy and specimen collection rounds", "Central sterile processing and reprocessing"],
-      heavy: ["Manual patient lifts and full lateral transfers without mechanical lift equipment", "Sustained or repeated CPR cycles", "Repositioning and turning bariatric patients", "Intensive physical and occupational therapy sessions", "Code response requiring extended physical effort"],
-      vh: ["Extended manual CPR — multiple continuous cycles without relief", "Sustained physical management of combative or resistive patients", "Emergency multi-person patient extraction from a room or vehicle", "Sustained very heavy repositioning in mass casualty or code situations"],
-    },
-    "retail": {
-      light: ["Cashiering and point-of-sale transactions", "Customer service desk and returns processing", "Fitting room attendant", "Product demonstrations at a fixed location", "Greeter or door staff", "Jewelry or specialty counter work", "Phone-based customer service"],
-      moderate: ["Stocking and facing shelves throughout a large sales floor", "Pushing merchandise carts and restocking floor displays", "Folding and organizing clothing at volume", "Backroom freight receiving and sorting", "Running purchases to customer vehicles", "Visual merchandising — moving and arranging displays"],
-      heavy: ["Unloading and manually moving merchandise from delivery trucks", "Stocking heavy cases (water, pet food, appliances, lumber)", "Pushing heavily loaded floor jacks or pallet movers", "Moving large furniture or appliances across the sales floor", "Setting up and breaking down large gondolas and store fixtures"],
-      vh: ["Sustained manual unloading of high-volume freight trucks without mechanical assist", "Continuous manual movement of maximum-weight merchandise at pace", "Intensive store resets and remodels — repeated heavy lifting, fixture movement, and sustained physical labor across a full shift"],
-    },
-    "construction": {
-      light: ["Blueprint review, layout measurement, and marking", "Light cleanup and debris removal (small items)", "Tool staging, organization, and inventory", "Operating controls from a fixed or cab position", "Safety inspection and site supervision on foot"],
-      moderate: ["Drywall installation on walls (standing, lifting, fastening)", "Painting and priming at standing height", "Electrical wiring — pulling wire, mounting boxes, walking floor", "Plumbing rough-in on lower floors", "Light framing — measuring, cutting, nailing", "Tile setting at ground level"],
-      heavy: ["Overhead drywall installation on ceilings", "Heavy structural framing — carrying and lifting lumber", "Concrete finishing — sustained bending, tamping, screeding", "Demolition of non-structural elements (walls, flooring)", "Setting large fixtures, beams, or mechanical equipment", "Sustained use of heavy power tools on a large area"],
-      vh: ["Sustained concrete breaking and removal", "Intensive structural demolition", "Carrying heavy materials up stairs repeatedly without mechanical assist", "Sustained overhead work with heavy tools or components", "Major interior excavation, formwork, and heavy pour operations"],
-    },
-    "laundry": {
-      light: ["Sorting clean, dry linens at a table", "Folding lightweight items (pillowcases, small linens)", "Supervisory rounds and quality inspection", "Operating automated sorting conveyors"],
-      moderate: ["Operating commercial washing and drying machines", "Sorting and loading moderate-weight laundry", "Folding heavy linens (sheets, towels, gowns) at a standing station", "Pushing loaded laundry carts between stations", "Operating flatwork ironers and folder machines"],
-      heavy: ["Lifting and moving full bags or bins of wet laundry", "Sustained loading and unloading of large industrial washers and dryers", "Manual transport of heavily loaded laundry carts over long distances", "Pressing and finishing of heavy institutional linens"],
-      vh: ["Sustained lifting and moving of wet linen loads at production pace — one of the highest-metabolic-rate indoor occupations", "Intensive manual handling of large institutional laundry volumes without mechanical assist (e.g., large hotel or hospital linen operations)", "Extended high-pace sorting and loading under high ambient heat from dryers and steam equipment"],
-    },
-    "foodprocessing": {
-      light: ["Quality inspection at a station on the line", "Packaging supervision and monitoring", "Machine monitoring and basic adjustments", "Light sorting, grading, or labeling at a fixed station"],
-      moderate: ["Product sorting and grading on a moving conveyor line", "Packaging and boxing at moderate sustained pace", "Poultry or fish processing line work — standing, repetitive cutting", "Machine operation with sustained repetitive arm movement", "Operating commercial baking or cooking equipment"],
-      heavy: ["Sustained meat cutting and deboning", "Heavy lifting of filled product tubs, barrels, or containers", "Manual stacking of heavy cases in cold storage or shipping", "Sustained work across extreme temperature differentials (freezer to processing floor)", "Operating heavy processing machinery with physical exertion"],
-      vh: ["Intensive sustained cutting and processing in high-volume meatpacking at full production speed", "Manual movement of heavy carcasses or large product loads", "Sustained work at maximum pace in hot processing environments (commercial bakeries, cooking or retort lines)", "High-pace line work combining heat exposure, standing, and repetitive exertion across an entire shift"],
-    },
-    "publicsafety": {
-      light: ["Report writing, dispatch, and administrative work", "Vehicle inspection and equipment checking", "Station duties and meal preparation", "Non-emergency patient monitoring (EMS at scene)"],
-      moderate: ["Routine patrol on foot or active post (corrections)", "Non-emergency patient transport and assessment (EMS)", "Staging and positioning equipment at a scene", "Sustained standing during operations and crowd management", "Active scene management and coordination on foot"],
-      heavy: ["Active fire suppression — interior structural firefighting", "Patient extrication from vehicles or confined spaces", "Physical management and escort of resistant individuals (corrections)", "Active search and rescue operations with equipment", "Emergency equipment deployment and hose advancement"],
-      vh: ["Extended interior firefighting operations in full PPE under high heat", "Repeated emergency patient lifts with extrication equipment", "Sustained physical restraint situations in corrections or emergency settings", "Mass casualty response requiring continuous heavy exertion over an extended period"],
-    },
-    "buildingservices": {
-      light: ["Dusting, light wiping, and surface cleaning", "Restroom checks and restocking", "Lobby and common area cleaning with a lightweight mop", "Elevator and entryway cleaning"],
-      moderate: ["Vacuuming large areas with a commercial upright or backpack vacuum", "Wet mopping corridors and large floor areas", "Trash collection and transport to consolidation points", "Window cleaning at ground or accessible height", "General deep cleaning of offices and common spaces"],
-      heavy: ["Floor buffing and burnishing with heavy commercial equipment", "Floor stripping — applying and removing finish with heavy machine", "Deep cleaning of industrial or production spaces", "Trash compactor operation and large waste container movement", "Moving heavy furniture and equipment for cleaning access"],
-      vh: ["Sustained heavy floor stripping and refinishing without mechanical assist on large areas", "Intensive cleaning of large industrial, food production, or manufacturing spaces", "Sustained heavy lifting of large waste containers or equipment in hot mechanical rooms"],
-    },
-    "agriculture": {
-      light: ["Seeding trays and transplanting small seedlings", "Plant inspection, scouting, and record keeping", "Light pruning and deadheading", "Irrigation system monitoring and adjustment", "Pesticide or nutrient mixing at a station"],
-      moderate: ["Transplanting seedlings at pace across a large area", "Moderate harvesting — picking, trimming, and staging", "Pushing and positioning plant or harvest carts", "Sustained pruning, training, and trellising of plants", "Applying soil amendments and nutrients manually"],
-      heavy: ["Harvesting and packing heavy crops (squash, melons, potted plants)", "Moving and repositioning heavy growing containers or trays", "Loading and staging produce for transport", "Sustained bending, lifting, and carrying in harvest operations in hot greenhouse conditions"],
-      vh: ["Sustained intensive harvesting at production pace in hot greenhouse environments", "Manual movement of very heavy plant containers without mechanical assist", "Intensive post-harvest packing and loading operations in enclosed high-humidity spaces"],
-    },
-    "childcare": {
-      light: ["Administrative and clerical work at a desk or station","Reading aloud to children while seated","Supervising quiet or seated activities (art, storytime, puzzles)","Check-in and check-out desk duties","Meal preparation — light tasks at a counter"],
-      moderate: ["Active supervision on a play floor — continuous walking and attending to children","Walking alongside toddlers and young children throughout the environment","Leading group movement activities, songs, and games","Pushing strollers or adaptive equipment","Diaper changing and dressing — repeated bending, lifting, and positioning","Setting up and breaking down activity areas and tables","Carrying infants and small toddlers for short distances and durations"],
-      heavy: ["Sustained lifting and carrying of infants and toddlers (repeated throughout a shift)","Physically redirecting or restraining a child in distress or during a behavioral episode","Moving cribs, cots, high chairs, and heavy classroom furniture","Carrying children up and down stairs repeatedly","Sustained active physical play — running, chasing, or physically supporting children during gross motor activities"],
-      vh: ["Sustained carrying of multiple heavy toddlers or children across a full shift without adequate rest — a frequently underrecognized source of cumulative physical strain","Intensive physical management of multiple children during outdoor play or emergency situations","Moving heavy playground equipment, large furniture, or supply deliveries without mechanical assist"],
-    },
-    "garment": {
-      light: ["Quality inspection of finished garments", "Pattern review and marking", "Light hand sewing, buttons, or finishing details", "Folding and packaging finished goods"],
-      moderate: ["Machine sewing — sustained pedal operation with material handling", "Fabric cutting with powered equipment while standing", "Steam pressing of lightweight garments at a station", "Assembly line garment construction — sustained repetitive motion", "Thread trimming and finishing at pace"],
-      heavy: ["Steam pressing and finishing of heavy garments (suits, coats, uniforms, workwear) in a hot pressing shop", "Sustained operation of heavy industrial sewing, knitting, or weaving machines", "Manual cutting of heavy fabric layers or leather", "Moving large bolts of fabric or rolls of material"],
-      vh: ["Sustained industrial steam pressing operations in hot environments — prolonged exposure to steam and radiant heat with physical exertion", "Intensive manual handling of heavy textile materials in a high-heat production environment", "High-pace production finishing in a non-climate-controlled pressing or dyeing facility"],
-    },
-  };
 
   function setSector(key) {
     document.querySelectorAll('.sector-btn').forEach(b => b.classList.toggle('active', b.id === 'sbtn-' + key));
@@ -1711,13 +1559,8 @@
     });
   }
 
-  // Initialize with C shown, F as subtext
-  setUnit('F');
-  setTrhUnit('F');
-  setHiUnit('F');
-  setSector('restaurant');
-  requestAnimationFrame(updateLayout);
-  window.addEventListener('resize', updateLayout);
+  // Initialize — data is loaded asynchronously from JSON files
+  initData();
 
 </script>
 
