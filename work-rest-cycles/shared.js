@@ -390,6 +390,21 @@ function buildBreadcrumbs() {
     container.appendChild(a);
   });
 
+  // Reset button — clears all selections and returns to index
+  const anySelected = crumbs.some(function(c) { return c.selected; });
+  if (anySelected) {
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'wrc-crumb-reset';
+    resetBtn.title = 'Clear all selections';
+    resetBtn.setAttribute('aria-label', 'Reset all selections');
+    resetBtn.innerHTML = '&#10005;';
+    resetBtn.addEventListener('click', function() {
+      try { sessionStorage.removeItem('wrc'); } catch(e) {}
+      window.location.href = 'index.html';
+    });
+    container.appendChild(resetBtn);
+  }
+
   // Mobile step indicator — shown in place of breadcrumbs on narrow screens
   let stepEl = document.getElementById('mobile-step-indicator');
   if (!stepEl) {

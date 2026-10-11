@@ -40,8 +40,7 @@
     background: #D50032;
     height: 191px;
     padding: 0;
-    display: flex;
-    align-items: center;
+    display: block;
     position: relative;
     overflow: clip;
     overflow-clip-margin: 0px;
@@ -87,13 +86,14 @@
   /* ── HEADER INNER LAYOUT ── */
   .header-inner {
     position: absolute;
-    inset: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 6px 70px; /* side padding leaves room for home-btn */
+    padding: 6px 80px; /* side padding clears home-btn on inner pages */
     pointer-events: none;
   }
   .header-brand {
@@ -218,6 +218,27 @@
   .wrc-crumb-sep {
     color: rgba(255,255,255,0.28);
     font-size: 11px;
+  }
+  .wrc-crumb-reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.30);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.80);
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.12s, color 0.12s;
+  }
+  .wrc-crumb-reset:hover {
+    background: rgba(255,255,255,0.28);
+    color: #fff;
   }
   /* hide breadcrumbs on very small screens to avoid overlap */
   @media (max-width: 540px) {
