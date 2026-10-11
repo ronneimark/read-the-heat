@@ -30,6 +30,6 @@ jobs:
           SSH_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
           sshpass -p "$SSH_PASS" rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -p 22" \
+            -e "ssh -o StrictHostKeyChecking=no -p 2222" \
             work-rest-cycles/ \
             "$SSH_USER@$SSH_HOST:public_html/work-rest-cycles/"
