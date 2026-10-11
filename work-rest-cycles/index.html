@@ -6,10 +6,10 @@
 <title>Indoor Heat Stress: Work-Rest Cycles Explained</title>
 <style>
   :root {
-    --navy:       #1B2B3B;
-    --slate:      #2C4258;
-    --mid:        #3B4F64;
-    --warm-white: #F7F6F3;
+    --navy:       #001E62;
+    --slate:      #1a3a8f;
+    --mid:        #243f8a;
+    --warm-white: #F6F3EC;
     --border:     #CDD3DA;
     --text:       #1A1A1A;
     --subtext:    #484F58;
@@ -35,11 +35,15 @@
   }
 
   /* ── HEADER ── */
-  header {
+  .hazard-bar {
+    height: 10px;
     background: var(--navy);
+  }
+  header {
+    background: #D50032;
     color: #fff;
     padding: 24px 32px 20px;
-    border-bottom: 4px solid #E05C2C;
+    border-bottom: none;
   }
   header h1 {
     font-size: 24px;
@@ -49,7 +53,7 @@
   }
   header p {
     font-size: 13px;
-    color: #C8DCEB;
+    color: #FEF8E0;
   }
 
   /* ── TABS ── */
@@ -80,7 +84,7 @@
   }
   .tab-btn:hover {
     color: #fff;
-    background: #3A5470;
+    background: #1a3a8f;
   }
   .tab-btn.active {
     background: var(--warm-white);
@@ -483,6 +487,7 @@
 <body>
 
 <div id="fixed-top">
+<div class="hazard-bar"></div>
 <header>
   <h1>Indoor Heat Stress: Work-Rest Cycles Explained</h1>
   <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
