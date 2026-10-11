@@ -186,105 +186,43 @@
   .launcher-screen { display: none; }
   .launcher-screen.active { display: block; }
 
-  /* ── SCREEN 1: EXPANDED ACTIVITY SELECTION CARDS ── */
-  .ls1-heading {
+  /* ── SHARED: HEADINGS / BACK LINKS ── */
+  .ls-heading {
     font-size: 20px;
     font-weight: 700;
     color: var(--navy);
     margin-bottom: 6px;
   }
-  .ls1-sub {
+  .ls-sub {
     font-size: 14px;
     color: var(--subtext);
     margin-bottom: 24px;
-    max-width: 640px;
+    max-width: 680px;
     line-height: 1.6;
   }
-  .ls1-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .ls1-card {
-    background: #fff;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 20px 16px;
-    cursor: pointer;
-    text-align: left;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-  .ls1-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: var(--card-accent, var(--navy));
-  }
-  .ls1-card:hover {
-    border-color: var(--card-accent, var(--navy));
-    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-  }
-  .ls1-card.selected {
-    border-color: var(--card-accent, var(--navy));
-    box-shadow: 0 0 0 3px var(--card-accent, var(--navy));
-    background: #F4F6FB;
-  }
-  .ls1-card-header {
+  .ls-back {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
-  .ls1-card-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--navy);
-  }
-  .ls1-card-kcal {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--subtext);
-  }
-  .ls1-card-desc {
-    font-size: 13px;
-    color: var(--subtext);
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
-  .ls1-card-examples {
-    font-size: 12px;
-    color: var(--subtext);
-    padding-left: 16px;
-    line-height: 1.8;
-    margin: 0;
-  }
-  .ls1-card-check {
-    display: none;
-    position: absolute;
-    top: 12px; right: 12px;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--card-accent, var(--navy));
-    color: #fff;
-    font-size: 13px;
     align-items: center;
-    justify-content: center;
-    font-weight: 700;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--mid);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 20px;
+    transition: color 0.12s;
   }
-  .ls1-card.selected .ls1-card-check { display: flex; }
-
-  .ls1-continue-row {
+  .ls-back:hover { color: var(--navy); }
+  .ls-continue-row {
     display: flex;
     align-items: center;
     gap: 16px;
+    margin-top: 4px;
     margin-bottom: 8px;
   }
-  .ls1-continue-btn {
+  .ls-continue-btn {
     background: var(--navy);
     color: #fff;
     border: none;
@@ -298,32 +236,137 @@
     gap: 8px;
     transition: background 0.13s, transform 0.1s;
   }
-  .ls1-continue-btn:hover {
-    background: var(--slate);
-    transform: translateX(2px);
-  }
-  .ls1-hint {
-    font-size: 13px;
-    color: var(--subtext);
-  }
+  .ls-continue-btn:hover { background: var(--slate); transform: translateX(2px); }
+  .ls-hint { font-size: 13px; color: var(--subtext); }
 
-  /* ── SCREEN 2: METHOD SELECTION ── */
-  .ls2-back {
+  /* ── SCREEN 1: INDUSTRY / SECTOR PICKER ── */
+  .ls1-sector-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .ls1-sector-btn {
+    border: 2px solid var(--border);
+    background: #fff;
+    color: var(--subtext);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: all 0.13s;
+    white-space: nowrap;
+  }
+  .ls1-sector-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .ls1-sector-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+  /* ── SCREEN 2: ACTIVITY LEVEL REVIEW + SELECT ── */
+  .ls2-sector-banner {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    color: var(--mid);
+    gap: 10px;
+    background: #EEF1F8;
+    border: 1.5px solid var(--navy);
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
     font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
-    margin-bottom: 18px;
-    transition: color 0.12s;
   }
-  .ls2-back:hover { color: var(--navy); }
-  .ls2-activity-banner {
+  .ls2-sector-banner strong { color: var(--navy); font-weight: 700; }
+  .ls2-sector-banner span { color: var(--subtext); }
+  .ls2-review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .ls2-level-panel {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .ls2-level-panel:hover {
+    border-color: var(--panel-accent, var(--navy));
+    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+  }
+  .ls2-level-header {
+    background: var(--panel-accent, var(--navy));
+    padding: 14px 18px 12px;
+  }
+  .ls2-level-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ls2-level-kcal {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 600;
+  }
+  .ls2-level-body {
+    padding: 14px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .ls2-level-desc {
+    font-size: 13px;
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .ls2-level-examples-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 6px;
+  }
+  .ls2-level-examples {
+    font-size: 13px;
+    color: var(--subtext);
+    line-height: 1.75;
+    padding-left: 16px;
+    margin: 0 0 auto;
+  }
+  .ls2-level-none {
+    font-size: 13px;
+    color: var(--subtext);
+    font-style: italic;
+    margin-bottom: auto;
+  }
+  .ls2-select-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 11px 0;
+    border: 2px solid var(--panel-accent, var(--navy));
+    background: #fff;
+    color: var(--panel-accent, var(--navy));
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.13s, color 0.13s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .ls2-select-btn:hover {
+    background: var(--panel-accent, var(--navy));
+    color: #fff;
+  }
+
+  /* ── SCREEN 3: METHOD SELECTION ── */
+  .ls3-activity-banner {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -333,7 +376,7 @@
     padding: 12px 18px;
     margin-bottom: 24px;
   }
-  .ls2-activity-banner-label {
+  .ls3-banner-label {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.8px;
@@ -341,19 +384,19 @@
     color: var(--mid);
     flex-shrink: 0;
   }
-  .ls2-activity-selected {
+  .ls3-activity-selected {
     font-size: 15px;
     font-weight: 800;
     color: var(--navy);
   }
-  .ls2-activity-desc {
+  .ls3-activity-kcal {
     font-size: 13px;
     color: var(--subtext);
     margin-left: auto;
   }
 
-  /* ── LAUNCHER ACTIVITY BUTTONS (kept for back-bar sync) ── */
-  .launcher-act-btn { display: none; } /* hidden — replaced by ls1-cards */
+  /* ── LAUNCHER ACTIVITY BUTTONS (hidden — replaced by ls2 panels) ── */
+  .launcher-act-btn { display: none; }
 
   .launcher-secondary {
     display: flex;
@@ -827,112 +870,152 @@
 <!-- ══ CARD LAUNCHER ══════════════════════════════════════════ -->
 <div id="launcher">
 
-  <!-- ── Screen 1: Activity Level Selection ─────────────────── -->
+  <!-- ── Screen 1: Industry / Sector ────────────────────────── -->
   <div class="launcher-screen active" id="ls1">
-    <p class="ls1-heading">What is the activity level of this work?</p>
-    <p class="ls1-sub">
-      The correct activity level determines which work-rest schedule applies.
-      <strong>Using the wrong category can underestimate heat illness risk.</strong>
-      Select the level that best describes the primary physical demand of the job.
+    <p class="ls-heading">What industry or sector is this work in?</p>
+    <p class="ls-sub">
+      Choose the industry that best matches the workplace. You'll review sample
+      activities for that sector — organized by exertion level — to identify
+      the correct category before looking up work-rest cycles.
     </p>
 
-    <div class="ls1-cards">
-
-      <!-- Light -->
-      <button class="ls1-card" style="--card-accent:#2E7D32" data-level="light" onclick="selectActivity('light')">
-        <div class="ls1-card-check">✓</div>
-        <div class="ls1-card-header">
-          <span class="ls1-card-name">🟢 Light</span>
-          <span class="ls1-card-kcal">~150–200 kcal/hr</span>
-        </div>
-        <p class="ls1-card-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
-        <ul class="ls1-card-examples">
-          <li>Order taking, cashier, reception</li>
-          <li>Light assembly, stock monitoring</li>
-          <li>Guard station, slow patrolling</li>
-          <li>Desk-based administrative work</li>
-        </ul>
-      </button>
-
-      <!-- Moderate -->
-      <button class="ls1-card" style="--card-accent:#F57F17" data-level="moderate" onclick="selectActivity('moderate')">
-        <div class="ls1-card-check">✓</div>
-        <div class="ls1-card-header">
-          <span class="ls1-card-name">🟡 Moderate</span>
-          <span class="ls1-card-kcal">~200–350 kcal/hr</span>
-        </div>
-        <p class="ls1-card-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
-        <ul class="ls1-card-examples">
-          <li>Kitchen line cook, prep cook</li>
-          <li>Warehouse order picking</li>
-          <li>Pushing loaded carts, light stocking</li>
-          <li>Sustained cleaning or mopping</li>
-        </ul>
-      </button>
-
-      <!-- Heavy -->
-      <button class="ls1-card" style="--card-accent:#E65100" data-level="heavy" onclick="selectActivity('heavy')">
-        <div class="ls1-card-check">✓</div>
-        <div class="ls1-card-header">
-          <span class="ls1-card-name">🔴 Heavy</span>
-          <span class="ls1-card-kcal">~350–500 kcal/hr</span>
-        </div>
-        <p class="ls1-card-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
-        <ul class="ls1-card-examples">
-          <li>Carrying heavy boxes up stairs</li>
-          <li>Shoveling, strenuous material handling</li>
-          <li>Heavy kitchen work (fryer stations, rapid prep)</li>
-          <li>Strenuous food processing or meatpacking</li>
-        </ul>
-      </button>
-
-      <!-- Very Heavy -->
-      <button class="ls1-card" style="--card-accent:#880E4F" data-level="vh" onclick="selectActivity('vh')">
-        <div class="ls1-card-check">✓</div>
-        <div class="ls1-card-header">
-          <span class="ls1-card-name">⛔ Very Heavy</span>
-          <span class="ls1-card-kcal">&gt;500 kcal/hr</span>
-        </div>
-        <p class="ls1-card-desc">Maximum sustained physical exertion with whole-body effort. <strong>More common than many realize.</strong> Requires the greatest heat precautions at any elevated temperature.</p>
-        <ul class="ls1-card-examples">
-          <li>Pick-and-shovel, maximum-effort carrying</li>
-          <li>Firefighter or emergency responder in gear</li>
-          <li>Highly strenuous continuous labor</li>
-          <li>High-speed strenuous food processing</li>
-        </ul>
-      </button>
-
-    </div><!-- /ls1-cards -->
-
-    <div class="ls1-continue-row">
-      <button class="ls1-continue-btn" id="ls1-continue" onclick="showScreen2()">
-        Continue to measurement method
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <span class="ls1-hint" id="ls1-hint">Select an activity level above</span>
+    <div class="ls1-sector-grid" id="ls1-sector-grid">
+      <button class="ls1-sector-btn" data-sector="restaurant"      onclick="ls1SelectSector('restaurant')"      >🍽 Restaurant / Kitchen</button>
+      <button class="ls1-sector-btn" data-sector="warehouse"       onclick="ls1SelectSector('warehouse')"       >📦 Warehouse / Distribution</button>
+      <button class="ls1-sector-btn" data-sector="factory"         onclick="ls1SelectSector('factory')"         >🏭 Factory / Manufacturing</button>
+      <button class="ls1-sector-btn" data-sector="healthcare"      onclick="ls1SelectSector('healthcare')"      >🏥 Healthcare</button>
+      <button class="ls1-sector-btn" data-sector="retail"          onclick="ls1SelectSector('retail')"          >🛍 Retail</button>
+      <button class="ls1-sector-btn" data-sector="construction"    onclick="ls1SelectSector('construction')"    >🏗 Indoor Construction</button>
+      <button class="ls1-sector-btn" data-sector="laundry"         onclick="ls1SelectSector('laundry')"         >🧺 Laundry / Linen Services</button>
+      <button class="ls1-sector-btn" data-sector="foodprocessing"  onclick="ls1SelectSector('foodprocessing')"  >🍳 Food Processing / Meatpacking</button>
+      <button class="ls1-sector-btn" data-sector="publicsafety"    onclick="ls1SelectSector('publicsafety')"    >🚒 Public Safety / Emergency Services</button>
+      <button class="ls1-sector-btn" data-sector="buildingservices" onclick="ls1SelectSector('buildingservices')">🛠 Janitorial / Housekeeping</button>
+      <button class="ls1-sector-btn" data-sector="agriculture"     onclick="ls1SelectSector('agriculture')"     >🌾 Agriculture (Indoor / Greenhouse)</button>
+      <button class="ls1-sector-btn" data-sector="garment"         onclick="ls1SelectSector('garment')"         >✂️ Garment / Textile</button>
+      <button class="ls1-sector-btn" data-sector="childcare"       onclick="ls1SelectSector('childcare')"       >🧒 Childcare</button>
     </div>
 
-    <div class="launcher-secondary" style="margin-top:12px">
-      <button class="secondary-link" onclick="showTab('activity')">
-        📋 Full Activity Level Guide
+    <div class="ls-continue-row">
+      <button class="ls-continue-btn" id="ls1-continue" onclick="showScreen2()" disabled style="opacity:0.45;cursor:not-allowed">
+        Review activities for this sector
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <button class="secondary-link" onclick="showTab('about')">
-        📚 Sources &amp; Methodology
-      </button>
+      <span class="ls-hint" id="ls1-hint">Select an industry above</span>
+    </div>
+
+    <div class="launcher-secondary">
+      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
+      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
     </div>
   </div><!-- /ls1 -->
 
-  <!-- ── Screen 2: Measurement Method ───────────────────────── -->
+  <!-- ── Screen 2: Activity Level Review ────────────────────── -->
   <div class="launcher-screen" id="ls2">
-    <button class="ls2-back" onclick="showScreen1()">
+    <button class="ls-back" onclick="showScreen1()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Change industry
+    </button>
+
+    <div class="ls2-sector-banner">
+      <strong id="ls2-sector-name">Restaurant / Kitchen</strong>
+      <span>— Review the activities below and select the level that best matches the work being done.</span>
+    </div>
+
+    <p class="ls-sub" style="margin-bottom:20px">
+      The correct activity level determines which work-rest schedule applies.
+      <strong>When in doubt, use the more protective (higher) category</strong> — especially when advocating for a worker or assessing risk for someone new to the job.
+    </p>
+
+    <div class="ls2-review-grid">
+
+      <!-- Light -->
+      <div class="ls2-level-panel" style="--panel-accent:#2E7D32">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">🟢 Light Work</span>
+          <span class="ls2-level-kcal">~150–200 kcal/hr (116–233 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-light"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('light')">
+            Select Light Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Moderate -->
+      <div class="ls2-level-panel" style="--panel-accent:#F57F17">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">🟡 Moderate Work</span>
+          <span class="ls2-level-kcal">~200–350 kcal/hr (233–407 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-moderate"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('moderate')">
+            Select Moderate Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Heavy -->
+      <div class="ls2-level-panel" style="--panel-accent:#E65100">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">🔴 Heavy Work</span>
+          <span class="ls2-level-kcal">~350–500 kcal/hr (407–581 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, or pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-heavy"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('heavy')">
+            Select Heavy Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Very Heavy -->
+      <div class="ls2-level-panel" style="--panel-accent:#880E4F">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">⛔ Very Heavy Work</span>
+          <span class="ls2-level-kcal">&gt;500 kcal/hr (&gt;581 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Maximum sustained physical exertion with whole-body effort. More common than many realize. Requires the greatest heat stress precautions at any elevated temperature.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-vh"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('vh')">
+            Select Very Heavy Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /ls2-review-grid -->
+
+    <div class="launcher-secondary">
+      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
+      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
+    </div>
+  </div><!-- /ls2 -->
+
+  <!-- ── Screen 3: Measurement Method ───────────────────────── -->
+  <div class="launcher-screen" id="ls3">
+    <button class="ls-back" onclick="showScreen2Nav()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Change activity level
     </button>
 
-    <div class="ls2-activity-banner">
-      <span class="ls2-activity-banner-label">Activity Level</span>
-      <span class="ls2-activity-selected" id="ls2-activity-label">🟡 Moderate</span>
-      <span class="ls2-activity-desc" id="ls2-activity-kcal">~200–350 kcal/hr</span>
+
+    <div class="ls3-activity-banner">
+      <span class="ls3-banner-label">Activity Level</span>
+      <span class="ls3-activity-selected" id="ls3-activity-label">🟡 Moderate Work</span>
+      <span class="ls3-activity-kcal" id="ls3-activity-kcal">~200–350 kcal/hr</span>
     </div>
 
     <div class="launcher-step">
@@ -959,14 +1042,10 @@
       </button>
     </div>
     <div class="launcher-secondary">
-      <button class="secondary-link" onclick="showTab('activity')">
-        📋 Full Activity Level Guide
-      </button>
-      <button class="secondary-link" onclick="showTab('about')">
-        📚 Sources &amp; Methodology
-      </button>
+      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
+      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
     </div>
-  </div><!-- /ls2 -->
+  </div><!-- /ls3 -->
 
 </div><!-- /launcher -->
 
@@ -1920,53 +1999,92 @@
     return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
   }
 
-  let globalActivity = null; // null = no selection yet
+  let globalActivity = null;
+  let globalSector   = null;
 
   const activityMeta = {
-    light:    { label: '🟢 Light',      kcal: '~150–200 kcal/hr' },
-    moderate: { label: '🟡 Moderate',   kcal: '~200–350 kcal/hr' },
-    heavy:    { label: '🔴 Heavy',      kcal: '~350–500 kcal/hr' },
-    vh:       { label: '⛔ Very Heavy', kcal: '>500 kcal/hr' },
+    light:    { label: '🟢 Light Work',      kcal: '~150–200 kcal/hr' },
+    moderate: { label: '🟡 Moderate Work',   kcal: '~200–350 kcal/hr' },
+    heavy:    { label: '🔴 Heavy Work',      kcal: '~350–500 kcal/hr' },
+    vh:       { label: '⛔ Very Heavy Work', kcal: '>500 kcal/hr' },
   };
 
-  function selectActivity(level) {
-    globalActivity = level;
-    // Update ls1 card selection UI
-    document.querySelectorAll('.ls1-card').forEach(c =>
-      c.classList.toggle('selected', c.dataset.level === level));
-    // Show continue button active state
+  const sectorLabels = {
+    restaurant: '🍽 Restaurant / Kitchen',
+    warehouse: '📦 Warehouse / Distribution',
+    factory: '🏭 Factory / Manufacturing',
+    healthcare: '🏥 Healthcare',
+    retail: '🛍 Retail',
+    construction: '🏗 Indoor Construction',
+    laundry: '🧺 Laundry / Linen Services',
+    foodprocessing: '🍳 Food Processing / Meatpacking',
+    publicsafety: '🚒 Public Safety / Emergency Services',
+    buildingservices: '🛠 Janitorial / Housekeeping',
+    agriculture: '🌾 Agriculture (Indoor / Greenhouse)',
+    garment: '✂️ Garment / Textile',
+    childcare: '🧒 Childcare',
+  };
+
+  // ── Screen 1: sector selection ──
+  function ls1SelectSector(key) {
+    globalSector = key;
+    document.querySelectorAll('.ls1-sector-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.sector === key));
+    const btn  = document.getElementById('ls1-continue');
     const hint = document.getElementById('ls1-hint');
-    const meta = activityMeta[level];
-    if (hint) hint.textContent = meta.label + ' selected';
-    setActivity(level);
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+    hint.textContent = (sectorLabels[key] || key) + ' selected';
   }
 
+  // ── Screen 2: show activity review for chosen sector ──
   function showScreen2() {
-    if (!globalActivity) { selectActivity('moderate'); }
-    // Update the activity banner
-    const meta = activityMeta[globalActivity];
-    document.getElementById('ls2-activity-label').textContent = meta.label;
-    document.getElementById('ls2-activity-kcal').textContent = meta.kcal;
-    // Switch screens
-    document.getElementById('ls1').classList.remove('active');
-    document.getElementById('ls2').classList.add('active');
+    if (!globalSector) return;
+    // Populate sector examples in review panels
+    const data = sectorData[globalSector] || {};
+    ['light','moderate','heavy','vh'].forEach(level => {
+      const ul = document.getElementById('ls2-ex-' + level);
+      if (!ul) return;
+      const items = data[level];
+      if (items && items.length) {
+        ul.innerHTML = items.map(x => '<li>' + x + '</li>').join('');
+      } else {
+        ul.innerHTML = '<li class="ls2-level-none">No specific examples listed for this sector at this level.</li>';
+      }
+    });
+    document.getElementById('ls2-sector-name').textContent = sectorLabels[globalSector] || globalSector;
+    // Also sync Activity Level Guide tab sector
+    setSector(globalSector);
+    switchLauncherScreen('ls2');
+  }
+
+  // ── Screen 2 → select an activity level → go to screen 3 ──
+  function commitActivity(level) {
+    globalActivity = level;
+    setActivity(level);
+    const meta = activityMeta[level];
+    document.getElementById('ls3-activity-label').textContent = meta.label;
+    document.getElementById('ls3-activity-kcal').textContent  = meta.kcal;
+    switchLauncherScreen('ls3');
+  }
+
+  function showScreen1() { switchLauncherScreen('ls1'); }
+  function showScreen2Nav() { switchLauncherScreen('ls2'); } // back from screen 3
+
+  function switchLauncherScreen(id) {
+    ['ls1','ls2','ls3'].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.classList.toggle('active', s === id);
+    });
     window.scrollTo(0, 0);
   }
 
-  function showScreen1() {
-    document.getElementById('ls2').classList.remove('active');
-    document.getElementById('ls1').classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  function setActivityGlobal(level) {
-    selectActivity(level);
-  }
+  function setActivityGlobal(level) { commitActivity(level); }
 
   function setActivity(level) {
     globalActivity = level;
     document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
-    document.querySelectorAll('.ls1-card').forEach(c => c.classList.toggle('selected', c.dataset.level === level));
     // Update back-bar activity badge
     const actLabels2 = { light: '🟢 Light', moderate: '🟡 Moderate', heavy: '🔴 Heavy', vh: '⛔ Very Heavy' };
     const actBadgeEl = document.getElementById('back-bar-activity');
@@ -2013,7 +2131,7 @@
     const actLabels = { light: '🟢 Light', moderate: '🟡 Moderate', heavy: '🔴 Heavy', vh: '⛔ Very Heavy' };
     // If opening a chart tab and no activity selected yet, default to moderate
     const chartTabs0 = ['wbgt', 'tempRH', 'heatIndex'];
-    if (chartTabs0.includes(name) && !globalActivity) { selectActivity('moderate'); }
+    if (chartTabs0.includes(name) && !globalActivity) { globalActivity = 'moderate'; setActivity('moderate'); }
     const chartTabs2 = ['wbgt', 'tempRH', 'heatIndex'];
     const actBadge = document.getElementById('back-bar-activity');
     actBadge.textContent = chartTabs2.includes(name) ? actLabels[globalActivity] || '' : '';
@@ -2034,9 +2152,11 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('back-bar').classList.remove('visible');
     document.getElementById('def-panels-container').style.display = 'none';
-    // Return to screen 1 so user re-engages with activity level
-    document.getElementById('ls2').classList.remove('active');
-    document.getElementById('ls1').classList.add('active');
+    // Return to screen 1 so user re-engages with industry + activity level
+    ['ls1','ls2','ls3'].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.classList.toggle('active', s === 'ls1');
+    });
     window.scrollTo(0, 0);
     requestAnimationFrame(updateLayout);
   }
