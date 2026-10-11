@@ -98,7 +98,7 @@
   .header-logo-img {
     height: auto;
     width: auto;
-    max-height: 150px;
+    max-height: 120px;
     max-width: 75%;
     object-fit: contain;
     display: block;
