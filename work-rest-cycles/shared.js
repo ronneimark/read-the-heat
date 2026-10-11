@@ -142,7 +142,7 @@ function buildBreadcrumbs() {
   if (sector && sectorLabels[sector]) {
     crumbs.push({ label: sectorLabels[sector], href: 'index.html', selected: true });
   } else {
-    crumbs.push({ label: 'Industry', selected: false });
+    crumbs.push({ label: 'Industry', href: 'index.html', selected: false });
   }
 
   // Activity level
@@ -152,7 +152,7 @@ function buildBreadcrumbs() {
     const emoji = activityEmoji[actLevel] || '';
     crumbs.push({ label: (emoji ? emoji + ' ' : '') + actLabel, href: 'activity.html', selected: true });
   } else {
-    crumbs.push({ label: 'Activity Level', selected: false });
+    crumbs.push({ label: 'Activity Level', href: 'activity.html', selected: false });
   }
 
   // Worker status
@@ -162,7 +162,7 @@ function buildBreadcrumbs() {
                         workerStatus === 'unacclimatized' ? '🟠 Unacclimatized' : workerStatus;
     crumbs.push({ label: statusLabel, href: 'acclimatization.html', selected: true });
   } else {
-    crumbs.push({ label: 'Acclimatization', selected: false });
+    crumbs.push({ label: 'Acclimatization', href: 'acclimatization.html', selected: false });
   }
 
   // Measurement instrument
@@ -171,7 +171,7 @@ function buildBreadcrumbs() {
   if (instrument && instrumentLabels[instrument]) {
     crumbs.push({ label: instrumentLabels[instrument], href: 'measurement.html', selected: true });
   } else {
-    crumbs.push({ label: 'Instrument', selected: false });
+    crumbs.push({ label: 'Instrument', href: 'measurement.html', selected: false });
   }
 
   container.innerHTML = '';
@@ -183,19 +183,12 @@ function buildBreadcrumbs() {
       sep.textContent = '›';
       container.appendChild(sep);
     }
-    if (c.selected) {
-      const a = document.createElement('a');
-      a.className = 'wrc-crumb';
-      a.href = c.href;
-      a.textContent = c.label;
-      a.title = 'Change selection';
-      container.appendChild(a);
-    } else {
-      const span = document.createElement('span');
-      span.className = 'wrc-crumb-pending';
-      span.textContent = c.label;
-      container.appendChild(span);
-    }
+    const a = document.createElement('a');
+    a.className = c.selected ? 'wrc-crumb' : 'wrc-crumb-pending';
+    a.href = c.href;
+    a.textContent = c.label;
+    a.title = c.selected ? 'Change selection' : 'Make a selection';
+    container.appendChild(a);
   });
 }
 
