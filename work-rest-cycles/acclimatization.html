@@ -51,22 +51,27 @@
         <button class="ls3-acclim-card ls3-acclim-yes" onclick="commitWorkerStatus('acclimatized')">
           <span class="ls3-acclim-icon">&#x2705;</span>
           <div class="ls3-acclim-title">Acclimatized</div>
-          <div class="ls3-acclim-desc">Completed the acclimatization protocol and has been working in the heat without a week-or-more break. Uses the <strong>NIOSH REL</strong> (Recommended Exposure Limits).</div>
+          <div class="ls3-acclim-desc">Has completed heat acclimatization and has not been absent from heat work for a week or more. Work-rest cycles use the <strong>NIOSH Recommended Exposure Limits (REL)</strong>.</div>
           <ul class="ls3-acclim-bullets">
             <li>Experienced worker in continuous heat exposure</li>
             <li>Returning worker absent fewer than 7 days</li>
+            <li><em>New workers:</em> 7–14 day graduated ramp — ≤20% of usual heat exposure on Day 1, +20% per day</li>
+            <li><em>Workers with prior experience:</em> 4-day return ramp (50% → 60% → 80% → 100%)</li>
+            <li>NIOSH (2016): acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload</li>
           </ul>
           <span class="ls3-acclim-cta">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
 
         <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized')">
           <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
-          <div class="ls3-acclim-title">Not Acclimatized</div>
-          <div class="ls3-acclim-desc">New to heat work, or returning after a week or more away. Uses the more protective <strong>NIOSH RAL</strong> (Recommended Alert Limits) — approximately 2–3&deg;C more restrictive.</div>
+          <div class="ls3-acclim-title">Unacclimatized</div>
+          <div class="ls3-acclim-desc">New to heat work, or returning after a week or more away. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong> — approximately 2–3&deg;C (3–5&deg;F) more restrictive than the REL.</div>
           <ul class="ls3-acclim-bullets">
-            <li>New hires or workers new to hot areas</li>
-            <li>Returning after 7+ days away from heat work</li>
-            <li>Workers with cardiovascular conditions, obesity, certain medications, or prior heat illness</li>
+            <li>New employees who have not yet completed the acclimatization ramp</li>
+            <li>Workers returning after 7+ days away from heat exposure</li>
+            <li>Workers newly assigned to hot areas</li>
+            <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
+            <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
           </ul>
           <span class="ls3-acclim-cta">Select Unacclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>

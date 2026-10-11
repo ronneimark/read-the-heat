@@ -37,41 +37,6 @@
   </div>
 </div><!-- /fixed-top -->
 
-<div id="def-panels-container" style="display:flex; flex-direction:column; background:#F7F6F3; border-bottom:2px solid var(--slate); padding:14px 32px 16px;">
-  <div id="def-panels-inner" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-    <div class="status-def def-acclim" id="def-acclim" style="flex:1; min-width:260px;">
-      <strong>Acclimatized worker</strong>
-      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
-        <li>Has completed a heat acclimatization protocol</li>
-        <li>Has not been absent from heat work for a week or more</li>
-        <li><em>New workers:</em> 7–14 day graduated ramp (≤20% of usual duration on day 1, +20% per day)</li>
-        <li><em>Returning workers with prior experience:</em> 4-day ramp (50% → 60% → 80% → 100%)</li>
-        <li>Acclimatization can be regained in 2–3 days upon return to hot work</li>
-        <li>Benefits per NIOSH (2016): increased sweating efficiency, stabilized circulation, lower core temperature and heart rate at the same workload</li>
-        <li>Charts use: <strong>NIOSH Recommended Exposure Limits (REL)</strong> — Figure 8-2</li>
-      </ul>
-    </div>
-    <div class="status-def def-unacclim" id="def-unacclim" style="flex:1; min-width:260px;">
-      <strong>Unacclimatized worker — select for:</strong>
-      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
-        <li>New employees who have not yet completed the acclimatization ramp</li>
-        <li>Workers returning after a week or more away from heat exposure</li>
-        <li>Workers newly assigned to hot areas</li>
-        <li>Workers with conditions increasing heat illness risk: cardiovascular disease, obesity, certain medications, prior heat illness</li>
-        <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
-        <li>Charts use: <strong>NIOSH Recommended Alert Limits (RAL)</strong> — for unacclimatized workers (Figure 8-1), approximately 2–3°C (3–5°F) more protective than REL</li>
-      </ul>
-    </div>
-  </div>
-  <div style="display:flex; align-items:center; gap:16px;">
-    <div class="status-label">Select worker status:</div>
-    <div class="status-btns">
-      <button class="status-btn" id="btn-acclim"   onclick="setWorkerStatus('acclimatized')">✅ Acclimatized</button>
-      <button class="status-btn" id="btn-unacclim" onclick="setWorkerStatus('unacclimatized')">⚠ Unacclimatized</button>
-    </div>
-  </div>
-</div>
-
 <main>
 
   <h2>Temperature + Relative Humidity → Work-Rest Recommendation</h2>

@@ -157,11 +157,20 @@ function buildBreadcrumbs() {
   // Worker status
   const workerStatus = WRC.val('workerStatus', null);
   if (workerStatus) {
-    const statusLabel = workerStatus === 'acclimated' ? '✅ Acclimated' :
-                        workerStatus === 'new' ? '🟠 New / Unacclimated' : workerStatus;
+    const statusLabel = workerStatus === 'acclimatized' ? '✅ Acclimatized' :
+                        workerStatus === 'unacclimatized' ? '🟠 Unacclimatized' : workerStatus;
     crumbs.push({ label: statusLabel, href: 'acclimatization.html', selected: true });
   } else {
     crumbs.push({ label: 'Acclimatization', selected: false });
+  }
+
+  // Measurement instrument
+  const instrument = WRC.val('instrument', null);
+  const instrumentLabels = { wbgt: '🌡️ WBGT', trh: '💧 Temp + Humidity', hi: '🔥 Heat Index' };
+  if (instrument && instrumentLabels[instrument]) {
+    crumbs.push({ label: instrumentLabels[instrument], href: 'measurement.html', selected: true });
+  } else {
+    crumbs.push({ label: 'Instrument', selected: false });
   }
 
   container.innerHTML = '';
