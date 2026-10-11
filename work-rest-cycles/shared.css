@@ -87,23 +87,35 @@
     position: absolute;
     inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     pointer-events: none;
   }
   .header-logo-img {
     height: auto;
     width: auto;
-    max-height: 202px; /* 240px header − ~19px top/bottom (~0.5cm each) */
+    max-height: 160px;
     max-width: 75%;
     object-fit: contain;
     display: block;
   }
+  .header-tagline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.80);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .header-tagline .wrc-sph-pill {
+    pointer-events: auto;
+  }
   @media (max-width: 600px) {
-    .header-logo-img {
-      max-height: 152px;
-      max-width: 65%;
-    }
+    .header-logo-img { max-height: 110px; max-width: 65%; }
+    .header-tagline { font-size: 10px; gap: 6px; }
   }
 
   /* ── STRIP BUTTONS (methodology + activity guide in blue band) ── */
@@ -238,42 +250,22 @@
   .modal-close-btn:hover { background: var(--warm-white); color: var(--navy); }
   .modal-close-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; }
 
-  /* ── ATTRIBUTION BAR (tagline + UIC pill, below blue strip) ── */
-  .wrc-attribution-bar {
-    background: #001247;
-    border-bottom: 1px solid rgba(255,255,255,0.10);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 5px 20px;
-  }
-  .wrc-attribution-text {
-    font-size: 11px;
-    color: rgba(255,255,255,0.70);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    letter-spacing: 0.1px;
-  }
+  /* ── UIC SPH PILL (inside banner, below logo) ── */
   .wrc-sph-pill {
     display: inline-flex;
     align-items: center;
     background: #fff;
-    border-radius: 6px;
-    padding: 4px 9px;
+    border-radius: 5px;
+    padding: 3px 7px;
     box-shadow: inset 0 0 0 1.5px #fff, inset 0 0 0 3px #D50032,
-                0 2px 0 #c9c4bb, 0 4px 8px rgba(40,0,10,0.28);
+                0 2px 0 #9a0000, 0 3px 7px rgba(40,0,10,0.35);
     flex-shrink: 0;
+    text-decoration: none;
   }
   .wrc-sph-pill img {
-    height: 20px;
+    height: 17px;
     width: auto;
     display: block;
-  }
-  @media (max-width: 480px) {
-    .wrc-attribution-text { display: none; }
-    .wrc-attribution-bar { justify-content: center; }
   }
 
   /* ── BANNER STRIP (language selector + label) ── */
