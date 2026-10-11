@@ -253,38 +253,39 @@
   }
   .ls1-header {
     flex-shrink: 0;
-    padding: 20px 24px 12px;
+    padding: 10px 12px 8px;
   }
   .ls1-sector-grid {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    grid-auto-rows: 1fr;
-    gap: 10px;
-    padding: 0 24px 16px;
+    /* 13 sectors: ideal is 7×2 or similar; let CSS pick columns to fill width */
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0 12px 10px;
     overflow: hidden;
   }
   .ls1-sector-btn {
     border: 2px solid var(--border);
     background: #fff;
     color: var(--text);
-    font-size: 13px;
+    font-size: clamp(11px, 1.1vw, 15px);
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.15s;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 12px 8px;
+    gap: clamp(4px, 0.6vh, 8px);
+    padding: 8px 6px;
     line-height: 1.3;
     text-align: center;
   }
   .ls1-sector-btn .ls1-icon {
-    font-size: 28px;
+    font-size: clamp(20px, 2.8vw, 36px);
     line-height: 1;
   }
   .ls1-sector-btn:hover {
@@ -303,17 +304,17 @@
   }
   .ls1-footer {
     flex-shrink: 0;
-    padding: 10px 24px 16px;
+    padding: 8px 12px 12px;
     display: flex;
     align-items: center;
     gap: 16px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 700px) {
     .ls1-sector-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: none;
+      grid-auto-rows: 1fr;
     }
-    .ls1-sector-btn .ls1-icon { font-size: 22px; }
-    .ls1-sector-btn { font-size: 12px; }
   }
 
   /* ── SCREEN 2: ACTIVITY LEVEL REVIEW + SELECT ── */
@@ -966,9 +967,9 @@
 
   <!-- ── Screen 1: Industry / Sector ────────────────────────── -->
   <div class="launcher-screen active" id="ls1">
-    <div class="ls1-header">
-      <p class="ls-heading" style="margin-bottom:4px">What industry is this work in?</p>
-      <p class="ls-sub" style="margin:0">Pick the sector that best fits — you'll review sample activities to confirm the exertion level.</p>
+    <div class="ls1-header" style="display:flex;align-items:center;gap:16px">
+      <p class="ls-heading" style="margin:0;white-space:nowrap">What industry is this work in?</p>
+      <p class="ls-sub" style="margin:0;font-size:12px">Pick the sector — you'll review sample activities to confirm the exertion level before looking up work-rest cycles.</p>
     </div>
 
     <div class="ls1-sector-grid" id="ls1-sector-grid">
