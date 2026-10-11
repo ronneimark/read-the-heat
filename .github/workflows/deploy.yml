@@ -50,6 +50,6 @@ jobs:
           SSH_USER: ${{ secrets.CPANEL_USERNAME }}
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2222" \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 22" \
             work-rest-cycles/ \
             "$SSH_USER@$SSH_HOST:public_html/work-rest-cycles/"
