@@ -169,15 +169,14 @@
   .strip-btn:active { transform: translateY(1px); border-bottom-width: 1px; }
   .strip-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-  /* ── BREADCRUMB PILLS (selected items in blue strip, always centered) ── */
+  /* ── BREADCRUMB PILLS (flex item in blue strip, left-aligned, grows to fill) ── */
   .wrc-breadcrumbs {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex: 1;
     display: flex;
     align-items: center;
     gap: 4px;
     white-space: nowrap;
+    overflow: hidden;
   }
   /* selected pill — red background, white font */
   .wrc-crumb {
