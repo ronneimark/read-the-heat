@@ -633,6 +633,16 @@
     box-shadow: 0 4px 14px rgba(0,30,98,.25);
   }
   .ls1-sector-btn:hover .ls1-photo { transform: scale(1.045); }
+  /* Factory photo is brighter than others — add a tint to match visual weight */
+  .ls1-sector-btn[data-sector="factory"]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 10, 30, 0.35);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .ls1-sector-btn[data-sector="factory"] .ls1-sector-label { position: relative; z-index: 1; }
   .ls1-sector-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 3px; }
   .ls1-sector-btn.selected {
     border-color: #D50032;

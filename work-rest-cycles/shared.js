@@ -25,18 +25,18 @@ const activityEmoji = {
 // ── Sector labels ──
 const sectorLabels = {
   restaurant:     '🍽 Restaurant / Kitchen',
-  warehouse:      '📦 Warehouse / Distribution',
-  factory:        '🏭 Factory / Manufacturing',
+  warehouse:      '📦 Warehouse',
+  factory:        '🏭 Manufacturing',
   healthcare:     '🏥 Healthcare',
   retail:         '🛍 Retail',
   construction:   '🏗 Indoor Construction',
-  laundry:        '🧺 Laundry / Linen Services',
+  laundry:        '🧺 Laundry',
   foodprocessing: '🍳 Food Processing / Meatpacking',
-  publicsafety:   '🚒 Public Safety / Emergency Services',
-  buildingservices:'🛠 Janitorial / Housekeeping',
-  agriculture:    '🌾 Agriculture (Indoor / Greenhouse)',
-  garment:        '✂️ Garment / Textile',
-  hospitality:    '🏨 Hospitality / Hotel',
+  publicsafety:   '🚒 Public Safety',
+  buildingservices:'🛠 Housekeeping',
+  agriculture:    '🌾 Greenhouse',
+  garment:        '✂️ Textile',
+  hospitality:    '🏨 Hospitality',
   childcare:      '🧒 Childcare',
 };
 
