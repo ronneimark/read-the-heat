@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acclimatization Status — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls3">
+
+    <div class="ls2-topbar">
+      <button class="ls-back" onclick="window.location.href='activity.html'" style="margin:0;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Change activity level
+      </button>
+      <div class="ls2-sector-banner">
+        <strong id="ls3-activity-summary">Moderate Work</strong>
+        <span id="ls3-activity-kcal-hint">~200–350 kcal/hr</span>
+      </div>
+    </div>
+
+    <div class="ls3-acclim-wrap">
+      <div class="launcher-step">
+        <div class="launcher-step-label">Has this worker completed heat acclimatization?</div>
+      </div>
+
+      <div class="ls3-acclim-cards">
+
+        <button class="ls3-acclim-card ls3-acclim-yes" onclick="commitWorkerStatus('acclimatized')">
+          <span class="ls3-acclim-icon">&#x2705;</span>
+          <div class="ls3-acclim-title">Acclimatized</div>
+          <div class="ls3-acclim-desc">Completed the acclimatization protocol and has been working in the heat without a week-or-more break. Uses the <strong>NIOSH REL</strong> (Recommended Exposure Limits).</div>
+          <ul class="ls3-acclim-bullets">
+            <li>Experienced worker in continuous heat exposure</li>
+            <li>Returning worker absent fewer than 7 days</li>
+          </ul>
+          <span class="ls3-acclim-cta">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+        <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized')">
+          <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
+          <div class="ls3-acclim-title">Not Acclimatized</div>
+          <div class="ls3-acclim-desc">New to heat work, or returning after a week or more away. Uses the more protective <strong>NIOSH RAL</strong> (Recommended Alert Limits) — approximately 2–3&deg;C more restrictive.</div>
+          <ul class="ls3-acclim-bullets">
+            <li>New hires or workers new to hot areas</li>
+            <li>Returning after 7+ days away from heat work</li>
+            <li>Workers with cardiovascular conditions, obesity, certain medications, or prior heat illness</li>
+          </ul>
+          <span class="ls3-acclim-cta">Select Unacclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+      </div>
+    </div>
+
+  </div><!-- /ls3 -->
+</div><!-- /launcher -->
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function commitWorkerStatus(status) {
+    navigate('measurement.html', { workerStatus: status });
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls3 = document.getElementById('ls3');
+    const fixedH = fixedTop.offsetHeight;
+    const vh = window.innerHeight;
+    ls3.style.paddingTop = (fixedH + 10) + 'px';
+    ls3.style.height = vh + 'px';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = WRC.get();
+    const label = s.activityLabel || 'Moderate Work';
+    const kcal  = s.activityKcal  || '~200–350 kcal/hr';
+    const summEl = document.getElementById('ls3-activity-summary');
+    const kcalEl = document.getElementById('ls3-activity-kcal-hint');
+    if (summEl) summEl.textContent = label;
+    if (kcalEl) kcalEl.textContent = kcal;
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+</body>
+</html>

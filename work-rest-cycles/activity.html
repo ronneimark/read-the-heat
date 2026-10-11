@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Level — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls2">
+
+    <div class="ls2-topbar">
+      <button class="ls-back" onclick="window.location.href='index.html'" style="margin:0;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Change industry
+      </button>
+      <div class="ls2-sector-banner">
+        <strong id="ls2-sector-name">Loading…</strong>
+        <span>— sample activities by exertion level</span>
+      </div>
+      <span class="ls2-topbar-hint">Select the level that best matches. <strong style="color:var(--text)">When in doubt, choose higher.</strong></span>
+    </div>
+
+    <div class="ls2-review-grid">
+
+      <!-- Light -->
+      <div class="ls2-level-panel" style="--panel-accent:#2E7D32">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Light Work</span>
+          <span class="ls2-level-kcal">~150–200 kcal/hr (116–233 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-light"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('light')">
+            Select Light Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Moderate -->
+      <div class="ls2-level-panel" style="--panel-accent:#F57F17">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Moderate Work</span>
+          <span class="ls2-level-kcal">~200–350 kcal/hr (233–407 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-moderate"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('moderate')">
+            Select Moderate Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Heavy -->
+      <div class="ls2-level-panel" style="--panel-accent:#E65100">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Heavy Work</span>
+          <span class="ls2-level-kcal">~350–500 kcal/hr (407–581 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, or pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-heavy"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('heavy')">
+            Select Heavy Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Very Heavy -->
+      <div class="ls2-level-panel" style="--panel-accent:#880E4F">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Very Heavy Work</span>
+          <span class="ls2-level-kcal">&gt;500 kcal/hr (&gt;581 W)</span>
+        </div>
+        <div class="ls2-level-body">
+          <p class="ls2-level-desc">Maximum sustained physical exertion with whole-body effort. More common than many realize. Requires the greatest heat stress precautions at any elevated temperature.</p>
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-vh"><li style="font-style:italic;color:#999">Loading…</li></ul>
+          <button class="ls2-select-btn" onclick="commitActivity('vh')">
+            Select Very Heavy Work
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /ls2-review-grid -->
+
+  </div><!-- /ls2 -->
+</div><!-- /launcher -->
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function commitActivity(level) {
+    const m = activityMeta[level];
+    navigate('acclimatization.html', {
+      activity: level,
+      activityLabel: m.label,
+      activityKcal: m.kcal
+    });
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls2 = document.getElementById('ls2');
+    const fixedH = fixedTop.offsetHeight;
+    const vh = window.innerHeight;
+    ls2.style.paddingTop = (fixedH + 10) + 'px';
+    ls2.style.height = vh + 'px';
+  }
+
+  async function init() {
+    await initData();
+    const sector = WRC.val('sector', 'restaurant');
+    const data = sectorData[sector] || {};
+    ['light','moderate','heavy','vh'].forEach(level => {
+      const ul = document.getElementById('ls2-ex-' + level);
+      if (!ul) return;
+      const items = data[level];
+      if (items && items.length) {
+        ul.innerHTML = items.map(x => '<li>' + x + '</li>').join('');
+      } else {
+        ul.innerHTML = '<li class="ls2-level-none">No specific examples listed for this sector at this level.</li>';
+      }
+    });
+    const nameEl = document.getElementById('ls2-sector-name');
+    if (nameEl) nameEl.textContent = sectorLabels[sector] || sector;
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

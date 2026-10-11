@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>body { overflow: auto; }</style>
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'" style="font-weight:700">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+  <div class="back-bar visible" id="back-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back
+    </button>
+    <span class="back-bar-sep">›</span>
+    <span class="back-bar-title">Sources &amp; Methodology</span>
+  </div>
+</div><!-- /fixed-top -->
+
+<main id="methodology-main">
+
+  <h2>Sources, Methodology, and Verification Notes</h2>
+
+  <div class="section-label">Primary Sources</div>
+  <ul class="source-list">
+    <li>American Conference of Governmental Industrial Hygienists. (2025). <em>Threshold limit values for chemical substances and physical agents and biological exposure indices.</em> ACGIH.</li>
+    <li>Herrmann, S. D., Willis, E. A., Ainsworth, B. E., Barreira, T. V., Hastert, M., Kracht, C. L., Schuna, J. M., Jr., Cai, Z., Quan, M., Tudor-Locke, C., Whitt-Glover, M. C., &amp; Jacobs, D. R. (2024). 2024 Adult Compendium of Physical Activities: A third update of the energy costs of human activities. <em>Journal of Sport and Health Science, 13</em>(1), 6–12. https://doi.org/10.1016/j.jshs.2023.10.010</li>
+    <li>International Organization for Standardization. (2021). <em>ISO 8996:2021: Ergonomics of the thermal environment — Determination of metabolic rate.</em> ISO.</li>
+    <li>National Institute for Occupational Safety and Health. (1986). <em>Criteria for a recommended standard: Occupational exposure to hot environments</em> (DHHS [NIOSH] Publication No. 86-113). U.S. Department of Health and Human Services.</li>
+    <li>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</li>
+    <li>Occupational Safety and Health Administration. (2017). <em>OSHA-NIOSH heat safety tool</em> (OSHA Publication No. 3993). U.S. Department of Labor.</li>
+    <li>Rothfusz, L. P. (1990). <em>The heat index "equation" (or, more than you ever wanted to know about heat index)</em> (Technical Attachment SR/SSD 90-23). National Weather Service, Southern Region Headquarters.</li>
+    <li>U.S. Environmental Protection Agency. (1993). <em>Preventing heat illness during outdoor work activities</em> [Referenced in NIOSH, 2016, Table 6-2]. U.S. Environmental Protection Agency.</li>
+  </ul>
+
+  <hr class="divider">
+
+  <div class="section-label">Activity Level Definitions</div>
+  <p class="desc" style="font-size:14px">Use these descriptions to determine which column applies to tasks performed in your workplace. Many jobs involve more than one activity level during a shift — use the highest level sustained for 30 minutes or more as the basis for work-rest decisions. Metabolic rate ranges are based on NIOSH workload categories; for more precise estimation by task, consult <strong>ISO 8996:2021</strong> (<em>Ergonomics of the thermal environment — Determination of metabolic rate</em>) or the <strong>2024 Adult Compendium of Physical Activities</strong> (Herrmann et al., 2024).</p>
+
+  <hr class="divider">
+
+  <div class="section-label">Methodology Notes</div>
+  <div class="note-box warn-note">
+    <strong>⚠ What is confirmed vs. what still requires direct curve reading.</strong>
+    <br><br>
+    <strong>Confirmed from NIOSH (2016) equations and Table 5-1 (no further verification needed):</strong>
+    <br>• The Recommended Alert Limit (RAL, for unacclimatized workers) and Recommended Exposure Limit (REL, for acclimatized workers) equations for 60 min/h (continuous work): RAL = 59.9 − 14.1 log₁₀(M[W]); REL = 56.7 − 11.5 log₁₀(M[W])
+    <br>• Continuous-work REL thresholds: Light ≈ 30°C (Table 5-1); Moderate ≈ 28°C (Table 5-1); Heavy = 26°C (equation + Table 5-1); Very Heavy ≈ 25°C (Table 5-1)
+    <br>• Continuous-work RAL thresholds: Light ≈ 26.5°C (equation); Moderate ≈ 25°C (NIOSH text, p. 4); Heavy ≈ 22.3°C (equation); Very Heavy ≈ 20.9°C (equation)
+    <br>• RAL/REL framework, four-line structure (15/30/45/60 min/h), clothing assumption, standard man, and acclimatization protocols — all confirmed NIOSH (2016)
+    <br><br>
+    <strong>Still requires direct reading from NIOSH (2016) Figures 8-1 and 8-2:</strong>
+    <br>• All 45/15, 30/30, and 15/45 WBGT thresholds — the figures present these as graphical curves only; no equations are given for the non-continuous work-rest lines. Cells marked * in the WBGT tab are approximate and should be verified against the figures before use in enforcement or published tools.
+    <br><br>
+    <strong>Derived approximations (no primary source — methodology only):</strong>
+    <br>• T+RH tab unacclimatized thresholds — derived by shifting acclimatized HI breakpoints; no equivalent NIOSH published table in HI units
+    <br>• Heat Index tab unacclimatized table — similarly derived; NIOSH Recommended Alert Limits (RAL) is expressed in WBGT, not HI
+  </div>
+
+  <div class="note-box">
+    <strong>Methodology for Heat Index–Based Work-Rest Limits</strong><br><br>
+
+    NIOSH expresses both the Recommended Exposure Limit (REL, for acclimatized workers) and the Recommended Alert Limit (RAL, for unacclimatized workers) in Wet Bulb Globe Temperature (WBGT) units — not Heat Index. The Temperature + Humidity and Heat Index tabs in this tool use Heat Index as a practical field substitute because it requires no specialized instrumentation and is accessible to workers and supervisors without industrial hygiene training. The following describes how the limits were derived for each.<br><br>
+
+    <strong>Acclimatized worker limits (REL-derived):</strong><br>
+    Heat Index thresholds were established using OSHA's published Heat Index risk framework as the structural basis (Lower Risk / Moderate / High / Very High / Extreme), which maps onto the NIOSH REL risk continuum. Work-rest cycles at each Heat Index level were assigned by cross-referencing the approximate WBGT equivalent for a given Heat Index value against the NIOSH (2016) REL curves (Figures 8-1 and 8-2). The approximate WBGT-to-Heat Index relationship used is: at moderate humidity (~50% RH), WBGT ≈ 0.70 × Wet Bulb Temperature + 0.30 × Dry Bulb Temperature; and Heat Index ≈ Dry Bulb Temperature + a humidity adjustment. This yields a rough correspondence of approximately 1–2°C WBGT per 5°F Heat Index under moderate indoor conditions, though this relationship varies significantly with relative humidity and air movement.<br><br>
+
+    <strong>Unacclimatized worker limits (RAL-derived):</strong><br>
+    No NIOSH-published table expresses the Recommended Alert Limit (RAL) in Heat Index units. The unacclimatized thresholds in this tool are approximated by shifting the acclimatized (REL-based) Heat Index breakpoints downward by approximately 8–10°F (4–5°C equivalent). This offset is derived from the difference between the NIOSH REL and RAL continuous-work equations at representative metabolic rates — for example, at moderate work (300 kcal/h), the REL continuous-work threshold is ≈27.5°C WBGT and the RAL is ≈24.0°C WBGT, a difference of approximately 3.5°C. Accounting for the approximate WBGT-to-HI conversion, this translates to roughly 8–10°F lower Heat Index thresholds for unacclimatized workers. These are approximations only and have not been validated against a published NIOSH source.<br><br>
+
+    <strong>Limitations of Heat Index for occupational use:</strong><br>
+    Heat Index was developed for shade conditions with light air movement (~5 mph). It does not account for: (1) radiant heat from hot equipment, ovens, or surfaces — a major factor in kitchens, laundries, and foundries; (2) very low or very high air velocity; (3) PPE or impermeable clothing; or (4) individual metabolic rate. In any environment with significant radiant heat sources or unusual clothing, WBGT measurement is strongly preferred and the Heat Index tab values should not be relied upon for compliance or enforcement purposes. The WBGT tab values, derived directly from NIOSH (2016) equations and Table 5-1, are the most defensible basis for formal heat stress assessment.
+  </div>
+
+  <div class="note-box warn-note">
+    <strong>⚠ The 2016 NIOSH update removed the 1986 ceiling limits.</strong> The 1986 criteria included absolute ceiling WBGT values above which no work was recommended. NIOSH (2016) explicitly removed these: "Data and scientific evidence were not identified to continue to support the NIOSH ceiling limit recommendations. Acclimatized workers live and work in temperatures above the ceiling limit without adverse health effects." The <strong>DANGER!</strong> designation in this tool therefore does not reflect a NIOSH-defined ceiling; it indicates conditions where the work-rest curves cannot provide protection using work-practice controls alone and where engineering controls, physiological monitoring, or cessation of work should be evaluated by a qualified safety professional.
+  </div>
+
+  <div class="note-box">
+    <strong>NIOSH (2016) RAL and REL equations</strong> — The 2016 Criteria Document (p. 93) provides equations for the 60 min/h (continuous work) curves, where M = metabolic rate in Watts (1 kcal/h = 1.163 W):<br><br>
+    <code style="font-size:13px;font-family:monospace">RAL [°C WBGT] = 59.9 − 14.1 × log₁₀(M[W])  &nbsp;&nbsp;← confirmed NIOSH equation</code><br>
+    <code style="font-size:13px;font-family:monospace">REL [°C WBGT] = 56.7 − 11.5 × log₁₀(M[W])  &nbsp;&nbsp;← confirmed NIOSH equation</code><br><br>
+    <strong>Non-continuous work-rest lines (TWA derivation)</strong> — Substituting the time-weighted average metabolic rate (M × T/60) yields:<br>
+    <code style="font-size:12px;font-family:monospace">REL_T = 56.7 − 11.5 × log₁₀(M × T/60) = REL_60 + 11.5 × log₁₀(60/T)</code><br>
+    <code style="font-size:12px;font-family:monospace">RAL_T = 59.9 − 14.1 × log₁₀(M × T/60) = RAL_60 + 14.1 × log₁₀(60/T)</code><br><br>
+    Resulting offsets above the continuous-work baseline:<br>
+    <code style="font-size:12px;font-family:monospace">45 min/h: REL +1.4°C, RAL +1.8°C</code><br>
+    <code style="font-size:12px;font-family:monospace">30 min/h: REL +3.5°C, RAL +4.2°C</code><br>
+    <code style="font-size:12px;font-family:monospace">15 min/h: REL +6.9°C, RAL +8.5°C</code><br><br>
+    The TWA approach assumes resting metabolic rate = 0, slightly overstating allowable WBGT at rest-heavy schedules. The equations produce thresholds consistent with the confirmed anchor points (REL at 300 kcal/h, 60 min/h = 27.5°C; RAL at 300 kcal/h, 60 min/h = 24.0°C) and with the visual scale of Figures 8-1 and 8-2. Verify against those figures for enforcement use.
+  </div>
+
+  <div class="note-box">
+    <strong>Indoor-specific considerations:</strong>
+    <br>• Tables assume indoor setting with <em>no direct solar load</em>. All WBGT values assume natural WBGT (NWBGTi) or indoor measurement.
+    <br>• Radiant heat sources (ovens, machinery, steam lines, dryers) can dramatically elevate effective heat stress beyond what air temperature or heat index captures. WBGT measured on-site is the only reliable method in these environments.
+    <br>• Air movement matters: fans can reduce heat stress significantly; still air in a hot room is more hazardous than the dry-bulb temperature alone suggests.
+    <br>• PPE and clothing dramatically affect allowable exposure. Impermeable suits can require reducing thresholds by 10–11°C WBGT equivalent.
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Comparison of Major Standard-Setting Bodies</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Standard / Agency</th>
+          <th>Basis</th>
+          <th>Work-Rest Structure</th>
+          <th>Copyright Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">NIOSH REL/RAL<br>(1986, confirmed 2016)</td>
+          <td style="text-align:left;font-size:12px">WBGT + metabolic rate (kcal/h); standard man 70 kg, 1.8 m²</td>
+          <td style="font-size:12px">Continuous curves (4 work-rest lines: 15/30/45/60 min/h); no published discrete table</td>
+          <td class="c-safe" style="font-size:12px">Public domain (federal agency)</td>
+          <td style="text-align:left;font-size:12px">Current standard is NIOSH (2016), Pub. No. 2016-106, which confirmed 1986 curve values unchanged and removed 1986 ceiling limits. Recommended basis for this tool.</td>
+        </tr>
+        <tr>
+          <td class="label">ACGIH TLV</td>
+          <td style="text-align:left;font-size:12px">WBGT + metabolic rate (kcal/hr)</td>
+          <td style="font-size:12px">% of hour; includes clothing correction</td>
+          <td class="c-high" style="font-size:12px">Copyrighted (ACGIH)</td>
+          <td style="text-align:left;font-size:12px">Similar structure to NIOSH but different breakpoints; most used in industrial hygiene practice; not reproducible without license</td>
+        </tr>
+        <tr>
+          <td class="label">OSHA Heat Index<br>(NIOSH joint)</td>
+          <td style="text-align:left;font-size:12px">Heat Index (°F); no metabolic rate</td>
+          <td style="font-size:12px">Risk categories → protective measures</td>
+          <td class="c-safe" style="font-size:12px">Public domain (federal agencies)</td>
+          <td style="text-align:left;font-size:12px">Simpler, more accessible; does not differentiate by workload intensity; useful for field conditions without WBGT meter</td>
+        </tr>
+        <tr>
+          <td class="label">Cal/OSHA Title 8</td>
+          <td style="text-align:left;font-size:12px">Heat Index or temperature triggers</td>
+          <td style="font-size:12px">Preventive cool-down rest ≥5 min; not scheduled cycling</td>
+          <td class="c-safe" style="font-size:12px">Public domain (state agency)</td>
+          <td style="text-align:left;font-size:12px">Different regulatory model: mandatory "as needed" cooling rest, not fixed work-rest cycles; applies to outdoor and indoor workers</td>
+        </tr>
+        <tr>
+          <td class="label">EPA (1993) / NIOSH (2016) Table 6-2</td>
+          <td style="text-align:left;font-size:12px">Adjusted dry-bulb temp (°F) with RH and solar correction factors</td>
+          <td style="font-size:12px">Minute-level splits (45/15, 40/20, 35/25, 30/30, 25/35, 20/40, 15/45) at 1°F increments</td>
+          <td class="c-safe" style="font-size:12px">Public domain</td>
+          <td style="text-align:left;font-size:12px">Adapted from EPA (1993); reproduced in NIOSH (2016) as a practical field reference. Assumes physically fit, well-rested, fully hydrated, under age 40, 30% RH, natural ventilation. Different methodology from RAL/REL curves — uses ambient temp + adjustments, not WBGT.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Intended Use and Limitations</div>
+  <div class="note-box">
+    This document is intended as a preliminary reference tool for occupational health education and policy development. It does not constitute a compliance standard or legal requirement. Users should:
+    <br>• Verify intermediate work-rest line thresholds (45/15, 30/30, 15/45 WBGT values) against NIOSH (2016) Figures 8-1 and 8-2 before use in enforcement or published tools — continuous-work thresholds are confirmed from equations and Table 5-1 and do not require further verification
+    <br>• Apply professional judgment accounting for site-specific conditions (radiant heat, clothing, workload variability, individual risk factors)
+    <br>• Consult a certified industrial hygienist (CIH) for complex or high-hazard situations
+    <br>• Check for updates to NIOSH criteria, OSHA standards, and state-specific requirements
+    <br><br>
+    Developed with support from GLC-OHS / UIC School of Public Health. For informational and educational use.
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const main = document.getElementById('methodology-main');
+    const fixedH = fixedTop.offsetHeight;
+    main.style.paddingTop = (fixedH + 16) + 'px';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+</body>
+</html>

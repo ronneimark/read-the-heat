@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measurement Method — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls4" style="padding:16px 24px 24px;">
+
+    <button class="ls-back" onclick="window.location.href='acclimatization.html'">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Change worker status
+    </button>
+
+    <div class="ls4-activity-banner">
+      <span class="ls4-banner-label">Activity Level</span>
+      <span class="ls4-activity-selected" id="ls4-activity-label">Moderate Work</span>
+      <span class="ls4-activity-kcal" id="ls4-activity-kcal">~200–350 kcal/hr</span>
+      <span id="ls4-worker-status-badge" style="font-size:12px;font-weight:700;border-radius:20px;padding:3px 12px;margin-left:12px;"></span>
+    </div>
+
+    <div class="launcher-step">
+      <div class="launcher-step-label">Choose a measurement method</div>
+    </div>
+
+    <div class="method-cards">
+      <button class="method-card" style="--card-accent:#001E62" onclick="window.location.href='wbgt.html'">
+        <span class="method-card-icon">🌡️</span>
+        <h3>WBGT</h3>
+        <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
+        <span class="method-card-tag">Requires WBGT meter</span>
+      </button>
+      <button class="method-card" style="--card-accent:#1a3a8f" onclick="window.location.href='temp-humidity.html'">
+        <span class="method-card-icon">💧</span>
+        <h3>Temperature + Humidity</h3>
+        <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
+        <span class="method-card-tag">Thermometer + hygrometer</span>
+      </button>
+      <button class="method-card" style="--card-accent:#E05C2C" onclick="window.location.href='heat-index.html'">
+        <span class="method-card-icon">🔥</span>
+        <h3>Heat Index</h3>
+        <p>The "feels like" temperature combining heat and humidity. Widely used in OSHA guidance. No specialized instrument needed.</p>
+        <span class="method-card-tag">No special instrument</span>
+      </button>
+    </div>
+
+    <div class="launcher-secondary">
+      <a class="secondary-link" href="methodology.html">📚 Methodology</a>
+    </div>
+
+  </div><!-- /ls4 -->
+</div><!-- /launcher -->
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls4 = document.getElementById('ls4');
+    const fixedH = fixedTop.offsetHeight;
+    ls4.style.paddingTop = (fixedH + 16) + 'px';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = WRC.get();
+    const labelEl = document.getElementById('ls4-activity-label');
+    const kcalEl  = document.getElementById('ls4-activity-kcal');
+    const badgeEl = document.getElementById('ls4-worker-status-badge');
+
+    const actLabel = s.activityLabel || 'Moderate Work';
+    const actKcal  = s.activityKcal  || '~200–350 kcal/hr';
+    const status   = s.workerStatus  || 'acclimatized';
+
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const act = s.activity || 'moderate';
+    if (labelEl) labelEl.textContent = (emojiMap[act] || '') + ' ' + actLabel;
+    if (kcalEl)  kcalEl.textContent  = actKcal;
+
+    if (badgeEl) {
+      if (status === 'acclimatized') {
+        badgeEl.textContent = '✅ Acclimatized';
+        badgeEl.style.background = 'var(--safe-bg)';
+        badgeEl.style.color = '#1A5A1F';
+      } else {
+        badgeEl.textContent = '⚠ Unacclimatized';
+        badgeEl.style.background = 'var(--warn-bg)';
+        badgeEl.style.color = '#7B2500';
+      }
+    }
+
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+</body>
+</html>

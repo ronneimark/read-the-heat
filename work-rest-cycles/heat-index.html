@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heat Index Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>body { overflow: auto; }</style>
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+  <div class="back-bar visible" id="back-bar">
+    <button class="back-btn" onclick="window.location.href='measurement.html'">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All Methods
+    </button>
+    <span class="back-bar-sep">›</span>
+    <span class="back-bar-title">Heat Index</span>
+    <span class="back-bar-activity" id="back-bar-activity"></span>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="def-panels-container" style="display:flex; flex-direction:column; background:#F7F6F3; border-bottom:2px solid var(--slate); padding:14px 32px 16px;">
+  <div id="def-panels-inner" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+    <div class="status-def def-acclim" id="def-acclim" style="flex:1; min-width:260px;">
+      <strong>Acclimatized worker</strong>
+      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
+        <li>Has completed a heat acclimatization protocol</li>
+        <li>Has not been absent from heat work for a week or more</li>
+        <li><em>New workers:</em> 7–14 day graduated ramp (≤20% of usual duration on day 1, +20% per day)</li>
+        <li><em>Returning workers with prior experience:</em> 4-day ramp (50% → 60% → 80% → 100%)</li>
+        <li>Acclimatization can be regained in 2–3 days upon return to hot work</li>
+        <li>Benefits per NIOSH (2016): increased sweating efficiency, stabilized circulation, lower core temperature and heart rate at the same workload</li>
+        <li>Charts use: <strong>NIOSH Recommended Exposure Limits (REL)</strong> — Figure 8-2</li>
+      </ul>
+    </div>
+    <div class="status-def def-unacclim" id="def-unacclim" style="flex:1; min-width:260px;">
+      <strong>Unacclimatized worker — select for:</strong>
+      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
+        <li>New employees who have not yet completed the acclimatization ramp</li>
+        <li>Workers returning after a week or more away from heat exposure</li>
+        <li>Workers newly assigned to hot areas</li>
+        <li>Workers with conditions increasing heat illness risk: cardiovascular disease, obesity, certain medications, prior heat illness</li>
+        <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
+        <li>Charts use: <strong>NIOSH Recommended Alert Limits (RAL)</strong> — for unacclimatized workers (Figure 8-1), approximately 2–3°C (3–5°F) more protective than REL</li>
+      </ul>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="status-label">Select worker status:</div>
+    <div class="status-btns">
+      <button class="status-btn" id="btn-acclim"   onclick="setWorkerStatus('acclimatized')">✅ Acclimatized</button>
+      <button class="status-btn" id="btn-unacclim" onclick="setWorkerStatus('unacclimatized')">⚠ Unacclimatized</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <h2>Heat Index–Based Work-Rest Schedule</h2>
+  <p class="desc">The Heat Index (HI) combines air temperature and relative humidity to estimate perceived temperature. This table synthesizes OSHA heat illness prevention guidance with NIOSH-based work-rest principles. Heat Index is measured in °F (°C equivalents shown). Indoor, no solar load. Standard work clothing assumed. Worker status is set at the top of the page.</p>
+
+  <div class="toggle-row">
+    <span class="toggle-label">Temperature Units:</span>
+    <div class="toggle">
+      <button class="active" id="btn-hi-f" onclick="setHiUnit('F')">°F</button>
+      <button id="btn-hi-c" onclick="setHiUnit('C')">°C</button>
+    </div>
+  </div>
+
+  <!-- Acclimatized Heat Index table -->
+  <div id="hi-acclim-section">
+  <div class="section-label">NIOSH Recommended Exposure Limits (REL) — Acclimatized Workers</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left" style="width:160px">Heat Index</th>
+          <th>Light Work</th>
+          <th>Moderate Work</th>
+          <th>Heavy Work</th>
+          <th>Very Heavy Work</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label" id="hi-a-r1">Below 80°F<br>Below 27°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Normal work practices; maintain standard hydration (8 oz water every 20 min). Train workers on heat illness signs.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-a-r2">80–90°F<br>27–32°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-low">Continuous*</td>
+          <td class="c-caution">45 / 15 min</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Implement basic precautions. Buddy system. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. *Monitor heavy workers closely.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-a-r3">91–103°F<br>33–39°C</td>
+          <td class="c-low">Continuous*</td>
+          <td class="c-caution">45 / 15 min</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">OSHA: Implement controls. Buddy system required. Enforce rest breaks in cool/shaded area. Hydration: 1 cup every 15–20 min. Watch new workers and unacclimatized workers especially.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-a-r4">103–115°F<br>39–46°C</td>
+          <td class="c-caution">45 / 15 min</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">OSHA: Active monitoring; frequent vital sign checks. Cool-down periods in air-conditioned or ventilated rest areas. Hydration: 1 cup every 15 min. Consider limiting new workers to ≤20% of shift in heat.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-a-r5">115–130°F<br>46–54°C</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">OSHA: Hazardous conditions. Engineering controls must be implemented or work suspended. Personal cooling (wet towels, cooling vests). Emergency response plan activated. Medical monitoring on-site.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-a-r6">Above 130°F<br>Above 54°C</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Imminent danger. All work should cease until conditions are corrected. Evacuation if engineering controls cannot reduce heat to safe levels.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div><!-- /table-wrap -->
+  </div><!-- /hi-acclim-section -->
+
+  <!-- Unacclimatized Heat Index table (NIOSH RAL-derived, approximate) -->
+  <div id="hi-unacclim-section" style="display:none">
+  <div class="note-box" style="border-left-color:#AE1515; background:#FFF0F0; color:#6D0000;">
+    <strong>⚠ Note:</strong> The unacclimatized work-rest cycles shown here do not capture the full acclimatization process recommended by NIOSH and OSHA. For more detailed guidance on acclimatization protocols, employers should follow the recommendations in the NIOSH Criteria Document.<br><br>
+    <em>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services. https://www.cdc.gov/niosh/docs/2016-106/</em>
+  </div>
+  <div class="section-label">NIOSH Recommended Alert Limits (RAL) — Unacclimatized Workers <small style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none">(methodology-derived HI approximation — NIOSH Recommended Alert Limits (RAL, for unacclimatized workers) expressed in WBGT, not HI; see WBGT tab for equation-confirmed values)</small></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left" style="width:160px">Heat Index</th>
+          <th>Light Work</th>
+          <th>Moderate Work</th>
+          <th>Heavy Work</th>
+          <th>Very Heavy Work</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label" id="hi-u-r1">Below 72°F<br>Below 22°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Normal work practices. Standard hydration, buddy system, training on heat illness recognition for all workers. Unacclimatized workers require heightened supervisor attention.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-u-r2">72–82°F<br>22–28°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-low">Continuous*</td>
+          <td class="c-caution">45 / 15 min</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Implement precautions. Buddy system required. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. New workers: limit to lighter tasks initially. *Monitor heavy workers closely.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-u-r3">83–95°F<br>28–35°C</td>
+          <td class="c-low">Continuous*</td>
+          <td class="c-caution">45 / 15 min</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Active monitoring required. Enforce rest breaks in cool area. Hydration: 1 cup every 15–20 min. For first week in heat: limit to 20% of shift in heat exposure, increasing 20% per day.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-u-r4">95–107°F<br>35–42°C</td>
+          <td class="c-caution">45 / 15 min</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Hazardous for unacclimatized workers. Active monitoring; vital sign checks. Cool-down in air-conditioned rest areas. Hydration: 1 cup every 15 min. Consider removing unacclimatized workers from this environment.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-u-r5">107–122°F<br>42–50°C</td>
+          <td class="c-warn">30 / 30 min</td>
+          <td class="c-high">15 / 45 min</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Unacclimatized workers should not be assigned to this environment. Engineering controls must be implemented. Medical monitoring on-site. Emergency response plan activated.</td>
+        </tr>
+        <tr>
+          <td class="label" id="hi-u-r6">Above 122°F<br>Above 50°C</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+          <td class="c-stop">DANGER!</td>
+        </tr>
+        <tr>
+          <td class="sublabel" colspan="5">Imminent danger for all workers. All work should cease until conditions are corrected.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div><!-- /hi-unacclim-section -->
+
+  <div class="note-box">
+    <strong>Hydration guidance</strong> (consistent with OSHA/NIOSH): Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.
+  </div>
+
+  <div class="note-box warn-note">
+    <strong>Key limitation of heat index for occupational use:</strong> Heat index was developed for shade conditions with 5 mph wind. In indoor environments with: (a) direct radiant heat from equipment, ovens, or hot surfaces; (b) very high or very low air movement; or (c) PPE/impermeable clothing — heat index <em>significantly underestimates</em> actual heat stress. WBGT is the preferred occupational measure in these settings.
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  let workerStatus = 'acclimatized';
+
+  const hiRowsAcclim = [
+    { id:'hi-a-r1', f:'Below 80.0°F',  c:'Below 26.7°C' },
+    { id:'hi-a-r2', f:'80.0–90.0°F',   c:'26.7–32.2°C'  },
+    { id:'hi-a-r3', f:'91.0–103.0°F',  c:'32.8–39.4°C'  },
+    { id:'hi-a-r4', f:'103.0–115.0°F', c:'39.4–46.1°C'  },
+    { id:'hi-a-r5', f:'115.0–130.0°F', c:'46.1–54.4°C'  },
+    { id:'hi-a-r6', f:'Above 130.0°F', c:'Above 54.4°C' }
+  ];
+
+  const hiRowsUnacclim = [
+    { id:'hi-u-r1', f:'Below 72.0°F',  c:'Below 22.2°C' },
+    { id:'hi-u-r2', f:'72.0–82.0°F',   c:'22.2–27.8°C'  },
+    { id:'hi-u-r3', f:'83.0–95.0°F',   c:'28.3–35.0°C'  },
+    { id:'hi-u-r4', f:'95.0–107.0°F',  c:'35.0–41.7°C'  },
+    { id:'hi-u-r5', f:'107.0–122.0°F', c:'41.7–50.0°C'  },
+    { id:'hi-u-r6', f:'Above 122.0°F', c:'Above 50.0°C' }
+  ];
+
+  function setHiUnit(unit) {
+    document.getElementById('btn-hi-f').classList.toggle('active', unit === 'F');
+    document.getElementById('btn-hi-c').classList.toggle('active', unit === 'C');
+    hiRowsAcclim.forEach(row => {
+      const cell = document.getElementById(row.id);
+      if (cell) cell.innerHTML = (unit === 'C' ? row.c : row.f);
+    });
+    hiRowsUnacclim.forEach(row => {
+      const cell = document.getElementById(row.id);
+      if (cell) cell.innerHTML = (unit === 'C' ? row.c : row.f);
+    });
+  }
+
+  function setWorkerStatus(status) {
+    workerStatus = status;
+    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
+    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
+    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
+    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
+    document.getElementById('hi-acclim-section').style.display  = status === 'acclimatized'   ? '' : 'none';
+    document.getElementById('hi-unacclim-section').style.display = status === 'unacclimatized' ? '' : 'none';
+    WRC.set({ workerStatus: status });
+    const inner = document.getElementById('def-panels-inner');
+    if (inner) { inner.style.display = 'none'; updateLayout(); }
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const defPanel = document.getElementById('def-panels-container');
+    const main     = document.querySelector('main');
+    const fixedH   = fixedTop.offsetHeight;
+    defPanel.style.top = fixedH + 'px';
+    const defH = defPanel.offsetHeight;
+    main.style.paddingTop = (fixedH + defH + 16) + 'px';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = WRC.get();
+    const status = s.workerStatus || 'acclimatized';
+    const act    = s.activity    || 'moderate';
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const actLabel = s.activityLabel || 'Moderate Work';
+    const bbActivity = document.getElementById('back-bar-activity');
+    if (bbActivity) bbActivity.textContent = (emojiMap[act] || '') + ' ' + actLabel;
+
+    workerStatus = status;
+    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
+    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
+    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
+    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
+    document.getElementById('hi-acclim-section').style.display  = status === 'acclimatized'   ? '' : 'none';
+    document.getElementById('hi-unacclim-section').style.display = status === 'unacclimatized' ? '' : 'none';
+
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+</body>
+</html>

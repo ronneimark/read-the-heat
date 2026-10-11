@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temperature + Humidity — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>body { overflow: auto; }</style>
+<script src="./lang-link.js"></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+    </div>
+    <div class="header-logo-wrap">
+      <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
+    </div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+  <div class="back-bar visible" id="back-bar">
+    <button class="back-btn" onclick="window.location.href='measurement.html'">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All Methods
+    </button>
+    <span class="back-bar-sep">›</span>
+    <span class="back-bar-title">Temperature + Humidity</span>
+    <span class="back-bar-activity" id="back-bar-activity"></span>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="def-panels-container" style="display:flex; flex-direction:column; background:#F7F6F3; border-bottom:2px solid var(--slate); padding:14px 32px 16px;">
+  <div id="def-panels-inner" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+    <div class="status-def def-acclim" id="def-acclim" style="flex:1; min-width:260px;">
+      <strong>Acclimatized worker</strong>
+      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
+        <li>Has completed a heat acclimatization protocol</li>
+        <li>Has not been absent from heat work for a week or more</li>
+        <li><em>New workers:</em> 7–14 day graduated ramp (≤20% of usual duration on day 1, +20% per day)</li>
+        <li><em>Returning workers with prior experience:</em> 4-day ramp (50% → 60% → 80% → 100%)</li>
+        <li>Acclimatization can be regained in 2–3 days upon return to hot work</li>
+        <li>Benefits per NIOSH (2016): increased sweating efficiency, stabilized circulation, lower core temperature and heart rate at the same workload</li>
+        <li>Charts use: <strong>NIOSH Recommended Exposure Limits (REL)</strong> — Figure 8-2</li>
+      </ul>
+    </div>
+    <div class="status-def def-unacclim" id="def-unacclim" style="flex:1; min-width:260px;">
+      <strong>Unacclimatized worker — select for:</strong>
+      <ul style="margin:6px 0 0 0; padding-left:18px; line-height:1.7;">
+        <li>New employees who have not yet completed the acclimatization ramp</li>
+        <li>Workers returning after a week or more away from heat exposure</li>
+        <li>Workers newly assigned to hot areas</li>
+        <li>Workers with conditions increasing heat illness risk: cardiovascular disease, obesity, certain medications, prior heat illness</li>
+        <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
+        <li>Charts use: <strong>NIOSH Recommended Alert Limits (RAL)</strong> — for unacclimatized workers (Figure 8-1), approximately 2–3°C (3–5°F) more protective than REL</li>
+      </ul>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="status-label">Select worker status:</div>
+    <div class="status-btns">
+      <button class="status-btn" id="btn-acclim"   onclick="setWorkerStatus('acclimatized')">✅ Acclimatized</button>
+      <button class="status-btn" id="btn-unacclim" onclick="setWorkerStatus('unacclimatized')">⚠ Unacclimatized</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <h2>Temperature + Relative Humidity → Work-Rest Recommendation</h2>
+  <p class="desc">Find dry-bulb temperature in the left column and relative humidity across the top. Each cell shows the approximate Heat Index and the recommended work-rest cycle for the selected worker status and activity level. Heat index is derived from air temperature and RH; WBGT is a more complete measure for high-radiant environments. Indoor, no solar load. Standard work clothing assumed. <em>Note: NIOSH Recommended Alert Limits (RAL, for unacclimatized workers) and Recommended Exposure Limits (REL, for acclimatized workers) are expressed in WBGT units, not Heat Index. Unacclimatized thresholds in this tab are methodology-derived approximations — no NIOSH-published equivalent exists in HI units.</em></p>
+
+  <div class="toggle-row">
+    <span class="toggle-label">Activity Level:</span>
+    <div class="toggle">
+      <button class="act-btn" data-level="light"    onclick="setActivity('light')">🟢 Light</button>
+      <button class="act-btn active" data-level="moderate" onclick="setActivity('moderate')">🟡 Moderate</button>
+      <button class="act-btn" data-level="heavy"    onclick="setActivity('heavy')">🔴 Heavy</button>
+      <button class="act-btn" data-level="vh"       onclick="setActivity('vh')">⛔ Very Heavy</button>
+    </div>
+  </div>
+
+  <div class="toggle-row">
+    <span class="toggle-label">Temperature Units:</span>
+    <div class="toggle">
+      <button class="active" id="btn-trh-f" onclick="setTrhUnit('F')">°F</button>
+      <button id="btn-trh-c" onclick="setTrhUnit('C')">°C</button>
+    </div>
+  </div>
+
+  <div id="trh-unacclim-warning" style="display:none" class="note-box" style="border-left-color:#AE1515; background:#FFF0F0; color:#6D0000;">
+    <strong>⚠ Note:</strong> The unacclimatized work-rest cycles shown here do not capture the full acclimatization process recommended by NIOSH and OSHA. For more detailed guidance on acclimatization protocols, employers should follow the recommendations in the NIOSH Criteria Document.<br><br>
+    <em>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services. https://www.cdc.gov/niosh/docs/2016-106/</em>
+  </div>
+
+  <div class="table-wrap">
+    <table id="rh-table">
+      <thead>
+        <tr>
+          <th class="left" style="width:110px" id="trh-header">Temp (°F)</th>
+          <th>RH 10%</th>
+          <th>RH 20%</th>
+          <th>RH 30%</th>
+          <th>RH 40%</th>
+          <th>RH 50%</th>
+          <th>RH 60%</th>
+          <th>RH 70%</th>
+          <th>RH 80%</th>
+          <th>RH 90%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 70°F / 21°C -->
+        <tr>
+          <td class="label" id="trh-r1">70°F / 21°C</td>
+          <td class="c-na hi-cell" data-hi="65">65<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="66">66<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="67">67<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="68">68<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="69">69<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="70">70<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="70">70<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
+        </tr>
+        <!-- 75°F / 24°C -->
+        <tr>
+          <td class="label" id="trh-r2">75°F / 24°C</td>
+          <td class="c-na hi-cell" data-hi="69">69<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="72">72<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="73">73<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="74">74<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="75">75<br><small>—</small></td>
+          <td class="c-na hi-cell" data-hi="76">76<br><small>—</small></td>
+          <td class="c-low hi-cell" data-hi="77">77<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="78">78<br><small>CONT*</small></td>
+        </tr>
+        <!-- 80°F / 27°C -->
+        <tr>
+          <td class="label" id="trh-r3">80°F / 27°C</td>
+          <td class="c-na hi-cell"  data-hi="75">75<br><small>—</small></td>
+          <td class="c-na hi-cell"  data-hi="77">77<br><small>—</small></td>
+          <td class="c-low hi-cell" data-hi="78">78<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="79">79<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="81">81<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="82">82<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="83">83<br><small>CONT*</small></td>
+          <td class="c-low hi-cell" data-hi="85">85<br><small>CONT*</small></td>
+          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
+        </tr>
+        <!-- 85°F / 29°C -->
+        <tr>
+          <td class="label" id="trh-r4">85°F / 29°C</td>
+          <td class="c-low hi-cell"    data-hi="79">79<br><small>CONT*</small></td>
+          <td class="c-low hi-cell"    data-hi="82">82<br><small>CONT*</small></td>
+          <td class="c-low hi-cell"    data-hi="84">84<br><small>CONT*</small></td>
+          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="88">88<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="90">90<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="93">93<br><small>45 / 15</small></td>
+          <td class="c-warn hi-cell"    data-hi="97">97<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="102">102<br><small>30 / 30</small></td>
+        </tr>
+        <!-- 90°F / 32°C -->
+        <tr>
+          <td class="label" id="trh-r5">90°F / 32°C</td>
+          <td class="c-low hi-cell"     data-hi="83">83<br><small>CONT*</small></td>
+          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="88">88<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
+          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="100">100<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="106">106<br><small>30 / 30</small></td>
+          <td class="c-high hi-cell"    data-hi="113">113<br><small>15 / 45</small></td>
+          <td class="c-high hi-cell"    data-hi="122">122<br><small>15 / 45</small></td>
+        </tr>
+        <!-- 95°F / 35°C -->
+        <tr>
+          <td class="label" id="trh-r6">95°F / 35°C</td>
+          <td class="c-caution hi-cell" data-hi="87">87<br><small>45 / 15</small></td>
+          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
+          <td class="c-warn hi-cell"    data-hi="96">96<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="101">101<br><small>30 / 30</small></td>
+          <td class="c-high hi-cell"    data-hi="107">107<br><small>15 / 45</small></td>
+          <td class="c-high hi-cell"    data-hi="114">114<br><small>15 / 45</small></td>
+          <td class="c-stop hi-cell"    data-hi="124">124<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="136">136<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+        </tr>
+        <!-- 100°F / 38°C -->
+        <tr>
+          <td class="label" id="trh-r7">100°F / 38°C</td>
+          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
+          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="100">100<br><small>30 / 30</small></td>
+          <td class="c-high hi-cell"    data-hi="109">109<br><small>15 / 45</small></td>
+          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="129">129<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+        </tr>
+        <!-- 105°F / 41°C -->
+        <tr>
+          <td class="label" id="trh-r8">105°F / 41°C</td>
+          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
+          <td class="c-warn hi-cell"    data-hi="101">101<br><small>30 / 30</small></td>
+          <td class="c-high hi-cell"    data-hi="109">109<br><small>15 / 45</small></td>
+          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="130">130<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+        </tr>
+        <!-- 110°F / 43°C -->
+        <tr>
+          <td class="label" id="trh-r9">110°F / 43°C</td>
+          <td class="c-warn hi-cell"    data-hi="99">99<br><small>30 / 30</small></td>
+          <td class="c-high hi-cell"    data-hi="107">107<br><small>15 / 45</small></td>
+          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="130">130<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note-box">
+    <strong>How to use:</strong> Set worker status at the top of the page, select the activity level, then find the row for current air temperature and column for relative humidity. Colors and cycles update automatically. <em>CONT*</em> = continuous work is acceptable but active monitoring, buddy system, and ready access to water are required.
+  </div>
+
+  <div class="note-box warn-note">
+    <strong>Limitations:</strong> Heat Index uses air temperature and relative humidity only — it does not account for air movement, radiant heat from hot equipment or surfaces, clothing, or metabolic rate. In high-radiant environments (kitchens, laundries, foundries, bakeries), measure WBGT directly. Heat index values shown are approximate; verify with NOAA tables or the Rothfusz regression equation.
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  let workerStatus = 'acclimatized';
+  let trhUnit = 'F';
+  let currentLevel = 'moderate';
+
+  const trhRows = [
+    { id:'trh-r1', f:'70.0°F',  c:'21.1°C' },
+    { id:'trh-r2', f:'75.0°F',  c:'23.9°C' },
+    { id:'trh-r3', f:'80.0°F',  c:'26.7°C' },
+    { id:'trh-r4', f:'85.0°F',  c:'29.4°C' },
+    { id:'trh-r5', f:'90.0°F',  c:'32.2°C' },
+    { id:'trh-r6', f:'95.0°F',  c:'35.0°C' },
+    { id:'trh-r7', f:'100.0°F', c:'37.8°C' },
+    { id:'trh-r8', f:'105.0°F', c:'40.6°C' },
+    { id:'trh-r9', f:'110.0°F', c:'43.3°C' }
+  ];
+
+  function hiDisplay(hi_f) {
+    const wrap = (txt) => `<span style="font-size:10px">${txt}</span>`;
+    if (hi_f >= 999) return wrap('—');
+    if (trhUnit === 'C') {
+      const hi_c = Math.round((hi_f - 32) * 5 / 9 * 10) / 10;
+      return wrap(hi_c + '°C');
+    }
+    return wrap(hi_f + '°F');
+  }
+
+  function getTierForHI(hi) {
+    if (workerStatus === 'unacclimatized') {
+      if (hi < 72)  return { light:{cls:'c-na',     txt:'—'},           moderate:{cls:'c-na',     txt:'—'},           heavy:{cls:'c-na',    txt:'—'},           vh:{cls:'c-na',    txt:'—'} };
+      if (hi < 83)  return { light:{cls:'c-safe',   txt:'CONT'},  moderate:{cls:'c-safe',   txt:'CONT'},  heavy:{cls:'c-low',   txt:'CONT*'}, vh:{cls:'c-caution',txt:'45 / 15'} };
+      if (hi < 95)  return { light:{cls:'c-low',    txt:'CONT*'}, moderate:{cls:'c-caution',txt:'45 / 15'},     heavy:{cls:'c-warn',  txt:'30 / 30'},     vh:{cls:'c-high',  txt:'15 / 45'} };
+      if (hi < 107) return { light:{cls:'c-caution',txt:'45 / 15'},     moderate:{cls:'c-warn',   txt:'30 / 30'},     heavy:{cls:'c-high',  txt:'15 / 45'},     vh:{cls:'c-stop',  txt:'DANGER!'} };
+      if (hi < 122) return { light:{cls:'c-warn',   txt:'30 / 30'},     moderate:{cls:'c-high',   txt:'15 / 45'},     heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
+      return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
+    }
+    // Acclimatized (NIOSH REL-derived)
+    if (hi < 80)  return { light:{cls:'c-na',     txt:'—'},           moderate:{cls:'c-na',     txt:'—'},           heavy:{cls:'c-na',    txt:'—'},           vh:{cls:'c-na',    txt:'—'} };
+    if (hi < 91)  return { light:{cls:'c-safe',   txt:'CONT'},  moderate:{cls:'c-safe',   txt:'CONT'},  heavy:{cls:'c-low',   txt:'CONT*'}, vh:{cls:'c-caution',txt:'45 / 15'} };
+    if (hi < 103) return { light:{cls:'c-low',    txt:'CONT*'}, moderate:{cls:'c-caution',txt:'45 / 15'},     heavy:{cls:'c-warn',  txt:'30 / 30'},     vh:{cls:'c-high',  txt:'15 / 45'} };
+    if (hi < 115) return { light:{cls:'c-caution',txt:'45 / 15'},     moderate:{cls:'c-warn',   txt:'30 / 30'},     heavy:{cls:'c-high',  txt:'15 / 45'},     vh:{cls:'c-stop',  txt:'DANGER!'} };
+    if (hi < 131) return { light:{cls:'c-warn',   txt:'30 / 30'},     moderate:{cls:'c-high',   txt:'15 / 45'},     heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
+    return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
+  }
+
+  function setActivity(level) {
+    currentLevel = level;
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
+    document.querySelectorAll('.hi-cell[data-hi]').forEach(cell => {
+      const hi = parseInt(cell.dataset.hi);
+      const tier = getTierForHI(hi);
+      const rec  = tier[level];
+      cell.className = 'hi-cell ' + rec.cls;
+      cell.innerHTML = hiDisplay(hi) + '<br><small>' + rec.txt + '</small>';
+    });
+  }
+
+  function setTrhUnit(unit) {
+    trhUnit = unit;
+    document.getElementById('btn-trh-f').classList.toggle('active', unit === 'F');
+    document.getElementById('btn-trh-c').classList.toggle('active', unit === 'C');
+    const header = document.getElementById('trh-header');
+    if (header) header.innerHTML = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
+    trhRows.forEach(row => {
+      const cell = document.getElementById(row.id);
+      if (cell) cell.innerHTML = unit === 'C' ? row.c : row.f;
+    });
+    setActivity(currentLevel);
+  }
+
+  function setWorkerStatus(status) {
+    workerStatus = status;
+    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
+    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
+    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
+    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
+    const trhWarn = document.getElementById('trh-unacclim-warning');
+    if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
+    WRC.set({ workerStatus: status });
+    setActivity(currentLevel);
+    const inner = document.getElementById('def-panels-inner');
+    if (inner) { inner.style.display = 'none'; updateLayout(); }
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const defPanel = document.getElementById('def-panels-container');
+    const main     = document.querySelector('main');
+    const fixedH   = fixedTop.offsetHeight;
+    defPanel.style.top = fixedH + 'px';
+    const defH = defPanel.offsetHeight;
+    main.style.paddingTop = (fixedH + defH + 16) + 'px';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = WRC.get();
+    const status = s.workerStatus || 'acclimatized';
+    const act    = s.activity    || 'moderate';
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const actLabel = s.activityLabel || 'Moderate Work';
+    const bbActivity = document.getElementById('back-bar-activity');
+    if (bbActivity) bbActivity.textContent = (emojiMap[act] || '') + ' ' + actLabel;
+
+    // Set initial activity button
+    currentLevel = act;
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === act));
+
+    // Apply worker status without collapsing panel
+    workerStatus = status;
+    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
+    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
+    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
+    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
+    const trhWarn = document.getElementById('trh-unacclim-warning');
+    if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
+
+    setActivity(act);
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+</body>
+</html>
