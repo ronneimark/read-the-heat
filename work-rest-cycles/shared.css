@@ -37,7 +37,7 @@
     background: var(--navy);
   }
   header {
-    background: var(--navy) url("images/indoor-background-8x1.jpg") center / cover no-repeat;
+    background: #D50032;
     height: 191px;
     padding: 0;
     display: flex;
