@@ -2204,6 +2204,10 @@
 
   // Initialize — data is loaded asynchronously from JSON files
   initData();
+  // Apply layout immediately so fixed header doesn't cover launcher content
+  // before the async data resolves (can't wait for initData's rAF)
+  requestAnimationFrame(updateLayout);
+  window.addEventListener('resize', updateLayout);
 
 </script>
 
