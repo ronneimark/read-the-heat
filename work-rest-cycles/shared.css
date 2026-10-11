@@ -135,16 +135,17 @@
   .strip-btn:active { transform: translateY(1px); border-bottom-width: 1px; }
   .strip-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-  /* ── BREADCRUMB PILLS (selected items in blue strip) ── */
+  /* ── BREADCRUMB PILLS (selected items in blue strip, always centered) ── */
   .wrc-breadcrumbs {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 4px;
-    flex: 1;
-    justify-content: center;
-    overflow: hidden;
-    min-width: 0;
+    white-space: nowrap;
   }
+  /* selected pill — clickable, full opacity */
   .wrc-crumb {
     display: inline-flex;
     align-items: center;
@@ -158,21 +159,31 @@
     white-space: nowrap;
     text-decoration: none;
     transition: background 0.12s;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .wrc-crumb:hover {
     background: rgba(255,255,255,0.24);
     border-color: rgba(255,255,255,0.38);
   }
-  .wrc-crumb-sep {
-    color: rgba(255,255,255,0.38);
+  /* pending pill — not yet selected, grayed out */
+  .wrc-crumb-pending {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px dashed rgba(255,255,255,0.18);
+    border-radius: 20px;
+    color: rgba(255,255,255,0.30);
     font-size: 11px;
-    flex-shrink: 0;
+    font-weight: 500;
+    font-style: italic;
+    white-space: nowrap;
   }
-  /* hide breadcrumbs on very small screens to avoid overflow */
-  @media (max-width: 480px) {
+  .wrc-crumb-sep {
+    color: rgba(255,255,255,0.28);
+    font-size: 11px;
+  }
+  /* hide breadcrumbs on very small screens to avoid overlap */
+  @media (max-width: 540px) {
     .wrc-breadcrumbs { display: none; }
   }
 

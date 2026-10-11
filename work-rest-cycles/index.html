@@ -82,6 +82,7 @@
       document.querySelectorAll('.ls1-sector-btn').forEach(b =>
         b.classList.toggle('selected', b.dataset.sector === prev));
     }
+    buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
   });

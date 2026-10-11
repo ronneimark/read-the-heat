@@ -129,30 +129,39 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeActivityModal();
 });
 
-// ── Breadcrumb pills (blue strip, centered) ──
+// ── Breadcrumb pills (blue strip, always centered, all 3 always shown) ──
 function buildBreadcrumbs() {
   const container = document.getElementById('wrc-breadcrumbs');
   if (!container) return;
 
   const crumbs = [];
 
+  // Sector
   const sector = WRC.val('sector', null);
   if (sector && sectorLabels[sector]) {
-    crumbs.push({ label: sectorLabels[sector], href: 'index.html' });
+    crumbs.push({ label: sectorLabels[sector], href: 'index.html', selected: true });
+  } else {
+    crumbs.push({ label: 'Industry', selected: false });
   }
 
+  // Activity level
   const actLevel = WRC.val('activity', null);
   const actLabel = WRC.val('activityLabel', null);
   if (actLevel && actLabel) {
     const emoji = activityEmoji[actLevel] || '';
-    crumbs.push({ label: (emoji ? emoji + ' ' : '') + actLabel, href: 'activity.html' });
+    crumbs.push({ label: (emoji ? emoji + ' ' : '') + actLabel, href: 'activity.html', selected: true });
+  } else {
+    crumbs.push({ label: 'Activity Level', selected: false });
   }
 
+  // Worker status
   const workerStatus = WRC.val('workerStatus', null);
   if (workerStatus) {
     const statusLabel = workerStatus === 'acclimated' ? '✅ Acclimated' :
                         workerStatus === 'new' ? '🟠 New / Unacclimated' : workerStatus;
-    crumbs.push({ label: statusLabel, href: 'acclimatization.html' });
+    crumbs.push({ label: statusLabel, href: 'acclimatization.html', selected: true });
+  } else {
+    crumbs.push({ label: 'Acclimatization', selected: false });
   }
 
   container.innerHTML = '';
@@ -164,12 +173,19 @@ function buildBreadcrumbs() {
       sep.textContent = '›';
       container.appendChild(sep);
     }
-    const a = document.createElement('a');
-    a.className = 'wrc-crumb';
-    a.href = c.href;
-    a.textContent = c.label;
-    a.title = 'Change: ' + c.label.replace(/^[^\w]+/, '');
-    container.appendChild(a);
+    if (c.selected) {
+      const a = document.createElement('a');
+      a.className = 'wrc-crumb';
+      a.href = c.href;
+      a.textContent = c.label;
+      a.title = 'Change selection';
+      container.appendChild(a);
+    } else {
+      const span = document.createElement('span');
+      span.className = 'wrc-crumb-pending';
+      span.textContent = c.label;
+      container.appendChild(span);
+    }
   });
 }
 
