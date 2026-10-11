@@ -1319,6 +1319,67 @@
     .header-logo-img { max-height: 60px; max-width: 58%; }
   }
 
+  /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
+  @media (max-width: 640px) {
+    /* Body scrolls instead of clipping */
+    body { overflow: auto !important; }
+    html { height: auto; }
+
+    /* Main launcher wrapper: release fixed height */
+    main, #launcher { height: auto !important; overflow: visible !important; }
+
+    /* Each launcher screen: let content flow */
+    #ls1, #ls2, #ls3 {
+      overflow: visible !important;
+      height: auto !important;
+      flex: none !important;
+    }
+
+    /* Sector grid: release clip, single column */
+    .ls1-sector-grid {
+      overflow: visible !important;
+      height: auto !important;
+      flex: none !important;
+      grid-template-columns: 1fr !important;
+      grid-template-rows: none !important;
+      grid-auto-rows: auto !important;
+    }
+    .ls1-sector-btn { min-height: 90px; font-size: 14px; }
+
+    /* Activity review grid: single column, scrollable panels */
+    .ls2-review-grid {
+      grid-template-columns: 1fr !important;
+      overflow: visible !important;
+      height: auto !important;
+      flex: none !important;
+      min-height: 0 !important;
+    }
+    .ls2-level-panel {
+      overflow: visible !important;
+      height: auto !important;
+    }
+
+    /* Acclimatization wrap + cards: flow freely */
+    .ls3-acclim-wrap {
+      overflow: visible !important;
+      flex: none !important;
+      height: auto !important;
+    }
+    .ls3-acclim-cards {
+      grid-template-columns: 1fr !important;
+      flex: none !important;
+      min-height: 0 !important;
+    }
+
+    /* Method cards (measurement.html): single column */
+    .method-cards {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Continue button row: stack on mobile */
+    .ls-continue-row { flex-wrap: wrap; }
+  }
+
   /* ── Banner strip: compact on very narrow screens ── */
   @media (max-width: 480px) {
     .wrc-banner-strip-inner { gap: 4px; padding: 4px 8px; }
