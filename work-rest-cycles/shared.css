@@ -94,14 +94,14 @@
   .header-logo-img {
     height: auto;
     width: auto;
-    max-height: 56px;
+    max-height: 202px; /* 240px header − ~19px top/bottom (~0.5cm each) */
     max-width: 75%;
     object-fit: contain;
     display: block;
   }
   @media (max-width: 600px) {
     .header-logo-img {
-      max-height: 44px;
+      max-height: 152px;
       max-width: 65%;
     }
   }
