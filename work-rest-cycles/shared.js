@@ -24,7 +24,7 @@ const activityEmoji = {
 
 // ── Sector labels ──
 const sectorLabels = {
-  restaurant:     '🍽 Restaurant / Kitchen',
+  restaurant:     '🍽 Restaurant',
   warehouse:      '📦 Warehouse',
   factory:        '🏭 Manufacturing',
   healthcare:     '🏥 Healthcare',
