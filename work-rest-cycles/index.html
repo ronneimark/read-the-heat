@@ -103,8 +103,9 @@
 
   /* ── LAUNCHER ── */
   #launcher {
-    padding: 0 32px 40px;
-    max-width: 1200px;
+    padding: 0;
+    max-width: none;
+    width: 100%;
   }
   .launcher-intro {
     font-size: 15px;
@@ -326,37 +327,43 @@
 
   .ls2-topbar {
     flex-shrink: 0;
-    padding: 14px 24px 10px;
+    padding: 10px 12px 8px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 16px;
   }
   .ls2-sector-banner {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: #EEF1F8;
     border: 1.5px solid var(--navy);
-    border-radius: 8px;
-    padding: 8px 14px;
+    border-radius: 6px;
+    padding: 5px 12px;
     font-size: 13px;
+    flex-shrink: 0;
   }
   .ls2-sector-banner strong { color: var(--navy); font-weight: 700; }
   .ls2-sector-banner span { color: var(--subtext); font-size: 12px; }
+  .ls2-topbar-hint {
+    font-size: 12px;
+    color: var(--subtext);
+    flex: 1;
+  }
 
   .ls2-review-grid {
     flex: 1;
     min-height: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 0 24px 16px;
+    gap: 8px;
+    padding: 0 12px 12px;
     overflow: hidden;
   }
   .ls2-level-panel {
     background: #fff;
     border: 2px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -369,23 +376,23 @@
   }
   .ls2-level-header {
     background: var(--panel-accent, var(--navy));
-    padding: 10px 14px 8px;
+    padding: clamp(8px,1.2vh,14px) clamp(10px,1.2vw,18px);
     flex-shrink: 0;
   }
   .ls2-level-name {
-    font-size: 15px;
+    font-size: clamp(13px, 1.4vw, 18px);
     font-weight: 800;
     color: #fff;
     display: block;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
   }
   .ls2-level-kcal {
-    font-size: 11px;
-    color: rgba(255,255,255,0.75);
+    font-size: clamp(10px, 0.85vw, 13px);
+    color: rgba(255,255,255,0.78);
     font-weight: 600;
   }
   .ls2-level-body {
-    padding: 10px 14px 12px;
+    padding: clamp(8px,1vh,14px) clamp(10px,1.1vw,16px) clamp(10px,1.2vh,16px);
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -393,45 +400,45 @@
     overflow: hidden;
   }
   .ls2-level-desc {
-    font-size: 12px;
+    font-size: clamp(11px, 0.9vw, 13px);
     color: var(--subtext);
     line-height: 1.5;
-    margin-bottom: 8px;
+    margin-bottom: clamp(6px, 0.8vh, 12px);
     flex-shrink: 0;
   }
   .ls2-level-examples-label {
-    font-size: 10px;
+    font-size: clamp(9px, 0.7vw, 11px);
     font-weight: 700;
-    letter-spacing: 0.9px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
     color: var(--mid);
-    margin-bottom: 4px;
+    margin-bottom: clamp(3px, 0.4vh, 6px);
     flex-shrink: 0;
   }
   .ls2-level-examples {
-    font-size: 12px;
+    font-size: clamp(11px, 0.9vw, 13px);
     color: var(--subtext);
-    line-height: 1.6;
+    line-height: clamp(1.4, 2.2vh, 1.8);
     padding-left: 14px;
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
+    overflow: hidden;
     margin: 0;
   }
   .ls2-level-none {
-    font-size: 12px;
+    font-size: clamp(11px, 0.9vw, 13px);
     color: var(--subtext);
     font-style: italic;
   }
   .ls2-select-btn {
-    margin-top: 10px;
+    margin-top: clamp(8px, 1vh, 14px);
     width: 100%;
-    padding: 9px 0;
+    padding: clamp(8px, 1vh, 12px) 0;
     border: 2px solid var(--panel-accent, var(--navy));
     background: #fff;
     color: var(--panel-accent, var(--navy));
     border-radius: 7px;
-    font-size: 13px;
+    font-size: clamp(12px, 1vw, 14px);
     font-weight: 700;
     cursor: pointer;
     transition: background 0.13s, color 0.13s;
@@ -445,7 +452,7 @@
     background: var(--panel-accent, var(--navy));
     color: #fff;
   }
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     .ls2-review-grid {
       grid-template-columns: repeat(2, 1fr);
       overflow-y: auto;
@@ -990,17 +997,15 @@
   <div class="launcher-screen" id="ls2">
 
     <div class="ls2-topbar">
-      <div style="display:flex;align-items:center;gap:16px">
-        <button class="ls-back" onclick="showScreen1()" style="margin:0">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Change industry
-        </button>
-        <span style="font-size:12px;color:var(--subtext)">Select the activity level that best matches the work being done. <strong style="color:var(--text)">When in doubt, choose the higher category.</strong></span>
-      </div>
+      <button class="ls-back" onclick="showScreen1()" style="margin:0;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Change industry
+      </button>
       <div class="ls2-sector-banner">
         <strong id="ls2-sector-name">Restaurant / Kitchen</strong>
         <span>— sample activities by exertion level</span>
       </div>
+      <span class="ls2-topbar-hint">Select the level that best matches. <strong style="color:var(--text)">When in doubt, choose higher.</strong></span>
     </div>
 
     <div class="ls2-review-grid">
