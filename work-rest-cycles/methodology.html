@@ -13,16 +13,14 @@
 <div id="fixed-top">
   <div class="hazard-bar"></div>
   <header>
-    <div class="header-btns">
-      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
-      <button class="header-3d-btn" onclick="window.location.href='methodology.html'" style="font-weight:700">📚 Methodology</button>
-    </div>
+    <a class="home-btn" href="index.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 2.5 11.1a.9.9 0 0 0 1.15 1.38L5 11.35V20a1 1 0 0 0 1 1h4.5v-6h3v6H18a1 1 0 0 0 1-1v-8.65l1.35 1.13a.9.9 0 0 0 1.15-1.38Z"/></svg></a>
     <div class="header-logo-wrap">
       <picture><source media="(max-width: 600px)" srcset="images/logo-mobile.png"><img class="header-logo-img" src="images/logo-desktop.png" alt="Read the Heat and Take a Beat"></picture>
     </div>
   </header>
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
+      <button class="strip-btn" style="position:absolute;left:50%;transform:translateX(-50%)" onclick="window.location.href='methodology.html'">📚 Methodology</button>
       <!-- language selector injected here by lang-switch.js -->
     </div>
   </div>

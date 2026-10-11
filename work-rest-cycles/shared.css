@@ -45,14 +45,44 @@
     position: relative;
     overflow: hidden;
   }
-  .header-btns {
+  /* ── HOME BUTTON (navy circle in red banner, non-index pages) ── */
+  .home-btn {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%),
+                linear-gradient(180deg, #1a3a8f 0%, #001E62 75%);
+    border: 2px solid #fff;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25), 0 3px 0 #001247, 0 5px 0 #000a26, 0 8px 12px rgba(0,0,0,0.35);
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.12s ease, translate 0.12s ease, box-shadow 0.12s ease;
     flex-shrink: 0;
-    align-self: center;
-    z-index: 1;
   }
+  .home-btn:hover {
+    translate: 0 -2px;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 55%),
+                linear-gradient(180deg, #24459c 0%, #0a2870 75%);
+    box-shadow: inset 0 -3px 0 #D50032, 0 5px 0 #001247, 0 7px 0 #000a26, 0 12px 16px rgba(0,0,0,0.38);
+  }
+  .home-btn:active {
+    translate: 0 3px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 0 #001247, 0 2px 0 #000a26, 0 3px 5px rgba(0,0,0,0.3);
+  }
+  .home-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .home-btn svg { width: 26px; height: 26px; fill: #fff; display: block; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35)); }
+  @media (max-width: 600px) {
+    .home-btn { width: 36px; height: 36px; left: 10px; }
+    .home-btn svg { width: 20px; height: 20px; }
+  }
+
   .header-logo-wrap {
     position: absolute;
     inset: 0;
@@ -64,49 +94,46 @@
   .header-logo-img {
     height: 100%;
     width: auto;
-    max-width: 100%;
+    max-width: 80%;
     object-fit: contain;
     display: block;
-    padding: 16px 0;
+    padding: 32px 0;
   }
   @media (max-width: 600px) {
     .header-logo-img {
-      padding: 10px 0;
+      padding: 20px 0;
+      max-width: 70%;
     }
   }
-  .header-3d-btn {
+
+  /* ── STRIP BUTTONS (methodology + activity guide in blue band) ── */
+  .strip-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    background: linear-gradient(180deg, #001E62 0%, #00123d 100%);
-    border: 1.5px solid #2a4a9a;
-    border-bottom: 3px solid #000820;
-    border-radius: 8px;
+    gap: 5px;
+    padding: 4px 14px;
+    background: linear-gradient(180deg, #c8001e 0%, #A50028 100%);
+    border: 1.5px solid #ff4060;
+    border-bottom: 2px solid #700018;
+    border-radius: 20px;
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     letter-spacing: 0.2px;
-    text-shadow: 0 1px 2px rgba(0,0,20,0.50);
-    box-shadow: 0 2px 6px rgba(0,18,62,0.30), inset 0 1px 0 rgba(255,255,255,0.10);
-    transition: transform 0.1s, box-shadow 0.1s;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.35);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.12);
+    transition: background 0.12s, transform 0.1s, box-shadow 0.1s;
     white-space: nowrap;
+    text-decoration: none;
   }
-  .header-3d-btn:hover {
-    background: linear-gradient(180deg, #0a2878 0%, #001454 100%);
+  .strip-btn:hover {
+    background: linear-gradient(180deg, #d9001f 0%, #b80030 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,18,62,0.38), inset 0 1px 0 rgba(255,255,255,0.10);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
   }
-  .header-3d-btn:active {
-    transform: translateY(1px);
-    border-bottom-width: 1px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  }
-  .header-3d-btn:focus-visible {
-    outline: 3px solid #fff;
-    outline-offset: 2px;
-  }
+  .strip-btn:active { transform: translateY(1px); border-bottom-width: 1px; }
+  .strip-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
   /* ── ACTIVITY GUIDE MODAL ── */
   #activity-modal-overlay {
@@ -165,6 +192,7 @@
     border-bottom: 1px solid rgba(255,255,255,0.12);
   }
   .wrc-banner-strip-inner {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 5px 20px;
