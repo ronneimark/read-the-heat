@@ -65,7 +65,96 @@
     font-size: 13px;
     color: #FEF8E0;
     line-height: 1.55;
+    margin-bottom: 14px;
   }
+  .header-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .header-3d-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: linear-gradient(180deg, #ffffff22 0%, #00000018 100%);
+    border: 1.5px solid rgba(255,255,255,0.55);
+    border-bottom: 3px solid rgba(0,0,0,0.30);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.18);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .header-3d-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .header-3d-btn:active {
+    transform: translateY(1px);
+    border-bottom-width: 1px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.20);
+  }
+  .header-3d-btn:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  /* ── ACTIVITY GUIDE MODAL ── */
+  #activity-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,10,30,0.60);
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #activity-modal-overlay.open { display: flex; }
+  #activity-modal {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 820px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    padding: 32px 36px 36px;
+    position: relative;
+  }
+  #activity-modal h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  #activity-modal .modal-sub {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--mid);
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .modal-close-btn:hover { background: var(--warm-white); color: var(--navy); }
+  .modal-close-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; }
 
   /* ── BACK BAR (shown when inside a section) ── */
   .back-bar {
@@ -415,16 +504,16 @@
     flex-shrink: 0;
   }
   .ls2-level-name {
-    font-size: 17px;             /* consistent across all 4 panels */
+    font-size: 19px;             /* bumped up, bolder presence */
     font-weight: 800;
     color: #fff;                 /* #fff on each accent ≥ 4.5:1 ✓ */
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .ls2-level-kcal {
-    font-size: 12px;
+    font-size: 13px;
     color: #fff;                 /* full white — opacity variants fail on lighter accents */
-    font-weight: 500;
+    font-weight: 600;
     opacity: 0.9;                /* slight softening, still ≥ 4.5:1 on all accent colors */
   }
   .ls2-level-body {
@@ -436,11 +525,13 @@
     overflow: hidden;
   }
   .ls2-level-desc {
-    font-size: 13px;             /* consistent across all 4 panels */
-    color: var(--subtext);       /* #484F58 on #fff = 7.1:1 ✓ */
+    font-size: 15px;             /* larger, bolder reading */
+    font-weight: 600;
+    color: var(--navy);          /* stronger than subtext for emphasis */
     line-height: 1.5;
-    margin-bottom: 10px;
-    flex-shrink: 0;
+    margin-bottom: 12px;
+    /* fixed height = 3 lines of text, so all 4 cards align examples at same y */
+    min-height: 6.75em;          /* 15px × 1.5 × 3 lines ≈ accommodates longest desc */
   }
   .ls2-level-examples-label {
     font-size: 11px;
@@ -449,7 +540,6 @@
     text-transform: uppercase;
     color: var(--mid);           /* #243f8a on #fff = 9.4:1 ✓ */
     margin-bottom: 5px;
-    flex-shrink: 0;
   }
   .ls2-level-examples {
     font-size: 13px;             /* consistent across all 4 panels */
@@ -954,6 +1044,10 @@
   <div class="header-inner">
     <h1>Indoor Heat Stress: Work-Rest Cycles Explained</h1>
     <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
+    <div class="header-btns">
+      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+      <button class="header-3d-btn" onclick="showTab('about')">📚 Methodology</button>
+    </div>
   </div>
 </header>
 
@@ -1030,8 +1124,6 @@
     </div>
 
     <div class="ls1-footer">
-      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
-      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
     </div>
   </div><!-- /ls1 -->
 
@@ -1162,8 +1254,7 @@
       </button>
     </div>
     <div class="launcher-secondary">
-      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
-      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
+      <button class="secondary-link" onclick="showTab('about')">📚 Methodology</button>
     </div>
   </div><!-- /ls3 -->
 
@@ -1961,99 +2052,49 @@
 </div><!-- /tab-about -->
 
 
-<!-- ══════════════════════════════════════════════════════════ -->
-<!--  TAB 5: ACTIVITY LEVELS                                   -->
-<!-- ══════════════════════════════════════════════════════════ -->
-<!-- ══════════════════════════════════════════════════════════ -->
-<!--  TAB 5: ACTIVITY LEVELS                                   -->
-<!-- ══════════════════════════════════════════════════════════ -->
-<div id="tab-activity" class="tab-panel">
-
-  <div class="section-label">Select Industry / Sector</div>
-  <div class="sector-btns">
-    <button class="sector-btn active" onclick="setSector('restaurant')" id="sbtn-restaurant">🍽 Restaurant / Kitchen</button>
-    <button class="sector-btn" onclick="setSector('warehouse')" id="sbtn-warehouse">📦 Warehouse / Distribution</button>
-    <button class="sector-btn" onclick="setSector('factory')" id="sbtn-factory">🏭 Factory / Manufacturing</button>
-    <button class="sector-btn" onclick="setSector('healthcare')" id="sbtn-healthcare">🏥 Healthcare</button>
-    <button class="sector-btn" onclick="setSector('retail')" id="sbtn-retail">🛍 Retail</button>
-    <button class="sector-btn" onclick="setSector('construction')" id="sbtn-construction">🏗 Indoor Construction</button>
-    <button class="sector-btn" onclick="setSector('laundry')" id="sbtn-laundry">🧺 Laundry / Linen Services</button>
-    <button class="sector-btn" onclick="setSector('foodprocessing')" id="sbtn-foodprocessing">🍳 Food Processing / Meatpacking</button>
-    <button class="sector-btn" onclick="setSector('publicsafety')" id="sbtn-publicsafety">🚒 Public Safety / Emergency Services</button>
-    <button class="sector-btn" onclick="setSector('buildingservices')" id="sbtn-buildingservices">🛠 Janitorial / Housekeeping</button>
-    <button class="sector-btn" onclick="setSector('agriculture')" id="sbtn-agriculture">🌾 Agriculture (Indoor / Greenhouse)</button>
-    <button class="sector-btn" onclick="setSector('garment')" id="sbtn-garment">✂️ Garment / Textile</button>
-    <button class="sector-btn" onclick="setSector('childcare')" id="sbtn-childcare">🧒 Childcare</button>
-  </div>
-
-  <div class="activity-grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
-    <div class="activity-card" style="border-top-color:#2E7D32">
-      <h4>🟢 Light Work &nbsp;<span style="font-weight:400;color:var(--subtext)">~150–200 kcal/hr (116–233 W)</span></h4>
-      <p style="font-size:14px;margin-bottom:8px">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
-      <ul class="sector-examples" id="ex-light" style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--subtext)">
-      </ul>
-    </div>
-    <div class="activity-card" style="border-top-color:#F57F17">
-      <h4>🟡 Moderate Work &nbsp;<span style="font-weight:400;color:var(--subtext)">~200–350 kcal/hr (233–407 W)</span></h4>
-      <p style="font-size:14px;margin-bottom:8px">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching. Note: NIOSH examples treat ~200–300 kcal/h as moderate; ACGIH defines Moderate as 180–300 kcal/h.</p>
-      <ul class="sector-examples" id="ex-moderate" style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--subtext)">
-      </ul>
-    </div>
-    <div class="activity-card" style="border-top-color:#E65100">
-      <h4>🔴 Heavy Work &nbsp;<span style="font-weight:400;color:var(--subtext)">~350–500 kcal/hr (407–581 W)</span></h4>
-      <p style="font-size:14px;margin-bottom:8px">Sustained vigorous exertion — heavy lifting, carrying, shoveling, or pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
-      <ul class="sector-examples" id="ex-heavy" style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--subtext)">
-      </ul>
-    </div>
-    <div class="activity-card" style="border-top-color:#880E4F">
-      <h4>⛔ Very Heavy Work &nbsp;<span style="font-weight:400;color:var(--subtext)">>500 kcal/hr (>581 W)</span></h4>
-      <p style="font-size:14px;margin-bottom:8px">Maximum sustained physical exertion with whole-body effort. Common in several indoor industries — not rare. Requires the greatest heat stress precautions at any elevated temperature.</p>
-      <ul class="sector-examples" id="ex-vh" style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--subtext)">
-      </ul>
-      <div class="note-box warn-note" style="margin-top:12px;font-size:14px">
-        At very heavy exertion, core body temperature rises rapidly. Even moderate heat exposure (WBGT above 26°C / 79°F) can pose serious risk for unacclimatized or medically vulnerable workers. Continuous work without scheduled rest should be avoided above approximately 25°C WBGT (77°F) per NIOSH Recommended Exposure Limit (REL).
-      </div>
-    </div>
-  </div>
-
-  <hr class="divider">
-  <div class="section-label">Determining Activity Level in Practice</div>
-  <div class="table-wrap">
-    <table class="qa-table" style="table-layout:fixed;width:100%">
-      <thead>
-        <tr>
-          <th class="left" style="width:28%">Question</th>
-          <th style="width:72%;text-align:left">Guidance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="label">A job involves different tasks throughout a shift. Which activity level applies?</td>
-          <td style="text-align:left;font-size:14px">Use the highest activity level sustained for 30 continuous minutes or more. If the work alternates between light and heavy tasks in short bursts, moderate is usually appropriate. When in doubt, use the more protective (higher) category — this is especially important when advocating for a worker or assessing risk.</td>
-        </tr>
-        <tr>
-          <td class="label">The physical demands of the job seem harder than the category description suggests. How can the actual metabolic rate be determined?</td>
-          <td style="text-align:left;font-size:14px">Workers and their representatives have the right to request that metabolic rate be properly assessed. <strong>ISO 8996:2021</strong> provides a systematic measurement and estimation approach. The <strong>2024 Adult Compendium of Physical Activities</strong> (Herrmann et al., 2024) offers an extensive task-level MET/kcal reference. Heart rate monitoring during actual work is the most practical field method and can be done by a worker, union rep, or industrial hygienist. If a job is being assessed at a lower activity level than the work actually involves, that directly affects how protective the recommended work-rest schedule is.</td>
-        </tr>
-        <tr>
-          <td class="label">Does wearing PPE, a uniform, or other special clothing affect the heat stress risk?</td>
-          <td style="text-align:left;font-size:14px">Yes — significantly. PPE does not change metabolic rate, but impermeable clothing severely limits sweat evaporation and increases physiological heat strain. Apply WBGT clothing correction factors (e.g., +10–11°C WBGT equivalent for fully impermeable suits). Workers in coveralls, chemical suits, or heavy protective gear face substantially greater heat illness risk at any given temperature than workers in standard clothing — and standard work-rest schedules based on WBGT alone will underestimate that risk.</td>
-        </tr>
-        <tr>
-          <td class="label">What should happen when very heavy work is being done in high heat — and a work-rest schedule alone doesn't seem sufficient?</td>
-          <td style="text-align:left;font-size:14px">At WBGT above ~26–27°C (79–81°F), very heavy continuous work is hazardous for all workers regardless of acclimatization status. Work-rest cycles are a control measure of last resort — engineering controls (spot cooling, task rotation, mechanization of the heaviest tasks) should be the first line of response. Workers and advocates can raise this under OSHA's General Duty Clause if engineering controls are feasible but not implemented. A certified industrial hygienist (CIH) can document the hazard and recommend controls.</td>
-        </tr>
-        <tr>
-          <td class="label">How can a worker or union representative identify the correct activity level for a job — especially if they disagree with how management has categorized it?</td>
-          <td style="text-align:left;font-size:14px">Start by comparing the job tasks to the sector examples and general descriptions on this tab. If the actual work involves more exertion than the assigned category suggests, document it — video of the tasks, heart rate data, or a written task description. Workers have the right under OSHA Section 8(a) to request an inspection, and unions can raise misclassification of physical demand in collective bargaining or grievance procedures. A worker center, occupational health clinic, or industrial hygienist can provide independent assessment.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-</div><!-- /tab-activity -->
-
 </main>
+
+<!-- ── ACTIVITY LEVEL GUIDE MODAL ── -->
+<div id="activity-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title" onclick="if(event.target===this)closeActivityModal()">
+  <div id="activity-modal">
+    <button class="modal-close-btn" onclick="closeActivityModal()" aria-label="Close">✕</button>
+    <h2 id="activity-modal-title">Determining Activity Level in Practice</h2>
+    <p class="modal-sub">How to identify the correct work category — including when tasks vary, when PPE adds risk, and when to push back on a misclassification.</p>
+
+    <div class="table-wrap">
+      <table class="qa-table" style="table-layout:fixed;width:100%">
+        <thead>
+          <tr>
+            <th class="left" style="width:30%">Question</th>
+            <th style="width:70%;text-align:left">Guidance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">A job involves different tasks throughout a shift. Which activity level applies?</td>
+            <td style="text-align:left;font-size:14px">Use the highest activity level sustained for 30 continuous minutes or more. If the work alternates between light and heavy tasks in short bursts, moderate is usually appropriate. When in doubt, use the more protective (higher) category — this is especially important when advocating for a worker or assessing risk.</td>
+          </tr>
+          <tr>
+            <td class="label">The physical demands of the job seem harder than the category description suggests. How can the actual metabolic rate be determined?</td>
+            <td style="text-align:left;font-size:14px">Workers and their representatives have the right to request that metabolic rate be properly assessed. <strong>ISO 8996:2021</strong> provides a systematic measurement and estimation approach. The <strong>2024 Adult Compendium of Physical Activities</strong> (Herrmann et al., 2024) offers an extensive task-level MET/kcal reference. Heart rate monitoring during actual work is the most practical field method and can be done by a worker, union rep, or industrial hygienist. If a job is being assessed at a lower activity level than the work actually involves, that directly affects how protective the recommended work-rest schedule is.</td>
+          </tr>
+          <tr>
+            <td class="label">Does wearing PPE, a uniform, or other special clothing affect the heat stress risk?</td>
+            <td style="text-align:left;font-size:14px">Yes — significantly. PPE does not change metabolic rate, but impermeable clothing severely limits sweat evaporation and increases physiological heat strain. Apply WBGT clothing correction factors (e.g., +10–11°C WBGT equivalent for fully impermeable suits). Workers in coveralls, chemical suits, or heavy protective gear face substantially greater heat illness risk at any given temperature than workers in standard clothing — and standard work-rest schedules based on WBGT alone will underestimate that risk.</td>
+          </tr>
+          <tr>
+            <td class="label">What should happen when very heavy work is being done in high heat — and a work-rest schedule alone doesn't seem sufficient?</td>
+            <td style="text-align:left;font-size:14px">At WBGT above ~26–27°C (79–81°F), very heavy continuous work is hazardous for all workers regardless of acclimatization status. Work-rest cycles are a control measure of last resort — engineering controls (spot cooling, task rotation, mechanization of the heaviest tasks) should be the first line of response. Workers and advocates can raise this under OSHA's General Duty Clause if engineering controls are feasible but not implemented. A certified industrial hygienist (CIH) can document the hazard and recommend controls.</td>
+          </tr>
+          <tr>
+            <td class="label">How can a worker or union representative identify the correct activity level for a job — especially if they disagree with how management has categorized it?</td>
+            <td style="text-align:left;font-size:14px">Start by comparing the job tasks to the activity level descriptions in Step 2. If the actual work involves more exertion than the assigned category suggests, document it — video of the tasks, heart rate data, or a written task description. Workers have the right under OSHA Section 8(a) to request an inspection, and unions can raise misclassification of physical demand in collective bargaining or grievance procedures. A worker center, occupational health clinic, or industrial hygienist can provide independent assessment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── Worker status ──
@@ -2243,6 +2284,19 @@
     activity:  'Activity Level Guide',
     about:     'Sources & Methodology',
   };
+
+  function openActivityModal() {
+    document.getElementById('activity-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.querySelector('#activity-modal .modal-close-btn').focus();
+  }
+  function closeActivityModal() {
+    document.getElementById('activity-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeActivityModal();
+  });
 
   function showTab(name) {
     document.getElementById('launcher').style.display = 'none';
