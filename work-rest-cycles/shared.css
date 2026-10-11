@@ -124,9 +124,12 @@
     align-items: center;
     background: #fff;
     border-radius: 5px;
-    border: 3px solid #D50032;
+    border: none;
     padding: 3px 7px;
-    box-shadow: 0 2px 0 #9a0000, 0 3px 7px rgba(40,0,10,0.35);
+    /* ring drawn outside border-box so border-radius is fully respected */
+    box-shadow: 0 0 0 3px #D50032,
+                0 2px 0 3px #9a0000,
+                0 3px 7px rgba(40,0,10,0.35);
     flex-shrink: 0;
     text-decoration: none;
   }
@@ -1280,6 +1283,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    background: #D50032; /* prevents warm-white body from bleeding through subpixel gaps */
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
   }
   #def-panels-container {
