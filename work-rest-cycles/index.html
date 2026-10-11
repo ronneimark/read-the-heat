@@ -185,6 +185,7 @@
   /* ── LAUNCHER SCREEN SYSTEM ── */
   .launcher-screen { display: none; }
   .launcher-screen.active { display: block; }
+  /* Screen 1 overrides to flex (handled by #ls1 rule) */
 
   /* ── SHARED: HEADINGS / BACK LINKS ── */
   .ls-heading {
@@ -240,26 +241,79 @@
   .ls-hint { font-size: 13px; color: var(--subtext); }
 
   /* ── SCREEN 1: INDUSTRY / SECTOR PICKER ── */
-  .ls1-sector-grid {
+  #ls1 {
+    display: none;
+    flex-direction: column;
+    /* height set by updateLayout via JS */
+    overflow: hidden;
+  }
+  #ls1.active {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 28px;
+  }
+  .ls1-header {
+    flex-shrink: 0;
+    padding: 20px 24px 12px;
+  }
+  .ls1-sector-grid {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 10px;
+    padding: 0 24px 16px;
+    overflow: hidden;
   }
   .ls1-sector-btn {
     border: 2px solid var(--border);
     background: #fff;
-    color: var(--subtext);
-    font-size: 14px;
+    color: var(--text);
+    font-size: 13px;
     font-weight: 600;
-    padding: 9px 16px;
-    border-radius: 22px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.13s;
-    white-space: nowrap;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    line-height: 1.3;
+    text-align: center;
   }
-  .ls1-sector-btn:hover { border-color: var(--navy); color: var(--navy); }
-  .ls1-sector-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .ls1-sector-btn .ls1-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  .ls1-sector-btn:hover {
+    border-color: var(--navy);
+    background: #f0f3fb;
+    color: var(--navy);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0,30,98,0.12);
+  }
+  .ls1-sector-btn.selected {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    transform: scale(1.03);
+    box-shadow: 0 4px 14px rgba(0,30,98,0.25);
+  }
+  .ls1-footer {
+    flex-shrink: 0;
+    padding: 10px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  @media (max-width: 480px) {
+    .ls1-sector-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .ls1-sector-btn .ls1-icon { font-size: 22px; }
+    .ls1-sector-btn { font-size: 12px; }
+  }
 
   /* ── SCREEN 2: ACTIVITY LEVEL REVIEW + SELECT ── */
   .ls2-sector-banner {
@@ -872,38 +926,28 @@
 
   <!-- ── Screen 1: Industry / Sector ────────────────────────── -->
   <div class="launcher-screen active" id="ls1">
-    <p class="ls-heading">What industry or sector is this work in?</p>
-    <p class="ls-sub">
-      Choose the industry that best matches the workplace. You'll review sample
-      activities for that sector — organized by exertion level — to identify
-      the correct category before looking up work-rest cycles.
-    </p>
+    <div class="ls1-header">
+      <p class="ls-heading" style="margin-bottom:4px">What industry is this work in?</p>
+      <p class="ls-sub" style="margin:0">Pick the sector that best fits — you'll review sample activities to confirm the exertion level.</p>
+    </div>
 
     <div class="ls1-sector-grid" id="ls1-sector-grid">
-      <button class="ls1-sector-btn" data-sector="restaurant"      onclick="ls1SelectSector('restaurant')"      >🍽 Restaurant / Kitchen</button>
-      <button class="ls1-sector-btn" data-sector="warehouse"       onclick="ls1SelectSector('warehouse')"       >📦 Warehouse / Distribution</button>
-      <button class="ls1-sector-btn" data-sector="factory"         onclick="ls1SelectSector('factory')"         >🏭 Factory / Manufacturing</button>
-      <button class="ls1-sector-btn" data-sector="healthcare"      onclick="ls1SelectSector('healthcare')"      >🏥 Healthcare</button>
-      <button class="ls1-sector-btn" data-sector="retail"          onclick="ls1SelectSector('retail')"          >🛍 Retail</button>
-      <button class="ls1-sector-btn" data-sector="construction"    onclick="ls1SelectSector('construction')"    >🏗 Indoor Construction</button>
-      <button class="ls1-sector-btn" data-sector="laundry"         onclick="ls1SelectSector('laundry')"         >🧺 Laundry / Linen Services</button>
-      <button class="ls1-sector-btn" data-sector="foodprocessing"  onclick="ls1SelectSector('foodprocessing')"  >🍳 Food Processing / Meatpacking</button>
-      <button class="ls1-sector-btn" data-sector="publicsafety"    onclick="ls1SelectSector('publicsafety')"    >🚒 Public Safety / Emergency Services</button>
-      <button class="ls1-sector-btn" data-sector="buildingservices" onclick="ls1SelectSector('buildingservices')">🛠 Janitorial / Housekeeping</button>
-      <button class="ls1-sector-btn" data-sector="agriculture"     onclick="ls1SelectSector('agriculture')"     >🌾 Agriculture (Indoor / Greenhouse)</button>
-      <button class="ls1-sector-btn" data-sector="garment"         onclick="ls1SelectSector('garment')"         >✂️ Garment / Textile</button>
-      <button class="ls1-sector-btn" data-sector="childcare"       onclick="ls1SelectSector('childcare')"       >🧒 Childcare</button>
+      <button class="ls1-sector-btn" data-sector="restaurant"       onclick="ls1SelectSector('restaurant')"      ><span class="ls1-icon">🍽</span>Restaurant / Kitchen</button>
+      <button class="ls1-sector-btn" data-sector="warehouse"        onclick="ls1SelectSector('warehouse')"       ><span class="ls1-icon">📦</span>Warehouse / Distribution</button>
+      <button class="ls1-sector-btn" data-sector="factory"          onclick="ls1SelectSector('factory')"         ><span class="ls1-icon">🏭</span>Factory / Manufacturing</button>
+      <button class="ls1-sector-btn" data-sector="healthcare"       onclick="ls1SelectSector('healthcare')"      ><span class="ls1-icon">🏥</span>Healthcare</button>
+      <button class="ls1-sector-btn" data-sector="retail"           onclick="ls1SelectSector('retail')"          ><span class="ls1-icon">🛍</span>Retail</button>
+      <button class="ls1-sector-btn" data-sector="construction"     onclick="ls1SelectSector('construction')"    ><span class="ls1-icon">🏗</span>Indoor Construction</button>
+      <button class="ls1-sector-btn" data-sector="laundry"          onclick="ls1SelectSector('laundry')"         ><span class="ls1-icon">🧺</span>Laundry / Linen Services</button>
+      <button class="ls1-sector-btn" data-sector="foodprocessing"   onclick="ls1SelectSector('foodprocessing')"  ><span class="ls1-icon">🍳</span>Food Processing / Meatpacking</button>
+      <button class="ls1-sector-btn" data-sector="publicsafety"     onclick="ls1SelectSector('publicsafety')"    ><span class="ls1-icon">🚒</span>Public Safety / Emergency</button>
+      <button class="ls1-sector-btn" data-sector="buildingservices" onclick="ls1SelectSector('buildingservices')"><span class="ls1-icon">🛠</span>Janitorial / Housekeeping</button>
+      <button class="ls1-sector-btn" data-sector="agriculture"      onclick="ls1SelectSector('agriculture')"     ><span class="ls1-icon">🌾</span>Agriculture / Greenhouse</button>
+      <button class="ls1-sector-btn" data-sector="garment"          onclick="ls1SelectSector('garment')"         ><span class="ls1-icon">✂️</span>Garment / Textile</button>
+      <button class="ls1-sector-btn" data-sector="childcare"        onclick="ls1SelectSector('childcare')"       ><span class="ls1-icon">🧒</span>Childcare</button>
     </div>
 
-    <div class="ls-continue-row">
-      <button class="ls-continue-btn" id="ls1-continue" onclick="showScreen2()" disabled style="opacity:0.45;cursor:not-allowed">
-        Review activities for this sector
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <span class="ls-hint" id="ls1-hint">Select an industry above</span>
-    </div>
-
-    <div class="launcher-secondary">
+    <div class="ls1-footer">
       <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
       <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
     </div>
@@ -2029,13 +2073,9 @@
   function ls1SelectSector(key) {
     globalSector = key;
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.sector === key));
-    const btn  = document.getElementById('ls1-continue');
-    const hint = document.getElementById('ls1-hint');
-    btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.cursor  = 'pointer';
-    hint.textContent = (sectorLabels[key] || key) + ' selected';
+      b.classList.toggle('selected', b.dataset.sector === key));
+    // Auto-advance after a brief moment so the selection is visible
+    setTimeout(showScreen2, 220);
   }
 
   // ── Screen 2: show activity review for chosen sector ──
@@ -2105,11 +2145,16 @@
     const defPanel = document.getElementById('def-panels-container');
     const main     = document.querySelector('main');
     const launcher = document.getElementById('launcher');
+    const ls1      = document.getElementById('ls1');
     const fixedH   = fixedTop.offsetHeight;
     defPanel.style.top = fixedH + 'px';
     const defH = (defPanel.style.display !== 'none') ? defPanel.offsetHeight : 0;
     main.style.paddingTop = (fixedH + defH + 16) + 'px';
-    launcher.style.paddingTop = (fixedH + 24) + 'px';
+    // Launcher: no top padding (ls1 manages its own internal padding)
+    launcher.style.paddingTop = '0';
+    // Screen 1 fills exactly one viewport height, padded below the fixed header
+    ls1.style.paddingTop = (fixedH + 16) + 'px';
+    ls1.style.height     = window.innerHeight + 'px';
   }
 
   const sectionTitles = {
