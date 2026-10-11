@@ -1,10 +1,10 @@
 # On every push to main, rsyncs work-rest-cycles/ → public_html/work-rest-cycles/
-# over SSH. No cPanel Git involved.
+# over SSH using key-based auth.
 #
 # Repository secrets required:
-#   CPANEL_HOST      SSH hostname (same as cPanel host, e.g. server123.greengeeks.net)
-#   CPANEL_USERNAME  cPanel / SSH username
-#   FTP_PASSWORD     cPanel account password (used here as the SSH password)
+#   CPANEL_HOST       SSH hostname (e.g. server123.greengeeks.net)
+#   CPANEL_USERNAME   cPanel / SSH username
+#   SSH_PRIVATE_KEY   Ed25519 private key (public key authorized in cPanel SSH Key Manager)
 name: Deploy to GreenGeeks via SSH
 
 on:
@@ -20,16 +20,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install sshpass
-        run: sudo apt-get install -y sshpass
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 2222 "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Deploy via rsync over SSH
         env:
           SSH_HOST: ${{ secrets.CPANEL_HOST }}
           SSH_USER: ${{ secrets.CPANEL_USERNAME }}
-          SSH_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          sshpass -p "$SSH_PASS" rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -p 2222" \
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2222" \
             work-rest-cycles/ \
             "$SSH_USER@$SSH_HOST:public_html/work-rest-cycles/"
