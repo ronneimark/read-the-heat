@@ -182,50 +182,184 @@
     margin-bottom: 12px;
   }
 
-  /* ── LAUNCHER ACTIVITY BUTTONS ── */
-  .launcher-activity-btns {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-    margin-bottom: 28px;
-  }
-  .launcher-act-btn {
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    cursor: pointer;
-    text-align: left;
-    transition: border-color 0.13s, box-shadow 0.13s;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .launcher-act-btn:hover {
-    border-color: var(--navy);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .launcher-act-btn.active {
-    border-color: var(--navy);
-    background: #EEF1F8;
-    box-shadow: 0 0 0 2px var(--navy);
-  }
-  .launcher-act-btn .act-icon { font-size: 18px; margin-bottom: 4px; }
-  .launcher-act-btn .act-name {
-    font-size: 14px;
+  /* ── LAUNCHER SCREEN SYSTEM ── */
+  .launcher-screen { display: none; }
+  .launcher-screen.active { display: block; }
+
+  /* ── SCREEN 1: EXPANDED ACTIVITY SELECTION CARDS ── */
+  .ls1-heading {
+    font-size: 20px;
     font-weight: 700;
     color: var(--navy);
+    margin-bottom: 6px;
   }
-  .launcher-act-btn .act-eg {
+  .ls1-sub {
+    font-size: 14px;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+  .ls1-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .ls1-card {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 20px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .ls1-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--card-accent, var(--navy));
+  }
+  .ls1-card:hover {
+    border-color: var(--card-accent, var(--navy));
+    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  }
+  .ls1-card.selected {
+    border-color: var(--card-accent, var(--navy));
+    box-shadow: 0 0 0 3px var(--card-accent, var(--navy));
+    background: #F4F6FB;
+  }
+  .ls1-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .ls1-card-name {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .ls1-card-kcal {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--subtext);
+  }
+  .ls1-card-desc {
+    font-size: 13px;
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .ls1-card-examples {
     font-size: 12px;
     color: var(--subtext);
-    line-height: 1.4;
+    padding-left: 16px;
+    line-height: 1.8;
+    margin: 0;
   }
+  .ls1-card-check {
+    display: none;
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--card-accent, var(--navy));
+    color: #fff;
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+  .ls1-card.selected .ls1-card-check { display: flex; }
+
+  .ls1-continue-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .ls1-continue-btn {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.13s, transform 0.1s;
+  }
+  .ls1-continue-btn:hover {
+    background: var(--slate);
+    transform: translateX(2px);
+  }
+  .ls1-hint {
+    font-size: 13px;
+    color: var(--subtext);
+  }
+
+  /* ── SCREEN 2: METHOD SELECTION ── */
+  .ls2-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--mid);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 18px;
+    transition: color 0.12s;
+  }
+  .ls2-back:hover { color: var(--navy); }
+  .ls2-activity-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #EEF1F8;
+    border: 1.5px solid var(--navy);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+  }
+  .ls2-activity-banner-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--mid);
+    flex-shrink: 0;
+  }
+  .ls2-activity-selected {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .ls2-activity-desc {
+    font-size: 13px;
+    color: var(--subtext);
+    margin-left: auto;
+  }
+
+  /* ── LAUNCHER ACTIVITY BUTTONS (kept for back-bar sync) ── */
+  .launcher-act-btn { display: none; } /* hidden — replaced by ls1-cards */
 
   .launcher-secondary {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    margin-top: 20px;
   }
   .secondary-link {
     background: none;
@@ -692,71 +826,149 @@
 
 <!-- ══ CARD LAUNCHER ══════════════════════════════════════════ -->
 <div id="launcher">
-  <p class="launcher-intro">
-    Select your <strong>activity level</strong>, then choose a heat stress measurement method to look up work-rest cycles.
-    All tables are based on NIOSH (2016) recommendations for indoor environments with no direct solar load.
-  </p>
 
-  <!-- Step 1: Activity level -->
-  <div class="launcher-step">
-    <div class="launcher-step-label">Step 1 — Activity Level</div>
-    <div class="launcher-activity-btns">
-      <button class="launcher-act-btn" data-level="light"    onclick="setActivityGlobal('light')">
-        <span class="act-icon">🟢</span>
-        <span class="act-name">Light</span>
-        <span class="act-eg">Desk work, standing, slow walking</span>
+  <!-- ── Screen 1: Activity Level Selection ─────────────────── -->
+  <div class="launcher-screen active" id="ls1">
+    <p class="ls1-heading">What is the activity level of this work?</p>
+    <p class="ls1-sub">
+      The correct activity level determines which work-rest schedule applies.
+      <strong>Using the wrong category can underestimate heat illness risk.</strong>
+      Select the level that best describes the primary physical demand of the job.
+    </p>
+
+    <div class="ls1-cards">
+
+      <!-- Light -->
+      <button class="ls1-card" style="--card-accent:#2E7D32" data-level="light" onclick="selectActivity('light')">
+        <div class="ls1-card-check">✓</div>
+        <div class="ls1-card-header">
+          <span class="ls1-card-name">🟢 Light</span>
+          <span class="ls1-card-kcal">~150–200 kcal/hr</span>
+        </div>
+        <p class="ls1-card-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
+        <ul class="ls1-card-examples">
+          <li>Order taking, cashier, reception</li>
+          <li>Light assembly, stock monitoring</li>
+          <li>Guard station, slow patrolling</li>
+          <li>Desk-based administrative work</li>
+        </ul>
       </button>
-      <button class="launcher-act-btn active" data-level="moderate" onclick="setActivityGlobal('moderate')">
-        <span class="act-icon">🟡</span>
-        <span class="act-name">Moderate</span>
-        <span class="act-eg">Sustained walking, lifting, kitchen line</span>
+
+      <!-- Moderate -->
+      <button class="ls1-card" style="--card-accent:#F57F17" data-level="moderate" onclick="selectActivity('moderate')">
+        <div class="ls1-card-check">✓</div>
+        <div class="ls1-card-header">
+          <span class="ls1-card-name">🟡 Moderate</span>
+          <span class="ls1-card-kcal">~200–350 kcal/hr</span>
+        </div>
+        <p class="ls1-card-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
+        <ul class="ls1-card-examples">
+          <li>Kitchen line cook, prep cook</li>
+          <li>Warehouse order picking</li>
+          <li>Pushing loaded carts, light stocking</li>
+          <li>Sustained cleaning or mopping</li>
+        </ul>
       </button>
-      <button class="launcher-act-btn" data-level="heavy"    onclick="setActivityGlobal('heavy')">
-        <span class="act-icon">🔴</span>
-        <span class="act-name">Heavy</span>
-        <span class="act-eg">Shoveling, carrying loads, strenuous labor</span>
+
+      <!-- Heavy -->
+      <button class="ls1-card" style="--card-accent:#E65100" data-level="heavy" onclick="selectActivity('heavy')">
+        <div class="ls1-card-check">✓</div>
+        <div class="ls1-card-header">
+          <span class="ls1-card-name">🔴 Heavy</span>
+          <span class="ls1-card-kcal">~350–500 kcal/hr</span>
+        </div>
+        <p class="ls1-card-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
+        <ul class="ls1-card-examples">
+          <li>Carrying heavy boxes up stairs</li>
+          <li>Shoveling, strenuous material handling</li>
+          <li>Heavy kitchen work (fryer stations, rapid prep)</li>
+          <li>Strenuous food processing or meatpacking</li>
+        </ul>
       </button>
-      <button class="launcher-act-btn" data-level="vh"       onclick="setActivityGlobal('vh')">
-        <span class="act-icon">⛔</span>
-        <span class="act-name">Very Heavy</span>
-        <span class="act-eg">Maximum effort, pick-and-shovel, fast carrying</span>
+
+      <!-- Very Heavy -->
+      <button class="ls1-card" style="--card-accent:#880E4F" data-level="vh" onclick="selectActivity('vh')">
+        <div class="ls1-card-check">✓</div>
+        <div class="ls1-card-header">
+          <span class="ls1-card-name">⛔ Very Heavy</span>
+          <span class="ls1-card-kcal">&gt;500 kcal/hr</span>
+        </div>
+        <p class="ls1-card-desc">Maximum sustained physical exertion with whole-body effort. <strong>More common than many realize.</strong> Requires the greatest heat precautions at any elevated temperature.</p>
+        <ul class="ls1-card-examples">
+          <li>Pick-and-shovel, maximum-effort carrying</li>
+          <li>Firefighter or emergency responder in gear</li>
+          <li>Highly strenuous continuous labor</li>
+          <li>High-speed strenuous food processing</li>
+        </ul>
+      </button>
+
+    </div><!-- /ls1-cards -->
+
+    <div class="ls1-continue-row">
+      <button class="ls1-continue-btn" id="ls1-continue" onclick="showScreen2()">
+        Continue to measurement method
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="ls1-hint" id="ls1-hint">Select an activity level above</span>
+    </div>
+
+    <div class="launcher-secondary" style="margin-top:12px">
+      <button class="secondary-link" onclick="showTab('activity')">
+        📋 Full Activity Level Guide
+      </button>
+      <button class="secondary-link" onclick="showTab('about')">
+        📚 Sources &amp; Methodology
       </button>
     </div>
-  </div>
+  </div><!-- /ls1 -->
 
-  <!-- Step 2: Method cards -->
-  <div class="launcher-step">
-    <div class="launcher-step-label">Step 2 — Measurement Method</div>
-  </div>
-  <div class="method-cards">
-    <button class="method-card" style="--card-accent:#001E62" onclick="showTab('wbgt')">
-      <span class="method-card-icon">🌡️</span>
-      <h3>WBGT</h3>
-      <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
-      <span class="method-card-tag">Requires WBGT meter</span>
+  <!-- ── Screen 2: Measurement Method ───────────────────────── -->
+  <div class="launcher-screen" id="ls2">
+    <button class="ls2-back" onclick="showScreen1()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Change activity level
     </button>
-    <button class="method-card" style="--card-accent:#1a3a8f" onclick="showTab('tempRH')">
-      <span class="method-card-icon">💧</span>
-      <h3>Temperature + Humidity</h3>
-      <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
-      <span class="method-card-tag">Thermometer + hygrometer</span>
-    </button>
-    <button class="method-card" style="--card-accent:#E05C2C" onclick="showTab('heatIndex')">
-      <span class="method-card-icon">🔥</span>
-      <h3>Heat Index</h3>
-      <p>The "feels like" temperature combining heat and humidity. Widely used in OSHA guidance. No specialized instrument needed.</p>
-      <span class="method-card-tag">No special instrument</span>
-    </button>
-  </div>
-  <div class="launcher-secondary">
-    <button class="secondary-link" onclick="showTab('activity')">
-      📋 Activity Level Guide
-    </button>
-    <button class="secondary-link" onclick="showTab('about')">
-      📚 Sources &amp; Methodology
-    </button>
-  </div>
-</div>
+
+    <div class="ls2-activity-banner">
+      <span class="ls2-activity-banner-label">Activity Level</span>
+      <span class="ls2-activity-selected" id="ls2-activity-label">🟡 Moderate</span>
+      <span class="ls2-activity-desc" id="ls2-activity-kcal">~200–350 kcal/hr</span>
+    </div>
+
+    <div class="launcher-step">
+      <div class="launcher-step-label">Choose a measurement method</div>
+    </div>
+    <div class="method-cards">
+      <button class="method-card" style="--card-accent:#001E62" onclick="showTab('wbgt')">
+        <span class="method-card-icon">🌡️</span>
+        <h3>WBGT</h3>
+        <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
+        <span class="method-card-tag">Requires WBGT meter</span>
+      </button>
+      <button class="method-card" style="--card-accent:#1a3a8f" onclick="showTab('tempRH')">
+        <span class="method-card-icon">💧</span>
+        <h3>Temperature + Humidity</h3>
+        <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
+        <span class="method-card-tag">Thermometer + hygrometer</span>
+      </button>
+      <button class="method-card" style="--card-accent:#E05C2C" onclick="showTab('heatIndex')">
+        <span class="method-card-icon">🔥</span>
+        <h3>Heat Index</h3>
+        <p>The "feels like" temperature combining heat and humidity. Widely used in OSHA guidance. No specialized instrument needed.</p>
+        <span class="method-card-tag">No special instrument</span>
+      </button>
+    </div>
+    <div class="launcher-secondary">
+      <button class="secondary-link" onclick="showTab('activity')">
+        📋 Full Activity Level Guide
+      </button>
+      <button class="secondary-link" onclick="showTab('about')">
+        📚 Sources &amp; Methodology
+      </button>
+    </div>
+  </div><!-- /ls2 -->
+
+</div><!-- /launcher -->
 
 <main>
 
@@ -1708,19 +1920,59 @@
     return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
   }
 
-  let globalActivity = 'moderate';
+  let globalActivity = null; // null = no selection yet
+
+  const activityMeta = {
+    light:    { label: '🟢 Light',      kcal: '~150–200 kcal/hr' },
+    moderate: { label: '🟡 Moderate',   kcal: '~200–350 kcal/hr' },
+    heavy:    { label: '🔴 Heavy',      kcal: '~350–500 kcal/hr' },
+    vh:       { label: '⛔ Very Heavy', kcal: '>500 kcal/hr' },
+  };
+
+  function selectActivity(level) {
+    globalActivity = level;
+    // Update ls1 card selection UI
+    document.querySelectorAll('.ls1-card').forEach(c =>
+      c.classList.toggle('selected', c.dataset.level === level));
+    // Show continue button active state
+    const hint = document.getElementById('ls1-hint');
+    const meta = activityMeta[level];
+    if (hint) hint.textContent = meta.label + ' selected';
+    setActivity(level);
+  }
+
+  function showScreen2() {
+    if (!globalActivity) { selectActivity('moderate'); }
+    // Update the activity banner
+    const meta = activityMeta[globalActivity];
+    document.getElementById('ls2-activity-label').textContent = meta.label;
+    document.getElementById('ls2-activity-kcal').textContent = meta.kcal;
+    // Switch screens
+    document.getElementById('ls1').classList.remove('active');
+    document.getElementById('ls2').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showScreen1() {
+    document.getElementById('ls2').classList.remove('active');
+    document.getElementById('ls1').classList.add('active');
+    window.scrollTo(0, 0);
+  }
 
   function setActivityGlobal(level) {
-    globalActivity = level;
-    document.querySelectorAll('.launcher-act-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.level === level));
-    setActivity(level);
+    selectActivity(level);
   }
 
   function setActivity(level) {
     globalActivity = level;
     document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
-    document.querySelectorAll('.launcher-act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
+    document.querySelectorAll('.ls1-card').forEach(c => c.classList.toggle('selected', c.dataset.level === level));
+    // Update back-bar activity badge
+    const actLabels2 = { light: '🟢 Light', moderate: '🟡 Moderate', heavy: '🔴 Heavy', vh: '⛔ Very Heavy' };
+    const actBadgeEl = document.getElementById('back-bar-activity');
+    if (actBadgeEl && actBadgeEl.style.display !== 'none') {
+      actBadgeEl.textContent = actLabels2[level] || '';
+    }
     document.querySelectorAll('.hi-cell[data-hi]').forEach(cell => {
       const hi = parseInt(cell.dataset.hi);
       const tier = getTierForHI(hi);
@@ -1759,6 +2011,9 @@
     backBar.classList.add('visible');
     document.getElementById('back-bar-title').textContent = sectionTitles[name] || '';
     const actLabels = { light: '🟢 Light', moderate: '🟡 Moderate', heavy: '🔴 Heavy', vh: '⛔ Very Heavy' };
+    // If opening a chart tab and no activity selected yet, default to moderate
+    const chartTabs0 = ['wbgt', 'tempRH', 'heatIndex'];
+    if (chartTabs0.includes(name) && !globalActivity) { selectActivity('moderate'); }
     const chartTabs2 = ['wbgt', 'tempRH', 'heatIndex'];
     const actBadge = document.getElementById('back-bar-activity');
     actBadge.textContent = chartTabs2.includes(name) ? actLabels[globalActivity] || '' : '';
@@ -1779,6 +2034,9 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('back-bar').classList.remove('visible');
     document.getElementById('def-panels-container').style.display = 'none';
+    // Return to screen 1 so user re-engages with activity level
+    document.getElementById('ls2').classList.remove('active');
+    document.getElementById('ls1').classList.add('active');
     window.scrollTo(0, 0);
     requestAnimationFrame(updateLayout);
   }
