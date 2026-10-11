@@ -527,19 +527,23 @@
     background: var(--panel-accent, var(--navy));
     padding: 12px 16px 10px;
     flex-shrink: 0;
+    text-align: center;
   }
   .ls2-level-name {
-    font-size: 19px;             /* bumped up, bolder presence */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 22px;
     font-weight: 800;
-    color: #fff;                 /* #fff on each accent ≥ 4.5:1 ✓ */
+    color: #fff;
     display: block;
     margin-bottom: 4px;
+    letter-spacing: 0.1px;
   }
   .ls2-level-kcal {
-    font-size: 13px;
-    color: #fff;                 /* full white — opacity variants fail on lighter accents */
-    font-weight: 600;
-    opacity: 0.9;                /* slight softening, still ≥ 4.5:1 on all accent colors */
+    font-size: 11px;
+    color: #fff;
+    font-weight: 500;
+    opacity: 0.85;
+    display: block;
   }
   .ls2-level-body {
     padding: 12px 16px 14px;
@@ -1179,7 +1183,7 @@
       <!-- Light -->
       <div class="ls2-level-panel" style="--panel-accent:#2E7D32">
         <div class="ls2-level-header">
-          <span class="ls2-level-name">🟢 Light Work</span>
+          <span class="ls2-level-name">Light Work</span>
           <span class="ls2-level-kcal">~150–200 kcal/hr (116–233 W)</span>
         </div>
         <div class="ls2-level-body">
@@ -1196,7 +1200,7 @@
       <!-- Moderate -->
       <div class="ls2-level-panel" style="--panel-accent:#F57F17">
         <div class="ls2-level-header">
-          <span class="ls2-level-name">🟡 Moderate Work</span>
+          <span class="ls2-level-name">Moderate Work</span>
           <span class="ls2-level-kcal">~200–350 kcal/hr (233–407 W)</span>
         </div>
         <div class="ls2-level-body">
@@ -1213,7 +1217,7 @@
       <!-- Heavy -->
       <div class="ls2-level-panel" style="--panel-accent:#E65100">
         <div class="ls2-level-header">
-          <span class="ls2-level-name">🔴 Heavy Work</span>
+          <span class="ls2-level-name">Heavy Work</span>
           <span class="ls2-level-kcal">~350–500 kcal/hr (407–581 W)</span>
         </div>
         <div class="ls2-level-body">
@@ -1230,7 +1234,7 @@
       <!-- Very Heavy -->
       <div class="ls2-level-panel" style="--panel-accent:#880E4F">
         <div class="ls2-level-header">
-          <span class="ls2-level-name">⛔ Very Heavy Work</span>
+          <span class="ls2-level-name">Very Heavy Work</span>
           <span class="ls2-level-kcal">&gt;500 kcal/hr (&gt;581 W)</span>
         </div>
         <div class="ls2-level-body">
