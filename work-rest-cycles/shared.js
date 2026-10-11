@@ -129,6 +129,50 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeActivityModal();
 });
 
+// ── Breadcrumb pills (blue strip, centered) ──
+function buildBreadcrumbs() {
+  const container = document.getElementById('wrc-breadcrumbs');
+  if (!container) return;
+
+  const crumbs = [];
+
+  const sector = WRC.val('sector', null);
+  if (sector && sectorLabels[sector]) {
+    crumbs.push({ label: sectorLabels[sector], href: 'index.html' });
+  }
+
+  const actLevel = WRC.val('activity', null);
+  const actLabel = WRC.val('activityLabel', null);
+  if (actLevel && actLabel) {
+    const emoji = activityEmoji[actLevel] || '';
+    crumbs.push({ label: (emoji ? emoji + ' ' : '') + actLabel, href: 'activity.html' });
+  }
+
+  const workerStatus = WRC.val('workerStatus', null);
+  if (workerStatus) {
+    const statusLabel = workerStatus === 'acclimated' ? '✅ Acclimated' :
+                        workerStatus === 'new' ? '🟠 New / Unacclimated' : workerStatus;
+    crumbs.push({ label: statusLabel, href: 'acclimatization.html' });
+  }
+
+  container.innerHTML = '';
+  crumbs.forEach(function(c, i) {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'wrc-crumb-sep';
+      sep.setAttribute('aria-hidden', 'true');
+      sep.textContent = '›';
+      container.appendChild(sep);
+    }
+    const a = document.createElement('a');
+    a.className = 'wrc-crumb';
+    a.href = c.href;
+    a.textContent = c.label;
+    a.title = 'Change: ' + c.label.replace(/^[^\w]+/, '');
+    container.appendChild(a);
+  });
+}
+
 // ── updateLayout (generic — pages override as needed) ──
 function updateLayout() {
   const fixedTop = document.getElementById('fixed-top');

@@ -20,7 +20,8 @@
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
       <button class="strip-btn" onclick="openActivityModal()">📋 Activity Guide</button>
-      <button class="strip-btn" style="position:absolute;left:50%;transform:translateX(-50%)" onclick="window.location.href='methodology.html'">📚 Methodology</button>
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+      <button class="strip-btn" onclick="window.location.href='methodology.html'">📚 Methodology</button>
       <!-- language selector injected here by lang-switch.js -->
     </div>
   </div>
@@ -153,6 +154,7 @@
     });
     const nameEl = document.getElementById('ls2-sector-name');
     if (nameEl) nameEl.textContent = sectorLabels[sector] || sector;
+    buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
   }
