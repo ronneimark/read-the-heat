@@ -56,43 +56,130 @@
     color: #FEF8E0;
   }
 
-  /* ── TABS ── */
-  .tab-bar {
-    display: flex;
+  /* ── BACK BAR (shown when inside a section) ── */
+  .back-bar {
+    display: none;
+    align-items: center;
+    gap: 12px;
     background: var(--navy);
     padding: 0 24px;
-    gap: 3px;
-    border-bottom: none;
-    align-items: flex-end;
+    height: 44px;
   }
-  .tab-btn {
-    background: var(--slate);
+  .back-bar.visible { display: flex; }
+  .back-btn {
+    background: none;
     border: none;
-    border-radius: 6px 6px 0 0;
     color: #C8DCEB;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    padding: 11px 20px 10px;
     cursor: pointer;
-    letter-spacing: 0.2px;
-    border-top: 3px solid transparent;
-    border-left: 1px solid rgba(255,255,255,0.08);
-    border-right: 1px solid rgba(255,255,255,0.08);
-    transition: color 0.13s, background 0.13s;
-    position: relative;
-    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    transition: color 0.13s;
   }
-  .tab-btn:hover {
-    color: #fff;
-    background: #1a3a8f;
-  }
-  .tab-btn.active {
-    background: var(--warm-white);
-    color: var(--navy);
-    border-top-color: #E05C2C;
-    border-left-color: rgba(0,0,0,0.12);
-    border-right-color: rgba(0,0,0,0.12);
+  .back-btn:hover { color: #fff; }
+  .back-btn svg { flex-shrink: 0; }
+  .back-bar-title {
+    font-size: 13px;
     font-weight: 700;
+    color: #fff;
+    opacity: 0.7;
+  }
+
+  /* ── LAUNCHER ── */
+  #launcher {
+    padding: 0 32px 40px;
+    max-width: 1200px;
+  }
+  .launcher-intro {
+    font-size: 15px;
+    color: var(--subtext);
+    margin-bottom: 28px;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+  .launcher-intro strong { color: var(--navy); }
+  .method-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .method-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 22px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .method-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--card-accent, var(--navy));
+  }
+  .method-card:hover {
+    border-color: var(--card-accent, var(--navy));
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+  .method-card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .method-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .method-card p {
+    font-size: 13px;
+    color: var(--subtext);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .method-card-tag {
+    display: inline-block;
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--mid);
+    padding: 3px 10px;
+    letter-spacing: 0.3px;
+  }
+  .launcher-secondary {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .secondary-link {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    transition: border-color 0.13s, background 0.13s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .secondary-link:hover {
+    border-color: var(--navy);
+    background: #fff;
   }
 
   /* ── LAYOUT ── */
@@ -477,10 +564,10 @@
   }
 
   @media print {
-    .tab-bar, .toggle-row { display: none; }
+    .back-bar, #launcher, .toggle-row { display: none; }
     .tab-panel { display: block !important; page-break-before: always; }
     .tab-panel:first-child { page-break-before: auto; }
-    header { background: #1B2B3B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    header { background: #D50032 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 </head>
@@ -493,12 +580,12 @@
   <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
 </header>
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="showTab('activity', this)">Activity Levels</button>
-  <button class="tab-btn" onclick="showTab('wbgt', this)">WBGT (°C / °F)</button>
-  <button class="tab-btn" onclick="showTab('tempRH', this)">Temperature + Humidity</button>
-  <button class="tab-btn" onclick="showTab('heatIndex', this)">Heat Index</button>
-  <button class="tab-btn" onclick="showTab('about', this)">Sources & Notes</button>
+<div class="back-bar" id="back-bar">
+  <button class="back-btn" onclick="showLauncher()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Methods
+  </button>
+  <span class="back-bar-title" id="back-bar-title"></span>
 </div>
 </div><!-- /fixed-top -->
 
@@ -534,6 +621,42 @@
       <button class="status-btn active-acclim" id="btn-acclim"   onclick="setWorkerStatus('acclimatized')">✅ Acclimatized</button>
       <button class="status-btn"               id="btn-unacclim" onclick="setWorkerStatus('unacclimatized')">⚠ Unacclimatized</button>
     </div>
+  </div>
+</div>
+
+<!-- ══ CARD LAUNCHER ══════════════════════════════════════════ -->
+<div id="launcher">
+  <p class="launcher-intro">
+    Select a <strong>heat stress measurement method</strong> to look up work-rest cycles for your workplace conditions.
+    All tables are based on NIOSH (2016) recommendations for indoor environments with no direct solar load.
+  </p>
+  <div class="method-cards">
+    <button class="method-card" style="--card-accent:#001E62" onclick="showTab('wbgt')">
+      <span class="method-card-icon">🌡️</span>
+      <h3>WBGT</h3>
+      <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
+      <span class="method-card-tag">Requires WBGT meter</span>
+    </button>
+    <button class="method-card" style="--card-accent:#1a3a8f" onclick="showTab('tempRH')">
+      <span class="method-card-icon">💧</span>
+      <h3>Temperature + Humidity</h3>
+      <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
+      <span class="method-card-tag">Thermometer + hygrometer</span>
+    </button>
+    <button class="method-card" style="--card-accent:#E05C2C" onclick="showTab('heatIndex')">
+      <span class="method-card-icon">🔥</span>
+      <h3>Heat Index</h3>
+      <p>The "feels like" temperature combining heat and humidity. Widely used in OSHA guidance. No specialized instrument needed.</p>
+      <span class="method-card-tag">No special instrument</span>
+    </button>
+  </div>
+  <div class="launcher-secondary">
+    <button class="secondary-link" onclick="showTab('activity')">
+      📋 Activity Level Guide
+    </button>
+    <button class="secondary-link" onclick="showTab('about')">
+      📚 Sources &amp; Methodology
+    </button>
   </div>
 </div>
 
@@ -1335,7 +1458,7 @@
 <!-- ══════════════════════════════════════════════════════════ -->
 <!--  TAB 5: ACTIVITY LEVELS                                   -->
 <!-- ══════════════════════════════════════════════════════════ -->
-<div id="tab-activity" class="tab-panel active">
+<div id="tab-activity" class="tab-panel">
 
   <div class="section-label">Select Industry / Sector</div>
   <div class="sector-btns">
@@ -1503,23 +1626,47 @@
     const fixedTop = document.getElementById('fixed-top');
     const defPanel = document.getElementById('def-panels-container');
     const main     = document.querySelector('main');
+    const launcher = document.getElementById('launcher');
     const fixedH   = fixedTop.offsetHeight;
     defPanel.style.top = fixedH + 'px';
     const defH = (defPanel.style.display !== 'none') ? defPanel.offsetHeight : 0;
     main.style.paddingTop = (fixedH + defH + 16) + 'px';
+    launcher.style.paddingTop = (fixedH + 24) + 'px';
   }
 
-  function showTab(name, btn) {
+  const sectionTitles = {
+    wbgt:      'WBGT (°C / °F)',
+    tempRH:    'Temperature + Humidity',
+    heatIndex: 'Heat Index',
+    activity:  'Activity Level Guide',
+    about:     'Sources & Methodology',
+  };
+
+  function showTab(name) {
+    document.getElementById('launcher').style.display = 'none';
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
-    btn.classList.add('active');
+
+    const backBar = document.getElementById('back-bar');
+    backBar.classList.add('visible');
+    document.getElementById('back-bar-title').textContent = sectionTitles[name] || '';
+
     const chartTabs = ['wbgt', 'tempRH', 'heatIndex'];
     const container = document.getElementById('def-panels-container');
     container.style.display = chartTabs.includes(name) ? 'flex' : 'none';
     if (chartTabs.includes(name)) {
       document.getElementById('def-panels-inner').style.display = 'flex';
     }
+    window.scrollTo(0, 0);
+    requestAnimationFrame(updateLayout);
+  }
+
+  function showLauncher() {
+    document.getElementById('launcher').style.display = '';
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('back-bar').classList.remove('visible');
+    document.getElementById('def-panels-container').style.display = 'none';
+    window.scrollTo(0, 0);
     requestAnimationFrame(updateLayout);
   }
 
