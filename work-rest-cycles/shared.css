@@ -69,6 +69,11 @@
     display: block;
     padding: 16px 0;
   }
+  @media (max-width: 600px) {
+    .header-logo-img {
+      padding: 10px 0;
+    }
+  }
   .header-3d-btn {
     display: inline-flex;
     align-items: center;
