@@ -301,6 +301,34 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// ── Mobile table → card reflow ──
+// Adds data-mobile-label attributes to each tbody data cell so CSS can
+// render them as stacked cards on narrow screens.  Safe to call multiple
+// times; existing attributes are overwritten (handles unit-toggle updates).
+function initMobileTables() {
+  document.querySelectorAll('.table-wrap table:not(.qa-table)').forEach(function(table) {
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(function(th) {
+      headers.push(th.textContent.trim());
+    });
+    if (headers.length < 2) return;
+
+    table.querySelectorAll('tbody tr').forEach(function(row) {
+      const sublabel = row.querySelector('td.sublabel');
+      if (sublabel) {
+        row.classList.add('mobile-sublabel-row');
+        return;
+      }
+      const cells = row.querySelectorAll('td');
+      cells.forEach(function(cell, i) {
+        if (i > 0 && headers[i]) {
+          cell.setAttribute('data-mobile-label', headers[i]);
+        }
+      });
+    });
+  });
+}
+
 // ── Breadcrumb pills (blue strip, always centered, all 3 always shown) ──
 function buildBreadcrumbs() {
   const container = document.getElementById('wrc-breadcrumbs');
@@ -361,6 +389,25 @@ function buildBreadcrumbs() {
     a.title = c.selected ? 'Change selection' : 'Make a selection';
     container.appendChild(a);
   });
+
+  // Mobile step indicator — shown in place of breadcrumbs on narrow screens
+  let stepEl = document.getElementById('mobile-step-indicator');
+  if (!stepEl) {
+    stepEl = document.createElement('div');
+    stepEl.id = 'mobile-step-indicator';
+    // Insert before the breadcrumbs container so it sits at the left of the strip
+    container.parentNode.insertBefore(stepEl, container);
+  }
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const stepMap = {
+    'index.html': 1, '': 1,
+    'activity.html': 2,
+    'acclimatization.html': 3,
+    'measurement.html': 4,
+    'wbgt.html': 4, 'heat-index.html': 4, 'temp-humidity.html': 4,
+  };
+  const stepNum = stepMap[page] || 1;
+  stepEl.textContent = 'Step ' + stepNum + ' of 4';
 }
 
 // ── updateLayout (generic — pages override as needed) ──
@@ -378,3 +425,8 @@ function updateLayout() {
     main.style.paddingTop = (fixedH + defH + 16) + 'px';
   }
 }
+
+// ── Mobile table init (runs after DOM ready on all pages) ──
+document.addEventListener('DOMContentLoaded', function() {
+  initMobileTables();
+});

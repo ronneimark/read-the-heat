@@ -1309,6 +1309,171 @@
     flex-shrink: 0;
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     MOBILE RESPONSIVE  — all rules below use @media; desktop unchanged
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── Shorter header on phones ── */
+  @media (max-width: 600px) {
+    header { height: 140px; }
+    .header-tagline { display: none; }   /* reclaim vertical space */
+  }
+
+  /* ── Banner strip: compact on very narrow screens ── */
+  @media (max-width: 480px) {
+    .wrc-banner-strip-inner { gap: 4px; padding: 4px 8px; }
+    .strip-btn { font-size: 11px; padding: 3px 10px; }
+  }
+
+  /* ── Mobile step indicator (shown instead of breadcrumbs) ── */
+  #mobile-step-indicator {
+    display: none;  /* JS inserts; CSS shows on mobile */
+    color: rgba(255,255,255,0.90);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  @media (max-width: 540px) {
+    #mobile-step-indicator { display: inline-flex; align-items: center; }
+  }
+
+  /* ── Back bar: compact on phones ── */
+  @media (max-width: 480px) {
+    .back-bar { font-size: 11px; gap: 5px; padding: 5px 10px; }
+    .back-bar-activity { display: none; }
+    .back-btn { padding: 3px 8px; font-size: 11px; }
+  }
+
+  /* ── Touch targets ── */
+  button, a, .back-btn, .strip-btn, .home-btn,
+  .sector-card, .activity-card, .measure-card {
+    touch-action: manipulation;
+  }
+
+  /* ── Modals: better mobile sizing ── */
+  @media (max-width: 640px) {
+    #activity-modal, #methodology-modal {
+      padding: 20px 16px 24px;
+      max-height: 92vh;
+      border-radius: 10px;
+      -webkit-overflow-scrolling: touch;
+    }
+    #activity-modal-overlay,
+    #methodology-modal-overlay {
+      padding: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    #activity-modal h2, #methodology-modal h2 { font-size: 17px; }
+  }
+
+  /* ── Acclimatization schedule grid: single column on mobile ── */
+  @media (max-width: 580px) {
+    .acclim-visual > div[style*="grid-template-columns"] {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+  }
+
+  /* ── Work-rest tables → card layout on mobile ──
+     JS sets data-mobile-label on each td and adds .mobile-sublabel-row
+     to rows that hold a .sublabel cell. CSS does the reflow.          */
+  @media (max-width: 640px) {
+
+    /* Unwrap the scrollable shell — cards don't need horizontal scroll */
+    .table-wrap:has(table:not(.qa-table)) { overflow-x: visible; }
+
+    .table-wrap table:not(.qa-table) {
+      min-width: 0;
+      display: block;
+      width: 100%;
+    }
+    .table-wrap table:not(.qa-table) thead { display: none; }
+    .table-wrap table:not(.qa-table) tbody { display: block; }
+
+    /* Each data row becomes a card */
+    .table-wrap table:not(.qa-table) tbody tr:not(.mobile-sublabel-row) {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* Temperature range = card header */
+    .table-wrap table:not(.qa-table) td.label {
+      display: block;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 12px;
+      width: 100%;
+      text-align: left;
+      border-bottom: none;
+    }
+
+    /* Sublabel rows (notes between card groups) */
+    .table-wrap table:not(.qa-table) tbody tr.mobile-sublabel-row {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .table-wrap table:not(.qa-table) td.sublabel {
+      display: block;
+      font-size: 11px;
+      color: var(--subtext);
+      background: #f4f6fa;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-style: italic;
+      line-height: 1.45;
+      width: 100%;
+    }
+
+    /* Activity-level cells: label on left, value on right */
+    .table-wrap table:not(.qa-table) td[data-mobile-label] {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .table-wrap table:not(.qa-table) td[data-mobile-label]:last-child {
+      border-bottom: none;
+    }
+    .table-wrap table:not(.qa-table) td[data-mobile-label]::before {
+      content: attr(data-mobile-label);
+      font-size: 11px;
+      color: var(--subtext);
+      font-weight: 600;
+      min-width: 88px;
+      max-width: 88px;
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+
+    /* Mobile font sizes in table cells */
+    .table-wrap table:not(.qa-table) td { font-size: 12px; }
+  }
+
+  /* ── General mobile font polish ── */
+  @media (max-width: 480px) {
+    .section-label { font-size: 12px; }
+    .toggle-row { font-size: 12px; gap: 8px; }
+    .toggle button { font-size: 12px; padding: 4px 12px; }
+    .note-box { font-size: 12px; padding: 12px 14px; }
+    h2 { font-size: 18px; }
+    .desc { font-size: 13px; }
+  }
+
   @media print {
     .back-bar, #launcher, .toggle-row { display: none; }
     .tab-panel { display: block !important; page-break-before: always; }
