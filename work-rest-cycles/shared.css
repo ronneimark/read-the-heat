@@ -194,27 +194,26 @@
     background: #b8002a;
     border-color: rgba(255,255,255,0.50);
   }
-  /* pending pill — no selection yet, italicized white */
+  /* pending pill — no selection yet, red bg, italic white */
   .wrc-crumb-pending {
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
-    background: rgba(255,255,255,0.08);
-    border: 1px dashed rgba(255,255,255,0.28);
+    background: #D50032;
+    border: 1px dashed rgba(255,255,255,0.45);
     border-radius: 20px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.75);
     font-size: 11px;
     font-weight: 500;
     font-style: italic;
     white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    transition: background 0.12s, color 0.12s;
   }
   .wrc-crumb-pending:hover {
-    background: rgba(255,255,255,0.14);
-    color: rgba(255,255,255,0.85);
-    border-color: rgba(255,255,255,0.45);
+    background: #b8002a;
+    color: #fff;
   }
   .wrc-crumb-sep {
     color: rgba(255,255,255,0.28);
