@@ -81,11 +81,24 @@
   }
   .back-btn:hover { color: #fff; }
   .back-btn svg { flex-shrink: 0; }
+  .back-bar-sep {
+    color: rgba(255,255,255,0.35);
+    font-size: 14px;
+  }
   .back-bar-title {
     font-size: 13px;
     font-weight: 700;
     color: #fff;
     opacity: 0.7;
+  }
+  .back-bar-activity {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: #C8DCEB;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 3px 12px;
   }
 
   /* ── LAUNCHER ── */
@@ -158,6 +171,57 @@
     padding: 3px 10px;
     letter-spacing: 0.3px;
   }
+  /* ── LAUNCHER STEP LABELS ── */
+  .launcher-step { margin-bottom: 16px; }
+  .launcher-step-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 12px;
+  }
+
+  /* ── LAUNCHER ACTIVITY BUTTONS ── */
+  .launcher-activity-btns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .launcher-act-btn {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.13s, box-shadow 0.13s;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .launcher-act-btn:hover {
+    border-color: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .launcher-act-btn.active {
+    border-color: var(--navy);
+    background: #EEF1F8;
+    box-shadow: 0 0 0 2px var(--navy);
+  }
+  .launcher-act-btn .act-icon { font-size: 18px; margin-bottom: 4px; }
+  .launcher-act-btn .act-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .launcher-act-btn .act-eg {
+    font-size: 12px;
+    color: var(--subtext);
+    line-height: 1.4;
+  }
+
   .launcher-secondary {
     display: flex;
     gap: 12px;
@@ -585,7 +649,9 @@
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     All Methods
   </button>
+  <span class="back-bar-sep">›</span>
   <span class="back-bar-title" id="back-bar-title"></span>
+  <span class="back-bar-activity" id="back-bar-activity"></span>
 </div>
 </div><!-- /fixed-top -->
 
@@ -627,9 +693,41 @@
 <!-- ══ CARD LAUNCHER ══════════════════════════════════════════ -->
 <div id="launcher">
   <p class="launcher-intro">
-    Select a <strong>heat stress measurement method</strong> to look up work-rest cycles for your workplace conditions.
+    Select your <strong>activity level</strong>, then choose a heat stress measurement method to look up work-rest cycles.
     All tables are based on NIOSH (2016) recommendations for indoor environments with no direct solar load.
   </p>
+
+  <!-- Step 1: Activity level -->
+  <div class="launcher-step">
+    <div class="launcher-step-label">Step 1 — Activity Level</div>
+    <div class="launcher-activity-btns">
+      <button class="launcher-act-btn" data-level="light"    onclick="setActivityGlobal('light')">
+        <span class="act-icon">🟢</span>
+        <span class="act-name">Light</span>
+        <span class="act-eg">Desk work, standing, slow walking</span>
+      </button>
+      <button class="launcher-act-btn active" data-level="moderate" onclick="setActivityGlobal('moderate')">
+        <span class="act-icon">🟡</span>
+        <span class="act-name">Moderate</span>
+        <span class="act-eg">Sustained walking, lifting, kitchen line</span>
+      </button>
+      <button class="launcher-act-btn" data-level="heavy"    onclick="setActivityGlobal('heavy')">
+        <span class="act-icon">🔴</span>
+        <span class="act-name">Heavy</span>
+        <span class="act-eg">Shoveling, carrying loads, strenuous labor</span>
+      </button>
+      <button class="launcher-act-btn" data-level="vh"       onclick="setActivityGlobal('vh')">
+        <span class="act-icon">⛔</span>
+        <span class="act-name">Very Heavy</span>
+        <span class="act-eg">Maximum effort, pick-and-shovel, fast carrying</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: Method cards -->
+  <div class="launcher-step">
+    <div class="launcher-step-label">Step 2 — Measurement Method</div>
+  </div>
   <div class="method-cards">
     <button class="method-card" style="--card-accent:#001E62" onclick="showTab('wbgt')">
       <span class="method-card-icon">🌡️</span>
@@ -870,7 +968,7 @@
   <h2>Temperature + Relative Humidity → Work-Rest Recommendation</h2>
   <p class="desc" id="trh-chart-desc">Find dry-bulb temperature in the left column and relative humidity across the top. Each cell shows the approximate Heat Index and the recommended work-rest cycle for the selected worker status and activity level. Heat index is derived from air temperature and RH; WBGT is a more complete measure for high-radiant environments. Indoor, no solar load. Standard work clothing assumed. <em>Note: NIOSH Recommended Alert Limits (RAL, for unacclimatized workers) and Recommended Exposure Limits (REL, for acclimatized workers) are expressed in WBGT units, not Heat Index. Unacclimatized thresholds in this tab are methodology-derived approximations — no NIOSH-published equivalent exists in HI units.</em></p>
 
-  <div class="toggle-row" id="trh-activity-toggle">
+  <div class="toggle-row" id="trh-activity-toggle" style="display:none">
     <span class="toggle-label">Activity Level:</span>
     <div class="toggle">
       <button class="act-btn" data-level="light"    onclick="setActivity('light')">🟢 Light</button>
@@ -1567,8 +1665,7 @@
     document.getElementById('hi-acclim-section').style.display  = status === 'acclimatized'   ? '' : 'none';
     document.getElementById('hi-unacclim-section').style.display = status === 'unacclimatized' ? '' : 'none';
     // Temp+RH tab: re-render with new thresholds
-    const currentLevel = document.querySelector('.act-btn.active')?.dataset.level || 'moderate';
-    setActivity(currentLevel);
+    setActivity(globalActivity);
     // Show/hide T+RH unacclimatized warning
     const trhWarn = document.getElementById('trh-unacclim-warning');
     if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
@@ -1611,8 +1708,19 @@
     return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
   }
 
+  let globalActivity = 'moderate';
+
+  function setActivityGlobal(level) {
+    globalActivity = level;
+    document.querySelectorAll('.launcher-act-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.level === level));
+    setActivity(level);
+  }
+
   function setActivity(level) {
+    globalActivity = level;
     document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
+    document.querySelectorAll('.launcher-act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
     document.querySelectorAll('.hi-cell[data-hi]').forEach(cell => {
       const hi = parseInt(cell.dataset.hi);
       const tier = getTierForHI(hi);
@@ -1650,6 +1758,11 @@
     const backBar = document.getElementById('back-bar');
     backBar.classList.add('visible');
     document.getElementById('back-bar-title').textContent = sectionTitles[name] || '';
+    const actLabels = { light: '🟢 Light', moderate: '🟡 Moderate', heavy: '🔴 Heavy', vh: '⛔ Very Heavy' };
+    const chartTabs2 = ['wbgt', 'tempRH', 'heatIndex'];
+    const actBadge = document.getElementById('back-bar-activity');
+    actBadge.textContent = chartTabs2.includes(name) ? actLabels[globalActivity] || '' : '';
+    actBadge.style.display = chartTabs2.includes(name) ? '' : 'none';
 
     const chartTabs = ['wbgt', 'tempRH', 'heatIndex'];
     const container = document.getElementById('def-panels-container');
