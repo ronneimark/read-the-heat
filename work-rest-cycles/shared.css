@@ -227,6 +227,44 @@
   .modal-close-btn:hover { background: var(--warm-white); color: var(--navy); }
   .modal-close-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; }
 
+  /* ── ATTRIBUTION BAR (tagline + UIC pill, below blue strip) ── */
+  .wrc-attribution-bar {
+    background: #001247;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px 20px;
+  }
+  .wrc-attribution-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.70);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.1px;
+  }
+  .wrc-sph-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px 9px;
+    box-shadow: inset 0 0 0 1.5px #fff, inset 0 0 0 3px #D50032,
+                0 2px 0 #c9c4bb, 0 4px 8px rgba(40,0,10,0.28);
+    flex-shrink: 0;
+  }
+  .wrc-sph-pill img {
+    height: 20px;
+    width: auto;
+    display: block;
+  }
+  @media (max-width: 480px) {
+    .wrc-attribution-text { display: none; }
+    .wrc-attribution-bar { justify-content: center; }
+  }
+
   /* ── BANNER STRIP (language selector + label) ── */
   .wrc-banner-strip {
     background: #001E62;
