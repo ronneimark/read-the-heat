@@ -316,24 +316,42 @@
   }
 
   /* ── SCREEN 2: ACTIVITY LEVEL REVIEW + SELECT ── */
+  #ls2 {
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    /* height and padding-top set by updateLayout */
+  }
+  #ls2.active { display: flex; }
+
+  .ls2-topbar {
+    flex-shrink: 0;
+    padding: 14px 24px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   .ls2-sector-banner {
     display: flex;
     align-items: center;
     gap: 10px;
     background: #EEF1F8;
     border: 1.5px solid var(--navy);
-    border-radius: 10px;
-    padding: 10px 16px;
-    margin-bottom: 20px;
+    border-radius: 8px;
+    padding: 8px 14px;
     font-size: 13px;
   }
   .ls2-sector-banner strong { color: var(--navy); font-weight: 700; }
-  .ls2-sector-banner span { color: var(--subtext); }
+  .ls2-sector-banner span { color: var(--subtext); font-size: 12px; }
+
   .ls2-review-grid {
+    flex: 1;
+    min-height: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 0 24px 16px;
+    overflow: hidden;
   }
   .ls2-level-panel {
     background: #fff;
@@ -343,6 +361,7 @@
     display: flex;
     flex-direction: column;
     transition: border-color 0.15s, box-shadow 0.15s;
+    min-height: 0;
   }
   .ls2-level-panel:hover {
     border-color: var(--panel-accent, var(--navy));
@@ -350,62 +369,69 @@
   }
   .ls2-level-header {
     background: var(--panel-accent, var(--navy));
-    padding: 14px 18px 12px;
+    padding: 10px 14px 8px;
+    flex-shrink: 0;
   }
   .ls2-level-name {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 800;
     color: #fff;
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
   }
   .ls2-level-kcal {
-    font-size: 12px;
+    font-size: 11px;
     color: rgba(255,255,255,0.75);
     font-weight: 600;
   }
   .ls2-level-body {
-    padding: 14px 18px;
+    padding: 10px 14px 12px;
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
   }
   .ls2-level-desc {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--subtext);
-    line-height: 1.6;
-    margin-bottom: 12px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    flex-shrink: 0;
   }
   .ls2-level-examples-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.9px;
     text-transform: uppercase;
     color: var(--mid);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
   }
   .ls2-level-examples {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--subtext);
-    line-height: 1.75;
-    padding-left: 16px;
-    margin: 0 0 auto;
+    line-height: 1.6;
+    padding-left: 14px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
   }
   .ls2-level-none {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--subtext);
     font-style: italic;
-    margin-bottom: auto;
   }
   .ls2-select-btn {
-    margin-top: 16px;
+    margin-top: 10px;
     width: 100%;
-    padding: 11px 0;
+    padding: 9px 0;
     border: 2px solid var(--panel-accent, var(--navy));
     background: #fff;
     color: var(--panel-accent, var(--navy));
     border-radius: 7px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.13s, color 0.13s;
@@ -413,10 +439,17 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    flex-shrink: 0;
   }
   .ls2-select-btn:hover {
     background: var(--panel-accent, var(--navy));
     color: #fff;
+  }
+  @media (max-width: 700px) {
+    .ls2-review-grid {
+      grid-template-columns: repeat(2, 1fr);
+      overflow-y: auto;
+    }
   }
 
   /* ── SCREEN 3: METHOD SELECTION ── */
@@ -955,20 +988,20 @@
 
   <!-- ── Screen 2: Activity Level Review ────────────────────── -->
   <div class="launcher-screen" id="ls2">
-    <button class="ls-back" onclick="showScreen1()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Change industry
-    </button>
 
-    <div class="ls2-sector-banner">
-      <strong id="ls2-sector-name">Restaurant / Kitchen</strong>
-      <span>— Review the activities below and select the level that best matches the work being done.</span>
+    <div class="ls2-topbar">
+      <div style="display:flex;align-items:center;gap:16px">
+        <button class="ls-back" onclick="showScreen1()" style="margin:0">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Change industry
+        </button>
+        <span style="font-size:12px;color:var(--subtext)">Select the activity level that best matches the work being done. <strong style="color:var(--text)">When in doubt, choose the higher category.</strong></span>
+      </div>
+      <div class="ls2-sector-banner">
+        <strong id="ls2-sector-name">Restaurant / Kitchen</strong>
+        <span>— sample activities by exertion level</span>
+      </div>
     </div>
-
-    <p class="ls-sub" style="margin-bottom:20px">
-      The correct activity level determines which work-rest schedule applies.
-      <strong>When in doubt, use the more protective (higher) category</strong> — especially when advocating for a worker or assessing risk for someone new to the job.
-    </p>
 
     <div class="ls2-review-grid">
 
@@ -1042,10 +1075,6 @@
 
     </div><!-- /ls2-review-grid -->
 
-    <div class="launcher-secondary">
-      <button class="secondary-link" onclick="showTab('activity')">📋 Full Activity Level Guide</button>
-      <button class="secondary-link" onclick="showTab('about')">📚 Sources &amp; Methodology</button>
-    </div>
   </div><!-- /ls2 -->
 
   <!-- ── Screen 3: Measurement Method ───────────────────────── -->
@@ -2146,15 +2175,18 @@
     const main     = document.querySelector('main');
     const launcher = document.getElementById('launcher');
     const ls1      = document.getElementById('ls1');
+    const ls2      = document.getElementById('ls2');
     const fixedH   = fixedTop.offsetHeight;
     defPanel.style.top = fixedH + 'px';
     const defH = (defPanel.style.display !== 'none') ? defPanel.offsetHeight : 0;
     main.style.paddingTop = (fixedH + defH + 16) + 'px';
-    // Launcher: no top padding (ls1 manages its own internal padding)
     launcher.style.paddingTop = '0';
-    // Screen 1 fills exactly one viewport height, padded below the fixed header
+    // Screens 1 & 2 each fill exactly one viewport height
+    const vh = window.innerHeight;
     ls1.style.paddingTop = (fixedH + 16) + 'px';
-    ls1.style.height     = window.innerHeight + 'px';
+    ls1.style.height     = vh + 'px';
+    ls2.style.paddingTop = (fixedH + 10) + 'px';
+    ls2.style.height     = vh + 'px';
   }
 
   const sectionTitles = {
