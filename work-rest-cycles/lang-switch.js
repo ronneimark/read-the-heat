@@ -1,8 +1,8 @@
 /* Work-Rest Cycles - language menu.
  *
  * Adds a globe + language dropdown to the strip below the banner.
- * Languages: English, Español, Polski, Українська, Français, العربية,
- *            中文（普通话）, 粵語（廣東話）
+ * Languages: English, Español, Tagalog, اردو, العربية, Русский,
+ *            한국어, Tiếng Việt, Deutsch
  *
  * Usage: <script src="./lang-link.js"></script> in <head>
  *        <script src="./lang-switch.js" defer></script> before </body>
@@ -10,14 +10,15 @@
 (function () {
   'use strict';
   var LANGS = [
-    ['en',    'English'],
-    ['es',    'Español'],
-    ['pl',    'Polski'],
-    ['uk',    'Українська'],
-    ['fr',    'Français'],
-    ['ar',    'العربية'],
-    ['zh-CN', '中文（普通话）'],
-    ['yue',   '粵語（廣東話）']
+    ['en', 'English'],
+    ['es', 'Español'],
+    ['tl', 'Tagalog'],
+    ['ur', 'اردو'],
+    ['ar', 'العربية'],
+    ['ru', 'Русский'],
+    ['ko', '한국어'],
+    ['vi', 'Tiếng Việt'],
+    ['de', 'Deutsch']
   ];
 
   function current() {
@@ -25,8 +26,6 @@
     if (!m) return 'en';
     var parts = decodeURIComponent(m[1]).split('/');
     var code = (parts[parts.length - 1] || '').toLowerCase();
-    // zh-HK maps back to yue in our menu
-    if (code === 'zh-hk') return 'yue';
     return LANGS.some(function (l) { return l[0].toLowerCase() === code; }) ? code : 'en';
   }
 
@@ -61,7 +60,7 @@
     window.googleTranslateElementInit = function () {
       new google.translate.TranslateElement({
         pageLanguage: 'en',
-        includedLanguages: 'en,es,pl,uk,fr,ar,zh-CN,zh-HK',
+        includedLanguages: 'en,es,tl,ur,ar,ru,ko,vi,de',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
       }, 'wrc-gt-widget');
@@ -96,7 +95,7 @@
       var o = document.createElement('option');
       o.value = l[0];
       o.textContent = l[1];
-      o.lang = l[0] === 'yue' ? 'zh-HK' : l[0];
+      o.lang = l[0];
       if (l[0] === lang) o.selected = true;
       sel.appendChild(o);
     });
