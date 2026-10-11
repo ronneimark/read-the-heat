@@ -40,69 +40,68 @@
     background: var(--navy);
   }
   header {
-    background: #D50032;
-    color: #fff;
-    height: 191px;
-    padding: 0 24px;
+    background: #fff;
+    height: 240px;
+    padding: 0 24px 0 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-bottom: none;
-  }
-  .header-inner {
-    max-width: 860px;
-  }
-  header h1 {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.4px;
-    margin-bottom: 10px;
-    line-height: 1.2;
-    color: #fff;
-  }
-  header p {
-    font-size: 13px;
-    color: #FEF8E0;
-    line-height: 1.55;
-    margin-bottom: 14px;
+    gap: 20px;
+    border-bottom: 2px solid #e8ecf2;
+    overflow: hidden;
   }
   .header-btns {
     display: flex;
+    flex-direction: column;
     gap: 10px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .header-logo-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    height: 100%;
+    overflow: hidden;
+  }
+  .header-logo-img {
+    height: 67%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
   }
   .header-3d-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 16px;
-    background: linear-gradient(180deg, #1a3a8f 0%, #001454 100%);
-    border: 1.5px solid #3358b8;
-    border-bottom: 3px solid #000d40;
+    padding: 8px 18px;
+    background: linear-gradient(180deg, #001E62 0%, #00123d 100%);
+    border: 1.5px solid #2a4a9a;
+    border-bottom: 3px solid #000820;
     border-radius: 8px;
     color: #fff;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     letter-spacing: 0.2px;
-    text-shadow: 0 1px 2px rgba(0,0,20,0.40);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
+    text-shadow: 0 1px 2px rgba(0,0,20,0.50);
+    box-shadow: 0 2px 6px rgba(0,18,62,0.30), inset 0 1px 0 rgba(255,255,255,0.10);
     transition: transform 0.1s, box-shadow 0.1s;
+    white-space: nowrap;
   }
   .header-3d-btn:hover {
-    background: linear-gradient(180deg, #2248b0 0%, #001870 100%);
+    background: linear-gradient(180deg, #0a2878 0%, #001454 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.12);
+    box-shadow: 0 4px 12px rgba(0,18,62,0.38), inset 0 1px 0 rgba(255,255,255,0.10);
   }
   .header-3d-btn:active {
     transform: translateY(1px);
     border-bottom-width: 1px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.30);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
   }
   .header-3d-btn:focus-visible {
-    outline: 3px solid #fff;
+    outline: 3px solid #001E62;
     outline-offset: 2px;
   }
 
@@ -1062,13 +1061,12 @@
 <div id="fixed-top">
 <div class="hazard-bar"></div>
 <header>
-  <div class="header-inner">
-    <h1>Indoor Heat Stress: Work-Rest Cycles Explained</h1>
-    <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
-    <div class="header-btns">
-      <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
-      <button class="header-3d-btn" onclick="showTab('about')">📚 Methodology</button>
-    </div>
+  <div class="header-btns">
+    <button class="header-3d-btn" onclick="openActivityModal()">📋 Activity Level Guide</button>
+    <button class="header-3d-btn" onclick="showTab('about')">📚 Methodology</button>
+  </div>
+  <div class="header-logo-wrap">
+    <img class="header-logo-img" src="images/logo.png" alt="Read the Heat and Take a Beat">
   </div>
 </header>
 
