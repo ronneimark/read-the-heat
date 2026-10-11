@@ -42,18 +42,29 @@
   header {
     background: #D50032;
     color: #fff;
-    padding: 24px 32px 20px;
+    height: 191px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     border-bottom: none;
   }
+  .header-inner {
+    max-width: 860px;
+  }
   header h1 {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    color: #fff;
   }
   header p {
     font-size: 13px;
     color: #FEF8E0;
+    line-height: 1.55;
   }
 
   /* ── BACK BAR (shown when inside a section) ── */
@@ -940,8 +951,10 @@
 <div id="fixed-top">
 <div class="hazard-bar"></div>
 <header>
-  <h1>Indoor Heat Stress: Work-Rest Cycles Explained</h1>
-  <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
+  <div class="header-inner">
+    <h1>Indoor Heat Stress: Work-Rest Cycles Explained</h1>
+    <p>Synthesized from NIOSH Criteria Document (2016) Pub. No. 2016-106 and OSHA heat guidance — <em>continuous-work thresholds confirmed from NIOSH equations and Table 5-1; intermediate work-rest lines (45/15, 30/30, 15/45) require direct reading from NIOSH Figures 8-1 and 8-2</em></p>
+  </div>
 </header>
 
 <div class="back-bar" id="back-bar">
