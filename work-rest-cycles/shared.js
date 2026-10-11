@@ -36,6 +36,7 @@ const sectorLabels = {
   buildingservices:'🛠 Janitorial / Housekeeping',
   agriculture:    '🌾 Agriculture (Indoor / Greenhouse)',
   garment:        '✂️ Garment / Textile',
+  hospitality:    '🏨 Hospitality / Hotel',
   childcare:      '🧒 Childcare',
 };
 

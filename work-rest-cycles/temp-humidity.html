@@ -287,26 +287,16 @@
 
   function setWorkerStatus(status) {
     workerStatus = status;
-    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
-    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
-    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
-    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
+    WRC.set({ workerStatus: status });
     const trhWarn = document.getElementById('trh-unacclim-warning');
     if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
-    WRC.set({ workerStatus: status });
     setActivity(currentLevel);
-    const inner = document.getElementById('def-panels-inner');
-    if (inner) { inner.style.display = 'none'; updateLayout(); }
   }
 
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
-    const defPanel = document.getElementById('def-panels-container');
     const main     = document.querySelector('main');
-    const fixedH   = fixedTop.offsetHeight;
-    defPanel.style.top = fixedH + 'px';
-    const defH = defPanel.offsetHeight;
-    main.style.paddingTop = (fixedH + defH + 16) + 'px';
+    if (main) main.style.paddingTop = (fixedTop.offsetHeight + 16) + 'px';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -318,16 +308,10 @@
     const bbActivity = document.getElementById('back-bar-activity');
     if (bbActivity) bbActivity.textContent = (emojiMap[act] || '') + ' ' + actLabel;
 
-    // Set initial activity button
     currentLevel = act;
     document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === act));
 
-    // Apply worker status without collapsing panel
     workerStatus = status;
-    document.getElementById('btn-acclim').className   = 'status-btn' + (status === 'acclimatized'   ? ' active-acclim'   : '');
-    document.getElementById('btn-unacclim').className = 'status-btn' + (status === 'unacclimatized' ? ' active-unacclim' : '');
-    document.getElementById('def-acclim').className   = 'status-def def-acclim'   + (status === 'acclimatized'   ? '' : ' inactive');
-    document.getElementById('def-unacclim').className = 'status-def def-unacclim' + (status === 'unacclimatized' ? '' : ' inactive');
     const trhWarn = document.getElementById('trh-unacclim-warning');
     if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
 
