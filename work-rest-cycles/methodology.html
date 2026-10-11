@@ -5,7 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Methodology — Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
-<style>body { overflow: auto; }</style>
+<style>
+body { overflow: auto; }
+#methodology-sticky-title {
+  position: sticky;
+  top: var(--fixed-top-h, 0px);
+  z-index: 10;
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 10px 24px;
+  border-bottom: 2px solid #D50032;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+</style>
 <script src="./lang-link.js"></script>
 </head>
 <body>
@@ -14,7 +29,7 @@
   <div class="hazard-bar"></div>
   <header>
     <a class="home-btn" href="index.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 2.5 11.1a.9.9 0 0 0 1.15 1.38L5 11.35V20a1 1 0 0 0 1 1h4.5v-6h3v6H18a1 1 0 0 0 1-1v-8.65l1.35 1.13a.9.9 0 0 0 1.15-1.38Z"/></svg></a>
-    <div class="header-logo-wrap">
+    <div class="header-inner">
       <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
       <div class="header-attribution">
         <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
@@ -38,6 +53,8 @@
     <span class="back-bar-title">Sources &amp; Methodology</span>
   </div>
 </div><!-- /fixed-top -->
+
+<div id="methodology-sticky-title">Sources, Methodology &amp; Verification</div>
 
 <main id="methodology-main">
 
@@ -196,8 +213,13 @@
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const main = document.getElementById('methodology-main');
+    const stickyTitle = document.getElementById('methodology-sticky-title');
     const fixedH = fixedTop.offsetHeight;
-    main.style.paddingTop = (fixedH + 16) + 'px';
+    document.documentElement.style.setProperty('--fixed-top-h', fixedH + 'px');
+    const titleH = stickyTitle ? stickyTitle.offsetHeight : 0;
+    main.style.paddingTop = '16px';
+    // offset the sticky title below fixed-top
+    if (stickyTitle) stickyTitle.style.top = fixedH + 'px';
   }
   document.addEventListener('DOMContentLoaded', () => {
     buildBreadcrumbs();
