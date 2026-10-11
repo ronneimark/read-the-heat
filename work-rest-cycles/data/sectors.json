@@ -83,6 +83,13 @@
     "heavy": ["Steam pressing and finishing of heavy garments (suits, coats, uniforms, workwear) in a hot pressing shop", "Sustained operation of heavy industrial sewing, knitting, or weaving machines", "Manual cutting of heavy fabric layers or leather", "Moving large bolts of fabric or rolls of material"],
     "vh": ["Sustained industrial steam pressing operations in hot environments — prolonged exposure to steam and radiant heat with physical exertion", "Intensive manual handling of heavy textile materials in a high-heat production environment", "High-pace production finishing in a non-climate-controlled pressing or dyeing facility"]
   },
+  "hospitality": {
+    "label": "Hospitality / Hotel",
+    "light": ["Front desk check-in and check-out", "Concierge and guest services at a desk or stand", "Reservation and phone handling", "Supervisory walkthroughs and quality inspection", "Light restocking of guest amenities at a cart"],
+    "moderate": ["Guestroom housekeeping — making beds, vacuuming, bathroom cleaning across multiple rooms", "Pushing a fully loaded housekeeping cart between rooms and floors", "Bussing and resetting banquet or restaurant tables at volume", "Sustained room attendant work with repeated bending, lifting, and carrying", "Laundry room operations — loading/unloading washers and dryers, folding linen", "Food and beverage running across a large property"],
+    "heavy": ["Manual setup and breakdown of large banquet or event rooms — moving tables, chairs, staging, and AV equipment", "Deep cleaning of common areas, kitchens, or event spaces with heavy equipment", "Moving heavy furniture, mattresses, or large fixtures between rooms", "Handling and transporting large linen or trash loads through the building", "Loading and unloading hotel supply deliveries — cases of beverages, food, or amenities"],
+    "vh": ["Intensive back-to-back banquet setup and breakdown with repeated heavy furniture lifts across a full shift", "Sustained manual movement of very heavy supply loads (kegs, bulk linens, equipment) without mechanical assist", "Extended deep-cleaning operations in a hot kitchen or laundry facility at production pace"]
+  },
   "childcare": {
     "label": "Childcare",
     "light": ["Administrative and clerical work at a desk or station", "Reading aloud to children while seated", "Supervising quiet or seated activities (art, storytime, puzzles)", "Check-in and check-out desk duties", "Meal preparation — light tasks at a counter"],
