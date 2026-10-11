@@ -38,7 +38,7 @@
   }
   header {
     background: #D50032;
-    height: 240px;
+    height: 191px;
     padding: 0 24px 0 20px;
     display: flex;
     align-items: center;
@@ -118,7 +118,6 @@
     pointer-events: auto;
   }
   @media (max-width: 600px) {
-    .header-logo-img { max-height: 110px; max-width: 65%; }
     .header-tagline { font-size: 10px; gap: 6px; }
   }
 
@@ -1315,8 +1314,9 @@
 
   /* ── Shorter header on phones ── */
   @media (max-width: 600px) {
-    header { height: 140px; }
+    header { height: 80px; }
     .header-tagline { display: none; }   /* reclaim vertical space */
+    .header-logo-img { max-height: 60px; max-width: 58%; }
   }
 
   /* ── Banner strip: compact on very narrow screens ── */
