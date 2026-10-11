@@ -2,7 +2,7 @@
 # via FTPS (explicit TLS). Bypasses cPanel Git Version Control entirely.
 #
 # Repository secrets required:
-#   CPANEL_HOST      FTP hostname (same as your cPanel host, e.g. server123.greengeeks.net)
+#   CPANEL_HOST      FTP hostname (e.g. server123.greengeeks.net or your domain)
 #   CPANEL_USERNAME  cPanel / FTP username
 #   FTP_PASSWORD     cPanel account password (or an FTP sub-account password)
 name: Deploy to GreenGeeks via FTPS
@@ -29,12 +29,16 @@ jobs:
           FTP_USER: ${{ secrets.CPANEL_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp -c "
-            set ftp:ssl-force true
-            set ftp:ssl-protect-data true
-            set ssl:verify-certificate false
-            open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST'
-            mirror --reverse --delete --verbose \
-              work-rest-cycles/ \
-              public_html/work-rest-cycles/
-          "
+          lftp \
+            -u "$FTP_USER","$FTP_PASS" \
+            "$FTP_HOST" \
+            -e "
+              set ftp:ssl-force true;
+              set ftp:ssl-protect-data true;
+              set ssl:verify-certificate false;
+              set ftp:passive-mode true;
+              set net:timeout 30;
+              set net:max-retries 3;
+              mirror --reverse --delete --verbose work-rest-cycles/ public_html/work-rest-cycles/;
+              quit
+            "
