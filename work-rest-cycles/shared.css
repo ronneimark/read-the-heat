@@ -91,15 +91,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 14px 0;
+    gap: 5px;
+    padding: 5px 0;
     pointer-events: none;
   }
   .header-logo-img {
     height: auto;
     width: auto;
-    max-height: 120px;
-    max-width: 75%;
+    max-height: 155px;
+    max-width: 85%;
     object-fit: contain;
     display: block;
     flex-shrink: 1;
