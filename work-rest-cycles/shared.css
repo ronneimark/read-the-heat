@@ -113,8 +113,8 @@
     pointer-events: auto;
   }
   .header-attribution-text {
-    font-size: 11px;
-    color: rgba(255,255,255,0.90);
+    font-size: 13px;
+    color: #fff;
     white-space: nowrap;
     font-weight: 500;
   }
@@ -204,9 +204,9 @@
     align-items: center;
     padding: 3px 10px;
     background: #D50032;
-    border: 1px dashed rgba(255,255,255,0.45);
+    border: 1px dashed rgba(255,255,255,0.60);
     border-radius: 20px;
-    color: rgba(255,255,255,0.75);
+    color: #fff; /* full white required for WCAG AA at 11px on #D50032 */
     font-size: 11px;
     font-weight: 500;
     font-style: italic;
