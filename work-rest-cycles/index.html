@@ -618,7 +618,7 @@
   }
 
   /* ── SCREEN 3: METHOD SELECTION ── */
-  .ls3-activity-banner {
+  .ls4-activity-banner {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -628,7 +628,7 @@
     padding: 12px 18px;
     margin-bottom: 24px;
   }
-  .ls3-banner-label {
+  .ls4-banner-label {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.8px;
@@ -636,12 +636,12 @@
     color: var(--mid);
     flex-shrink: 0;
   }
-  .ls3-activity-selected {
+  .ls4-activity-selected {
     font-size: 15px;
     font-weight: 800;
     color: var(--navy);
   }
-  .ls3-activity-kcal {
+  .ls4-activity-kcal {
     font-size: 13px;
     color: var(--subtext);
     margin-left: auto;
@@ -1250,18 +1250,67 @@
 
   </div><!-- /ls2 -->
 
-  <!-- ── Screen 3: Measurement Method ───────────────────────── -->
+  <!-- ── Screen 3: Acclimatization Status ──────────────────── -->
   <div class="launcher-screen" id="ls3">
-    <button class="ls-back" onclick="showScreen2Nav()">
+
+    <div class="ls2-topbar">
+      <button class="ls-back" onclick="showScreen2Nav()" style="margin:0;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Change activity level
+      </button>
+      <div class="ls2-sector-banner">
+        <strong id="ls3-activity-summary">Moderate Work</strong>
+        <span id="ls3-activity-kcal-hint">~200–350 kcal/hr</span>
+      </div>
+    </div>
+
+    <div class="ls3-acclim-wrap">
+      <div class="launcher-step">
+        <div class="launcher-step-label">Has this worker completed heat acclimatization?</div>
+      </div>
+
+      <div class="ls3-acclim-cards">
+
+        <button class="ls3-acclim-card ls3-acclim-yes" onclick="commitWorkerStatus('acclimatized')">
+          <span class="ls3-acclim-icon">✅</span>
+          <div class="ls3-acclim-title">Acclimatized</div>
+          <div class="ls3-acclim-desc">Completed the acclimatization protocol and has been working in the heat without a week-or-more break. Uses the <strong>NIOSH REL</strong> (Recommended Exposure Limits).</div>
+          <ul class="ls3-acclim-bullets">
+            <li>Experienced worker in continuous heat exposure</li>
+            <li>Returning worker absent fewer than 7 days</li>
+          </ul>
+          <span class="ls3-acclim-cta">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+        <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized')">
+          <span class="ls3-acclim-icon">⚠️</span>
+          <div class="ls3-acclim-title">Not Acclimatized</div>
+          <div class="ls3-acclim-desc">New to heat work, or returning after a week or more away. Uses the more protective <strong>NIOSH RAL</strong> (Recommended Alert Limits) — approximately 2–3°C more restrictive.</div>
+          <ul class="ls3-acclim-bullets">
+            <li>New hires or workers new to hot areas</li>
+            <li>Returning after 7+ days away from heat work</li>
+            <li>Workers with cardiovascular conditions, obesity, certain medications, or prior heat illness</li>
+          </ul>
+          <span class="ls3-acclim-cta">Select Unacclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+      </div>
+    </div>
+
+  </div><!-- /ls3 -->
+
+  <!-- ── Screen 4: Measurement Method ───────────────────────── -->
+  <div class="launcher-screen" id="ls4">
+    <button class="ls-back" onclick="showScreen3Nav()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Change activity level
+      Change worker status
     </button>
 
 
-    <div class="ls3-activity-banner">
-      <span class="ls3-banner-label">Activity Level</span>
-      <span class="ls3-activity-selected" id="ls3-activity-label">🟡 Moderate Work</span>
-      <span class="ls3-activity-kcal" id="ls3-activity-kcal">~200–350 kcal/hr</span>
+    <div class="ls4-activity-banner">
+      <span class="ls4-banner-label">Activity Level</span>
+      <span class="ls4-activity-selected" id="ls4-activity-label">🟡 Moderate Work</span>
+      <span class="ls4-activity-kcal" id="ls4-activity-kcal">~200–350 kcal/hr</span>
     </div>
 
     <div class="launcher-step">
@@ -1290,7 +1339,7 @@
     <div class="launcher-secondary">
       <button class="secondary-link" onclick="showTab('about')">📚 Methodology</button>
     </div>
-  </div><!-- /ls3 -->
+  </div><!-- /ls4 -->
 
 </div><!-- /launcher -->
 
@@ -2255,16 +2304,16 @@
     globalActivity = level;
     setActivity(level);
     const meta = activityMeta[level];
-    document.getElementById('ls3-activity-label').textContent = meta.label;
-    document.getElementById('ls3-activity-kcal').textContent  = meta.kcal;
-    switchLauncherScreen('ls3');
+    document.getElementById('ls4-activity-label').textContent = meta.label;
+    document.getElementById('ls4-activity-kcal').textContent  = meta.kcal;
+    switchLauncherScreen('ls4');
   }
 
   function showScreen1() { switchLauncherScreen('ls1'); }
   function showScreen2Nav() { switchLauncherScreen('ls2'); } // back from screen 3
 
   function switchLauncherScreen(id) {
-    ['ls1','ls2','ls3'].forEach(s => {
+    ['ls1','ls2','ls3','ls4'].forEach(s => {
       const el = document.getElementById(s);
       if (el) el.classList.toggle('active', s === id);
     });
@@ -2366,7 +2415,7 @@
     document.getElementById('back-bar').classList.remove('visible');
     document.getElementById('def-panels-container').style.display = 'none';
     // Return to screen 1 so user re-engages with industry + activity level
-    ['ls1','ls2','ls3'].forEach(s => {
+    ['ls1','ls2','ls3','ls4'].forEach(s => {
       const el = document.getElementById(s);
       if (el) el.classList.toggle('active', s === 'ls1');
     });
