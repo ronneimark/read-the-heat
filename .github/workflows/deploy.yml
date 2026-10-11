@@ -28,6 +28,22 @@ jobs:
           ssh-keyscan -p 2222 "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
           ssh-keyscan "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: Test SSH connection (port 2222)
+        env:
+          SSH_HOST: ${{ secrets.CPANEL_HOST }}
+          SSH_USER: ${{ secrets.CPANEL_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2222 -v \
+            "$SSH_USER@$SSH_HOST" echo "SSH OK port 2222" 2>&1 || true
+
+      - name: Test SSH connection (port 22)
+        env:
+          SSH_HOST: ${{ secrets.CPANEL_HOST }}
+          SSH_USER: ${{ secrets.CPANEL_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 22 -v \
+            "$SSH_USER@$SSH_HOST" echo "SSH OK port 22" 2>&1 || true
+
       - name: Deploy via rsync over SSH
         env:
           SSH_HOST: ${{ secrets.CPANEL_HOST }}
