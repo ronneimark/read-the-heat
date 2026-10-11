@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/work-rest-cycles/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R work-rest-cycles/. $DEPLOYPATH

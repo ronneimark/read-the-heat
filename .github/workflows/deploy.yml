@@ -1,8 +1,12 @@
-# Deploys the work-rest-cycles site to GreenGeeks over FTPS on every push to main.
-# Needs three repository secrets: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD.
-# The FTP account's home directory should be the site's folder on the server
-# (e.g. public_html/work-rest-cycles), so server-dir ./ lands files there.
-name: Deploy to GreenGeeks
+# On every push to main, tells cPanel (workerpowerforhealth.com server on GreenGeeks)
+# to pull this repo and run .cpanel.yml, which copies the site into
+# public_html/work-rest-cycles.
+#
+# Repository secrets required:
+#   CPANEL_HOST       server hostname, without https:// or :2083
+#   CPANEL_USERNAME   cPanel username
+#   CPANEL_API_TOKEN  cPanel API token (Security > Manage API Tokens)
+name: Deploy to GreenGeeks cPanel
 
 on:
   push:
@@ -12,23 +16,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    env:
+      REPO_ROOT: /home/${{ secrets.CPANEL_USERNAME }}/repositories/work-rest-cycles
+      API: https://${{ secrets.CPANEL_HOST }}:2083/execute
+      AUTH: "cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}"
     steps:
-      - name: Get latest code
-        uses: actions/checkout@v6
+      - name: Pull latest commit into cPanel repository
+        run: |
+          resp=$(curl -sS -G -H "Authorization: $AUTH" \
+            --data-urlencode "repository_root=$REPO_ROOT" \
+            --data-urlencode "branch=main" \
+            "$API/VersionControl/update")
+          echo "$resp" | jq '{status, errors, messages}'
+          [ "$(echo "$resp" | jq -r '.status')" = "1" ]
 
-      - name: Sync files over FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 21
-          local-dir: ./work-rest-cycles/
-          server-dir: ./
-          dry-run: true
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+      - name: Deploy HEAD commit
+        run: |
+          resp=$(curl -sS -G -H "Authorization: $AUTH" \
+            --data-urlencode "repository_root=$REPO_ROOT" \
+            "$API/VersionControlDeployment/create")
+          echo "$resp" | jq '{status, errors, messages}'
+          [ "$(echo "$resp" | jq -r '.status')" = "1" ]
