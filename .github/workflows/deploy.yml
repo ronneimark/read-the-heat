@@ -1,12 +1,11 @@
-# On every push to main, tells cPanel (workerpowerforhealth.com server on GreenGeeks)
-# to pull this repo and run .cpanel.yml, which copies the site into
-# public_html/work-rest-cycles.
+# On every push to main, mirrors work-rest-cycles/ to public_html/work-rest-cycles/
+# via FTPS (explicit TLS). Bypasses cPanel Git Version Control entirely.
 #
 # Repository secrets required:
-#   CPANEL_HOST       server hostname, without https:// or :2083
-#   CPANEL_USERNAME   cPanel username
-#   CPANEL_API_TOKEN  cPanel API token (Security > Manage API Tokens)
-name: Deploy to GreenGeeks cPanel
+#   CPANEL_HOST      FTP hostname (same as your cPanel host, e.g. server123.greengeeks.net)
+#   CPANEL_USERNAME  cPanel / FTP username
+#   FTP_PASSWORD     cPanel account password (or an FTP sub-account password)
+name: Deploy to GreenGeeks via FTPS
 
 on:
   push:
@@ -17,24 +16,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      REPO_ROOT: /home/${{ secrets.CPANEL_USERNAME }}/repositories/work-rest-cycles
-      API: https://${{ secrets.CPANEL_HOST }}:2083/execute
-      AUTH: "cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}"
     steps:
-      - name: Pull latest commit into cPanel repository
-        run: |
-          resp=$(curl -sS -G -H "Authorization: $AUTH" \
-            --data-urlencode "repository_root=$REPO_ROOT" \
-            --data-urlencode "branch=main" \
-            "$API/VersionControl/update")
-          echo "$resp" | jq '{status, errors, messages}'
-          [ "$(echo "$resp" | jq -r '.status')" = "1" ]
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Deploy HEAD commit
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Mirror site to server via FTPS
+        env:
+          FTP_HOST: ${{ secrets.CPANEL_HOST }}
+          FTP_USER: ${{ secrets.CPANEL_USERNAME }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          resp=$(curl -sS -G -H "Authorization: $AUTH" \
-            --data-urlencode "repository_root=$REPO_ROOT" \
-            "$API/VersionControlDeployment/create")
-          echo "$resp" | jq '{status, errors, messages}'
-          [ "$(echo "$resp" | jq -r '.status')" = "1" ]
+          lftp -c "
+            set ftp:ssl-force true
+            set ftp:ssl-protect-data true
+            set ssl:verify-certificate false
+            open -u '$FTP_USER','$FTP_PASS' '$FTP_HOST'
+            mirror --reverse --delete --verbose \
+              work-rest-cycles/ \
+              public_html/work-rest-cycles/
+          "
