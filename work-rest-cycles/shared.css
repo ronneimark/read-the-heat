@@ -1315,8 +1315,11 @@
   /* ── Shorter header on phones ── */
   @media (max-width: 600px) {
     header { height: 80px; }
-    .header-tagline { display: none; }   /* reclaim vertical space */
-    .header-logo-img { max-height: 60px; max-width: 58%; }
+    .header-tagline { display: none; }
+    /* Remove wrap padding so the full 80px is available for the logo;
+       constrain logo to 72px (80px − 4px breathing room top+bottom) */
+    .header-logo-wrap { padding: 4px 0; }
+    .header-logo-img { max-height: 72px; max-width: 70%; }
   }
 
   /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
