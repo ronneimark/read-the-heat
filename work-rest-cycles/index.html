@@ -189,8 +189,7 @@
 
 /* ── popover shell ── */
 .intro-popover {
-  position: absolute;
-  top: calc(100% + 10px);
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
   width: min(500px, 96vw);
@@ -198,7 +197,7 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
   z-index: 1000;
-  overflow: hidden;
+  overflow-y: auto;
   transform-origin: top center;
   animation: popoverIn .5s cubic-bezier(0.34, 1.1, 0.64, 1);
   display: flex;
@@ -463,6 +462,52 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  function positionIntroPopover() {
+    const pop = document.getElementById('intro-popover');
+    const btn = document.getElementById('intro-open-btn');
+    const btnRect = btn.getBoundingClientRect();
+    const gap = 10;
+    const vpad = 12; /* min gap from viewport edges */
+    const vpH = window.innerHeight;
+
+    /* reset inline overrides so we can measure natural height */
+    pop.style.top = '';
+    pop.style.bottom = '';
+    pop.style.maxHeight = '';
+    pop.style.position = 'fixed';
+    pop.style.left = '50%';
+    pop.style.transform = 'translateX(-50%)';
+
+    const popH = pop.scrollHeight;
+
+    const spaceBelow = vpH - btnRect.bottom - gap - vpad;
+    const spaceAbove = btnRect.top - gap - vpad;
+
+    if (popH <= spaceBelow) {
+      /* fits below — standard position */
+      pop.style.top = (btnRect.bottom + gap) + 'px';
+      pop.style.bottom = '';
+      pop.style.maxHeight = spaceBelow + 'px';
+    } else if (popH <= spaceAbove) {
+      /* fits above */
+      pop.style.bottom = (vpH - btnRect.top + gap) + 'px';
+      pop.style.top = '';
+      pop.style.maxHeight = spaceAbove + 'px';
+    } else if (spaceAbove >= spaceBelow) {
+      /* more room above — open upward and constrain */
+      pop.style.bottom = (vpH - btnRect.top + gap) + 'px';
+      pop.style.top = '';
+      pop.style.maxHeight = spaceAbove + 'px';
+      pop.style.overflowY = 'auto';
+    } else {
+      /* more room below — open downward and constrain */
+      pop.style.top = (btnRect.bottom + gap) + 'px';
+      pop.style.bottom = '';
+      pop.style.maxHeight = spaceBelow + 'px';
+      pop.style.overflowY = 'auto';
+    }
+  }
+
   function toggleIntroPopover() {
     const pop = document.getElementById('intro-popover');
     const btn = document.getElementById('intro-open-btn');
@@ -471,6 +516,7 @@
     } else {
       pop.hidden = false;
       btn.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => positionIntroPopover());
     }
   }
 
@@ -509,6 +555,10 @@
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeIntroPopover();
+  });
+  window.addEventListener('resize', () => {
+    const pop = document.getElementById('intro-popover');
+    if (!pop.hidden) positionIntroPopover();
   });
 
   const INSTRUMENT_PHOTOS = {
