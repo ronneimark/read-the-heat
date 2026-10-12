@@ -132,8 +132,10 @@ function ensureMethodologyModal() {
   const el = document.createElement('div');
   el.innerHTML = `<div id="methodology-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="methodology-modal-title" onclick="if(event.target===this)closeMethodologyModal()">
   <div id="methodology-modal">
-    <button class="modal-close-btn" onclick="closeMethodologyModal()" aria-label="Close">&#x2715;</button>
-    <h2 id="methodology-modal-title">Sources, Methodology, and Verification Notes</h2>
+    <div class="modal-sticky-header">
+      <h2 id="methodology-modal-title">Sources, Methodology, and Verification Notes</h2>
+      <button class="modal-close-btn" onclick="closeMethodologyModal()" aria-label="Close">&#x2715;</button>
+    </div>
 
     <div class="section-label">Primary Sources</div>
     <ul class="source-list">

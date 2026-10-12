@@ -284,9 +284,6 @@
     line-height: 1.5;
   }
   .modal-close-btn {
-    position: absolute;
-    top: 16px;
-    right: 18px;
     background: none;
     border: none;
     font-size: 22px;
@@ -295,9 +292,24 @@
     line-height: 1;
     padding: 4px 8px;
     border-radius: 6px;
+    flex-shrink: 0;
   }
   .modal-close-btn:hover { background: var(--warm-white); color: var(--navy); }
   .modal-close-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; }
+  .modal-sticky-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 24px 14px;
+    margin: -32px -36px 16px;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
 
   #methodology-modal-overlay {
     display: none;
@@ -320,7 +332,6 @@
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0,0,0,0.30);
     padding: 32px 36px 36px;
-    position: relative;
     margin: auto;
   }
   #methodology-modal h2 {
@@ -1465,6 +1476,7 @@
       -webkit-overflow-scrolling: touch;
     }
     #activity-modal h2, #methodology-modal h2 { font-size: 17px; }
+    .modal-sticky-header { margin: -20px -16px 12px; padding: 16px 16px 12px; }
   }
 
   /* ── Acclimatization schedule grid: single column on mobile ── */
