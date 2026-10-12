@@ -36,9 +36,18 @@
 .meas-field-group {
   margin-bottom: 8px;
 }
-/* T+RH has two fields — compress them further */
+/* T+RH has two fields — compress inputs and spacing further */
 #meas-trh-fields .meas-field-group {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
+}
+#meas-trh-fields .meas-input {
+  height: 34px;
+  font-size: 16px;
+}
+#meas-trh-fields .meas-toggle button {
+  height: 34px;
+  font-size: 11px;
+  padding: 0 7px;
 }
 .meas-field-label {
   font-size: 10px;
@@ -113,12 +122,12 @@
 }
 .meas-submit-btn {
   width: 100%;
-  padding: 9px;
+  padding: 7px;
   background: var(--navy);
   color: #fff;
   border: none;
   border-radius: 7px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -266,6 +275,7 @@
     measCurrentInstrument = instrument;
     measCurrentUnit = 'F';
     WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
+    buildBreadcrumbs();   // show instrument pill immediately on card tap
     document.getElementById('meas-modal-title').textContent = measTitles[instrument];
     const isTrh = instrument === 'trh';
     document.getElementById('meas-single-fields').hidden = isTrh;
