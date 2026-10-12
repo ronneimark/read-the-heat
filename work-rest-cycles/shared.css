@@ -301,6 +301,16 @@
     background: #b8002a;
     border-color: rgba(255,255,255,0.50);
   }
+  /* current page pill — green */
+  .wrc-crumb-current,
+  .wrc-crumb-pending.wrc-crumb-current {
+    background: #1a7a3c !important;
+    border-color: rgba(255,255,255,0.35) !important;
+    font-style: normal !important;
+  }
+  .wrc-crumb-current:hover {
+    background: #155f30 !important;
+  }
   /* pending pill — no selection yet, red bg, italic white */
   .wrc-crumb-pending {
     display: inline-flex;
