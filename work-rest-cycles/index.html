@@ -704,7 +704,7 @@
     const distRight = Math.abs(tx - pR2.right);
     const fromRight = distRight < distLeft;
     // Start point: modal edge, at the Y of the clicked list item
-    const x1 = fromRight ? pR2.right : pR2.left;
+    const x1 = e.clientX;
     const y1 = e.clientY;
     // End point: near edge of the target ring (not dead-centre)
     const x2 = tR.left + tR.width / 2;  // horizontal midpoint of target
