@@ -381,6 +381,7 @@
     document.querySelectorAll('.intro-tab-panel').forEach((p, i) => {
       p.hidden = i + 1 !== n;
     });
+    document.getElementById('wrc-step-overlay')?.remove();
   }
 
   document.addEventListener('click', e => {
