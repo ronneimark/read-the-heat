@@ -474,10 +474,6 @@ body.chart-active { overflow: hidden; }
         <span class="acclim-tab-btn-title">📝 Notes</span>
         <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
       </button>
-      <button class="unacclim-tab-btn" id="utab-btn-4" onclick="switchUnacclimTab(4)">
-        <span class="acclim-tab-btn-title">🔍 Full Reference</span>
-        <span class="acclim-tab-btn-sub">Complete original view</span>
-      </button>
     </div>
   </div>
 </div><!-- /fixed-top -->
@@ -598,7 +594,6 @@ body.chart-active { overflow: hidden; }
     <div id="unacclim-tab-chart"></div>
     <div id="unacclim-tab-schedule" class="unacclim-tab-pane"></div>
     <div id="unacclim-tab-notes" class="unacclim-tab-pane"></div>
-    <div id="unacclim-tab-legacy" class="unacclim-tab-pane"></div>
   </div>
 
   <!-- Unacclimatized Table (NIOSH RAL) -->
@@ -1177,12 +1172,7 @@ body.chart-active { overflow: hidden; }
       </p>`;
   }
 
-  function buildUnacclimLegacyTab() {
-    const src = document.getElementById('wbgt-unacclim-section');
-    if (src) document.getElementById('unacclim-tab-legacy').innerHTML = src.innerHTML;
-  }
-
-  function sizeUnacclimChartPane() {
+function sizeUnacclimChartPane() {
     const fixedTop = document.getElementById('fixed-top');
     const pane     = document.getElementById('unacclim-tab-chart');
     if (!pane) return;
@@ -1205,13 +1195,12 @@ body.chart-active { overflow: hidden; }
       {id:'unacclim-tab-chart',    display:'block'},
       {id:'unacclim-tab-schedule', display:'block'},
       {id:'unacclim-tab-notes',    display:'block'},
-      {id:'unacclim-tab-legacy',   display:'block'}
     ];
     paneDefs.forEach((p, i) => {
       const el = document.getElementById(p.id);
       if (el) el.style.display = i === idx ? p.display : 'none';
     });
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       const btn = document.getElementById('utab-btn-' + i);
       if (btn) btn.classList.toggle('active', i === idx);
     }
@@ -1270,10 +1259,7 @@ body.chart-active { overflow: hidden; }
 
     } else if (hasUnacclimSession) {
       _sessionMode = 'unacclim';
-      // ── Five-tab view for unacclimatized WBGT workers ──
-      // Clone legacy content BEFORE hiding source section
-      buildUnacclimLegacyTab();
-
+      // ── Four-tab view for unacclimatized WBGT workers ──
       document.getElementById('wbgt-unacclim-tabs').style.display       = '';
       document.getElementById('unacclim-tab-bar-wrap').style.display    = '';
       document.getElementById('acclim-tab-bar-wrap').style.display      = 'none';
