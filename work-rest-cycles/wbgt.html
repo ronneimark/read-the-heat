@@ -18,14 +18,16 @@ body { overflow: auto; }
 /* ── Acclimatized two-tab shell ── */
 .acclim-tab-bar {
   display: flex;
-  gap: 0;
+  justify-content: center;
+  gap: 6px;
   background: #D6DFE9;
   padding: 8px 8px 0;
   flex-shrink: 0;
 }
+
 .acclim-tab-btn {
-  flex: 1;
-  padding: 14px 20px 12px;
+  padding: 14px 36px 12px;
+  min-width: 200px;
   font-size: 15px;
   font-weight: 700;
   border: none;
@@ -63,7 +65,7 @@ body { overflow: auto; }
   color: var(--navy, #1A2A3A);
 }
 
-/* ── Result tab — vertically centered in available viewport ── */
+/* ── Result tab — centered in available viewport ── */
 #acclim-tab-result-wrap {
   display: flex;
   align-items: center;
@@ -74,6 +76,17 @@ body { overflow: auto; }
 #acclim-tab-result {
   width: 100%;
   max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+.result-inputs {
+  justify-items: center;
+}
+.result-input-card {
+  text-align: left;
+}
+.result-main {
+  text-align: left;
 }
 
 .result-inputs {
