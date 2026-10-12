@@ -634,7 +634,14 @@ body.hi-chart-active { overflow: hidden; }
       </div>
       <div class="radiant-warn-strip">
         <strong>⚠ Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
-      </div>`;
+      </div>
+      ${rowIdx >= 0 && HI_RANGE_NOTES[rowIdx] ? `
+      <div class="hi-notes-section" style="margin-top:20px">
+        <h3>Monitoring &amp; Guidance — ${HI_RANGE_NOTES[rowIdx].range}</h3>
+        <div class="hi-notes-block" style="margin-bottom:0">
+          <div class="hi-notes-text">${HI_RANGE_NOTES[rowIdx].text}</div>
+        </div>
+      </div>` : ''}`;
   }
 
   // ── Build chart tab ───────────────────────────────────────────────────────────
@@ -671,27 +678,21 @@ body.hi-chart-active { overflow: hidden; }
     pane.innerHTML = html;
   }
 
+  // ── Range-specific monitoring guidance (shared by result + notes) ────────────
+  const HI_RANGE_NOTES = [
+    { range: 'Below 80°F (Below 27°C)',  text: 'Normal work practices; maintain standard hydration (8 oz water every 20 min). Train workers on heat illness signs.' },
+    { range: '80–90°F (27–32°C)',         text: 'Implement basic precautions. Buddy system. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. *Monitor heavy workers closely.' },
+    { range: '91–103°F (33–39°C)',        text: 'OSHA: Implement controls. Buddy system required. Enforce rest breaks in cool/shaded area. Hydration: 1 cup every 15–20 min. Watch new workers and unacclimatized workers especially.' },
+    { range: '103–115°F (39–46°C)',       text: 'OSHA: Active monitoring; frequent vital sign checks. Cool-down periods in air-conditioned or ventilated rest areas. Hydration: 1 cup every 15 min. Consider limiting new workers to ≤20% of shift in heat.' },
+    { range: '115–130°F (46–54°C)',       text: 'OSHA: Hazardous conditions. Engineering controls must be implemented or work suspended. Personal cooling (wet towels, cooling vests). Emergency response plan activated. Medical monitoring on-site.' },
+    { range: 'Above 130°F (Above 54°C)', text: 'Imminent danger. All work should cease until conditions are corrected. Evacuation if engineering controls cannot reduce heat to safe levels.' }
+  ];
+
   // ── Build notes tab ───────────────────────────────────────────────────────────
   function buildHINotesTab() {
     const pane = document.getElementById('hi-tab-notes');
     if (!pane) return;
-    const rangeNotes = [
-      { range: 'Below 80°F (Below 27°C)',  text: 'Normal work practices; maintain standard hydration (8 oz water every 20 min). Train workers on heat illness signs.' },
-      { range: '80–90°F (27–32°C)',         text: 'Implement basic precautions. Buddy system. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. *Monitor heavy workers closely.' },
-      { range: '91–103°F (33–39°C)',        text: 'OSHA: Implement controls. Buddy system required. Enforce rest breaks in cool/shaded area. Hydration: 1 cup every 15–20 min. Watch new workers and unacclimatized workers especially.' },
-      { range: '103–115°F (39–46°C)',       text: 'OSHA: Active monitoring; frequent vital sign checks. Cool-down periods in air-conditioned or ventilated rest areas. Hydration: 1 cup every 15 min. Consider limiting new workers to ≤20% of shift in heat.' },
-      { range: '115–130°F (46–54°C)',       text: 'OSHA: Hazardous conditions. Engineering controls must be implemented or work suspended. Personal cooling (wet towels, cooling vests). Emergency response plan activated. Medical monitoring on-site.' },
-      { range: 'Above 130°F (Above 54°C)', text: 'Imminent danger. All work should cease until conditions are corrected. Evacuation if engineering controls cannot reduce heat to safe levels.' }
-    ];
-    let html = `<div class="hi-notes-section">
-      <h3>Monitoring &amp; Guidance by Heat Index Range</h3>`;
-    rangeNotes.forEach(n => {
-      html += `<div class="hi-notes-block">
-        <div class="hi-notes-range">${n.range}</div>
-        <div class="hi-notes-text">${n.text}</div>
-      </div>`;
-    });
-    html += `</div>
+    pane.innerHTML = `
     <div class="hi-notes-section">
       <h3>Hydration Guidance</h3>
       <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
@@ -700,7 +701,6 @@ body.hi-chart-active { overflow: hidden; }
       <h3>Radiant Heat Limitation</h3>
       <div class="note-box warn-note" style="margin:0"><strong>Heat Index does not account for radiant heat from equipment, machinery, ovens, furnaces, or other hot surfaces.</strong> Heat index was developed for shade conditions with 5 mph wind. In indoor environments with direct radiant heat sources, very high or low air movement, or PPE/impermeable clothing — heat index <em>significantly underestimates</em> actual heat stress. If your work area has high levels of radiant heat, the work-rest cycles on this page may not adequately protect workers. WBGT is the preferred occupational heat stress measure in these settings.</div>
     </div>`;
-    pane.innerHTML = html;
   }
 
   // ── Fit header/range cell font sizes ─────────────────────────────────────────
