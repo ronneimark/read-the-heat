@@ -136,17 +136,142 @@
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
+/* ── Card two-column layout ── */
+.method-card-full {
+  flex-direction: row !important;
+  align-items: stretch;
+  cursor: default !important;
+  min-height: 164px;
+  gap: 14px;
+}
+.card-left {
+  flex: 0 0 54%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.card-left h3 { margin: 0; }
+.card-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 /* Method card photo */
 .method-card-photo {
   width: 100%;
   max-width: 100%;
-  height: 160px;
+  max-height: 114px;
   object-fit: contain;
-  border-radius: 6px;
-  margin: 8px 0 4px;
+  border-radius: 5px;
   display: block;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.12);
+  cursor: zoom-in;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
+.method-card-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+
+/* 3D blue action buttons */
+.card-btn {
+  width: 100%;
+  padding: 11px 10px;
+  border-radius: 9px;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  background: linear-gradient(180deg, #4f8ef7 0%, #1a56db 100%);
+  color: #fff;
+  box-shadow: 0 5px 0 #1338a8, 0 6px 12px rgba(0,10,60,0.28);
+  transform: translateY(0);
+  transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
+  text-shadow: 0 1px 2px rgba(0,0,50,0.22);
+}
+.card-btn:hover {
+  background: linear-gradient(180deg, #6fa3ff 0%, #2563eb 100%);
+}
+.card-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1338a8, 0 2px 4px rgba(0,10,60,0.28);
+}
+
+/* Photo lightbox */
+#photo-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,20,0.9);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+#photo-lightbox[hidden] { display: none !important; }
+#photo-lightbox-img {
+  max-width: 90vw;
+  max-height: 86vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+}
+
+/* Device info modal */
+#device-info-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,10,30,0.52);
+  z-index: 9300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#device-info-overlay[hidden] { display: none !important; }
+#device-info-modal {
+  background: #FEF8E0;
+  border-radius: 12px;
+  width: min(520px, 92vw);
+  max-height: 82vh;
+  overflow-y: auto;
+  padding: 8px 18px 20px;
+  box-shadow: 0 14px 48px rgba(0,10,60,0.22);
+  display: flex;
+  flex-direction: column;
+}
+#device-info-body h4 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 14px 0 4px;
+}
+#device-info-body p {
+  font-size: 13px;
+  line-height: 1.58;
+  color: var(--text, #1a1a2e);
+  margin: 0 0 6px;
+}
+.device-info-badge {
+  display: inline-block;
+  background: #001E62;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin: 8px 0 10px;
+}
+
 /* DBT warning on the Thermometer Only card */
 .meas-dbt-card-warning {
   background: #FFF3CD;
@@ -191,30 +316,71 @@
     <p class="ls-heading">Choose a measurement method and select temperature</p>
 
     <div class="method-cards method-cards-full">
-      <button class="method-card method-card-full" style="--card-accent:#001E62" onclick="openMeasModal('wbgt', this)">
-        <h3>WBGT</h3>
-        <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
-        <span class="method-card-tag">Wet Bulb Globe Temperature</span>
-      </button>
-      <button class="method-card method-card-full" style="--card-accent:#1a3a8f" onclick="openMeasModal('trh', this)">
-        <h3>Temperature + Humidity</h3>
-        <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
-        <span class="method-card-tag">Thermometer + hygrometer</span>
-      </button>
-      <button class="method-card method-card-full" style="--card-accent:#E05C2C" onclick="openMeasModal('hi', this)">
-        <h3>Heat Index</h3>
-        <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
-        <span class="method-card-tag">Device that Records Heat Index</span>
-      </button>
-      <button class="method-card method-card-full" style="--card-accent:#6B7280" onclick="openMeasModal('dbt', this)">
-        <h3>Thermometer Only</h3>
-        <div class="meas-dbt-card-warning">⚠️ Conservative estimate using 100% relative humidity.</div>
-        <span class="method-card-tag">Thermometer only</span>
-      </button>
+
+      <div class="method-card method-card-full" style="--card-accent:#001E62">
+        <div class="card-left">
+          <h3>WBGT</h3>
+          <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors" onclick="expandPhoto(this)">
+        </div>
+        <div class="card-right">
+          <button class="card-btn" onclick="showDeviceInfo('wbgt')">Information</button>
+          <button class="card-btn" onclick="openMeasModal('wbgt',this.closest('.method-card'))">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" style="--card-accent:#1a3a8f">
+        <div class="card-left">
+          <h3>Temperature + Humidity</h3>
+          <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors" onclick="expandPhoto(this)">
+        </div>
+        <div class="card-right">
+          <button class="card-btn" onclick="showDeviceInfo('trh')">Information</button>
+          <button class="card-btn" onclick="openMeasModal('trh',this.closest('.method-card'))">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" style="--card-accent:#E05C2C">
+        <div class="card-left">
+          <h3>Heat Index</h3>
+          <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors" onclick="expandPhoto(this)">
+        </div>
+        <div class="card-right">
+          <button class="card-btn" onclick="showDeviceInfo('hi')">Information</button>
+          <button class="card-btn" onclick="openMeasModal('hi',this.closest('.method-card'))">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" style="--card-accent:#6B7280">
+        <div class="card-left">
+          <h3>Thermometer Only</h3>
+          <div class="meas-dbt-card-warning">⚠️ Conservative estimate using 100% relative humidity.</div>
+        </div>
+        <div class="card-right">
+          <button class="card-btn" onclick="showDeviceInfo('dbt')">Information</button>
+          <button class="card-btn" onclick="openMeasModal('dbt',this.closest('.method-card'))">Select</button>
+        </div>
+      </div>
+
     </div>
 
   </div><!-- /ls4 -->
 </div><!-- /launcher -->
+
+<!-- ── Photo lightbox ── -->
+<div id="photo-lightbox" hidden onclick="closeLightbox()">
+  <img id="photo-lightbox-img" src="" alt="">
+</div>
+
+<!-- ── Device info modal ── -->
+<div id="device-info-overlay" hidden onclick="if(event.target===this)closeDeviceInfo()">
+  <div id="device-info-modal">
+    <div class="modal-sticky-header" style="margin:-8px -18px 10px;padding:10px 18px;background:#FEF8E0;box-shadow:none;border-bottom:1px solid var(--border);">
+      <h2 id="device-info-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;"></h2>
+      <button class="modal-close-btn" onclick="closeDeviceInfo()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="device-info-body"></div>
+  </div>
+</div>
 
 <!-- ── Measurement input modal ── -->
 <div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
@@ -367,6 +533,76 @@
     }
     closeMeasModal();
     window.location.href = measDestUrls[measCurrentInstrument];
+  }
+
+  // ── Photo lightbox ──
+  function expandPhoto(img) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = img.src;
+    document.getElementById('photo-lightbox-img').alt = img.alt;
+    lb.hidden = false;
+  }
+  function closeLightbox() {
+    document.getElementById('photo-lightbox').hidden = true;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeLightbox(); closeDeviceInfo(); }
+  });
+
+  // ── Device info modal ──
+  const DEVICE_INFO = {
+    wbgt: {
+      title: 'WBGT Monitors',
+      badge: '★ Gold Standard',
+      sections: [
+        { h: 'What it measures', p: 'The Wet Bulb Globe Temperature integrates three separate readings: the <strong>natural wet bulb</strong> (evaporative cooling — how humidity limits sweat evaporation), the <strong>black globe</strong> (radiant heat from hot surfaces, furnaces, or overhead heat sources), and the <strong>dry bulb</strong> (air temperature). Together these capture every major factor driving heat stress on the human body.' },
+        { h: 'Why it\'s the gold standard for indoor heat', p: 'WBGT is the preferred heat stress metric of OSHA, NIOSH, and ACGIH specifically because it captures radiant heat — the factor most likely to be missed in indoor workplaces. Near furnaces, boilers, commercial ovens, laundry equipment, and manufacturing heat sources, radiant heat can substantially raise heat strain even when the air temperature alone seems manageable. No other portable field instrument accounts for all of these factors simultaneously.' },
+        { h: 'Best suited for', p: 'All indoor industrial and commercial settings with significant heat sources: foundries, commercial kitchens, boiler rooms, laundries, glass and metal manufacturing, and any work environment where workers are near hot equipment or surfaces.' }
+      ]
+    },
+    trh: {
+      title: 'Temperature & Relative Humidity Monitors',
+      badge: null,
+      sections: [
+        { h: 'What it measures', p: 'These instruments record <strong>dry-bulb air temperature</strong> and <strong>relative humidity</strong> simultaneously. The two readings are then combined — using a heat index formula or a lookup table — to estimate the apparent temperature and the appropriate work-rest schedule.' },
+        { h: 'Better than a thermometer alone', p: 'Humidity has a large effect on how the body sheds heat. High humidity limits the evaporation of sweat — the body\'s primary cooling mechanism. A thermometer without a humidity reading will underestimate heat stress in humid environments, sometimes by a wide margin. Pairing temperature with relative humidity gives a meaningfully more accurate picture.' },
+        { h: 'Limitations compared to WBGT', p: 'Temperature and relative humidity do not capture <strong>radiant heat</strong> from hot surfaces or equipment, nor the cooling effect of air movement. In workplaces near furnaces, ovens, boilers, or other radiant heat sources, a T+RH estimate can substantially understate actual heat stress. WBGT remains the more protective and accurate measurement in those environments.' }
+      ]
+    },
+    hi: {
+      title: 'Heat Index Meters',
+      badge: null,
+      sections: [
+        { h: 'What it measures', p: 'Heat Index meters read <strong>air temperature</strong> and <strong>relative humidity</strong> and display a single computed "feels like" temperature — the apparent temperature that reflects the body\'s reduced ability to cool itself when humidity is high.' },
+        { h: 'Better than a thermometer alone', p: 'Because the humidity effect is built directly into the output, a heat index reading immediately communicates heat stress risk without requiring a separate calculation. It is the measure widely used by public health agencies and the National Weather Service to communicate outdoor heat danger to the public.' },
+        { h: 'Limitations compared to WBGT', p: 'Like any temperature-and-humidity-based measure, heat index does not account for <strong>radiant heat</strong> from hot surfaces or equipment, or the cooling benefit of air movement. In workplaces with strong radiant heat sources, heat index can meaningfully underestimate actual heat stress. WBGT is the preferred standard in those environments.' }
+      ]
+    },
+    dbt: {
+      title: 'Thermometer Only',
+      badge: 'Conservative Estimate',
+      sections: [
+        { h: 'What it measures', p: 'A standard thermometer reads dry-bulb <strong>air temperature only</strong>. Without a humidity reading, the exact level of heat stress cannot be determined — humidity is a major factor in how effectively the body cools itself.' },
+        { h: 'How this tool uses it', p: 'When only air temperature is available, this tool assumes <strong>100% relative humidity</strong> — the most conservative possible condition. The resulting work-rest schedule will never be less protective than necessary; if humidity is actually lower, the schedule simply errs on the side of caution.' },
+        { h: 'Recommendation', p: 'If resources allow, adding an inexpensive hygrometer (to pair with the thermometer) or upgrading to a combined T+RH monitor will give a more accurate — and potentially less restrictive — schedule. A WBGT meter gives the most complete picture for indoor workplaces with heat sources.' }
+      ]
+    }
+  };
+
+  function showDeviceInfo(key) {
+    const info = DEVICE_INFO[key];
+    if (!info) return;
+    document.getElementById('device-info-title').textContent = info.title;
+    let html = '';
+    if (info.badge) html += `<span class="device-info-badge">${info.badge}</span>`;
+    info.sections.forEach(s => {
+      html += `<h4>${s.h}</h4><p>${s.p}</p>`;
+    });
+    document.getElementById('device-info-body').innerHTML = html;
+    document.getElementById('device-info-overlay').hidden = false;
+  }
+  function closeDeviceInfo() {
+    document.getElementById('device-info-overlay').hidden = true;
   }
 
   function updateLayout() {
