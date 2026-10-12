@@ -95,47 +95,46 @@
 /* ── ls1 header row ── */
 .ls1-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
-.ls-heading { margin: 0; white-space: nowrap; }
+.ls-heading { margin: 0; }
 
 /* ── "How to use" button + popover wrapper ── */
 .intro-anchor {
   position: relative;
-  flex-shrink: 0;
 }
 
-/* Dark-blue 3-D button */
+/* Red 3-D button */
 .intro-open-btn {
-  font-size: .78rem;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: .03em;
+  letter-spacing: .04em;
   white-space: nowrap;
-  padding: 6px 13px;
-  border-radius: 7px;
+  padding: 10px 28px;
+  border-radius: 9px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(180deg, #1e5fa8 0%, #0d3d6e 100%);
+  background: linear-gradient(180deg, #c8001e 0%, #A50028 100%);
   color: #fff;
-  box-shadow: 0 4px 0 #071f3a, 0 5px 8px rgba(0,0,0,.3);
+  box-shadow: 0 5px 0 #6b0014, 0 7px 10px rgba(0,0,0,.3);
   transition: transform .1s, box-shadow .1s;
   position: relative;
-  z-index: 1001; /* stay above popover arrow */
+  z-index: 1001;
 }
-.intro-open-btn:hover { filter: brightness(1.15); }
+.intro-open-btn:hover { filter: brightness(1.1); }
 .intro-open-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #071f3a, 0 2px 4px rgba(0,0,0,.2);
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #6b0014, 0 2px 4px rgba(0,0,0,.2);
 }
 
 /* ── Popover ── */
 .intro-popover {
   position: absolute;
-  top: calc(100% + 10px); /* 10px gap below button */
-  right: 0;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
   width: min(480px, 92vw);
   background: var(--modal-bg, #fff);
   border-radius: 12px;
@@ -143,7 +142,7 @@
   z-index: 1000;
   overflow: hidden;
   /* slide-down animation */
-  transform-origin: top right;
+  transform-origin: top center;
   animation: popoverIn .18s ease;
 }
 .intro-popover[hidden] { display: none; }
@@ -159,7 +158,8 @@
 .intro-popover-arrow {
   position: absolute;
   top: -7px;
-  right: 18px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 14px;
   height: 7px;
   overflow: hidden;
