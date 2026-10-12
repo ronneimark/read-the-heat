@@ -715,10 +715,10 @@
     const cp2x = fromRight ? x2 + cpOff : x2 - cpOff;
 
     const arrow = document.createElementNS(NS, 'path');
-    arrow.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${y1}, ${cp2x} ${y2}, ${x2} ${y2}`);
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
     arrow.setAttribute('fill', 'none');
     arrow.setAttribute('stroke', '#00966C');
-    arrow.setAttribute('stroke-width', '2.5');
+    arrow.setAttribute('stroke-width', '4');
     arrow.setAttribute('stroke-linecap', 'round');
     arrow.setAttribute('marker-end', 'url(#wrc-ah)');
     svg.appendChild(arrow);
