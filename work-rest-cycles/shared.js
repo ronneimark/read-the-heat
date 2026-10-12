@@ -380,9 +380,9 @@ function buildBreadcrumbs() {
     const measTemp  = WRC.val('measTemp', null);
     const measRH    = WRC.val('measRH', null);
     let valueLabel = null;
-    if (instrument === 'trh' && measTemp !== null && measRH !== null) {
+    if (instrument === 'trh' && measTemp != null && measRH != null) {
       valueLabel = measTemp + unitSuffix + ' / ' + measRH + '%';
-    } else if ((instrument === 'wbgt' || instrument === 'hi') && measValue !== null) {
+    } else if ((instrument === 'wbgt' || instrument === 'hi') && measValue != null) {
       valueLabel = measValue + unitSuffix;
     }
     if (valueLabel) {
