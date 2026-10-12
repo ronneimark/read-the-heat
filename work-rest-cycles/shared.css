@@ -556,16 +556,15 @@
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     grid-template-rows: 1fr 1fr !important;
-    gap: 0 !important;
+    gap: 1px !important;          /* gap + background = equal dividers everywhere */
+    background: var(--border) !important;
     margin-bottom: 0 !important;
     flex: 1;
     min-height: 0;
   }
   .method-card-full {
     border-radius: 0 !important;
-    border: none !important;
-    border-right: 1px solid var(--border) !important;
-    border-bottom: 1px solid var(--border) !important;
+    border: none !important;      /* grid gap handles all dividers */
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
@@ -1520,8 +1519,6 @@
       grid-auto-rows: auto !important;
     }
     .method-card-full {
-      border-right: none !important;
-      border-bottom: 1px solid var(--border) !important;
       min-height: 160px !important;
     }
 
