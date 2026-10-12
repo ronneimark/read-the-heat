@@ -125,6 +125,18 @@
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
+/* DBT warning on the Thermometer Only card */
+.meas-dbt-card-warning {
+  background: #FFF3CD;
+  border: 1px solid #FBBF24;
+  border-radius: 6px;
+  padding: 7px 10px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #78350F;
+  text-align: left;
+}
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -178,7 +190,8 @@
       <button class="method-card method-card-full" style="--card-accent:#6B7280" onclick="openMeasModal('dbt', this)">
         <span class="method-card-icon">🌡</span>
         <h3>Thermometer Only</h3>
-        <p>Record a dry-bulb air temperature reading without humidity. <strong>Important limitations apply</strong> — dry-bulb temperature alone does not capture heat stress.</p>
+        <p>Record a dry-bulb air temperature reading without humidity.</p>
+        <div class="meas-dbt-card-warning">⚠️ Dry-bulb alone misses humidity and radiant heat. Use another method for a complete heat stress assessment.</div>
         <span class="method-card-tag">Thermometer only</span>
       </button>
     </div>
@@ -192,11 +205,6 @@
     <div class="modal-sticky-header" style="margin:-10px -16px 12px;">
       <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
-    </div>
-
-    <!-- Warning banner — shown for dry-bulb only -->
-    <div id="meas-dbt-warning" hidden style="background:#FFF3CD;border:1px solid #FBBF24;border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;line-height:1.45;color:#78350F;">
-      <strong>⚠️ Dry-bulb alone is insufficient.</strong> It misses humidity and radiant heat. Use WBGT, Temp + Humidity, or Heat Index for a complete assessment.
     </div>
 
     <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
@@ -268,8 +276,6 @@
       if (el) { el.value = ''; el.classList.remove('error'); }
     });
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
-    document.getElementById('meas-dbt-warning').hidden = (instrument !== 'dbt');
-
     // Position overlay within the clicked card's quadrant
     const overlay = document.getElementById('meas-modal-overlay');
     if (triggerEl) {
