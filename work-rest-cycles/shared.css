@@ -306,10 +306,12 @@
   .wrc-crumb-pending.wrc-crumb-current {
     background: #1a7a3c !important;
     border-color: rgba(255,255,255,0.35) !important;
+    color: #fff !important;
     font-style: normal !important;
   }
   .wrc-crumb-current:hover {
     background: #155f30 !important;
+    color: #fff !important;
   }
   /* pending pill — no selection yet, red bg, italic white */
   .wrc-crumb-pending {

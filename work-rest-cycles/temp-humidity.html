@@ -856,6 +856,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     const calcEl  = document.getElementById('trh-calc-display');
     if (isNaN(tempRaw) || isNaN(rh)) {
       _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      WRC.set({ derivedHI: null, derivedHIUnit: null });
       if (calcEl) calcEl.textContent = '—';
       buildTrhResultTab();
       buildTrhUnacclimResultTab();
@@ -876,6 +877,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     }
     if (_hiCalcHI != null) {
       _hiStoredVal = _hiCalcHI; _hiStoredUnit = 'F';
+      WRC.set({ derivedHI: _hiCalcHI, derivedHIUnit: 'F' });
+    } else {
+      WRC.set({ derivedHI: null, derivedHIUnit: null });
     }
     buildTrhResultTab();
     buildTrhUnacclimResultTab();

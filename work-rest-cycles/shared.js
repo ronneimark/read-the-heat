@@ -510,6 +510,12 @@ function buildBreadcrumbs() {
     let valueLabel = null;
     if (instrument === 'trh' && measTemp != null && measRH != null) {
       valueLabel = measTemp + unitSuffix + ' / ' + measRH + '%';
+      const derivedHI     = WRC.val('derivedHI', null);
+      const derivedHIUnit = WRC.val('derivedHIUnit', 'F');
+      if (derivedHI != null) {
+        const hiSuffix = derivedHIUnit === 'C' ? '°C' : '°F';
+        valueLabel += ' → HI: ' + derivedHI + hiSuffix;
+      }
     } else if ((instrument === 'wbgt' || instrument === 'hi' || instrument === 'dbt') && measValue != null) {
       valueLabel = measValue + unitSuffix;
     }
