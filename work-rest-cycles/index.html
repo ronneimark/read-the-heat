@@ -482,16 +482,28 @@
     const popH = pop.scrollHeight;
     const btnMid = (btnRect.top + btnRect.bottom) / 2;
 
-    /* Floor = just below the button, fixed. Popover grows upward from there. */
-    const floorFromBottom = vpH - btnRect.bottom - 8;
-    pop.style.bottom = floorFromBottom + 'px';
-    pop.style.top = '';
+    const gap = 8;
+    const topAnchor = btnRect.bottom + gap; /* top of popover starts below button */
 
-    if (popH <= availH) {
+    /* How much space is below the button down to the viewport floor */
+    const spaceBelow = vpH - topAnchor - vpad;
+
+    if (popH <= spaceBelow) {
+      /* Fits entirely below button — simple case */
+      pop.style.top = topAnchor + 'px';
+      pop.style.bottom = '';
+      pop.style.maxHeight = '';
+      pop.style.overflowY = 'visible';
+    } else if (popH <= availH) {
+      /* Doesn't fit below alone — extend top upward, keep bottom pinned to viewport floor */
+      pop.style.top = Math.max(vpad, vpH - vpad - popH) + 'px';
+      pop.style.bottom = '';
       pop.style.maxHeight = '';
       pop.style.overflowY = 'visible';
     } else {
-      /* Taller than viewport — fill available height and scroll */
+      /* Taller than full viewport — fill it and scroll */
+      pop.style.top = vpad + 'px';
+      pop.style.bottom = '';
       pop.style.maxHeight = availH + 'px';
       pop.style.overflowY = 'auto';
     }
