@@ -131,17 +131,33 @@
 <style>
 /* ── heading row ── */
 .ls1-header {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  width: 100%;
 }
-.ls-heading { margin: 0; text-align: center; }
+.ls-heading {
+  margin: 0;
+  text-align: left;
+  grid-column: 1;
+  font-size: 1.05rem;
+}
+.intro-anchor {
+  grid-column: 2;
+}
+/* on narrow screens, stack heading above centered button */
+@media (max-width: 560px) {
+  .ls1-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .ls-heading { text-align: center; grid-column: 1; }
+  .intro-anchor { grid-column: 1; }
+}
 
 /* ── anchor wrapper ── */
-.intro-anchor {
-  position: relative;
-}
+.intro-anchor { position: relative; }
 
 /* ── red 3D button ── */
 .intro-open-btn {
