@@ -114,6 +114,7 @@ main { padding: 0; max-width: none; }
   line-height: 1.65;
 }
 .hi-formula-footnote strong { color: var(--navy, #1A2A3A); }
+body.trh-result-active .hi-formula-footnote { display: none; }
 
 /* ── Tab bar ── */
 .acclim-tab-bar {
@@ -1240,6 +1241,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       }
     });
     document.body.classList.toggle('trh-chart-active', which === 'chart');
+    document.body.classList.toggle('trh-result-active', which === 'result');
     if (which === 'chart') sizeTrhChartPane();
   }
 
@@ -1266,6 +1268,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       }
     });
     document.body.classList.toggle('trh-unacclim-chart-active', which === 'chart');
+    document.body.classList.toggle('trh-result-active', which === 'result');
     if (which === 'chart') sizeTrhUnacclimChartPane();
   }
 
