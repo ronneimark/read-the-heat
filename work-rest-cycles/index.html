@@ -523,6 +523,26 @@
     }
   }
 
+  function lockPanelHeight() {
+    // Measure each tab panel at its natural height, fix the panels container
+    // to the tallest so tab switches never shrink the modal.
+    const panelsWrap = document.querySelector('.intro-tab-panels');
+    const panels = [...document.querySelectorAll('.intro-tab-panel')];
+    if (!panelsWrap || !panels.length) return;
+
+    // Temporarily show all panels to measure them
+    const wasHidden = panels.map(p => p.hidden);
+    panels.forEach(p => { p.hidden = false; p.style.display = ''; });
+    panelsWrap.style.minHeight = '';
+
+    const tallest = Math.max(...panels.map(p => p.scrollHeight));
+
+    // Restore original visibility
+    panels.forEach((p, i) => { p.hidden = wasHidden[i]; });
+
+    panelsWrap.style.minHeight = tallest + 'px';
+  }
+
   function toggleIntroPopover() {
     const pop = document.getElementById('intro-popover');
     const btn = document.getElementById('intro-open-btn');
@@ -531,7 +551,10 @@
     } else {
       pop.hidden = false;
       btn.setAttribute('aria-expanded', 'true');
-      requestAnimationFrame(() => positionIntroPopover());
+      requestAnimationFrame(() => {
+        lockPanelHeight();
+        positionIntroPopover();
+      });
     }
   }
 
@@ -575,7 +598,7 @@
   });
   window.addEventListener('resize', () => {
     const pop = document.getElementById('intro-popover');
-    if (!pop.hidden) positionIntroPopover();
+    if (!pop.hidden) { lockPanelHeight(); positionIntroPopover(); }
   });
 
   const INSTRUMENT_PHOTOS = {
