@@ -77,7 +77,7 @@
                 <li class="intro-step-link" onclick="highlightStep(event,2)"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
                 <li class="intro-step-link" onclick="highlightStep(event,3)"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
                 <li class="intro-step-link" onclick="highlightStep(event,4)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,5)"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,5)"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
               </ol>
               <!-- illustration slot -->
               <div class="intro-illus-slot" aria-hidden="true"></div>
@@ -516,12 +516,20 @@
     panelsWrap.style.minHeight = tallest + 'px';
   }
 
+  function updateStep5Hint() {
+    const hint = document.getElementById('step5-hint');
+    if (!hint) return;
+    const hasGoBtn = !!document.querySelector('.wrc-crumb-go');
+    hint.style.display = hasGoBtn ? '' : 'none';
+  }
+
   function toggleIntroPopover() {
     const pop = document.getElementById('intro-popover');
     const btn = document.getElementById('intro-open-btn');
     if (!pop.hidden) {
       animateClosePopover(pop, btn);
     } else {
+      updateStep5Hint();
       pop.hidden = false;
       btn.setAttribute('aria-expanded', 'true');
       requestAnimationFrame(() => {
