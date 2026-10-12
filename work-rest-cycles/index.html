@@ -64,10 +64,10 @@
 
             <div class="intro-tab-panel active" id="itab-1" role="tabpanel">
               <ol class="intro-steps">
-                <li class="intro-step-link" onclick="highlightStep(1)"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(2)"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(3)"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(4)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,1)"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,2)"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,3)"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,4)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
               </ol>
               <!-- illustration slot -->
               <div class="intro-illus-slot" aria-hidden="true"></div>
@@ -359,6 +359,7 @@
     if (pop.hidden || pop.classList.contains('closing')) return;
     pop.classList.add('closing');
     if (btn) btn.setAttribute('aria-expanded', 'false');
+    document.getElementById('wrc-step-overlay')?.remove();
     setTimeout(() => {
       pop.hidden = true;
       pop.classList.remove('closing');
@@ -389,105 +390,88 @@
     if (e.key === 'Escape') closeIntroPopover();
   });
 
-  function highlightStep(n) {
-    requestAnimationFrame(() => {
-      const NS = 'http://www.w3.org/2000/svg';
-      const btn = document.getElementById('intro-open-btn');
-      const btnR = btn.getBoundingClientRect();
+  function highlightStep(e, n) {
+    const NS = 'http://www.w3.org/2000/svg';
 
-      // Target: each step maps to the corresponding breadcrumb pill in the nav bar
-      const crumbs = document.querySelectorAll('#wrc-breadcrumbs .wrc-crumb, #wrc-breadcrumbs .wrc-crumb-pending');
-      const targets = {
-        1: crumbs[0],   // Industry
-        2: crumbs[1],   // Activity Level
-        3: crumbs[2],   // Acclimatization
-        4: crumbs[3],   // Instrument
-      };
-      const target = targets[n];
-      if (!target) return;
-      const tR = target.getBoundingClientRect();
+    // Target: each step maps to the corresponding breadcrumb pill
+    const crumbs = document.querySelectorAll('#wrc-breadcrumbs .wrc-crumb, #wrc-breadcrumbs .wrc-crumb-pending');
+    const target = crumbs[n - 1];
+    if (!target) return;
+    const tR = target.getBoundingClientRect();
 
-      // Remove any existing overlay
-      document.getElementById('wrc-step-overlay')?.remove();
+    // Remove any existing overlay
+    document.getElementById('wrc-step-overlay')?.remove();
 
-      const svg = document.createElementNS(NS, 'svg');
-      svg.id = 'wrc-step-overlay';
-      Object.assign(svg.style, {
-        position: 'fixed', top: '0', left: '0',
-        width: '100vw', height: '100vh',
-        pointerEvents: 'none', zIndex: '9998',
-      });
-
-      // Arrowhead marker
-      const defs = document.createElementNS(NS, 'defs');
-      const marker = document.createElementNS(NS, 'marker');
-      marker.setAttribute('id', 'wrc-ah');
-      marker.setAttribute('markerWidth', '9'); marker.setAttribute('markerHeight', '6');
-      marker.setAttribute('refX', '9');        marker.setAttribute('refY', '3');
-      marker.setAttribute('orient', 'auto');
-      const tip = document.createElementNS(NS, 'polygon');
-      tip.setAttribute('points', '0 0, 9 3, 0 6');
-      tip.setAttribute('fill', '#e53935');
-      marker.appendChild(tip); defs.appendChild(marker); svg.appendChild(defs);
-
-      // Arrow from button bottom to target top-center
-      const x1 = btnR.left + btnR.width / 2;
-      const y1 = btnR.bottom + 4;
-      const x2 = tR.left + tR.width / 2;
-      const y2 = tR.top - 8;
-
-      const arrow = document.createElementNS(NS, 'path');
-      arrow.setAttribute('d', `M ${x1} ${y1} C ${x1} ${(y1+y2)/2}, ${x2} ${(y1+y2)/2}, ${x2} ${y2}`);
-      arrow.setAttribute('fill', 'none');
-      arrow.setAttribute('stroke', '#e53935');
-      arrow.setAttribute('stroke-width', '2.5');
-      arrow.setAttribute('stroke-linecap', 'round');
-      arrow.setAttribute('marker-end', 'url(#wrc-ah)');
-      svg.appendChild(arrow);
-      document.body.appendChild(svg);
-
-      // Animate arrow draw
-      const len = arrow.getTotalLength();
-      arrow.style.strokeDasharray = len;
-      arrow.style.strokeDashoffset = len;
-      arrow.style.transition = 'stroke-dashoffset .4s ease';
-      requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
-
-      // Countdown ring around target pill
-      const cx = tR.left + tR.width / 2;
-      const cy = tR.top + tR.height / 2;
-      const r  = Math.max(tR.width, tR.height) / 2 + 10;
-      const circum = 2 * Math.PI * r;
-
-      // Filled tint
-      const tint = document.createElementNS(NS, 'circle');
-      tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', r);
-      tint.setAttribute('fill', 'rgba(229,57,53,.12)');
-      svg.appendChild(tint);
-
-      // Progress ring
-      const ring = document.createElementNS(NS, 'circle');
-      ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', r);
-      ring.setAttribute('fill', 'none');
-      ring.setAttribute('stroke', '#e53935');
-      ring.setAttribute('stroke-width', '3');
-      ring.setAttribute('stroke-linecap', 'round');
-      ring.style.transformOrigin = `${cx}px ${cy}px`;
-      ring.style.transform = 'rotate(-90deg)';
-      ring.style.strokeDasharray = circum;
-      ring.style.strokeDashoffset = circum;
-      ring.style.transition = 'stroke-dashoffset 5s linear';
-      svg.appendChild(ring);
-
-      setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 420);
-
-      // Fade out after 5.5 s
-      setTimeout(() => {
-        svg.style.transition = 'opacity .4s';
-        svg.style.opacity = '0';
-        setTimeout(() => svg.remove(), 400);
-      }, 5400);
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9998',
     });
+
+    // Arrowhead marker
+    const defs = document.createElementNS(NS, 'defs');
+    const marker = document.createElementNS(NS, 'marker');
+    marker.setAttribute('id', 'wrc-ah');
+    marker.setAttribute('markerWidth', '9'); marker.setAttribute('markerHeight', '6');
+    marker.setAttribute('refX', '9');        marker.setAttribute('refY', '3');
+    marker.setAttribute('orient', 'auto');
+    const tip = document.createElementNS(NS, 'polygon');
+    tip.setAttribute('points', '0 0, 9 3, 0 6');
+    tip.setAttribute('fill', '#e53935');
+    marker.appendChild(tip); defs.appendChild(marker); svg.appendChild(defs);
+
+    // Arrow from click point to target pill
+    const x1 = e.clientX;
+    const y1 = e.clientY;
+    const x2 = tR.left + tR.width / 2;
+    const y2 = tR.bottom + 8;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} C ${x1} ${y1 - 40}, ${x2} ${y2 + 40}, ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#e53935');
+    arrow.setAttribute('stroke-width', '2.5');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-ah)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+
+    // Animate arrow draw
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    // Ring around target pill
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    const r  = Math.max(tR.width, tR.height) / 2 + 10;
+    const circum = 2 * Math.PI * r;
+
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', r);
+    tint.setAttribute('fill', 'rgba(229,57,53,.12)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', r);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#e53935');
+    ring.setAttribute('stroke-width', '6');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+
+    // Draw circle fast after arrow
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
+    // No auto-fade — stays until next step click or modal close
   }
 
   function ls1SelectSector(key) {
