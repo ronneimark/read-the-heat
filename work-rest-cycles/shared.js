@@ -177,6 +177,23 @@ function ensureMethodologyModal() {
       <strong>Derived approximations (no primary source — methodology only):</strong>
       <br>• T+RH tab unacclimatized thresholds — derived by shifting acclimatized HI breakpoints; no equivalent NIOSH published table in HI units
       <br>• Heat Index tab unacclimatized table — similarly derived; NIOSH Recommended Alert Limits (RAL) is expressed in WBGT, not HI
+      <br>• Thermometer-only path HI values — calculated from measured dry-bulb temperature at an assumed 100% relative humidity (see below)
+    </div>
+
+    <div class="note-box">
+      <strong>Thermometer-Only (Dry Bulb) Path — Methodology</strong><br><br>
+      When a worker or supervisor has access only to a standard thermometer (no hygrometer or psychrometer), the tool accepts a dry-bulb air temperature and calculates a Heat Index using <strong>100% relative humidity as a conservative ceiling assumption</strong>. This is the highest possible heat stress for a given air temperature, because relative humidity cannot exceed 100%; the actual Heat Index will be equal to or lower than the displayed value if measured humidity is below 100%.<br><br>
+      This approach ensures the work-rest recommendation will never <em>underestimate</em> risk — it is protective by design. However, it may significantly <em>overestimate</em> heat stress in dry environments (e.g., dry desert climates, low-humidity warehouses), and in those settings a measured humidity reading should be obtained for a more accurate assessment.<br><br>
+      The resulting Heat Index value is then passed through the same Rothfusz (1990) regression and NIOSH-derived thresholds used for the T+RH path. The tool displays a notice to the user that 100% RH was assumed and recommends re-entering with a measured humidity if available.
+    </div>
+
+    <div class="note-box">
+      <strong>Acclimatization Status — Tool Workflow</strong><br><br>
+      Before entering a temperature measurement, users select the worker's acclimatization status. This determines which NIOSH exposure limit applies:<br><br>
+      <strong>Acclimatized (REL):</strong> Workers who have completed a full acclimatization protocol and have not been absent from heat work for seven or more consecutive days. The NIOSH Recommended Exposure Limit (REL) applies. Acclimatization increases sweating efficiency, stabilizes cardiovascular response, and lowers core body temperature and heart rate at equivalent workloads (NIOSH, 2016).<br><br>
+      <strong>Unacclimatized — New Worker (RAL):</strong> Workers starting heat exposure for the first time, or newly assigned to a hot work area. The NIOSH Recommended Alert Limit (RAL) applies. NIOSH protocol recommends no more than 20% of usual heat exposure on Day 1, increasing by approximately 20% per day over 7–14 days.<br><br>
+      <strong>Unacclimatized — Returning Worker (RAL):</strong> Workers previously acclimatized but absent from heat work for seven or more consecutive days. The RAL also applies. NIOSH return protocol: 4-day ramp — 50% → 60% → 80% → 100% of usual exposure. Workers with cardiovascular disease, obesity, certain medications, or a history of prior heat illness should also be considered unacclimatized for conservative planning purposes.<br><br>
+      NIOSH (2016, p. 40): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death."</em>
     </div>
 
     <div class="note-box">
@@ -272,11 +289,19 @@ function ensureMethodologyModal() {
 
     <hr class="divider">
 
+    <div class="section-label">Individual Health Risk Factors</div>
+    <div class="note-box">
+      The tool includes a reference panel (accessed via the ❤ button on any page) summarizing individual-level factors that increase susceptibility to heat-related illness, drawn from NIOSH (2016). These factors do not modify the displayed work-rest thresholds — the thresholds are based on the NIOSH "standard man" (70 kg, 1.8 m² BSA, physically fit, acclimatized where noted) — but supervisors and safety professionals should apply additional caution and potentially more conservative schedules when workers have one or more of the following characteristics:<br><br>
+      <strong>High-risk conditions identified by NIOSH (2016):</strong> cardiovascular disease or hypertension; diabetes; kidney disease; obesity (BMI ≥ 30); pregnancy; age 65 or older (reduced sweating capacity); prior heat stroke (permanent impairment of heat tolerance in some individuals); use of medications that impair thermoregulation (diuretics, anticholinergics, beta-blockers, antihistamines, certain antidepressants and antipsychotics); recent illness with fever or diarrhea; low physical fitness; and lack of acclimatization (addressed in the tool's acclimatization workflow above).<br><br>
+      This panel is informational only. Specific accommodation decisions should involve occupational medicine consultation.
+    </div>
+
     <div class="section-label">Intended Use and Limitations</div>
     <div class="note-box">
-      This document is intended as a preliminary reference tool for occupational health education and policy development. It does not constitute a compliance standard or legal requirement. Users should:
+      This tool is intended as a preliminary reference for occupational health education and policy development. It does not constitute a compliance standard or legal requirement. Users should:
       <br>• Verify intermediate work-rest line thresholds (45/15, 30/30, 15/45 WBGT values) against NIOSH (2016) Figures 8-1 and 8-2 before use in enforcement or published tools — continuous-work thresholds are confirmed from equations and Table 5-1 and do not require further verification
       <br>• Apply professional judgment accounting for site-specific conditions (radiant heat, clothing, workload variability, individual risk factors)
+      <br>• Treat Heat Index–based recommendations (T+RH and thermometer-only paths) as approximations — NIOSH expresses its limits in WBGT, not Heat Index; the WBGT tab values are the most defensible basis for formal heat stress assessment
       <br>• Consult a certified industrial hygienist (CIH) for complex or high-hazard situations
       <br>• Check for updates to NIOSH criteria, OSHA standards, and state-specific requirements
       <br><br>
