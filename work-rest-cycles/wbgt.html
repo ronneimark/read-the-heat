@@ -218,6 +218,8 @@ body.chart-active { overflow: hidden; }
   color: var(--navy, #1A2A3A);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
 
@@ -228,6 +230,8 @@ body.chart-active { overflow: hidden; }
   justify-content: flex-start;
   padding-left: 12px;
   background: var(--surface, #F8FAFB);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* value cells: inherit c-* colors, override font size */
@@ -906,13 +910,14 @@ body.chart-active { overflow: hidden; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    // Binary search in tenths of a px between 7 px and 42 px
+    // Binary search in tenths of a px between 7 px and 42 px.
+    // white-space:nowrap is set in CSS, so only width overflow matters.
     let lo = 70, hi = 420;
     while (lo < hi) {
       const mid = Math.floor((lo + hi + 1) / 2);
       const fs  = (mid / 10) + 'px';
-      cells.forEach(c => { c.style.fontSize = fs; c.style.lineHeight = '1.15'; });
-      const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1 || c.scrollHeight > c.clientHeight + 1);
+      cells.forEach(c => c.style.fontSize = fs);
+      const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
       if (overflows) hi = mid - 1; else lo = mid;
     }
     const finalSize = (lo / 10) + 'px';
