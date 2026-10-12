@@ -720,9 +720,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   }
 
   // ── Notes tab builders ────────────────────────────────────────────────────────
-  function _buildNotesContent(rangeNotes, extraTop) {
+  function _buildNotesContent(rangeNotes, extraTop, includeRangeSection = true) {
     const unit = _hiUnit;
     let html = extraTop || '';
+    if (includeRangeSection) {
     html += `<div class="hi-notes-section">
       <h3>Monitoring &amp; Guidance by Heat Index Range</h3>`;
     rangeNotes.forEach(n => {
@@ -734,8 +735,8 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         <div class="hi-notes-text">${n.text}</div>
       </div>`;
     });
-    html += `</div>
-    <div class="hi-notes-section">
+    html += `</div>`; }
+    html += `<div class="hi-notes-section">
       <h3>Hydration Guidance</h3>
       <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
     </div>
@@ -763,7 +764,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         <strong>Note:</strong> These values are methodology-derived HI approximations. NIOSH RAL is expressed in WBGT — see the WBGT tab for equation-confirmed values.
       </div>
     </div>`;
-    pane.innerHTML = _buildNotesContent(HI_UNACCLIM_RANGE_NOTES, extra);
+    pane.innerHTML = _buildNotesContent(HI_UNACCLIM_RANGE_NOTES, extra, false);
   }
 
   // ── Grid font fitting ─────────────────────────────────────────────────────────
