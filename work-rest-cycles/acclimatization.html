@@ -39,12 +39,14 @@
   font-weight: 800;
   text-shadow: none !important;
 }
-.ls3-acclim-yes    .ls3-acclim-cta { background: #00966C !important; }
-.ls3-acclim-no     .ls3-acclim-cta { background: #E65100 !important; }
-.ls3-acclim-return .ls3-acclim-cta { background: #B45309 !important; }
+.ls3-acclim-yes    .ls3-acclim-cta { background: #00966C !important; box-shadow: 0 5px 0 #005a40, 0 6px 12px rgba(0,0,0,0.25) !important; }
+.ls3-acclim-no     .ls3-acclim-cta { background: #E65100 !important; box-shadow: 0 5px 0 #8a3000, 0 6px 12px rgba(0,0,0,0.25) !important; }
+.ls3-acclim-return .ls3-acclim-cta { background: #B45309 !important; box-shadow: 0 5px 0 #6b3105, 0 6px 12px rgba(0,0,0,0.25) !important; }
+.ls3-acclim-cta { transform: translateY(0); transition: transform .08s, box-shadow .08s !important; }
 .ls3-acclim-yes    .ls3-acclim-cta:hover { background: #007a57 !important; }
 .ls3-acclim-no     .ls3-acclim-cta:hover { background: #c74600 !important; }
 .ls3-acclim-return .ls3-acclim-cta:hover { background: #924407 !important; }
+.ls3-acclim-cta:active { transform: translateY(4px) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.15) !important; }
 
 /* About Acclimatization modal */
 #acclim-about-overlay {
