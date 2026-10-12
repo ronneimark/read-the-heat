@@ -174,31 +174,38 @@
 }
 .card-left { position: relative; }
 
-/* 3D blue action buttons */
+/* 3D action buttons */
 .card-btn {
   width: 100%;
   padding: 11px 10px;
   border-radius: 9px;
-  font-weight: 800;
-  font-size: 13px;
+  font-weight: 900;
+  font-size: 15px;
   letter-spacing: 0.02em;
   cursor: pointer;
   border: none;
   font-family: inherit;
-  background: linear-gradient(180deg, #0a2e8a 0%, #001E62 100%);
   color: #fff;
-  box-shadow: 0 5px 0 #001040, 0 6px 12px rgba(0,10,60,0.35);
   transform: translateY(0);
   transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
+}
+/* Information — navy */
+.card-btn-info {
+  background: linear-gradient(180deg, #0a2e8a 0%, #001E62 100%);
+  box-shadow: 0 5px 0 #001040, 0 6px 12px rgba(0,10,60,0.35);
   text-shadow: 0 1px 2px rgba(0,0,50,0.3);
 }
-.card-btn:hover {
-  background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%);
+.card-btn-info:hover { background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%); }
+.card-btn-info:active { box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35); }
+/* Select — site red */
+.card-btn-select {
+  background: linear-gradient(180deg, #f0003a 0%, #D50032 100%);
+  box-shadow: 0 5px 0 #8a0020, 0 6px 12px rgba(80,0,20,0.35);
+  text-shadow: 0 1px 2px rgba(80,0,0,0.3);
 }
-.card-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35);
-}
+.card-btn-select:hover { background: linear-gradient(180deg, #ff1a4a 0%, #e8003a 100%); }
+.card-btn-select:active { box-shadow: 0 1px 0 #8a0020, 0 2px 4px rgba(80,0,20,0.35); }
+.card-btn:active { transform: translateY(4px); }
 
 /* Photo expand — overlay zoom (counter-the-cough pattern) */
 #photo-zoom-overlay {
@@ -362,8 +369,8 @@
           <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
         </div>
         <div class="card-right">
-          <button class="card-btn" onclick="showDeviceInfo('wbgt')">Information</button>
-          <button class="card-btn" onclick="openMeasModal('wbgt',this.closest('.method-card'))">Select</button>
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('wbgt')">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('wbgt',this.closest('.method-card'))">Select</button>
         </div>
       </div>
 
@@ -373,8 +380,8 @@
           <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
         </div>
         <div class="card-right">
-          <button class="card-btn" onclick="showDeviceInfo('trh')">Information</button>
-          <button class="card-btn" onclick="openMeasModal('trh',this.closest('.method-card'))">Select</button>
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('trh')">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('trh',this.closest('.method-card'))">Select</button>
         </div>
       </div>
 
@@ -384,8 +391,8 @@
           <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
         </div>
         <div class="card-right">
-          <button class="card-btn" onclick="showDeviceInfo('hi')">Information</button>
-          <button class="card-btn" onclick="openMeasModal('hi',this.closest('.method-card'))">Select</button>
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('hi')">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('hi',this.closest('.method-card'))">Select</button>
         </div>
       </div>
 
@@ -395,8 +402,8 @@
           <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:96px;line-height:1;">🌡️</div>
         </div>
         <div class="card-right">
-          <button class="card-btn" onclick="showDeviceInfo('dbt')">Information</button>
-          <button class="card-btn" onclick="openMeasModal('dbt',this.closest('.method-card'))">Select</button>
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('dbt')">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('dbt',this.closest('.method-card'))">Select</button>
         </div>
       </div>
 
