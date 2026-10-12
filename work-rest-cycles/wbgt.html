@@ -55,11 +55,11 @@ body { overflow: auto; }
   letter-spacing: 0.02em;
 }
 .acclim-tab-btn.active {
-  background: #fff;
-  color: var(--navy, #1A2A3A);
-  box-shadow: 0 -3px 0 var(--navy, #1A2A3A) inset;
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  box-shadow: none;
 }
-.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.55; }
+.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
 .acclim-tab-btn:not(.active):hover {
   background: rgba(255,255,255,0.7);
   color: var(--navy, #1A2A3A);
@@ -272,27 +272,23 @@ body.chart-active { overflow: hidden; }
   position: relative;
 }
 .unacclim-tab-btn.active {
-  background: #fff;
-  color: var(--navy, #1A2A3A);
-  box-shadow: 0 -3px 0 var(--navy, #1A2A3A) inset;
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  box-shadow: none;
 }
 .unacclim-tab-btn:not(.active):hover {
   background: rgba(255,255,255,0.7);
   color: var(--navy, #1A2A3A);
 }
 .unacclim-tab-btn .acclim-tab-btn-sub { opacity: 0.75; }
-.unacclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.55; }
+.unacclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
 
+/* ── Rec tab: full-viewport two-panel layout ── */
 #unacclim-tab-0-wrap {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 20px 16px;
-}
-#unacclim-tab-result {
-  width: 100%;
-  max-width: 920px;
+  overflow: hidden;
 }
 #unacclim-tab-chart {
   position: fixed;
@@ -307,31 +303,116 @@ body.chart-active { overflow: hidden; }
   margin: 0 auto;
 }
 
-/* Day schedule table */
-.day-schedule-table {
+/* Left panel — recommendation */
+.urec-left {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(12px,2vw,28px) clamp(12px,2.5vw,32px);
+  overflow: hidden;
+  border-right: 2px solid var(--border);
+  box-sizing: border-box;
+  gap: clamp(8px,1.2vh,16px);
+}
+.urec-badges {
+  display: flex; gap: clamp(6px,1vw,14px); width: 100%; justify-content: center;
+}
+.urec-badge {
+  flex: 1; background: var(--surface,#F8FAFB);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: clamp(8px,1vh,14px) clamp(8px,1vw,14px);
+  min-width: 0;
+}
+.urec-badge-label {
+  font-size: clamp(9px,0.9vw,12px); font-weight:700; text-transform:uppercase;
+  letter-spacing:0.07em; color:var(--subtext,#6B7785); margin-bottom:3px;
+}
+.urec-badge-value {
+  font-size: clamp(14px,1.4vw,20px); font-weight:800; color:var(--navy,#1A2A3A); line-height:1.1;
+}
+.urec-badge-sub {
+  font-size: clamp(10px,0.85vw,13px); color:var(--subtext,#6B7785); margin-top:2px; line-height:1.3;
+}
+.urec-rec-block {
+  display: flex; align-items: center; gap: clamp(12px,2vw,28px);
+  border-radius: 14px; padding: clamp(14px,2vh,28px) clamp(14px,2vw,24px);
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
-  font-size: 14px;
 }
-.day-schedule-table th {
-  background: var(--navy, #1A2A3A);
-  color: #fff;
-  padding: 10px 12px;
-  text-align: center;
-  font-weight: 700;
+.urec-rec-clock { flex-shrink:0; }
+.urec-rec-text  { flex:1; min-width:0; }
+.urec-rec-label {
+  font-size: clamp(9px,0.85vw,12px); font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; opacity:0.7; margin-bottom:5px;
 }
-.day-schedule-table td {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  text-align: center;
-  line-height: 1.4;
+.urec-rec-headline {
+  font-size: clamp(18px,2.5vw,36px); font-weight:900; line-height:1.05; margin-bottom:6px;
 }
-.day-schedule-table tr:nth-child(even) td { background: var(--surface, #F8FAFB); }
-.day-row-highlight td {
-  background: #E3EDF7 !important;
-  font-weight: 700;
-  border-left: 4px solid var(--navy, #1A2A3A);
+.urec-rec-sub {
+  font-size: clamp(11px,1vw,15px); line-height:1.5; opacity:0.85;
+}
+.urec-source {
+  font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; text-align:center;
+}
+
+/* Right panel — daily schedule */
+.urec-right {
+  flex: 0 0 50%;
+  display: flex; flex-direction: column;
+  padding: clamp(12px,2vw,24px) clamp(14px,2.5vw,30px);
+  overflow: hidden;
+  background: var(--surface,#F8FAFB);
+  box-sizing: border-box;
+  gap: clamp(6px,1vh,12px);
+  border-top: 4px solid var(--navy,#1A2A3A);
+}
+.urec-sched-hdr { flex-shrink:0; }
+.urec-sched-title {
+  font-size: clamp(13px,1.4vw,18px); font-weight:800; color:var(--navy,#1A2A3A); line-height:1.2;
+}
+.urec-sched-sub {
+  font-size: clamp(10px,0.9vw,13px); color:var(--subtext); margin-top:2px; line-height:1.3;
+}
+.urec-sched-grid {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: stretch;
+}
+.urec-day-row {
+  display: flex; align-items: center; flex: 1;
+  gap: clamp(6px,1vw,14px);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 0; min-height: 0;
+}
+.urec-day-row:last-child { border-bottom: none; }
+.urec-day-row.urec-day-full {
+  background: #E3EDF7;
+  border-left: 4px solid var(--navy,#1A2A3A);
+  padding-left: clamp(6px,1vw,12px);
+  border-radius: 4px;
+  margin: 2px 0;
+}
+.urec-day-label {
+  font-size: clamp(12px,1.2vw,17px); font-weight:800;
+  color:var(--navy,#1A2A3A); min-width: 52px; flex-shrink:0;
+}
+.urec-bar-wrap {
+  flex: 1; height: clamp(10px,1.2vh,16px); background:#D8E0E8;
+  border-radius:4px; overflow:hidden; min-width:0;
+}
+.urec-bar { height:100%; border-radius:4px; }
+.urec-day-pct {
+  font-size: clamp(11px,1.1vw,14px); font-weight:700; min-width:32px; text-align:right; flex-shrink:0;
+}
+.urec-day-times {
+  font-size: clamp(10px,0.95vw,13px); line-height:1.25; min-width:0; flex-shrink:0;
+  text-align: right; width: clamp(140px,18vw,230px);
+}
+.urec-time-work  { color: #1A5A1F; font-weight:700; display:block; }
+.urec-time-rest  { color: #7A1515; font-weight:600; display:block; }
+.urec-time-out   { color: var(--subtext); display:block; }
+.urec-day-full .urec-time-work { color: #0D3B10; }
+.urec-sched-foot {
+  font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; flex-shrink:0;
 }
 </style>
 <script src="./lang-link.js"></script>
@@ -880,9 +961,7 @@ body.chart-active { overflow: hidden; }
     const rowLabel  = RAL_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
     const sched     = isNew ? SCHED_NEW : SCHED_RETURNING;
     const statusLabel = isNew ? 'New Worker' : 'Returning Worker';
-    const schedNote   = isNew
-      ? 'Full acclimatization typically takes 7–14 days.'
-      : 'Acclimatization can typically be regained in 4 days.';
+    const accent    = isNew ? '#E05C2C' : '#2E7D32';
 
     const bgMap = {'c-safe':'var(--safe-bg)','c-caution':'var(--caution-bg)','c-warn':'var(--warn-bg)','c-high':'var(--high-bg)','c-stop':'var(--stop-bg)'};
     const fgMap = {'c-safe':'var(--safe-text)','c-caution':'var(--caution-text)','c-warn':'var(--warn-text)','c-high':'var(--high-text)','c-stop':'var(--stop-text)'};
@@ -890,70 +969,124 @@ body.chart-active { overflow: hidden; }
     let headline, subtext;
     if (!wr) {
       headline = 'DANGER — Stop Work';
-      subtext  = 'Conditions exceed the NIOSH RAL 15-minute limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers. Engineering controls and physiological monitoring are required.';
+      subtext  = 'Conditions exceed the NIOSH RAL 15-min limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers — engineering controls required.';
     } else if (wr.w === 60) {
       headline = 'Continuous Work';
-      subtext  = 'No mandatory work-rest break is required at this WBGT level for ' + ACT_FULL[activity] + '. Apply the daily exposure schedule below. Stay hydrated — drink before you feel thirsty.';
+      subtext  = 'No mandatory rest break at this WBGT for ' + ACT_FULL[activity] + '. Apply the daily schedule (right). Hydrate — drink before you feel thirsty.';
     } else {
       headline = wr.w + ' min work &nbsp;·&nbsp; ' + wr.r + ' min rest';
-      subtext  = 'During each hour of heat exposure, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area. Apply these cycles during the permitted portion of the shift per the schedule below.';
+      subtext  = 'Per hour of heat exposure: ' + wr.r + ' min rest in cool shade. Apply during the daily exposure portion shown at right.';
     }
 
     const valDisplay = val != null ? val + unitLabel : '—';
-    const wrDesc     = wr ? (wr.w === 60 ? 'Continuous work' : wr.w + ' / ' + wr.r + ' min work-rest cycles') : 'DANGER — do not expose';
 
-    let schedHtml = `<table class="day-schedule-table">
-      <thead><tr>
-        <th>Day</th>
-        <th>% of Shift in Heat</th>
-        <th>Work-Rest During Exposure</th>
-      </tr></thead><tbody>`;
+    // Build clock SVG sized for the narrower half-viewport layout
+    function buildSmallClock(wr) {
+      const sz = 100, cx = 50, cy = 50, r = 38;
+      const circ = 2 * Math.PI * r;
+      if (!wr) {
+        return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="8"/>
+          <text x="${cx}" y="${cy+5}" text-anchor="middle" dominant-baseline="middle" font-size="28" fill="#AE1515">⚠</text>
+        </svg>`;
+      }
+      if (wr.w === 60) {
+        return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="9"/>
+          <text x="${cx}" y="${cy-5}" text-anchor="middle" dominant-baseline="middle" font-size="26" font-weight="900" fill="#1A5A1F">60</text>
+          <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="10" font-weight="700" fill="#2E7D32">min/hr</text>
+        </svg>`;
+      }
+      const sc = {45:'#E65100',30:'#B71C1C',15:'#8B0000'}[wr.w]||'#1565C0';
+      const bc = {45:'#FFF3E0',30:'#FFEBEE',15:'#FFCDD2'}[wr.w]||'#E3F0FF';
+      const workDash = (wr.w/60)*circ, restDash = circ - workDash;
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="9"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="9"
+          stroke-dasharray="${workDash.toFixed(2)} ${restDash.toFixed(2)}"
+          transform="rotate(-90 ${cx} ${cy})"/>
+        <text x="${cx}" y="${cy-4}" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="900" fill="${sc}">${wr.w}</text>
+        <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="9" font-weight="700" fill="${sc}">min work</text>
+      </svg>`;
+    }
+
+    // Compute actual per-60-min times for each schedule day
+    function dayTimes(pct) {
+      if (!wr) return null;
+      const f = pct / 100;
+      const workHeat = Math.round(wr.w * f);
+      const restHeat = wr.w === 60 ? 0 : Math.round(wr.r * f);
+      const outside  = 60 - workHeat - restHeat;
+      return {workHeat, restHeat, outside};
+    }
+
+    let dayRowsHtml = '';
     sched.forEach(d => {
       const isFull = d.pct === 100;
-      schedHtml += `<tr${isFull ? ' class="day-row-highlight"' : ''}>
-        <td><strong>${d.day}</strong></td>
-        <td>${d.pct}%</td>
-        <td>${isFull ? wrDesc : 'Limit to ' + d.pct + '% of shift; apply work-rest during exposure'}</td>
-      </tr>`;
+      const t = dayTimes(d.pct);
+      let timesHtml = '';
+      if (!t) {
+        timesHtml = '<span class="urec-time-work" style="color:#AE1515">Do not expose</span>';
+      } else if (d.pct < 100) {
+        timesHtml = `<span class="urec-time-work">${t.workHeat} min work in heat</span>` +
+          (t.restHeat > 0 ? `<span class="urec-time-rest">${t.restHeat} min rest in heat</span>` : '') +
+          `<span class="urec-time-out">${t.outside} min outside heat</span>`;
+      } else {
+        // Full day
+        timesHtml = wr.w === 60
+          ? `<span class="urec-time-work">${t.workHeat} min work (full shift)</span>`
+          : `<span class="urec-time-work">${t.workHeat} min work in heat</span>` +
+            `<span class="urec-time-rest">${t.restHeat} min rest in heat</span>`;
+      }
+      dayRowsHtml += `<div class="urec-day-row${isFull?' urec-day-full':''}">
+        <div class="urec-day-label">${d.day}</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#2E7D32':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#2E7D32':accent}">${d.pct}%</div>
+        <div class="urec-day-times">${timesHtml}</div>
+      </div>`;
     });
-    schedHtml += '</tbody></table>';
 
     window._wrcUnacclimRowIdx = rowIdx;
     window._wrcUnacclimColIdx = colIdx;
 
-    document.getElementById('unacclim-tab-result').innerHTML = `
-      <div class="result-inputs">
-        <div class="result-input-card">
-          <div class="result-input-label">🌡️ WBGT Reading</div>
-          <div class="result-input-value">${valDisplay}</div>
-          <div class="result-input-sub">Range: ${rowLabel}</div>
+    // Inject into the two-panel wrapper directly
+    document.getElementById('unacclim-tab-0-wrap').innerHTML = `
+      <div class="urec-left">
+        <div class="urec-badges">
+          <div class="urec-badge">
+            <div class="urec-badge-label">🌡️ WBGT</div>
+            <div class="urec-badge-value">${valDisplay}</div>
+            <div class="urec-badge-sub">${rowLabel}</div>
+          </div>
+          <div class="urec-badge">
+            <div class="urec-badge-label">${ACT_EMOJI[activity]||'⚡'} Work</div>
+            <div class="urec-badge-value">${ACT_LABEL[activity]||'Moderate'}</div>
+            <div class="urec-badge-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="urec-badge">
+            <div class="urec-badge-label">⏳ Status</div>
+            <div class="urec-badge-value">${statusLabel}</div>
+            <div class="urec-badge-sub">NIOSH RAL</div>
+          </div>
         </div>
-        <div class="result-input-card">
-          <div class="result-input-label">${ACT_EMOJI[activity]||'⚡'} Work Intensity</div>
-          <div class="result-input-value">${ACT_LABEL[activity]||'Moderate'}</div>
-          <div class="result-input-sub">${ACT_FULL[activity]}</div>
+        <div class="urec-rec-block${cls==='c-stop'?' result-danger':''}"
+             style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
+          <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
+          <div class="urec-rec-text">
+            <div class="urec-rec-label">RAL Work-Rest Recommendation</div>
+            <div class="urec-rec-headline">${headline}</div>
+            <div class="urec-rec-sub">${subtext}</div>
+          </div>
         </div>
-        <div class="result-input-card">
-          <div class="result-input-label">⏳ Worker Status</div>
-          <div class="result-input-value">${statusLabel}</div>
-          <div class="result-input-sub">NIOSH RAL applies</div>
-        </div>
+        <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>
-      <div class="result-main ${cls==='c-stop'?'result-danger':''}"
-           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
-        <div class="result-clock">${buildClockSvg(wr)}</div>
-        <div class="result-text">
-          <div class="result-label">Recommended Work-Rest Cycle (RAL — During Heat Exposure)</div>
-          <div class="result-headline">${headline}</div>
-          <div class="result-subtext">${subtext}</div>
-          <div class="result-source">NIOSH (2016) Recommended Alert Limits (RAL) — Unacclimatized Workers</div>
+      <div class="urec-right">
+        <div class="urec-sched-hdr">
+          <div class="urec-sched-title">📅 Daily Exposure Schedule</div>
+          <div class="urec-sched-sub">${isNew?'New Worker — 5-day ramp':'Returning Worker — 4-day ramp'} &nbsp;·&nbsp; Times shown per 60-min period</div>
         </div>
-      </div>
-      <div style="text-align:left; margin-top:28px;">
-        <h3 style="font-size:16px; font-weight:800; color:var(--navy); margin-bottom:4px;">📅 Daily Acclimatization Exposure Schedule</h3>
-        <p style="font-size:13px; color:var(--subtext); margin-bottom:8px; line-height:1.5">${isNew ? 'As a <strong>new worker</strong>, follow this progressive schedule before reaching full shift exposure.' : 'As a <strong>returning worker</strong> (absent ≥1 week), follow this abbreviated ramp-up schedule.'} ${schedNote}</p>
-        ${schedHtml}
-        <p style="font-size:12px; color:var(--subtext); margin-top:8px; font-style:italic">† Apply RAL-based work-rest cycles during all heat exposure periods, regardless of daily percentage.</p>
+        <div class="urec-sched-grid">${dayRowsHtml}</div>
+        <div class="urec-sched-foot">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
       </div>`;
   }
 
@@ -1048,8 +1181,7 @@ body.chart-active { overflow: hidden; }
     const tabBar   = document.getElementById('unacclim-tab-bar');
     const wrap     = document.getElementById('unacclim-tab-0-wrap');
     if (!wrap || !fixedTop || !tabBar) return;
-    const avail = window.innerHeight - fixedTop.offsetHeight - tabBar.offsetHeight;
-    wrap.style.minHeight = Math.max(avail, 320) + 'px';
+    wrap.style.top = (fixedTop.offsetHeight + tabBar.offsetHeight) + 'px';
   }
 
   let _unacclimChartActive = false;
@@ -1072,10 +1204,11 @@ body.chart-active { overflow: hidden; }
       if (btn) btn.classList.toggle('active', i === idx);
     }
     const isChart = idx === 1;
-    document.body.classList.toggle('chart-active', isChart);
+    const needsFixed = idx === 0 || idx === 1;
+    document.body.classList.toggle('chart-active', needsFixed);
     _unacclimChartActive = isChart;
     _unacclimActiveTab   = idx;
-    if (isChart) sizeUnacclimChartPane(); else sizeUnacclimResultWrap();
+    if (isChart) sizeUnacclimChartPane(); else if (idx === 0) sizeUnacclimResultWrap();
   }
 
   // ── Legacy unit toggle (for non-acclimatized fallback table) ──
