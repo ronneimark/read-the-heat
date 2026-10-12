@@ -445,33 +445,45 @@ body.chart-active { overflow: hidden; }
   </div>
   <!-- Tab bars live inside fixed-top so they stay pinned below the header -->
   <div id="acclim-tab-bar-wrap" style="display:none">
-    <div class="acclim-tab-bar" id="acclim-tab-bar">
-      <button class="acclim-tab-btn active" id="tab-btn-result" onclick="switchAcclimTab('result')">
-        <span class="acclim-tab-btn-title">📋 My Work-Rest Cycle</span>
+    <div class="acclim-tab-bar" id="acclim-tab-bar" role="tablist" aria-label="Acclimatized worker views">
+      <button class="acclim-tab-btn active" id="tab-btn-result" role="tab"
+              aria-selected="true" aria-controls="acclim-tab-result-wrap" tabindex="0"
+              onclick="switchAcclimTab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
         <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
       </button>
-      <button class="acclim-tab-btn" id="tab-btn-chart" onclick="switchAcclimTab('chart')">
-        <span class="acclim-tab-btn-title">📊 Full Chart</span>
+      <button class="acclim-tab-btn" id="tab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="acclim-tab-chart" tabindex="-1"
+              onclick="switchAcclimTab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
         <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
       </button>
     </div>
   </div>
   <div id="unacclim-tab-bar-wrap" style="display:none">
-    <div class="acclim-tab-bar" id="unacclim-tab-bar" style="flex-wrap:wrap;">
-      <button class="unacclim-tab-btn active" id="utab-btn-0" onclick="switchUnacclimTab(0)">
-        <span class="acclim-tab-btn-title">📋 My Schedule</span>
+    <div class="acclim-tab-bar" id="unacclim-tab-bar" role="tablist" aria-label="Unacclimatized worker views" style="flex-wrap:wrap;">
+      <button class="unacclim-tab-btn active" id="utab-btn-0" role="tab"
+              aria-selected="true" aria-controls="unacclim-tab-0-wrap" tabindex="0"
+              onclick="switchUnacclimTab(0)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Schedule</span>
         <span class="acclim-tab-btn-sub">RAL &amp; daily exposure</span>
       </button>
-      <button class="unacclim-tab-btn" id="utab-btn-1" onclick="switchUnacclimTab(1)">
-        <span class="acclim-tab-btn-title">📊 Full RAL Chart</span>
+      <button class="unacclim-tab-btn" id="utab-btn-1" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-chart" tabindex="-1"
+              onclick="switchUnacclimTab(1)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full RAL Chart</span>
         <span class="acclim-tab-btn-sub">All conditions &amp; levels</span>
       </button>
-      <button class="unacclim-tab-btn" id="utab-btn-2" onclick="switchUnacclimTab(2)">
-        <span class="acclim-tab-btn-title">📅 Acclim. Schedule</span>
+      <button class="unacclim-tab-btn" id="utab-btn-2" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-schedule" tabindex="-1"
+              onclick="switchUnacclimTab(2)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📅 </span>Acclim. Schedule</span>
         <span class="acclim-tab-btn-sub">% of shift by day</span>
       </button>
-      <button class="unacclim-tab-btn" id="utab-btn-3" onclick="switchUnacclimTab(3)">
-        <span class="acclim-tab-btn-title">📝 Notes</span>
+      <button class="unacclim-tab-btn" id="utab-btn-3" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-notes" tabindex="-1"
+              onclick="switchUnacclimTab(3)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
         <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
       </button>
     </div>
@@ -482,8 +494,8 @@ body.chart-active { overflow: hidden; }
 
   <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
   <div id="wbgt-acclim-tabs" style="display:none">
-    <div id="acclim-tab-result-wrap"><div id="acclim-tab-result"></div></div>
-    <div id="acclim-tab-chart"></div>
+    <div id="acclim-tab-result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result"></div></div>
+    <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
   </div>
 
   <!-- ══ ORIGINAL ACCLIMATIZED TABLE (shown as fallback if no session) ══ -->
@@ -588,12 +600,12 @@ body.chart-active { overflow: hidden; }
   </div>
   </div><!-- /wbgt-acclim-section -->
 
-  <!-- ══ UNACCLIMATIZED 5-TAB VIEW ══ -->
+  <!-- ══ UNACCLIMATIZED 4-TAB VIEW ══ -->
   <div id="wbgt-unacclim-tabs" style="display:none">
-    <div id="unacclim-tab-0-wrap"><div id="unacclim-tab-result"></div></div>
-    <div id="unacclim-tab-chart"></div>
-    <div id="unacclim-tab-schedule" class="unacclim-tab-pane"></div>
-    <div id="unacclim-tab-notes" class="unacclim-tab-pane"></div>
+    <div id="unacclim-tab-0-wrap" role="tabpanel" aria-labelledby="utab-btn-0" tabindex="0"><div id="unacclim-tab-result"></div></div>
+    <div id="unacclim-tab-chart" role="tabpanel" aria-labelledby="utab-btn-1" tabindex="0"></div>
+    <div id="unacclim-tab-schedule" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-2" tabindex="0"></div>
+    <div id="unacclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-3" tabindex="0"></div>
   </div>
 
   <!-- Unacclimatized Table (NIOSH RAL) -->
@@ -910,13 +922,40 @@ body.chart-active { overflow: hidden; }
     const isChart = which === 'chart';
     document.getElementById('acclim-tab-result-wrap').style.display = isChart ? 'none' : '';
     document.getElementById('acclim-tab-chart').style.display  = isChart ? 'block' : 'none';
-    document.getElementById('tab-btn-result').classList.toggle('active', !isChart);
-    document.getElementById('tab-btn-chart').classList.toggle('active',  isChart);
+    const btnResult = document.getElementById('tab-btn-result');
+    const btnChart  = document.getElementById('tab-btn-chart');
+    btnResult.classList.toggle('active', !isChart);
+    btnResult.setAttribute('aria-selected', String(!isChart));
+    btnResult.tabIndex = isChart ? -1 : 0;
+    btnChart.classList.toggle('active',  isChart);
+    btnChart.setAttribute('aria-selected', String(isChart));
+    btnChart.tabIndex = isChart ? 0 : -1;
     document.body.classList.toggle('chart-active', isChart);
     _chartActive = isChart;
     if (isChart) sizeChartPane();
     else sizeResultWrap();
   }
+
+  // Arrow-key navigation for acclimatized tablist
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('acclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result', 'chart'];
+      const cur  = tabs.findIndex(t => document.getElementById('tab-btn-' + t).getAttribute('aria-selected') === 'true');
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        switchAcclimTab(tabs[(cur + 1) % tabs.length]);
+        document.getElementById('tab-btn-' + tabs[(cur + 1) % tabs.length]).focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        switchAcclimTab(tabs[(cur - 1 + tabs.length) % tabs.length]);
+        document.getElementById('tab-btn-' + tabs[(cur - 1 + tabs.length) % tabs.length]).focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault(); switchAcclimTab(tabs[0]); document.getElementById('tab-btn-' + tabs[0]).focus();
+      } else if (e.key === 'End') {
+        e.preventDefault(); switchAcclimTab(tabs[tabs.length-1]); document.getElementById('tab-btn-' + tabs[tabs.length-1]).focus();
+      }
+    });
+  });
 
   // ── RAL lookup data (unacclimatized) ──
   const RAL_BOUNDS_C = [21.0, 22.3, 24.0, 25.8, 26.5, 28.3, 29.4, 30.8];
@@ -1202,7 +1241,11 @@ function sizeUnacclimChartPane() {
     });
     for (let i = 0; i < 4; i++) {
       const btn = document.getElementById('utab-btn-' + i);
-      if (btn) btn.classList.toggle('active', i === idx);
+      if (btn) {
+        btn.classList.toggle('active', i === idx);
+        btn.setAttribute('aria-selected', String(i === idx));
+        btn.tabIndex = i === idx ? 0 : -1;
+      }
     }
     const isChart = idx === 1;
     const needsFixed = idx === 0 || idx === 1;
@@ -1211,6 +1254,27 @@ function sizeUnacclimChartPane() {
     _unacclimActiveTab   = idx;
     if (isChart) sizeUnacclimChartPane(); else if (idx === 0) sizeUnacclimResultWrap();
   }
+
+  // Arrow-key navigation for unacclimatized tablist
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('unacclim-tab-bar').addEventListener('keydown', e => {
+      const total = 4;
+      const cur   = _unacclimActiveTab;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = (cur + 1) % total;
+        switchUnacclimTab(next); document.getElementById('utab-btn-' + next).focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = (cur - 1 + total) % total;
+        switchUnacclimTab(prev); document.getElementById('utab-btn-' + prev).focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault(); switchUnacclimTab(0); document.getElementById('utab-btn-0').focus();
+      } else if (e.key === 'End') {
+        e.preventDefault(); switchUnacclimTab(total-1); document.getElementById('utab-btn-' + (total-1)).focus();
+      }
+    });
+  });
 
   // ── Legacy unit toggle (for non-acclimatized fallback table) ──
   function setUnit(unit) {
