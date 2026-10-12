@@ -195,7 +195,6 @@ body.chart-active { overflow: hidden; }
   grid-template-rows: repeat(10, 1fr);
   height: 100%;
   width: 100%;
-  border-top: 4px solid var(--navy, #1A2A3A);
 }
 .acc-cell {
   display: flex;
@@ -318,9 +317,9 @@ body.chart-active { overflow: hidden; }
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: clamp(12px,2vw,28px) clamp(12px,2.5vw,32px);
+  padding: 0 clamp(12px,2.5vw,32px) clamp(12px,2vw,28px);
   overflow: hidden;
-  border-right: 2px solid var(--border);
+  border-right: 2px solid var(--navy, #1A2A3A);
   box-sizing: border-box;
   gap: clamp(8px,1.2vh,16px);
 }
@@ -368,12 +367,11 @@ body.chart-active { overflow: hidden; }
 .urec-right {
   flex: 0 0 50%;
   display: flex; flex-direction: column;
-  padding: clamp(12px,2vw,24px) clamp(14px,2.5vw,30px);
+  padding: 0 clamp(14px,2.5vw,30px) clamp(12px,2vw,24px);
   overflow: hidden;
   background: var(--surface,#F8FAFB);
   box-sizing: border-box;
   gap: clamp(6px,1vh,12px);
-  border-top: 4px solid var(--navy,#1A2A3A);
 }
 .urec-sched-hdr { flex-shrink:0; }
 .urec-sched-title {
@@ -1143,7 +1141,7 @@ body.chart-active { overflow: hidden; }
       </div>`;
     });
     document.getElementById('unacclim-tab-schedule').innerHTML = `
-      <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;border-top:3px solid ${accent};padding-top:14px">${title}</h3>
+      <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;padding-top:14px">${title}</h3>
       <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.55">${sub}</p>
       ${barsHtml}
       <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E8F5E9'};color:${isNew?'#7A2800':'#104A13'}">
