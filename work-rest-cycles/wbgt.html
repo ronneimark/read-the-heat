@@ -251,6 +251,88 @@ body.chart-active { overflow: hidden; }
   z-index: 1;
   font-size: clamp(16px, 3.5vh, 44px) !important;
 }
+
+/* ── Unacclimatized 5-tab shell ── */
+.unacclim-tab-btn {
+  padding: 10px 16px 9px;
+  min-width: 120px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+.unacclim-tab-btn.active {
+  background: #fff;
+  color: var(--navy, #1A2A3A);
+  box-shadow: 0 -3px 0 var(--navy, #1A2A3A) inset;
+}
+.unacclim-tab-btn:not(.active):hover {
+  background: rgba(255,255,255,0.7);
+  color: var(--navy, #1A2A3A);
+}
+.unacclim-tab-btn .acclim-tab-btn-sub { opacity: 0.75; }
+.unacclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.55; }
+
+#unacclim-tab-0-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 20px 16px;
+}
+#unacclim-tab-result {
+  width: 100%;
+  max-width: 920px;
+}
+#unacclim-tab-chart {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  display: none;
+}
+.unacclim-tab-pane {
+  display: none;
+  padding: 24px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Day schedule table */
+.day-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+.day-schedule-table th {
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: 700;
+}
+.day-schedule-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+  line-height: 1.4;
+}
+.day-schedule-table tr:nth-child(even) td { background: var(--surface, #F8FAFB); }
+.day-row-highlight td {
+  background: #E3EDF7 !important;
+  font-weight: 700;
+  border-left: 4px solid var(--navy, #1A2A3A);
+}
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -395,6 +477,37 @@ body.chart-active { overflow: hidden; }
     </table>
   </div>
   </div><!-- /wbgt-acclim-section -->
+
+  <!-- ══ UNACCLIMATIZED 5-TAB VIEW ══ -->
+  <div id="wbgt-unacclim-tabs" style="display:none">
+    <div class="acclim-tab-bar" id="unacclim-tab-bar" style="flex-wrap:wrap;">
+      <button class="unacclim-tab-btn active" id="utab-btn-0" onclick="switchUnacclimTab(0)">
+        <span class="acclim-tab-btn-title">📋 My Schedule</span>
+        <span class="acclim-tab-btn-sub">RAL &amp; daily exposure</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-1" onclick="switchUnacclimTab(1)">
+        <span class="acclim-tab-btn-title">📊 Full RAL Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; levels</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-2" onclick="switchUnacclimTab(2)">
+        <span class="acclim-tab-btn-title">📅 Acclim. Schedule</span>
+        <span class="acclim-tab-btn-sub">% of shift by day</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-3" onclick="switchUnacclimTab(3)">
+        <span class="acclim-tab-btn-title">📝 Notes</span>
+        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-4" onclick="switchUnacclimTab(4)">
+        <span class="acclim-tab-btn-title">🔍 Full Reference</span>
+        <span class="acclim-tab-btn-sub">Complete original view</span>
+      </button>
+    </div>
+    <div id="unacclim-tab-0-wrap"><div id="unacclim-tab-result"></div></div>
+    <div id="unacclim-tab-chart"></div>
+    <div id="unacclim-tab-schedule" class="unacclim-tab-pane"></div>
+    <div id="unacclim-tab-notes" class="unacclim-tab-pane"></div>
+    <div id="unacclim-tab-legacy" class="unacclim-tab-pane"></div>
+  </div>
 
   <!-- Unacclimatized Table (NIOSH RAL) -->
   <div id="wbgt-unacclim-section" style="display:none">
@@ -721,6 +834,250 @@ body.chart-active { overflow: hidden; }
     else sizeResultWrap();
   }
 
+  // ── RAL lookup data (unacclimatized) ──
+  const RAL_BOUNDS_C = [21.0, 22.3, 24.0, 25.8, 26.5, 28.3, 29.4, 30.8];
+  const RAL_ROW_LABELS = {
+    c: ['Below 21.0°C','21.0–22.2°C','22.3–23.9°C','24.0–25.7°C','25.8–26.4°C','26.5–28.2°C','28.3–29.3°C','29.4–30.7°C','≥ 30.8°C'],
+    f: ['Below 69.8°F','69.8–72.0°F','72.1–75.0°F','75.2–78.3°F','78.4–79.5°F','79.7–82.8°F','82.9–84.7°F','84.9–87.3°F','≥ 87.4°F']
+  };
+  // null = DANGER, {dagger:true} = footnoted 15/45
+  const WR_UNACCLIM = [
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:60,r:0}],
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:45,r:15}],
+    [{w:60,r:0},{w:60,r:0},{w:45,r:15},{w:30,r:30}],
+    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:15,r:45}],
+    [{w:60,r:0},{w:30,r:30},{w:30,r:30},{w:15,r:45}],
+    [{w:45,r:15},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},null],
+    [{w:15,r:45},{w:15,r:45,dagger:true},null,null]
+  ];
+  const SCHED_NEW       = [{day:'Day 1',pct:20},{day:'Day 2',pct:40},{day:'Day 3',pct:60},{day:'Day 4',pct:80},{day:'Day 5+',pct:100}];
+  const SCHED_RETURNING = [{day:'Day 1',pct:50},{day:'Day 2',pct:60},{day:'Day 3',pct:80},{day:'Day 4+',pct:100}];
+
+  function getRALRow(val, unit) {
+    const c = unit === 'C' ? parseFloat(val) : (parseFloat(val) - 32) * 5 / 9;
+    for (let i = 0; i < RAL_BOUNDS_C.length; i++) { if (c < RAL_BOUNDS_C[i]) return i; }
+    return 8;
+  }
+
+  function ralWrLabel(wr) {
+    if (!wr)         return 'DANGER!†';
+    if (wr.w === 60) return 'Continuous';
+    return wr.w + ' / ' + wr.r + (wr.dagger ? '†' : '');
+  }
+
+  function buildUnacclimResultTab(s) {
+    const val       = s.measValue;
+    const unit      = s.measUnit || 'F';
+    const activity  = s.activity || 'moderate';
+    const isNew     = s.workerStatus === 'unacclimatized-new';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+    const rowIdx    = getRALRow(val, unit);
+    const colIdx    = activity in ACT_COL ? ACT_COL[activity] : 1;
+    const wr        = WR_UNACCLIM[rowIdx][colIdx];
+    const cls       = wrClass(wr);
+    const rowLabel  = RAL_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
+    const sched     = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const statusLabel = isNew ? 'New Worker' : 'Returning Worker';
+    const schedNote   = isNew
+      ? 'Full acclimatization typically takes 7–14 days.'
+      : 'Acclimatization can typically be regained in 4 days.';
+
+    const bgMap = {'c-safe':'var(--safe-bg)','c-caution':'var(--caution-bg)','c-warn':'var(--warn-bg)','c-high':'var(--high-bg)','c-stop':'var(--stop-bg)'};
+    const fgMap = {'c-safe':'var(--safe-text)','c-caution':'var(--caution-text)','c-warn':'var(--warn-text)','c-high':'var(--high-text)','c-stop':'var(--stop-text)'};
+
+    let headline, subtext;
+    if (!wr) {
+      headline = 'DANGER — Stop Work';
+      subtext  = 'Conditions exceed the NIOSH RAL 15-minute limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers. Engineering controls and physiological monitoring are required.';
+    } else if (wr.w === 60) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory work-rest break is required at this WBGT level for ' + ACT_FULL[activity] + '. Apply the daily exposure schedule below. Stay hydrated — drink before you feel thirsty.';
+    } else {
+      headline = wr.w + ' min work &nbsp;·&nbsp; ' + wr.r + ' min rest';
+      subtext  = 'During each hour of heat exposure, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area. Apply these cycles during the permitted portion of the shift per the schedule below.';
+    }
+
+    const valDisplay = val != null ? val + unitLabel : '—';
+    const wrDesc     = wr ? (wr.w === 60 ? 'Continuous work' : wr.w + ' / ' + wr.r + ' min work-rest cycles') : 'DANGER — do not expose';
+
+    let schedHtml = `<table class="day-schedule-table">
+      <thead><tr>
+        <th>Day</th>
+        <th>% of Shift in Heat</th>
+        <th>Work-Rest During Exposure</th>
+      </tr></thead><tbody>`;
+    sched.forEach(d => {
+      const isFull = d.pct === 100;
+      schedHtml += `<tr${isFull ? ' class="day-row-highlight"' : ''}>
+        <td><strong>${d.day}</strong></td>
+        <td>${d.pct}%</td>
+        <td>${isFull ? wrDesc : 'Limit to ' + d.pct + '% of shift; apply work-rest during exposure'}</td>
+      </tr>`;
+    });
+    schedHtml += '</tbody></table>';
+
+    window._wrcUnacclimRowIdx = rowIdx;
+    window._wrcUnacclimColIdx = colIdx;
+
+    document.getElementById('unacclim-tab-result').innerHTML = `
+      <div class="result-inputs">
+        <div class="result-input-card">
+          <div class="result-input-label">🌡️ WBGT Reading</div>
+          <div class="result-input-value">${valDisplay}</div>
+          <div class="result-input-sub">Range: ${rowLabel}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label">${ACT_EMOJI[activity]||'⚡'} Work Intensity</div>
+          <div class="result-input-value">${ACT_LABEL[activity]||'Moderate'}</div>
+          <div class="result-input-sub">${ACT_FULL[activity]}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label">⏳ Worker Status</div>
+          <div class="result-input-value">${statusLabel}</div>
+          <div class="result-input-sub">NIOSH RAL applies</div>
+        </div>
+      </div>
+      <div class="result-main ${cls==='c-stop'?'result-danger':''}"
+           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+        <div class="result-clock">${buildClockSvg(wr)}</div>
+        <div class="result-text">
+          <div class="result-label">Recommended Work-Rest Cycle (RAL — During Heat Exposure)</div>
+          <div class="result-headline">${headline}</div>
+          <div class="result-subtext">${subtext}</div>
+          <div class="result-source">NIOSH (2016) Recommended Alert Limits (RAL) — Unacclimatized Workers</div>
+        </div>
+      </div>
+      <div style="text-align:left; margin-top:28px;">
+        <h3 style="font-size:16px; font-weight:800; color:var(--navy); margin-bottom:4px;">📅 Daily Acclimatization Exposure Schedule</h3>
+        <p style="font-size:13px; color:var(--subtext); margin-bottom:8px; line-height:1.5">${isNew ? 'As a <strong>new worker</strong>, follow this progressive schedule before reaching full shift exposure.' : 'As a <strong>returning worker</strong> (absent ≥1 week), follow this abbreviated ramp-up schedule.'} ${schedNote}</p>
+        ${schedHtml}
+        <p style="font-size:12px; color:var(--subtext); margin-top:8px; font-style:italic">† Apply RAL-based work-rest cycles during all heat exposure periods, regardless of daily percentage.</p>
+      </div>`;
+  }
+
+  function buildUnacclimChartTab(unit, rowIdx, colIdx) {
+    const unitKey  = unit === 'C' ? 'c' : 'f';
+    const labels   = RAL_ROW_LABELS[unitKey];
+    const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    let html = '<div class="acclim-chart-grid">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr">WBGT Range</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr${isUser?' acc-user-col':''}">${actNames[ci]}</div>`;
+    }
+    for (let ri = 0; ri < 9; ri++) {
+      const isUserRow = ri === rowIdx, isLastRow = ri === 8;
+      html += `<div class="acc-cell acc-range${isUserRow?' acc-user-row':''}${isLastRow?' acc-last-row':''}">${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const wr = WR_UNACCLIM[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol;
+        html += `<div class="acc-cell ${wrClass(wr)}${isUserCol?' acc-user-col':''}${isUserRow?' acc-user-row':''}${isUserCell?' acc-user-cell':''}${isLastRow?' acc-last-row':''}">${ralWrLabel(wr)}</div>`;
+      }
+    }
+    html += '</div>';
+    document.getElementById('unacclim-tab-chart').innerHTML = html;
+  }
+
+  function buildUnacclimScheduleTab(isNew) {
+    const sched  = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const title  = isNew ? 'New Workers — 5-Day Progressive Exposure Schedule' : 'Returning Workers — 4-Day Re-Acclimatization Schedule';
+    const sub    = isNew
+      ? 'No prior heat exposure — must complete full ramp. Maximum increase of 20% per day. Full acclimatization typically takes 7–14 days of work.'
+      : 'Prior experience, absent ≥1 week — abbreviated ramp. After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.';
+    const accent = isNew ? '#E05C2C' : '#2E7D32';
+    let barsHtml = '';
+    sched.forEach(d => {
+      const isFull = d.pct === 100;
+      barsHtml += `<div style="display:flex;align-items:center;margin-bottom:12px">
+        <span style="min-width:60px;font-weight:${isFull?800:600};font-size:14px">${d.day}</span>
+        <div style="flex:1;height:22px;background:#E9EDEF;border-radius:4px;overflow:hidden;margin:0 12px">
+          <div style="width:${d.pct}%;height:100%;background:${isFull?'#2E7D32':accent};border-radius:4px"></div>
+        </div>
+        <span style="min-width:38px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#2E7D32':accent};font-size:14px">${d.pct}%</span>
+      </div>`;
+    });
+    document.getElementById('unacclim-tab-schedule').innerHTML = `
+      <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;border-top:3px solid ${accent};padding-top:14px">${title}</h3>
+      <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.55">${sub}</p>
+      ${barsHtml}
+      <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E8F5E9'};color:${isNew?'#7A2800':'#104A13'}">
+        <strong>Remember:</strong> Apply RAL-based work-rest cycles <em>during all heat exposure periods</em>, regardless of the daily percentage.
+        ${isNew?' For new workers, continue working at 100% exposure through day 14 before considering the worker fully acclimatized.':' After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.'}
+      </div>
+      <p style="font-size:12px;color:var(--subtext);margin-top:14px;font-style:italic">Source: NIOSH (2016) Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (Table B-3)</p>`;
+  }
+
+  function buildUnacclimNotesTab() {
+    document.getElementById('unacclim-tab-notes').innerHTML = `
+      <div class="note-box warn-note" style="margin-bottom:16px">
+        <strong>During all acclimatization periods:</strong>
+        <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.8;font-size:13px">
+          <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+          <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+          <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+          <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans</li>
+          <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+        </ul>
+      </div>
+      <div class="note-box" style="margin-top:12px;border-left-color:#1A5A1F;background:#E8F5E9;color:#104A13">
+        <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
+      </div>
+      <p style="font-size:12px;color:var(--subtext);margin-top:12px;line-height:1.6">
+        <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+      </p>`;
+  }
+
+  function buildUnacclimLegacyTab() {
+    const src = document.getElementById('wbgt-unacclim-section');
+    if (src) document.getElementById('unacclim-tab-legacy').innerHTML = src.innerHTML;
+  }
+
+  function sizeUnacclimChartPane() {
+    const fixedTop = document.getElementById('fixed-top');
+    const tabBar   = document.getElementById('unacclim-tab-bar');
+    const pane     = document.getElementById('unacclim-tab-chart');
+    if (!pane) return;
+    pane.style.top = (fixedTop.offsetHeight + tabBar.offsetHeight) + 'px';
+  }
+
+  function sizeUnacclimResultWrap() {
+    const fixedTop = document.getElementById('fixed-top');
+    const tabBar   = document.getElementById('unacclim-tab-bar');
+    const wrap     = document.getElementById('unacclim-tab-0-wrap');
+    if (!wrap || !fixedTop || !tabBar) return;
+    const avail = window.innerHeight - fixedTop.offsetHeight - tabBar.offsetHeight;
+    wrap.style.minHeight = Math.max(avail, 320) + 'px';
+  }
+
+  let _unacclimChartActive = false;
+  let _unacclimActiveTab   = 0;
+
+  function switchUnacclimTab(idx) {
+    const paneDefs = [
+      {id:'unacclim-tab-0-wrap',   display:'flex'},
+      {id:'unacclim-tab-chart',    display:'block'},
+      {id:'unacclim-tab-schedule', display:'block'},
+      {id:'unacclim-tab-notes',    display:'block'},
+      {id:'unacclim-tab-legacy',   display:'block'}
+    ];
+    paneDefs.forEach((p, i) => {
+      const el = document.getElementById(p.id);
+      if (el) el.style.display = i === idx ? p.display : 'none';
+    });
+    for (let i = 0; i < 5; i++) {
+      const btn = document.getElementById('utab-btn-' + i);
+      if (btn) btn.classList.toggle('active', i === idx);
+    }
+    const isChart = idx === 1;
+    document.body.classList.toggle('chart-active', isChart);
+    _unacclimChartActive = isChart;
+    _unacclimActiveTab   = idx;
+    if (isChart) sizeUnacclimChartPane(); else sizeUnacclimResultWrap();
+  }
+
   // ── Legacy unit toggle (for non-acclimatized fallback table) ──
   function setUnit(unit) {
     currentUnit = unit;
@@ -737,6 +1094,7 @@ body.chart-active { overflow: hidden; }
     const main = document.querySelector('main');
     if (main) main.style.paddingTop = (fixedTop.offsetHeight + 12) + 'px';
     if (_chartActive) sizeChartPane();
+    if (_unacclimChartActive) sizeUnacclimChartPane();
   }
 
   async function init() {
@@ -744,28 +1102,58 @@ body.chart-active { overflow: hidden; }
     const s = WRC.get();
     workerStatus = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
 
-    const isAcclim = workerStatus === 'acclimatized';
-    const hasSession = isAcclim && s.instrument === 'wbgt';
+    const isAcclim          = workerStatus === 'acclimatized';
+    const hasAcclimSession  = isAcclim && s.instrument === 'wbgt';
+    const hasUnacclimSession = !isAcclim && s.instrument === 'wbgt';
 
-    if (hasSession) {
+    if (hasAcclimSession) {
       // ── Two-tab view for acclimatized WBGT workers ──
-      document.getElementById('wbgt-acclim-tabs').style.display = '';
-      document.getElementById('wbgt-acclim-section').style.display = 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display      = '';
+      document.getElementById('wbgt-acclim-section').style.display   = 'none';
       document.getElementById('wbgt-unacclim-section').style.display = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display    = 'none';
 
       buildResultTab(s);
       buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
 
+    } else if (hasUnacclimSession) {
+      // ── Five-tab view for unacclimatized WBGT workers ──
+      // Clone legacy content BEFORE hiding source section
+      buildUnacclimLegacyTab();
+
+      document.getElementById('wbgt-unacclim-tabs').style.display    = '';
+      document.getElementById('wbgt-acclim-tabs').style.display      = 'none';
+      document.getElementById('wbgt-acclim-section').style.display   = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display = 'none';
+
+      buildUnacclimResultTab(s);
+      buildUnacclimChartTab(s.measUnit || 'F', window._wrcUnacclimRowIdx, window._wrcUnacclimColIdx);
+      buildUnacclimScheduleTab(s.workerStatus === 'unacclimatized-new');
+      buildUnacclimNotesTab();
+      switchUnacclimTab(0);
+
     } else {
       // ── Fallback: original table view ──
-      document.getElementById('wbgt-acclim-section').style.display  = isAcclim ? '' : 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display      = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display    = 'none';
+      document.getElementById('wbgt-acclim-section').style.display   = isAcclim ? '' : 'none';
       document.getElementById('wbgt-unacclim-section').style.display = !isAcclim ? '' : 'none';
       setUnit('F');
     }
 
     buildBreadcrumbs();
-    requestAnimationFrame(() => { updateLayout(); if (hasSession) sizeResultWrap(); });
-    window.addEventListener('resize', () => { updateLayout(); if (_chartActive) sizeChartPane(); else sizeResultWrap(); });
+    requestAnimationFrame(() => {
+      updateLayout();
+      if (hasAcclimSession) sizeResultWrap();
+      else if (hasUnacclimSession) sizeUnacclimResultWrap();
+    });
+    window.addEventListener('resize', () => {
+      updateLayout();
+      if (_chartActive) sizeChartPane();
+      else if (_unacclimChartActive) sizeUnacclimChartPane();
+      else if (hasAcclimSession) sizeResultWrap();
+      else if (hasUnacclimSession) sizeUnacclimResultWrap();
+    });
   }
 
   document.addEventListener('DOMContentLoaded', init);
