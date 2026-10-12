@@ -690,14 +690,27 @@
     tip.setAttribute('fill', '#00966C');
     marker.appendChild(tip); defs.appendChild(marker); svg.appendChild(defs);
 
-    // Arrow from click point to target pill
-    const x1 = e.clientX;
+    // Arrow exits from the left or right edge of the modal (never top/bottom)
+    const pR2 = pop.getBoundingClientRect();
+    const tx = tR.left + tR.width / 2;   // target centre x
+    const ty = tR.top  + tR.height / 2;  // target centre y
+    // Pick whichever modal edge is closer to the target horizontally
+    const distLeft  = Math.abs(tx - pR2.left);
+    const distRight = Math.abs(tx - pR2.right);
+    const fromRight = distRight < distLeft;
+    // Start point: modal edge, at the Y of the clicked list item
+    const x1 = fromRight ? pR2.right : pR2.left;
     const y1 = e.clientY;
-    const x2 = tR.left + tR.width / 2;
-    const y2 = tR.bottom + 8;
+    // End point: near edge of the target ring (not dead-centre)
+    const x2 = fromRight ? tR.right + 8 : tR.left - 8;
+    const y2 = ty;
+    // Control points curve outward horizontally so the arrow flows left/right
+    const cpOff = Math.abs(x2 - x1) * 0.5;
+    const cp1x = fromRight ? x1 + cpOff : x1 - cpOff;
+    const cp2x = fromRight ? x2 + cpOff : x2 - cpOff;
 
     const arrow = document.createElementNS(NS, 'path');
-    arrow.setAttribute('d', `M ${x1} ${y1} C ${x1} ${y1 - 40}, ${x2} ${y2 + 40}, ${x2} ${y2}`);
+    arrow.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${y1}, ${cp2x} ${y2}, ${x2} ${y2}`);
     arrow.setAttribute('fill', 'none');
     arrow.setAttribute('stroke', '#00966C');
     arrow.setAttribute('stroke-width', '2.5');
