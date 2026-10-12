@@ -212,7 +212,7 @@ body.chart-active { overflow: hidden; }
 .acc-cell.acc-last-row { border-bottom: none; }
 
 .acc-hdr {
-  font-size: clamp(11px, 1.5vh, 19px);
+  font-size: 14px; /* overridden at runtime by fitGridHeaderSize() */
   font-weight: 800;
   background: var(--surface, #F0F4F8);
   color: var(--navy, #1A2A3A);
@@ -222,7 +222,7 @@ body.chart-active { overflow: hidden; }
 .acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
 
 .acc-range {
-  font-size: clamp(14px, 1.8vh, 22px);
+  font-size: 14px; /* overridden at runtime by fitGridHeaderSize() */
   font-weight: 600;
   color: var(--navy, #1A2A3A);
   justify-content: flex-start;
@@ -901,6 +901,24 @@ body.chart-active { overflow: hidden; }
     document.getElementById('acclim-tab-chart').innerHTML = html;
   }
 
+  // ── Fit header + leftmost-column cells to the largest font that doesn't overflow ──
+  function fitGridHeaderSize(gridEl) {
+    if (!gridEl) return;
+    const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
+    if (!cells.length) return;
+    // Binary search in tenths of a px between 7 px and 42 px
+    let lo = 70, hi = 420;
+    while (lo < hi) {
+      const mid = Math.floor((lo + hi + 1) / 2);
+      const fs  = (mid / 10) + 'px';
+      cells.forEach(c => { c.style.fontSize = fs; c.style.lineHeight = '1.15'; });
+      const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1 || c.scrollHeight > c.clientHeight + 1);
+      if (overflows) hi = mid - 1; else lo = mid;
+    }
+    const finalSize = (lo / 10) + 'px';
+    cells.forEach(c => c.style.fontSize = finalSize);
+  }
+
   // ── Size the chart pane to fill from below header+tabbar to bottom of viewport ──
   let _chartActive = false;
   function sizeChartPane() {
@@ -908,6 +926,7 @@ body.chart-active { overflow: hidden; }
     const chartPane = document.getElementById('acclim-tab-chart');
     if (!chartPane) return;
     chartPane.style.top = fixedTop.offsetHeight + 'px';
+    requestAnimationFrame(() => fitGridHeaderSize(chartPane.querySelector('.acclim-chart-grid')));
   }
 
   function sizeResultWrap() {
@@ -1211,11 +1230,12 @@ body.chart-active { overflow: hidden; }
       </p>`;
   }
 
-function sizeUnacclimChartPane() {
+  function sizeUnacclimChartPane() {
     const fixedTop = document.getElementById('fixed-top');
     const pane     = document.getElementById('unacclim-tab-chart');
     if (!pane) return;
     pane.style.top = fixedTop.offsetHeight + 'px';
+    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
   }
 
   function sizeUnacclimResultWrap() {
