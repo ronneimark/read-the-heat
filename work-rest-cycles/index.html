@@ -210,7 +210,6 @@
   animation: popoverOut .45s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
 .intro-popover.rolled {
-  max-height: 44px !important;
   overflow: hidden !important;
   transition: max-height .35s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
@@ -493,7 +492,7 @@
     const pop = document.getElementById('intro-popover');
     const btn = document.getElementById('intro-open-btn');
     const btnRect = btn.getBoundingClientRect();
-    const vpad = 12; /* min gap from viewport edges */
+    const vpad = 4; /* min gap from viewport edges */
     const vpH = window.innerHeight;
     const availH = vpH - vpad * 2; /* max usable height */
 
@@ -646,6 +645,7 @@
     // If same step clicked while rolled — unroll and return
     if (pop._rolledStep === n && pop.classList.contains('rolled')) {
       pop.classList.remove('rolled');
+      pop.style.maxHeight = '';
       pop._rolledStep = null;
       positionIntroPopover();
       return;
@@ -738,14 +738,22 @@
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
     // No auto-fade — stays until next step click or modal close
 
-    // Check if popover overlaps the target; if so, roll it down
+    // Check if popover overlaps the target; if so, roll it down just enough
     pop.classList.remove('rolled');
+    pop.style.maxHeight = '';
     pop._rolledStep = null;
     requestAnimationFrame(() => {
       const pR = pop.getBoundingClientRect();
       const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
                          pR.bottom < tR.top  || pR.top  > tR.bottom);
       if (overlaps) {
+        // Popover is bottom-anchored; shrink it so its top clears below the target
+        const gap = 10;
+        const vpH = window.innerHeight;
+        const popBottom = pR.bottom; /* fixed bottom position */
+        const neededTop = tR.bottom + gap;
+        const rolledHeight = popBottom - neededTop;
+        pop.style.maxHeight = Math.max(44, rolledHeight) + 'px';
         pop.classList.add('rolled');
         pop._rolledStep = n;
       }
@@ -757,6 +765,7 @@
     document.getElementById('intro-popover').addEventListener('click', function(e) {
       if (this.classList.contains('rolled')) {
         this.classList.remove('rolled');
+        this.style.maxHeight = '';
         this._rolledStep = null;
         positionIntroPopover();
       }
