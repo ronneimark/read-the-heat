@@ -182,13 +182,13 @@
   .wrc-crumb {
     display: inline-flex;
     align-items: center;
-    padding: 5px 14px;
+    padding: 6px 16px;
     background: #D50032;
     border: 1px solid rgba(255,255,255,0.30);
     border-radius: 20px;
     color: #fff;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     white-space: nowrap;
     text-decoration: none;
     transition: background 0.12s;
@@ -201,12 +201,12 @@
   .wrc-crumb-pending {
     display: inline-flex;
     align-items: center;
-    padding: 5px 14px;
+    padding: 6px 16px;
     background: #D50032;
     border: 1px dashed rgba(255,255,255,0.60);
     border-radius: 20px;
     color: #fff;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     font-style: italic;
     white-space: nowrap;
@@ -225,10 +225,10 @@
     color: #111;
     font-style: normal;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 17px;
     font-variant-numeric: tabular-nums;
-    padding: 6px 14px;
-    margin-block: -8px;
+    padding: 7px 16px;
+    margin-block: -10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     letter-spacing: 0.01em;
   }

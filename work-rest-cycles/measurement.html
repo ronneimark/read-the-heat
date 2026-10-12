@@ -10,60 +10,51 @@
 #meas-modal-overlay {
   display: none;
   position: fixed;
-  /* default full-screen; JS overrides with card rect for quadrant mode */
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,10,30,0.72);
+  background: rgba(0,10,30,0.45);
   z-index: 9100;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  overflow-y: auto;
+  align-items: stretch;   /* modal stretches full height of overlay */
+  justify-content: flex-end; /* modal hugs the right edge */
+  padding: 0;
 }
 #meas-modal-overlay.open { display: flex; }
 #meas-modal {
   background: #fff;
-  border-radius: 14px;
-  /* shrink to fit a quadrant — max-width stays as upper bound */
-  max-width: min(420px, 100%);
-  width: 100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-  padding: 24px 24px 24px;
-  margin: auto;
-  max-height: 100%;
-  overflow-y: auto;
+  border-radius: 0;
+  width: 50%;             /* right half of the card's quadrant */
+  height: 100%;
+  box-shadow: -6px 0 32px rgba(0,0,0,0.22);
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;       /* no scroll — content must fit */
 }
-.meas-instrument-label {
-  font-size: 13px;
+.meas-field-group {
+  margin-bottom: 10px;
+}
+.meas-field-label {
+  font-size: 11px;
   font-weight: 700;
   color: var(--subtext);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 18px;
-}
-.meas-field-group {
-  margin-bottom: 20px;
-}
-.meas-field-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 8px;
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
   display: block;
 }
 .meas-input-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .meas-input {
   flex: 1;
-  height: 52px;
-  font-size: 22px;
+  height: 44px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--navy);
   border: 2px solid var(--border);
-  border-radius: 8px;
-  padding: 0 14px;
+  border-radius: 7px;
+  padding: 0 10px;
   outline: none;
   transition: border-color 0.15s;
   font-family: inherit;
@@ -72,7 +63,7 @@
 .meas-input:focus { border-color: var(--navy); }
 .meas-input.error { border-color: #D50032; }
 .meas-unit-suffix {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--subtext);
   flex-shrink: 0;
@@ -80,16 +71,16 @@
 .meas-toggle {
   display: flex;
   border: 2px solid var(--border);
-  border-radius: 8px;
+  border-radius: 7px;
   overflow: hidden;
   flex-shrink: 0;
 }
 .meas-toggle button {
-  padding: 0 13px;
-  height: 52px;
+  padding: 0 10px;
+  height: 44px;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--subtext);
   cursor: pointer;
@@ -102,39 +93,42 @@
 }
 .meas-error-msg {
   color: #D50032;
-  font-size: 12px;
-  margin-top: 5px;
+  font-size: 11px;
+  margin-top: 3px;
   display: none;
 }
 .meas-error-msg.visible { display: block; }
 .meas-divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 20px 0;
+  margin: 10px 0;
 }
 .meas-submit-btn {
   width: 100%;
-  padding: 15px;
+  padding: 11px;
   background: var(--navy);
   color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.12s, transform 0.1s;
   letter-spacing: 0.02em;
+  margin-top: auto;      /* pushes to bottom of flex column */
+  flex-shrink: 0;
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
 .meas-skip-link {
   display: block;
   text-align: center;
-  margin-top: 14px;
-  font-size: 13px;
+  margin-top: 8px;
+  font-size: 11px;
   color: var(--subtext);
   text-decoration: none;
+  flex-shrink: 0;
 }
 .meas-skip-link:hover { color: var(--navy); text-decoration: underline; }
 </style>
@@ -201,15 +195,14 @@
 <!-- ── Measurement input modal ── -->
 <div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
   <div id="meas-modal">
-    <div class="modal-sticky-header" style="margin:-28px -28px 20px;">
-      <h2 id="meas-modal-title" style="font-size:17px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
+    <div class="modal-sticky-header" style="margin:-18px -20px 14px;">
+      <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
 
     <!-- Warning banner — shown for dry-bulb only -->
-    <div id="meas-dbt-warning" hidden style="background:#FFF3CD;border:1px solid #FBBF24;border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:13px;line-height:1.5;color:#78350F;">
-      <strong>⚠️ Dry-bulb temperature alone is not sufficient to determine heat stress.</strong>
-      It does not account for the effects of humidity or radiant heat from ovens, furnaces, and other hot equipment — factors that significantly increase physiological strain on workers. For a more complete assessment, use WBGT, Temperature + Humidity, or Heat Index instead.
+    <div id="meas-dbt-warning" hidden style="background:#FFF3CD;border:1px solid #FBBF24;border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;line-height:1.45;color:#78350F;">
+      <strong>⚠️ Dry-bulb alone is insufficient.</strong> It misses humidity and radiant heat. Use WBGT, Temp + Humidity, or Heat Index for a complete assessment.
     </div>
 
     <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
