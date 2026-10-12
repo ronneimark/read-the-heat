@@ -147,11 +147,11 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 /* Left column */
 .result-main {
   border-radius: 14px;
-  padding: 24px 28px;
+  padding: 24px 28px 16px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 0;
+  justify-content: space-between;
+  gap: 12px;
   text-align: left;
   grid-column: 1;
   grid-row: 1;
@@ -217,18 +217,19 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   line-height: 1.3;
 }
 
-/* Radiant heat note */
+/* Radiant heat note — lives in left column, adapts to colored backgrounds */
 .radiant-warn-strip {
-  padding: 10px 12px;
-  background: #FFF8E1;
-  border-left: 4px solid #F59E0B;
-  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.15);
+  border-left: 3px solid rgba(255,255,255,0.5);
+  border-radius: 0 6px 6px 0;
   font-size: 11px;
   line-height: 1.5;
-  color: #78350F;
+  color: inherit;
+  opacity: 0.9;
   flex-shrink: 0;
 }
-.radiant-warn-strip strong { display: block; margin-bottom: 2px; }
+.radiant-warn-strip strong { display: inline; }
 
 /* Monitoring guidance in sidebar */
 .result-monitoring {
@@ -901,6 +902,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
             ${trhDerivation}
           </div>
         </div>
+        <div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
+        </div>
       </div>
       <div class="result-sidebar">
         ${trhCards}
@@ -920,9 +924,6 @@ body.trh-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-sub">${workerSub}</div>
         </div>
         ${monitoringHtml}
-        <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
-        </div>
       </div>`;
     return { rowIdx, colIdx };
   }
