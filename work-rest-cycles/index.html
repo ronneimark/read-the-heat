@@ -25,7 +25,6 @@
     <div class="wrc-banner-strip-inner">
       <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
       <button class="strip-btn" onclick="openMethodologyModal()">📚 Methodology</button>
-      <!-- language selector injected here by lang-switch.js -->
     </div>
   </div>
 </div><!-- /fixed-top -->
@@ -33,7 +32,7 @@
 <div id="launcher">
   <div class="launcher-screen active" id="ls1">
 
-    <!-- heading row: question + "How to use" button + popover -->
+    <!-- heading row with How to use button -->
     <div class="ls1-header">
       <p class="ls-heading">What industry is this work in?</p>
       <div class="intro-anchor" id="intro-anchor">
@@ -42,33 +41,62 @@
                 aria-expanded="false"
                 aria-controls="intro-popover"
                 title="How to use this tool">ℹ How to use</button>
-        <div class="intro-popover" id="intro-popover" hidden>
+
+        <!-- tabbed popover -->
+        <div class="intro-popover" id="intro-popover" hidden role="dialog" aria-label="How to use this tool">
           <div class="intro-popover-arrow"></div>
-          <div class="intro-popover-inner">
-            <p class="intro-lead">This tool calculates <strong>NIOSH-recommended work-rest cycles</strong> for indoor workers exposed to heat — in about 30 seconds.</p>
-            <p class="intro-lead">Understanding heat risk means understanding conditions. This tool guides you through how <strong>work intensity interacts with environmental heat</strong> to determine safe exposure limits — and the more accurately those conditions are measured, the more protective the result.</p>
-            <ol class="intro-steps">
-              <li><strong>Pick your industry</strong> — choose the sector that best matches your workplace.</li>
-              <li><strong>Describe the work</strong> — select the physical activity level (light, moderate, or heavy).</li>
-              <li><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits.</li>
-              <li><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure.</li>
-            </ol>
-            <p class="intro-uses-label">A note on instruments:</p>
-            <ul class="intro-uses">
-              <li>🌡️ <strong>WBGT meters</strong> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
-              <li>💧 <strong>Heat index meters</strong> (temperature + humidity) are a solid second choice.</li>
-              <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Any organization relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it. <strong class="rights-statement">Workers and their representatives have every right to transparent access to those measurements.</strong></li>
-            </ul>
-            <p class="intro-uses-label">How people use it:</p>
-            <ul class="intro-uses">
-              <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
-              <li>🦺 <strong>Safety reps &amp; union stewards</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
-              <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
-            </ul>
+
+          <!-- intro paragraph above tabs -->
+          <div class="intro-preamble">
+            <p><strong>This tool calculates NIOSH-recommended work-rest cycles for indoor workers exposed to heat — in about 30 seconds.</strong></p>
+            <p>The purpose of this site is to identify the need for breaks from work in hot conditions based on the intensity of the work and the environmental conditions:</p>
           </div>
-        </div>
-      </div>
-    </div>
+
+          <!-- tab bar -->
+          <div class="intro-tab-bar" role="tablist">
+            <button class="intro-tab active" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)">1 · How to use</button>
+            <button class="intro-tab"        role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)">2 · Measuring heat</button>
+            <button class="intro-tab"        role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)">3 · How it's used</button>
+          </div>
+
+          <!-- tab panels -->
+          <div class="intro-tab-panels">
+
+            <div class="intro-tab-panel active" id="itab-1" role="tabpanel">
+              <ol class="intro-steps">
+                <li><strong>Pick your industry</strong> — choose the sector that best matches your workplace.</li>
+                <li><strong>Describe the work</strong> — select the physical activity level (light, moderate, or heavy).</li>
+                <li><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits.</li>
+                <li><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure.</li>
+              </ol>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+            <div class="intro-tab-panel" id="itab-2" role="tabpanel" hidden>
+              <ul class="intro-uses">
+                <li>🌡️ <strong>WBGT meters</strong> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
+                <li>💧 <strong>Heat index meters</strong> (temperature + humidity) are a solid second choice.</li>
+                <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Organizations relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it. <strong class="rights-statement">Workers and their representatives have every right to transparent access to those measurements.</strong></li>
+              </ul>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+            <div class="intro-tab-panel" id="itab-3" role="tabpanel" hidden>
+              <ul class="intro-uses">
+                <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
+                <li>🦺 <strong>Safety reps &amp; union stewards</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
+                <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
+              </ul>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+          </div><!-- /tab-panels -->
+        </div><!-- /intro-popover -->
+      </div><!-- /intro-anchor -->
+    </div><!-- /ls1-header -->
 
     <div class="ls1-sector-grid" id="ls1-sector-grid">
       <button class="ls1-sector-btn" data-sector="restaurant" onclick="ls1SelectSector('restaurant')"><img class="ls1-photo" src="images/industries/restaurant.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Restaurant</span></button>
@@ -92,122 +120,188 @@
 </div><!-- /launcher -->
 
 <style>
-/* ── ls1 header row ── */
+/* ── heading row ── */
 .ls1-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.ls-heading { margin: 0; }
+.ls-heading { margin: 0; white-space: nowrap; }
 
-/* ── "How to use" button + popover wrapper ── */
+/* ── anchor wrapper ── */
 .intro-anchor {
   position: relative;
+  flex-shrink: 0;
 }
 
-/* Red 3-D button */
+/* ── dark-blue 3D button ── */
 .intro-open-btn {
-  font-size: 1rem;
+  font-size: .8rem;
   font-weight: 700;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
   white-space: nowrap;
-  padding: 10px 28px;
-  border-radius: 9px;
+  padding: 6px 14px;
+  border-radius: 7px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(180deg, #c8001e 0%, #A50028 100%);
+  background: linear-gradient(180deg, #1e5fa8 0%, #0d3d6e 100%);
   color: #fff;
-  box-shadow: 0 5px 0 #6b0014, 0 7px 10px rgba(0,0,0,.3);
+  box-shadow: 0 4px 0 #071f3a, 0 5px 8px rgba(0,0,0,.3);
   transition: transform .1s, box-shadow .1s;
   position: relative;
   z-index: 1001;
 }
-.intro-open-btn:hover { filter: brightness(1.1); }
+.intro-open-btn:hover { filter: brightness(1.15); }
 .intro-open-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 #6b0014, 0 2px 4px rgba(0,0,0,.2);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #071f3a, 0 2px 4px rgba(0,0,0,.2);
 }
 
-/* ── Popover ── */
+/* ── popover shell ── */
 .intro-popover {
   position: absolute;
   top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(480px, 92vw);
+  right: 0;
+  width: min(500px, 96vw);
   background: var(--modal-bg, #fff);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
   z-index: 1000;
   overflow: hidden;
-  /* slide-down animation */
-  transform-origin: top center;
-  animation: popoverIn .18s ease;
+  transform-origin: top right;
+  animation: popoverIn .32s cubic-bezier(.22,.68,0,1.1);
+  display: flex;
+  flex-direction: column;
 }
 .intro-popover[hidden] { display: none; }
 @keyframes popoverIn {
-  from { opacity: 0; transform: scaleY(.9) translateY(-6px); }
-  to   { opacity: 1; transform: scaleY(1) translateY(0); }
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 12px);
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0% 0 round 12px);
+  }
 }
 @media (prefers-color-scheme: dark) {
   .intro-popover { background: #1a2235; color: #dde2ee; }
 }
 
-/* small triangle pointing up at button */
+/* triangle arrow */
 .intro-popover-arrow {
   position: absolute;
-  top: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 7px;
+  top: -7px; right: 20px;
+  width: 14px; height: 7px;
   overflow: hidden;
+  pointer-events: none;
 }
 .intro-popover-arrow::after {
   content: '';
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 12px; height: 12px;
   background: var(--modal-bg, #fff);
   transform: rotate(45deg);
-  top: 3px;
-  left: 1px;
+  top: 3px; left: 1px;
   box-shadow: -2px -2px 4px rgba(0,0,0,.1);
 }
 @media (prefers-color-scheme: dark) {
   .intro-popover-arrow::after { background: #1a2235; }
 }
 
-.intro-popover-inner {
-  padding: 16px 18px 18px;
-  max-height: 70vh;
+/* preamble */
+.intro-preamble {
+  padding: 14px 18px 0;
+  font-size: 1rem;
+}
+.intro-preamble p { margin: 0 0 6px; }
+
+/* tab bar */
+.intro-tab-bar {
+  display: flex;
+  border-bottom: 2px solid var(--border, #dee2e6);
+  padding: 0 18px;
+  gap: 2px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .intro-tab-bar { border-color: #334; }
+}
+.intro-tab {
+  font-size: .78rem;
+  font-weight: 700;
+  padding: 7px 12px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--subtext, #666);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 6px 6px 0 0;
+  white-space: nowrap;
+  transition: color .12s, border-color .12s;
+}
+.intro-tab:hover { color: var(--navy, #1a2e4a); }
+.intro-tab.active {
+  color: #1e5fa8;
+  border-bottom-color: #1e5fa8;
+  background: rgba(30,95,168,.06);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-tab.active { color: #7ab4f5; border-bottom-color: #7ab4f5; background: rgba(122,180,245,.08); }
+}
+
+/* tab panels */
+.intro-tab-panels {
+  flex: 1;
+  overflow: hidden;
+}
+.intro-tab-panel {
+  padding: 14px 18px 18px;
+  font-size: 1rem;
   overflow-y: auto;
-  font-size: .88rem;
+  max-height: 52vh;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
 }
-.intro-lead { margin: 0 0 9px; }
+.intro-tab-panel[hidden] { display: none; }
+
 .intro-steps {
-  margin: 0 0 11px;
+  margin: 0;
   padding-left: 1.3em;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
-.intro-uses-label { margin: 0 0 5px; font-weight: 600; }
 .intro-uses {
-  margin: 0 0 11px;
+  margin: 0;
   padding-left: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
-.intro-uses:last-child { margin-bottom: 0; }
 .rights-statement { color: #c0392b; }
+
+/* illustration placeholder — invisible until an image is placed */
+.intro-illus-slot {
+  min-height: 0;
+  border-radius: 8px;
+}
+.intro-illus-slot:not(:empty) {
+  min-height: 120px;
+  background: var(--surface, #f5f6f8);
+  margin-top: 4px;
+}
 </style>
+
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
@@ -216,21 +310,27 @@
     const btn = document.getElementById('intro-open-btn');
     const isOpen = !pop.hidden;
     pop.hidden = isOpen;
-    btn.setAttribute('aria-expanded', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
   }
 
   function closeIntroPopover() {
-    const pop = document.getElementById('intro-popover');
-    const btn = document.getElementById('intro-open-btn');
-    pop.hidden = true;
-    btn.setAttribute('aria-expanded', 'false');
+    document.getElementById('intro-popover').hidden = true;
+    document.getElementById('intro-open-btn').setAttribute('aria-expanded', 'false');
   }
 
-  // close on outside click or Escape
+  function switchIntroTab(n) {
+    document.querySelectorAll('.intro-tab').forEach((t, i) => {
+      const active = i + 1 === n;
+      t.classList.toggle('active', active);
+      t.setAttribute('aria-selected', String(active));
+    });
+    document.querySelectorAll('.intro-tab-panel').forEach((p, i) => {
+      p.hidden = i + 1 !== n;
+    });
+  }
+
   document.addEventListener('click', e => {
-    if (!document.getElementById('intro-anchor').contains(e.target)) {
-      closeIntroPopover();
-    }
+    if (!document.getElementById('intro-anchor').contains(e.target)) closeIntroPopover();
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeIntroPopover();
@@ -243,12 +343,10 @@
   }
 
   function updateLayout() {
-    const fixedTop = document.getElementById('fixed-top');
+    const fixedH = document.getElementById('fixed-top').offsetHeight;
     const ls1 = document.getElementById('ls1');
-    const fixedH = fixedTop.offsetHeight;
-    const vh = window.innerHeight;
     ls1.style.paddingTop = (fixedH + 16) + 'px';
-    ls1.style.height = vh + 'px';
+    ls1.style.height = window.innerHeight + 'px';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
