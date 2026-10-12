@@ -1112,7 +1112,7 @@
     line-height: 1.65;
     padding-left: 18px;
     margin: 0;
-    margin-top: 0;
+    margin-top: -10px; /* cancel card gap so bullets sit flush under desc */
   }
   .ls3-acclim-cta {
     display: flex;
