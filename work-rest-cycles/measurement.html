@@ -204,24 +204,38 @@
   box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35);
 }
 
-/* Photo lightbox */
-#photo-lightbox {
+/* Photo expand — in-place zoom to viewport */
+.method-card-photo.photo-fixed {
+  position: fixed !important;
+  z-index: 9997;
+  margin: 0 !important;
+  max-height: none !important;
+  object-fit: contain;
+  cursor: zoom-out;
+  background: transparent;
+  transition: top .38s cubic-bezier(.4,0,.2,1),
+              left .38s cubic-bezier(.4,0,.2,1),
+              width .38s cubic-bezier(.4,0,.2,1),
+              height .38s cubic-bezier(.4,0,.2,1),
+              border-radius .38s cubic-bezier(.4,0,.2,1),
+              box-shadow .38s;
+}
+.method-card-photo.photo-fixed.photo-expanded {
+  box-shadow: 0 32px 80px rgba(0,0,20,0.5);
+}
+#photo-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,20,0.9);
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(0,0,20,0.88);
+  z-index: 9996;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .38s;
   cursor: zoom-out;
 }
-#photo-lightbox[hidden] { display: none !important; }
-#photo-lightbox-img {
-  max-width: 90vw;
-  max-height: 86vh;
-  object-fit: contain;
-  border-radius: 10px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+#photo-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Device info modal */
@@ -366,10 +380,8 @@
   </div><!-- /ls4 -->
 </div><!-- /launcher -->
 
-<!-- ── Photo lightbox ── -->
-<div id="photo-lightbox" hidden onclick="closeLightbox()">
-  <img id="photo-lightbox-img" src="" alt="">
-</div>
+<!-- ── Photo expand backdrop ── -->
+<div id="photo-backdrop" onclick="collapsePhoto()"></div>
 
 <!-- ── Device info modal ── -->
 <div id="device-info-overlay" hidden onclick="if(event.target===this)closeDeviceInfo()">
@@ -535,18 +547,62 @@
     window.location.href = measDestUrls[measCurrentInstrument];
   }
 
-  // ── Photo lightbox ──
+  // ── Photo in-place expand ──
+  let _expandedPhoto = null;
+
   function expandPhoto(img) {
-    const lb = document.getElementById('photo-lightbox');
-    document.getElementById('photo-lightbox-img').src = img.src;
-    document.getElementById('photo-lightbox-img').alt = img.alt;
-    lb.hidden = false;
+    if (_expandedPhoto) { collapsePhoto(); return; }
+
+    const r = img.getBoundingClientRect();
+    img._origRect = { top: r.top, left: r.left, width: r.width, height: r.height };
+
+    // Pin at current position without transition
+    img.style.transition = 'none';
+    img.classList.add('photo-fixed');
+    img.style.top    = r.top    + 'px';
+    img.style.left   = r.left   + 'px';
+    img.style.width  = r.width  + 'px';
+    img.style.height = r.height + 'px';
+    img.style.borderRadius = '5px';
+    _expandedPhoto = img;
+
+    document.getElementById('photo-backdrop').classList.add('visible');
+
+    // Two rAFs: let the browser paint the pinned position first, then animate
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      img.style.transition = '';
+      img.style.top    = '0';
+      img.style.left   = '0';
+      img.style.width  = '100vw';
+      img.style.height = '100vh';
+      img.style.borderRadius = '0';
+      img.classList.add('photo-expanded');
+    }));
   }
-  function closeLightbox() {
-    document.getElementById('photo-lightbox').hidden = true;
+
+  function collapsePhoto() {
+    const img = _expandedPhoto;
+    if (!img) return;
+    _expandedPhoto = null;
+
+    const o = img._origRect;
+    img.classList.remove('photo-expanded');
+    img.style.top    = o.top    + 'px';
+    img.style.left   = o.left   + 'px';
+    img.style.width  = o.width  + 'px';
+    img.style.height = o.height + 'px';
+    img.style.borderRadius = '5px';
+
+    document.getElementById('photo-backdrop').classList.remove('visible');
+
+    img.addEventListener('transitionend', () => {
+      img.classList.remove('photo-fixed');
+      img.style.cssText = '';
+    }, { once: true });
   }
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeLightbox(); closeDeviceInfo(); }
+    if (e.key === 'Escape') { collapsePhoto(); closeDeviceInfo(); }
   });
 
   // ── Device info modal ──
