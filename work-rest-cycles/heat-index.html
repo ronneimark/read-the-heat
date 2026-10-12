@@ -15,11 +15,140 @@ main { padding: 0; max-width: none; }
   .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
 }
 
-/* ── Navy divider below tab bars ── */
-#hi-acclim-tab-bar-wrap,
-#hi-unacclim-tab-bar-wrap {
+/* ── T+RH input strip (border moves here from tab bar wraps) ── */
+#hi-trh-strip {
+  background: #EBF0F5;
   border-bottom: 4px solid var(--navy, #1A2A3A);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
+.trh-strip-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+  white-space: nowrap;
+}
+.trh-mode-toggle { display: flex; gap: 0; border-radius: 6px; overflow: hidden; border: 1px solid #AAB8C4; }
+.trh-mode-btn {
+  padding: 5px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  background: #fff;
+  color: var(--subtext, #484F58);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.trh-mode-btn.active { background: var(--navy, #1A2A3A); color: #fff; }
+.trh-mode-btn:not(.active):hover { background: #D6E0EA; }
+.trh-mode-btn:focus-visible { outline: 2px solid #005FCC; outline-offset: 1px; z-index: 1; }
+.trh-inputs-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.trh-field { display: flex; flex-direction: column; gap: 2px; }
+.trh-field label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-field input[type=number] {
+  width: 86px;
+  padding: 5px 8px;
+  border: 1px solid #AAB8C4;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  background: #fff;
+  color: var(--navy, #1A2A3A);
+  -moz-appearance: textfield;
+}
+.trh-field input[type=number]::-webkit-outer-spin-button,
+.trh-field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.trh-field input[type=number]:focus { outline: 2px solid #005FCC; outline-offset: 1px; }
+.trh-arrow { font-size: 20px; color: var(--subtext, #484F58); line-height: 1; padding-bottom: 4px; }
+.trh-hi-result { display: flex; flex-direction: column; gap: 2px; }
+.trh-hi-result-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-hi-result-value { font-size: 20px; font-weight: 900; color: var(--navy, #1A2A3A); min-width: 72px; }
+
+/* Result tab — derivation sentence */
+.result-derivation {
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 8px;
+  opacity: 0.88;
+  line-height: 1.4;
+}
+
+/* Formula check tab */
+.formula-check-pane { padding: 24px 20px 40px; max-width: 900px; margin: 0 auto; }
+.formula-check-pane h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--navy, #1A2A3A);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border, #D0D8E0);
+}
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 16px;
+}
+.formula-table th { text-align: left; padding: 6px 10px; background: var(--surface, #F0F4F8); font-weight: 700; border: 1px solid var(--border, #D0D8E0); }
+.formula-table td { padding: 6px 10px; border: 1px solid var(--border, #D0D8E0); }
+.formula-table .formula-total td { font-weight: 800; background: var(--surface, #F0F4F8); }
+.formula-code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--surface, #F0F4F8);
+  border: 1px solid var(--border, #D0D8E0);
+  border-radius: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.formula-temp-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  background: #FFF8E1;
+  border: 1px solid #E6B800;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #78350F;
+  margin-left: 6px;
+}
+
+/* Page-level formula footnote */
+.hi-formula-footnote {
+  border-top: 1px solid var(--border, #D0D8E0);
+  padding: 12px 20px 24px;
+  max-width: 900px;
+  margin: 20px auto 0;
+  font-size: 11px;
+  color: var(--subtext, #484F58);
+  line-height: 1.65;
+}
+.hi-formula-footnote strong { color: var(--navy, #1A2A3A); }
 
 /* ── Tab bar ── */
 .acclim-tab-bar {
@@ -365,6 +494,12 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
         <span class="acclim-tab-btn-sub">Hydration &amp; limitations</span>
       </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="hi-tab-formula" tabindex="-1"
+              onclick="switchHITab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
+      </button>
     </div>
   </div>
 
@@ -389,6 +524,40 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
         <span class="acclim-tab-btn-sub">Guidance &amp; limitations</span>
       </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="hi-utab-formula" tabindex="-1"
+              onclick="switchHIUnacclimTab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- T+RH input strip (shared; border-bottom separates header from content) -->
+  <div id="hi-trh-strip">
+    <span class="trh-strip-label">Input Method:</span>
+    <div class="trh-mode-toggle" role="group" aria-label="Heat index input method">
+      <button class="trh-mode-btn active" id="trh-btn-hi" aria-pressed="true"
+              onclick="setHiInputMode('hi')">Heat Index</button>
+      <button class="trh-mode-btn" id="trh-btn-trh" aria-pressed="false"
+              onclick="setHiInputMode('trh')">Temp + RH</button>
+    </div>
+    <div class="trh-inputs-row" id="hi-trh-inputs-row" style="display:none" aria-live="polite">
+      <div class="trh-field">
+        <label for="hi-trh-temp">Temperature (<span id="hi-trh-unit-label">°F</span>)</label>
+        <input type="number" id="hi-trh-temp" min="-50" max="200" step="0.1"
+               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
+      </div>
+      <div class="trh-field">
+        <label for="hi-trh-rh">Relative Humidity (%)</label>
+        <input type="number" id="hi-trh-rh" min="0" max="100" step="1"
+               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
+      </div>
+      <div class="trh-arrow" aria-hidden="true">→</div>
+      <div class="trh-hi-result">
+        <div class="trh-hi-result-label">Calculated Heat Index</div>
+        <div class="trh-hi-result-value" id="hi-trh-calc-display" aria-live="polite">—</div>
+      </div>
     </div>
   </div>
 </div><!-- /fixed-top -->
@@ -410,6 +579,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       </div>
     </div>
     <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
+    <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
   </div><!-- /hi-acclim-tabs -->
 
   <!-- ── Unacclimatized tab panels ── -->
@@ -427,7 +597,21 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       </div>
     </div>
     <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
+    <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
   </div><!-- /hi-unacclim-tabs -->
+
+  <!-- Page-level formula footnote (always visible when scrolling) -->
+  <div class="hi-formula-footnote" id="hi-formula-footnote">
+    <strong>† Heat Index from Temperature + RH — Rothfusz Regression (NOAA, 1990):</strong>
+    HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
+    (where <em>T</em> = air temperature in °F, <em>RH</em> = relative humidity in %).
+    Adjustments: when RH &lt; 13% and 80°F &lt; T &lt; 112°F, subtract (13−RH)/4 × √((17−|T−95|)/17);
+    when RH &gt; 85% and 80°F &lt; T &lt; 87°F, add ((RH−85)/10) × ((87−T)/5).
+    When T &lt; 80°F or the simple estimate &lt; 80°F, the Steadman (1979) approximation applies:
+    HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
+    Source: Rothfusz, L.P. (1990). <em>The heat index equation</em>. NWS Technical Attachment SR 90-23.
+    Steadman, R.G. (1979). <em>The assessment of sultriness. Part I: A temperature-humidity index based on human physiology and clothing science.</em> Journal of Applied Meteorology, 18(7), 861–873.
+  </div>
 
 </main>
 
@@ -446,6 +630,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   let _hiStoredVal          = null;
   let _hiStoredUnit         = 'F';
   let _hiActivity           = 'moderate';
+  let _hiInputMode          = 'hi';   // 'hi' | 'trh'
+  let _hiTempValF           = null;   // stored always in °F
+  let _hiRhVal              = null;
+  let _hiCalcHI             = null;   // calculated HI in °F
 
   // ── Acclimatized HI data ──────────────────────────────────────────────────────
   const HI_BOUNDS_F = [80, 91, 103, 115, 130];
@@ -521,6 +709,173 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     return cell.w + ' / ' + cell.r;
   }
 
+  // ── Rothfusz Heat Index regression (NOAA, 1990) ───────────────────────────────
+  function calcRothfuszHI(tempF, rh) {
+    const T = parseFloat(tempF), RH = Math.min(100, Math.max(0, parseFloat(rh)));
+    if (isNaN(T) || isNaN(RH)) return null;
+    // Steadman simple approximation (used when T < 80°F or result would be < 80°F)
+    const hiSimple = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    if (T < 80 || hiSimple < 80) return Math.round(hiSimple * 10) / 10;
+    // Full Rothfusz regression
+    let hi = -42.379
+      + 2.04901523  * T
+      + 10.14333127 * RH
+      - 0.22475541  * T  * RH
+      - 0.00683783  * T  * T
+      - 0.05481717  * RH * RH
+      + 0.00122874  * T  * T  * RH
+      + 0.00085282  * T  * RH * RH
+      - 0.00000199  * T  * T  * RH * RH;
+    // Low-RH adjustment
+    if (RH < 13 && T >= 80 && T <= 112) {
+      hi -= (13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+    }
+    // High-RH adjustment
+    if (RH > 85 && T >= 80 && T <= 87) {
+      hi += ((RH - 85) / 10) * ((87 - T) / 5);
+    }
+    return Math.round(hi * 10) / 10;
+  }
+
+  // ── T+RH input mode ───────────────────────────────────────────────────────────
+  function setHiInputMode(mode) {
+    _hiInputMode = mode;
+    document.getElementById('trh-btn-hi').classList.toggle('active', mode === 'hi');
+    document.getElementById('trh-btn-hi').setAttribute('aria-pressed', String(mode === 'hi'));
+    document.getElementById('trh-btn-trh').classList.toggle('active', mode === 'trh');
+    document.getElementById('trh-btn-trh').setAttribute('aria-pressed', String(mode === 'trh'));
+    const row = document.getElementById('hi-trh-inputs-row');
+    if (row) row.style.display = mode === 'trh' ? 'flex' : 'none';
+    if (mode === 'hi') {
+      _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      const calcEl = document.getElementById('hi-trh-calc-display');
+      if (calcEl) calcEl.textContent = '—';
+      buildHIResultTab({ measValue: _hiStoredVal, measUnit: _hiStoredUnit, activity: _hiActivity });
+      buildHIUnacclimResultTab(null);
+    } else {
+      onTrhInput();
+    }
+    buildHIFormulaTab();
+    buildHIUnacclimFormulaTab();
+  }
+
+  function onTrhInput() {
+    const tempEl = document.getElementById('hi-trh-temp');
+    const rhEl   = document.getElementById('hi-trh-rh');
+    if (!tempEl || !rhEl) return;
+    const tempRaw = parseFloat(tempEl.value);
+    const rh      = parseFloat(rhEl.value);
+    const calcEl  = document.getElementById('hi-trh-calc-display');
+    if (isNaN(tempRaw) || isNaN(rh)) {
+      _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      if (calcEl) calcEl.textContent = '—';
+      return;
+    }
+    // Convert entered temp to °F for internal storage
+    const tempF = _hiUnit === 'C' ? Math.round((tempRaw * 9/5 + 32) * 10) / 10 : tempRaw;
+    _hiTempValF = tempF;
+    _hiRhVal    = rh;
+    _hiCalcHI   = calcRothfuszHI(tempF, rh);
+    if (calcEl) {
+      calcEl.textContent = _hiCalcHI != null
+        ? (_hiUnit === 'C'
+            ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+            : _hiCalcHI + '°F')
+        : '—';
+    }
+    if (_hiCalcHI != null) {
+      _hiStoredVal = _hiCalcHI; _hiStoredUnit = 'F';
+      buildHIResultTab({ measValue: _hiCalcHI, measUnit: 'F', activity: _hiActivity });
+      buildHIUnacclimResultTab(null);
+      buildHIFormulaTab();
+      buildHIUnacclimFormulaTab();
+    }
+  }
+
+  // ── Formula Check tab builder ─────────────────────────────────────────────────
+  function _buildFormulaTab(paneId) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    if (_hiInputMode !== 'trh') {
+      pane.innerHTML = `<div class="formula-check-pane">
+        <p style="margin-top:8px;font-size:14px;color:var(--subtext)">Switch to <strong>Temp + RH</strong> input mode above to see the heat index calculation breakdown here.</p>
+      </div>`;
+      return;
+    }
+    const T = _hiTempValF, RH = _hiRhVal;
+    if (T == null || RH == null) {
+      pane.innerHTML = `<div class="formula-check-pane"><p style="margin-top:8px;font-size:14px;color:var(--subtext)">Enter a temperature and relative humidity above to see the step-by-step calculation.</p></div>`;
+      return;
+    }
+    const tDisplay = _hiUnit === 'C'
+      ? (Math.round((T - 32) * 5/9 * 10) / 10) + '°C'
+      : T + '°F';
+    const hiInUnit = _hiCalcHI != null
+      ? (_hiUnit === 'C' ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C' : _hiCalcHI + '°F')
+      : '—';
+    const hiSimpleVal = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    const usedSimple = T < 80 || hiSimpleVal < 80;
+    let html = `<div class="formula-check-pane">
+      <h3>Heat Index Calculation — Formula Check</h3>
+      <p style="margin:0 0 14px;font-size:13px;">
+        <strong>Inputs:</strong> Temperature = ${tDisplay}${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F used in formula</span>` : ''}, RH = ${RH}%<br>
+        <strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}<br>
+        <strong>Result:</strong> Heat Index = <strong>${hiInUnit}</strong>${_hiUnit === 'C' ? ` (${_hiCalcHI}°F internally)` : ''}
+      </p>`;
+    if (usedSimple) {
+      const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
+      html += `<h3>Steadman Simple Formula</h3>
+      <div class="formula-code">HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]
+   = 0.5 × [${T} + 61.0 + (${T} − 68.0) × 1.2 + ${RH} × 0.094]
+   = 0.5 × [${innerSum.toFixed(3)}]
+   = ${(innerSum / 2).toFixed(1)}°F</div>`;
+    } else {
+      const terms = [
+        ['Constant',               1,           -42.379,              -42.379],
+        ['2.04901523 × T',         T,           2.04901523,           2.04901523 * T],
+        ['10.14333127 × RH',       RH,          10.14333127,          10.14333127 * RH],
+        ['−0.22475541 × T × RH',  T*RH,        -0.22475541,          -0.22475541 * T * RH],
+        ['−0.00683783 × T²',      T*T,         -0.00683783,          -0.00683783 * T * T],
+        ['−0.05481717 × RH²',     RH*RH,       -0.05481717,          -0.05481717 * RH * RH],
+        ['0.00122874 × T² × RH',  T*T*RH,      0.00122874,           0.00122874 * T * T * RH],
+        ['0.00085282 × T × RH²',  T*RH*RH,     0.00085282,           0.00085282 * T * RH * RH],
+        ['−0.00000199 × T² × RH²',T*T*RH*RH,  -0.00000199,          -0.00000199 * T * T * RH * RH],
+      ];
+      const baseHI = terms.reduce((s, t) => s + t[3], 0);
+      let adj1 = 0, adj2 = 0;
+      const adj1Applied = RH < 13 && T >= 80 && T <= 112;
+      const adj2Applied = RH > 85 && T >= 80 && T <= 87;
+      if (adj1Applied) adj1 = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+      if (adj2Applied) adj2 = ((RH - 85) / 10) * ((87 - T) / 5);
+      const finalHI = Math.round((baseHI + adj1 + adj2) * 10) / 10;
+      html += `<h3>Rothfusz Regression Terms</h3>
+      <table class="formula-table">
+        <tr><th>Term</th><th>Value computed</th><th>Contribution</th></tr>`;
+      terms.forEach(t => {
+        const contrib = t[3];
+        html += `<tr><td>${t[0]}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
+      });
+      html += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
+      if (adj1Applied) {
+        const adj1val = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+        html += `<tr><td colspan="2">Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
+      }
+      if (adj2Applied) {
+        const adj2val = ((RH - 85) / 10) * ((87 - T) / 5);
+        html += `<tr><td colspan="2">High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
+      }
+      if (!adj1Applied && !adj2Applied) {
+        html += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
+      }
+      html += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
+      </table>`;
+    }
+    html += `<p style="font-size:11px;color:var(--subtext);margin-top:4px;">See page footnote for full formula citation.</p></div>`;
+    pane.innerHTML = html;
+  }
+  function buildHIFormulaTab()        { _buildFormulaTab('hi-tab-formula'); }
+  function buildHIUnacclimFormulaTab() { _buildFormulaTab('hi-utab-formula'); }
+
   // ── Clock SVG ─────────────────────────────────────────────────────────────────
   function buildClockSvg(cell) {
     const sz = 148, cx = sz/2, cy = sz/2, r = 58, circ = 2 * Math.PI * r;
@@ -589,6 +944,31 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     }
 
     const valDisplay = val != null ? val + unitLabel : '—';
+
+    // T+RH context (when calculating from temp + RH)
+    const inTrhMode = _hiInputMode === 'trh';
+    let tempDisplay = '—', rhDisplay = '—', trhDerivation = '', trhCards = '';
+    if (inTrhMode && _hiTempValF != null) {
+      tempDisplay = unit === 'C'
+        ? (Math.round((_hiTempValF - 32) * 5/9 * 10) / 10) + '°C'
+        : _hiTempValF + '°F';
+      rhDisplay = _hiRhVal != null ? _hiRhVal + '%' : '—';
+      if (_hiRhVal != null && val != null) {
+        trhDerivation = `<p class="result-derivation">Your air temperature of ${tempDisplay} and relative humidity of ${rhDisplay} yields a calculated Heat Index of ${valDisplay}.</p>`;
+      }
+      if (_hiTempValF != null && _hiRhVal != null) {
+        trhCards = `<div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Air Temperature</div>
+          <div class="result-input-value">${tempDisplay}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">💧 </span>Relative Humidity</div>
+          <div class="result-input-value">${rhDisplay}</div>
+        </div>`;
+      }
+    }
+    const hiCardLabel = inTrhMode ? 'Heat Index (calculated)' : 'Heat Index';
+
     const monitoringRange = rowIdx >= 0 && rangeNotes[rowIdx]
       ? (unit === 'C'
           ? (rangeNotes[rowIdx].range.match(/\(([^)]+)\)/) || [])[1] || rangeNotes[rowIdx].range
@@ -611,12 +991,14 @@ body.hi-unacclim-chart-active { overflow: hidden; }
             <div class="result-headline">${headline}</div>
             <div class="result-subtext">${subtext}</div>
             <div class="result-source">${sourceNote}</div>
+            ${trhDerivation}
           </div>
         </div>
       </div>
       <div class="result-sidebar">
+        ${trhCards}
         <div class="result-input-card">
-          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Heat Index</div>
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>${hiCardLabel}</div>
           <div class="result-input-value">${valDisplay}</div>
           <div class="result-input-sub">Range: ${rowLabel}</div>
         </div>
@@ -801,7 +1183,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   // ── Tab switching ─────────────────────────────────────────────────────────────
   function switchHITab(which) {
     _hiCurrentTab = which;
-    const tabs = ['result','chart','notes'];
+    const tabs = ['result','chart','notes','formula'];
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'hi-tab-result-wrap' : 'hi-tab-' + t;
       const panel = document.getElementById(panelId);
@@ -819,7 +1201,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 
   function switchHIUnacclimTab(which) {
     _hiUnacclimCurrentTab = which;
-    const tabs = ['result','chart','notes'];
+    const tabs = ['result','chart','notes','formula'];
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'hi-utab-result-wrap' : 'hi-utab-' + t;
       const panel = document.getElementById(panelId);
@@ -845,6 +1227,19 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       el.classList.toggle('active', isActive);
       el.setAttribute('aria-pressed', String(isActive));
     });
+    // Update T+RH strip unit label
+    const unitLabelEl = document.getElementById('hi-trh-unit-label');
+    if (unitLabelEl) unitLabelEl.textContent = unit === 'C' ? '°C' : '°F';
+    // If in T+RH mode with a stored temperature, convert the input field value
+    if (_hiInputMode === 'trh' && _hiTempValF != null) {
+      const tempEl = document.getElementById('hi-trh-temp');
+      if (tempEl) {
+        tempEl.value = unit === 'C'
+          ? Math.round((_hiTempValF - 32) * 5/9 * 10) / 10
+          : _hiTempValF;
+      }
+      onTrhInput();
+    }
     // Rebuild charts if visible
     if (_hiCurrentTab         === 'chart') buildHIChartTab();
     if (_hiUnacclimCurrentTab === 'chart') buildHIUnacclimChartTab();
@@ -914,9 +1309,11 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     buildHIResultTab(s);
     buildHIChartTab();
     buildHINotesTab();
+    buildHIFormulaTab();
     buildHIUnacclimResultTab(s);
     buildHIUnacclimChartTab();
     buildHIUnacclimNotesTab();
+    buildHIUnacclimFormulaTab();
 
     // Activate first tab in each section
     switchHITab('result');
@@ -924,7 +1321,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 
     // Keyboard nav — acclimatized tablist
     document.getElementById('hi-acclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes'];
+      const tabs = ['result','chart','notes','formula'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-tab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
@@ -938,7 +1335,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 
     // Keyboard nav — unacclimatized tablist
     document.getElementById('hi-unacclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes'];
+      const tabs = ['result','chart','notes','formula'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-utab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
