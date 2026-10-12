@@ -992,11 +992,12 @@
     flex: 1;
   }
   .ls3-acclim-bullets {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--subtext);
     line-height: 1.65;
     padding-left: 18px;
     margin: 0;
+    margin-top: 1em;
   }
   .ls3-acclim-cta {
     display: flex;
