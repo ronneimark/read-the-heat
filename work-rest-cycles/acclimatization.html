@@ -40,7 +40,7 @@
 
       <div class="ls3-acclim-cards">
 
-        <button class="ls3-acclim-card ls3-acclim-yes" onclick="commitWorkerStatus('acclimatized')">
+        <div class="ls3-acclim-card ls3-acclim-yes">
           <span class="ls3-acclim-icon">&#x2705;</span>
           <div class="ls3-acclim-title">Acclimatized</div>
           <div class="ls3-acclim-desc">Has completed heat acclimatization and has not been absent from heat work for a week or more. Work-rest cycles use the <strong>NIOSH Recommended Exposure Limits (REL)</strong>.</div>
@@ -49,10 +49,10 @@
             <li>Returning worker absent fewer than 7 days</li>
             <li>Acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload (NIOSH, 2016)</li>
           </ul>
-          <span class="ls3-acclim-cta">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
+          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('acclimatized')">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
 
-        <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized-new')">
+        <div class="ls3-acclim-card ls3-acclim-no">
           <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
           <div class="ls3-acclim-title">Unacclimatized — New Worker</div>
           <div class="ls3-acclim-desc">Has not previously worked in heat or has not yet completed an acclimatization ramp. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong>.</div>
@@ -62,10 +62,10 @@
             <li>NIOSH protocol: ≤20% of usual exposure on Day 1, +20% each day over 7–14 days</li>
             <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
           </ul>
-          <span class="ls3-acclim-cta">Select New Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
+          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('unacclimatized-new')">Select New Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
 
-        <button class="ls3-acclim-card ls3-acclim-return" onclick="commitWorkerStatus('unacclimatized-returning')">
+        <div class="ls3-acclim-card ls3-acclim-return">
           <span class="ls3-acclim-icon">&#x1F504;</span>
           <div class="ls3-acclim-title">Unacclimatized — Returning Worker</div>
           <div class="ls3-acclim-desc">Previously acclimatized, but absent from heat work for 7 or more days. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong>.</div>
@@ -74,8 +74,8 @@
             <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
             <li>NIOSH return protocol: 4-day ramp — 50% → 60% → 80% → 100% of usual exposure</li>
           </ul>
-          <span class="ls3-acclim-cta">Select Returning Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
+          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('unacclimatized-returning')">Select Returning Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
 
       </div>
     </div>
