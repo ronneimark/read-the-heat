@@ -750,7 +750,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   function buildHINotesTab() {
     const pane = document.getElementById('hi-tab-notes');
     if (!pane) return;
-    pane.innerHTML = _buildNotesContent(HI_RANGE_NOTES, null);
+    pane.innerHTML = _buildNotesContent(HI_RANGE_NOTES, null, false);
   }
 
   function buildHIUnacclimNotesTab() {
