@@ -27,6 +27,23 @@
 .acclim-about-btn:hover { background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%); }
 .acclim-about-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.3); }
 
+/* CTA buttons: card-color background, black text, aligned at bottom */
+.ls3-acclim-card { display: flex; flex-direction: column; }
+.ls3-acclim-bullets { flex: 1; }
+.ls3-acclim-cta {
+  margin-top: auto;
+  color: #000 !important;
+  border-color: transparent !important;
+  font-weight: 800;
+  text-shadow: none !important;
+}
+.ls3-acclim-yes    .ls3-acclim-cta { background: #00966C !important; }
+.ls3-acclim-no     .ls3-acclim-cta { background: #E65100 !important; }
+.ls3-acclim-return .ls3-acclim-cta { background: #B45309 !important; }
+.ls3-acclim-yes    .ls3-acclim-cta:hover { background: #007a57 !important; }
+.ls3-acclim-no     .ls3-acclim-cta:hover { background: #c74600 !important; }
+.ls3-acclim-return .ls3-acclim-cta:hover { background: #924407 !important; }
+
 /* About Acclimatization modal */
 #acclim-about-overlay {
   display: none;
