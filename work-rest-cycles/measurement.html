@@ -31,7 +31,7 @@
   padding: 8px 14px 12px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 .meas-field-group {
   margin-bottom: 8px;
@@ -291,13 +291,13 @@
       if (el) { el.value = measDefaults[id] ?? '74'; el.classList.remove('error'); }
     });
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
-    // Position overlay within the clicked card's quadrant
+    // Position overlay spanning full width but clamped to the card's grid row
     const overlay = document.getElementById('meas-modal-overlay');
     if (triggerEl) {
       const r = triggerEl.getBoundingClientRect();
       overlay.style.top    = r.top  + 'px';
-      overlay.style.left   = r.left + 'px';
-      overlay.style.width  = r.width  + 'px';
+      overlay.style.left   = '0';
+      overlay.style.width  = '100%';
       overlay.style.height = r.height + 'px';
       overlay.style.borderRadius = '0';
     } else {
