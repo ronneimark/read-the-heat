@@ -218,6 +218,19 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 }
 
 /* Radiant heat note — lives in left column, adapts to colored backgrounds */
+.dbt-conservative-notice {
+  background: #FFF8E1;
+  border-left: 4px solid #F9A825;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #4E342E;
+  flex-shrink: 0;
+  margin: 0 0 8px;
+}
+.dbt-conservative-notice strong { color: #3E2723; }
+
 .radiant-warn-strip {
   padding: 8px 12px;
   background: rgba(0,0,0,0.15);
@@ -1352,6 +1365,22 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     buildTrhFormulaTab();
     buildTrhRefTable();
     buildTrhUnacclimResultTab();
+
+    // If user entered temperature only (no hygrometer), show conservative-assumption notice
+    if (s.dbtConservative) {
+      const noticeHTML = `<div class="dbt-conservative-notice" role="note">
+        <strong>⚠ Conservative estimate — thermometer only:</strong>
+        This work-rest cycle was calculated using your air temperature with <strong>100% relative humidity assumed</strong>.
+        Actual conditions may be less severe if humidity is lower, but this schedule will never underestimate the risk.
+        For a more precise result, re-enter with a measured humidity reading.
+      </div>`;
+      ['trh-tab-result-wrap', 'trh-utab-result-wrap'].forEach(function(id) {
+        const wrap = document.getElementById(id);
+        if (wrap && !wrap.querySelector('.dbt-conservative-notice')) {
+          wrap.insertAdjacentHTML('afterbegin', noticeHTML);
+        }
+      });
+    }
     buildTrhUnacclimChartTab();
     buildTrhUnacclimNotesTab();
     buildTrhUnacclimFormulaTab();

@@ -203,9 +203,9 @@
       <button class="method-card method-card-full" style="--card-accent:#6B7280" onclick="openMeasModal('dbt', this)">
         <span class="method-card-icon">🌡</span>
         <h3>Thermometer Only</h3>
-        <p>Record a dry-bulb air temperature reading without humidity.</p>
-        <div class="meas-dbt-card-warning">⚠️ Dry-bulb alone misses humidity and radiant heat. Use another method for a complete heat stress assessment.</div>
-        <span class="method-card-tag">Thermometer only</span>
+        <p>No hygrometer available? Enter air temperature and we'll calculate work-rest using <strong>100% relative humidity</strong> — the most conservative possible assumption.</p>
+        <div class="meas-dbt-card-warning">⚠️ This is a ceiling estimate. The actual schedule may be less restrictive if humidity is lower, but it will never be less protective than necessary.</div>
+        <span class="method-card-tag">Thermometer only · conservative estimate</span>
       </button>
     </div>
 
@@ -340,6 +340,19 @@
       }
       if (!valid) return;
       WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal) });
+    } else if (measCurrentInstrument === 'dbt') {
+      const valEl = document.getElementById('meas-value');
+      const val = valEl.value.trim();
+      if (!val) {
+        valEl.classList.add('error');
+        document.getElementById('meas-single-error').classList.add('visible');
+        return;
+      }
+      // Conservative ceiling: assume 100% RH and route through T+RH calculator
+      WRC.set({ measTemp: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
+      closeMeasModal();
+      window.location.href = 'temp-humidity.html';
+      return;
     } else {
       const valEl = document.getElementById('meas-value');
       const val = valEl.value.trim();
