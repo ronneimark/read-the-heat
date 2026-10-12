@@ -327,6 +327,12 @@ body.chart-active { overflow: hidden; }
   box-sizing: border-box;
   gap: clamp(8px,1.2vh,16px);
 }
+.urec-left.urec-left-full {
+  flex: 1 1 100%;
+  border-right: none;
+  max-width: 680px;
+  margin: 0 auto;
+}
 .urec-badges {
   display: flex; gap: clamp(6px,1vw,14px); width: 100%; justify-content: center;
 }
@@ -1038,7 +1044,7 @@ body.chart-active { overflow: hidden; }
       subtext  = 'Conditions exceed the NIOSH RAL 15-min limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers — engineering controls required.';
     } else if (wr.w === 60) {
       headline = 'Continuous Work';
-      subtext  = 'No mandatory rest break at this WBGT for ' + ACT_FULL[activity] + '. Apply the daily schedule (right). Hydrate — drink before you feel thirsty.';
+      subtext  = 'No mandatory rest break at this WBGT for ' + ACT_FULL[activity] + '. Still follow the daily exposure ramp during the first days of work in heat. Hydrate — drink before you feel thirsty.';
     } else {
       headline = wr.w + ' min work<br>' + wr.r + ' min rest';
       subtext  = 'Per hour of heat exposure: ' + wr.r + ' min rest in cool shade. Apply during the daily exposure portion shown at right.';
@@ -1115,9 +1121,11 @@ body.chart-active { overflow: hidden; }
     window._wrcUnacclimRowIdx = rowIdx;
     window._wrcUnacclimColIdx = colIdx;
 
+    const isContinuous = wr && wr.w === 60;
+
     // Inject into the two-panel wrapper directly
     document.getElementById('unacclim-tab-0-wrap').innerHTML = `
-      <div class="urec-left">
+      <div class="urec-left${isContinuous ? ' urec-left-full' : ''}">
         <div class="urec-badges">
           <div class="urec-badge">
             <div class="urec-badge-label">🌡️ WBGT</div>
@@ -1146,7 +1154,7 @@ body.chart-active { overflow: hidden; }
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>
-      <div class="urec-right">
+      ${isContinuous ? '' : `<div class="urec-right">
         <div class="urec-sched-hdr">
           <div class="urec-sched-title">📅 Daily Exposure Schedule</div>
           <div class="urec-sched-sub">${isNew?'New Worker — 5-day ramp':'Returning Worker — 4-day ramp'} &nbsp;·&nbsp; Times shown per 60-min period</div>
@@ -1156,7 +1164,7 @@ body.chart-active { overflow: hidden; }
           ⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.
         </div>
         <div class="urec-sched-foot" style="margin-top:4px;">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
-      </div>`;
+      </div>`}`;
   }
 
   function buildUnacclimChartTab(unit, rowIdx, colIdx) {
