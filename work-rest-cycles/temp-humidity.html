@@ -1347,7 +1347,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
       else lo = mid;
     }
-    cells.forEach(c => c.style.fontSize = (lo / 10) + 'px');
+    cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 20) / 10) + 'px');
   }
 
   function sizeTrhChartPane() {

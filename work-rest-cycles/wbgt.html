@@ -981,7 +981,7 @@ body.chart-active { overflow: hidden; }
       const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
       if (overflows) hi = mid - 1; else lo = mid;
     }
-    const finalSize = (lo / 10) + 'px';
+    const finalSize = Math.max(70, lo - 20) / 10 + 'px';
     cells.forEach(c => c.style.fontSize = finalSize);
   }
 
