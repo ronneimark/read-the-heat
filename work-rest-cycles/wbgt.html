@@ -822,7 +822,7 @@ body.chart-active { overflow: hidden; }
 
     let headline, subtext;
     if (!wr) {
-      headline = 'DANGER — Stop Work';
+      headline = 'DANGER';
       subtext  = 'Conditions exceed the NIOSH 15-minute REL for ' + ACT_FULL[activity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
     } else if (wr.w === 60) {
       headline = 'Continuous Work';
@@ -1034,7 +1034,7 @@ body.chart-active { overflow: hidden; }
 
     let headline, subtext;
     if (!wr) {
-      headline = 'DANGER — Stop Work';
+      headline = 'DANGER';
       subtext  = 'Conditions exceed the NIOSH RAL 15-min limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers — engineering controls required.';
     } else if (wr.w === 60) {
       headline = 'Continuous Work';

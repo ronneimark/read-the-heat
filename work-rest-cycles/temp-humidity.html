@@ -856,7 +856,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       headline = 'Enter temperature and RH';
       subtext  = 'Enter air temperature and relative humidity in the strip above. The heat index will be calculated and your work-rest recommendation will appear here.';
     } else if (!cell) {
-      headline = 'DANGER — Stop Work';
+      headline = 'DANGER';
       subtext  = 'Conditions exceed safe limits for ' + ACT_FULL[_hiActivity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
     } else if (cell.w === null) {
       headline = 'Continuous Work';

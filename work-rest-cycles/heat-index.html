@@ -933,7 +933,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       headline = 'See chart for conditions';
       subtext  = 'No heat index reading was found in your session. View the Full Chart tab to look up your work-rest cycle, or return to the calculator to enter your heat index reading.';
     } else if (!cell) {
-      headline = 'DANGER — Stop Work';
+      headline = 'DANGER';
       subtext  = 'Conditions exceed safe limits for ' + ACT_FULL[_hiActivity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
     } else if (cell.w === null) {
       headline = 'Continuous Work';
