@@ -203,7 +203,7 @@
   animation: popoverIn .5s cubic-bezier(0.34, 1.1, 0.64, 1);
   display: flex;
   flex-direction: column;
-  transition: mask-image .3s ease, -webkit-mask-image .3s ease;
+  transition: opacity .3s ease;
 }
 .intro-popover[hidden] { display: none; }
 .intro-popover.closing {
@@ -638,8 +638,7 @@
   }
 
   function clearPopoverMask(pop) {
-    pop.style.maskImage = '';
-    pop.style.webkitMaskImage = '';
+    pop.style.opacity = '';
     pop._maskedStep = null;
   }
 
@@ -740,23 +739,14 @@
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
     // No auto-fade — stays until next step click or modal close
 
-    // Check if popover overlaps the target; if so, fade it out over the overlap zone
+    // Check if popover overlaps the target; if so, fade it transparent
     clearPopoverMask(pop);
     requestAnimationFrame(() => {
       const pR = pop.getBoundingClientRect();
       const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
                          pR.bottom < tR.top  || pR.top  > tR.bottom);
       if (overlaps) {
-        // Fade the modal to transparent starting just above the target top
-        const fadeBuffer = 24; // px of gradual fade above the target
-        const overlapTopPx = tR.top - pR.top;
-        const fadeStartPx = Math.max(0, overlapTopPx - fadeBuffer);
-        const h = pR.height;
-        const pct1 = (fadeStartPx / h * 100).toFixed(1);
-        const pct2 = (overlapTopPx / h * 100).toFixed(1);
-        const mask = `linear-gradient(to bottom, black 0%, black ${pct1}%, transparent ${pct2}%)`;
-        pop.style.maskImage = mask;
-        pop.style.webkitMaskImage = mask;
+        pop.style.opacity = '0.15';
         pop._maskedStep = n;
       }
     });
