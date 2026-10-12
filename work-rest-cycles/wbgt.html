@@ -205,10 +205,11 @@ body.chart-active { overflow: hidden; }
 }
 /* User's exact cell: ring highlight */
 .acc-user-cell {
-  outline: 4px solid var(--navy, #1A2A3A);
-  outline-offset: -4px;
+  outline: 7px solid var(--navy, #1A2A3A);
+  outline-offset: -7px;
   position: relative;
   z-index: 1;
+  font-size: clamp(16px, 3.5vh, 44px) !important;
 }
 </style>
 <script src="./lang-link.js"></script>
@@ -536,7 +537,7 @@ body.chart-active { overflow: hidden; }
     const activity = s.activity || 'moderate';
     const unitLabel = unit === 'C' ? '°C' : '°F';
     const rowIdx   = getWBGTRow(val, unit);
-    const colIdx   = ACT_COL[activity] || 1;
+    const colIdx   = activity in ACT_COL ? ACT_COL[activity] : 1;
     const wr       = WR_ACCLIM[rowIdx][colIdx];
     const cls      = wrClass(wr);
     const rowLabel = WBGT_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
