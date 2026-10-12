@@ -14,6 +14,202 @@ body { overflow: auto; }
   .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
   .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
 }
+
+/* ── Acclimatized two-tab shell ── */
+.acclim-tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  background: var(--surface, #F8FAFB);
+  flex-shrink: 0;
+}
+.acclim-tab-btn {
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--subtext, #6B7785);
+  cursor: pointer;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.01em;
+}
+.acclim-tab-btn.active {
+  color: var(--navy, #1A2A3A);
+  border-bottom-color: var(--navy, #1A2A3A);
+}
+.acclim-tab-btn:hover:not(.active) { color: var(--navy, #1A2A3A); }
+
+/* ── Result tab ── */
+#acclim-tab-result {
+  padding: 28px 24px 32px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.result-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.result-input-card {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.result-input-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--subtext, #6B7785);
+  margin-bottom: 5px;
+}
+.result-input-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy, #1A2A3A);
+  line-height: 1.1;
+}
+.result-input-sub {
+  font-size: 12px;
+  color: var(--subtext, #6B7785);
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+.result-main {
+  border-radius: 14px;
+  padding: 32px 28px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.result-clock {
+  flex-shrink: 0;
+}
+.result-text { flex: 1; min-width: 0; }
+.result-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+.result-headline {
+  font-size: clamp(26px, 4vw, 46px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+.result-subtext {
+  font-size: 15px;
+  line-height: 1.55;
+  opacity: 0.8;
+  max-width: 440px;
+}
+.result-source {
+  margin-top: 20px;
+  font-size: 11px;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Danger result */
+.result-main.result-danger {
+  background: var(--stop-bg, #AE1515);
+  color: var(--stop-text, #fff);
+}
+
+@media (max-width: 600px) {
+  .result-inputs { grid-template-columns: 1fr 1fr; }
+  .result-main { flex-direction: column; text-align: center; gap: 20px; }
+  .result-subtext { max-width: 100%; }
+}
+
+/* ── Chart tab ── */
+#acclim-tab-chart {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  display: none;
+}
+body.chart-active { overflow: hidden; }
+
+.acclim-chart-grid {
+  display: grid;
+  grid-template-columns: 22% repeat(4, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  height: 100%;
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+.acc-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 6px;
+  line-height: 1.15;
+  box-sizing: border-box;
+}
+.acc-cell:nth-child(5n) { border-right: none; } /* last col */
+/* last row cells: remove bottom border */
+.acc-cell.acc-last-row { border-bottom: none; }
+
+.acc-hdr {
+  font-size: clamp(11px, 1.5vh, 19px);
+  font-weight: 800;
+  background: var(--surface, #F0F4F8);
+  color: var(--navy, #1A2A3A);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
+
+.acc-range {
+  font-size: clamp(10px, 1.35vh, 17px);
+  font-weight: 600;
+  color: var(--navy, #1A2A3A);
+  justify-content: flex-start;
+  padding-left: 12px;
+  background: var(--surface, #F8FAFB);
+}
+
+/* value cells: inherit c-* colors, override font size */
+.acclim-chart-grid .c-safe,
+.acclim-chart-grid .c-caution,
+.acclim-chart-grid .c-warn,
+.acclim-chart-grid .c-high,
+.acclim-chart-grid .c-stop {
+  font-size: clamp(13px, 2.5vh, 32px);
+  font-weight: 900;
+}
+
+/* Highlight user's column */
+.acc-user-col.acc-hdr {
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+}
+.acc-range.acc-user-row {
+  background: #E3EDF7;
+  font-weight: 800;
+  border-left: 4px solid var(--navy, #1A2A3A);
+}
+/* User's exact cell: ring highlight */
+.acc-user-cell {
+  outline: 4px solid var(--navy, #1A2A3A);
+  outline-offset: -4px;
+  position: relative;
+  z-index: 1;
+}
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -35,12 +231,24 @@ body { overflow: auto; }
     <div class="wrc-banner-strip-inner">
       <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
       <button class="strip-btn" onclick="openMethodologyModal()">📚 Methodology</button>
-      <!-- language selector injected here by lang-switch.js -->
     </div>
   </div>
 </div><!-- /fixed-top -->
 
 <main>
+
+  <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
+  <div id="wbgt-acclim-tabs" style="display:none">
+    <div class="acclim-tab-bar" id="acclim-tab-bar">
+      <button class="acclim-tab-btn active" id="tab-btn-result" onclick="switchAcclimTab('result')">My Work-Rest Cycle</button>
+      <button class="acclim-tab-btn" id="tab-btn-chart" onclick="switchAcclimTab('chart')">Full Chart</button>
+    </div>
+    <div id="acclim-tab-result"></div>
+    <div id="acclim-tab-chart"></div>
+  </div>
+
+  <!-- ══ ORIGINAL ACCLIMATIZED TABLE (shown as fallback if no session) ══ -->
+  <div id="wbgt-acclim-section">
 
   <div class="toggle-row" id="wbgt-unit-toggle">
     <span class="toggle-label">Temperature Units:</span>
@@ -50,8 +258,6 @@ body { overflow: auto; }
     </div>
   </div>
 
-  <!-- Acclimatized Table (NIOSH REL) -->
-  <div id="wbgt-acclim-section">
   <div class="section-label">NIOSH Recommended Exposure Limits (REL) — Acclimatized Workers</div>
 
   <div class="table-wrap">
@@ -238,18 +444,231 @@ body { overflow: auto; }
   let workerStatus = 'acclimatized';
   let currentUnit = 'F';
 
-  function setWorkerStatus(status) {
-    workerStatus = status;
-    WRC.set({ workerStatus: status });
-    document.getElementById('wbgt-acclim-section').style.display   = status === 'acclimatized'   ? '' : 'none';
-    document.getElementById('wbgt-unacclim-section').style.display = status === 'unacclimatized' ? '' : 'none';
+  // ── WBGT lookup data ──
+  const WBGT_BOUNDS_C = [25.0, 26.0, 27.5, 28.4, 29.5, 30.9, 31.8, 32.9];
+  const WBGT_ROW_LABELS = {
+    c: ['Below 25.0°C','25.0–25.9°C','26.0–27.4°C','27.5–28.3°C','28.4–29.4°C','29.5–30.8°C','30.9–31.7°C','31.8–32.8°C','≥ 32.9°C'],
+    f: ['Below 77.0°F','77.0–78.6°F','78.8–81.3°F','81.5–82.9°F','83.1–84.9°F','85.1–87.4°F','87.6–89.1°F','89.2–91.0°F','≥ 91.2°F']
+  };
+  // [row 0-8][col: 0=light 1=moderate 2=heavy 3=vh], null=DANGER
+  const WR_ACCLIM = [
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:60,r:0}],
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:45,r:15}],
+    [{w:60,r:0},{w:60,r:0},{w:45,r:15},{w:30,r:30}],
+    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:30,r:30}],
+    [{w:60,r:0},{w:30,r:30},{w:30,r:30},{w:15,r:45}],
+    [{w:45,r:15},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},null],
+    [{w:15,r:45},{w:15,r:45},null,null]
+  ];
+  const ACT_COL   = {light:0, moderate:1, heavy:2, vh:3};
+  const ACT_LABEL = {light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy'};
+  const ACT_FULL  = {light:'Light Work', moderate:'Moderate Work', heavy:'Heavy Work', vh:'Very Heavy Work'};
+  const ACT_EMOJI = {light:'🟢', moderate:'🟡', heavy:'🟠', vh:'🔴'};
+
+  function getWBGTRow(val, unit) {
+    const c = unit === 'C' ? parseFloat(val) : (parseFloat(val) - 32) * 5 / 9;
+    for (let i = 0; i < WBGT_BOUNDS_C.length; i++) {
+      if (c < WBGT_BOUNDS_C[i]) return i;
+    }
+    return 8;
   }
 
+  function wrClass(wr) {
+    if (!wr)       return 'c-stop';
+    if (wr.w===60) return 'c-safe';
+    if (wr.w===45) return 'c-caution';
+    if (wr.w===30) return 'c-warn';
+    if (wr.w===15) return 'c-high';
+    return 'c-safe';
+  }
+
+  function wrLabel(wr) {
+    if (!wr)       return 'DANGER!';
+    if (wr.w===60) return 'Continuous';
+    return wr.w + ' / ' + wr.r;
+  }
+
+  // ── Clock SVG ──
+  function buildClockSvg(wr) {
+    const sz = 148;
+    const cx = sz/2, cy = sz/2, r = 58;
+    const circ = 2 * Math.PI * r;
+
+    if (!wr) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="10"/>
+        <text x="${cx}" y="${cy-6}" text-anchor="middle" dominant-baseline="middle" font-size="36" fill="#AE1515">⚠</text>
+        <text x="${cx}" y="${cy+22}" text-anchor="middle" font-size="13" font-weight="800" fill="#AE1515">DANGER</text>
+      </svg>`;
+    }
+
+    if (wr.w === 60) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#1A5A1F">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">min / hr</text>
+      </svg>`;
+    }
+
+    const strokeColors = {45:'#E65100', 30:'#B71C1C', 15:'#8B0000'};
+    const bgColors     = {45:'#FFF3E0', 30:'#FFEBEE', 15:'#FFCDD2'};
+    const sc = strokeColors[wr.w] || '#1565C0';
+    const bc = bgColors[wr.w] || '#E3F0FF';
+    const workDash = (wr.w / 60) * circ;
+    const restDash = circ - workDash;
+
+    return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="12"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="12"
+        stroke-dasharray="${workDash.toFixed(2)} ${restDash.toFixed(2)}"
+        transform="rotate(-90 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy-9}" text-anchor="middle" dominant-baseline="middle" font-size="34" font-weight="900" fill="${sc}">${wr.w}</text>
+      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="12" font-weight="700" fill="${sc}">min work</text>
+    </svg>`;
+  }
+
+  // ── Build result tab content ──
+  function buildResultTab(s) {
+    const val      = s.measValue;
+    const unit     = s.measUnit || 'F';
+    const activity = s.activity || 'moderate';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+    const rowIdx   = getWBGTRow(val, unit);
+    const colIdx   = ACT_COL[activity] || 1;
+    const wr       = WR_ACCLIM[rowIdx][colIdx];
+    const cls      = wrClass(wr);
+    const rowLabel = WBGT_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
+
+    // Result card colors from CSS variables (inline for the main result block)
+    const bgMap  = {
+      'c-safe':    'var(--safe-bg)',
+      'c-caution': 'var(--caution-bg)',
+      'c-warn':    'var(--warn-bg)',
+      'c-high':    'var(--high-bg)',
+      'c-stop':    'var(--stop-bg)'
+    };
+    const fgMap  = {
+      'c-safe':    'var(--safe-text)',
+      'c-caution': 'var(--caution-text)',
+      'c-warn':    'var(--warn-text)',
+      'c-high':    'var(--high-text)',
+      'c-stop':    'var(--stop-text)'
+    };
+
+    let headline, subtext;
+    if (!wr) {
+      headline = 'DANGER — Stop Work';
+      subtext  = 'Conditions exceed the NIOSH 15-minute REL for ' + ACT_FULL[activity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
+    } else if (wr.w === 60) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory work-rest break is required at this WBGT level for ' + ACT_FULL[activity] + '. Stay hydrated — drink water before you feel thirsty.';
+    } else {
+      headline = wr.w + ' min work &nbsp;·&nbsp; ' + wr.r + ' min rest';
+      subtext  = 'For every 60-minute period, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[activity].toLowerCase() + '. Provide water and shade at the rest station.';
+    }
+
+    const valDisplay = val != null ? val + unitLabel : '—';
+
+    document.getElementById('acclim-tab-result').innerHTML = `
+      <div id="acclim-tab-result">
+        <div class="result-inputs">
+          <div class="result-input-card">
+            <div class="result-input-label">🌡️ WBGT Reading</div>
+            <div class="result-input-value">${valDisplay}</div>
+            <div class="result-input-sub">Range: ${rowLabel}</div>
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">${ACT_EMOJI[activity] || '⚡'} Work Intensity</div>
+            <div class="result-input-value">${ACT_LABEL[activity] || 'Moderate'}</div>
+            <div class="result-input-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">✅ Worker Status</div>
+            <div class="result-input-value">Acclimatized</div>
+            <div class="result-input-sub">NIOSH REL applies</div>
+          </div>
+        </div>
+
+        <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
+             style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+          <div class="result-clock">${buildClockSvg(wr)}</div>
+          <div class="result-text">
+            <div class="result-label">Recommended Work-Rest Cycle</div>
+            <div class="result-headline">${headline}</div>
+            <div class="result-subtext">${subtext}</div>
+            <div class="result-source">NIOSH Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (2016), Table B-2</div>
+          </div>
+        </div>
+      </div>`;
+
+    // Store for chart sizing
+    window._wrcRowIdx = rowIdx;
+    window._wrcColIdx = colIdx;
+    window._wrcUnit   = unit;
+  }
+
+  // ── Build full chart tab content ──
+  function buildChartTab(unit, rowIdx, colIdx) {
+    const unitKey = unit === 'C' ? 'c' : 'f';
+    const labels  = WBGT_ROW_LABELS[unitKey];
+    const actNames = ['Light Work', 'Moderate Work', 'Heavy Work', 'Very Heavy Work'];
+    let html = '<div class="acclim-chart-grid">';
+
+    // Header row
+    html += `<div class="acc-cell acc-hdr acc-range-hdr">WBGT Range</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}">${actNames[ci]}</div>`;
+    }
+
+    // Data rows
+    for (let ri = 0; ri < 9; ri++) {
+      const isUserRow  = ri === rowIdx;
+      const isLastRow  = ri === 8;
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}">${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const wr = WR_ACCLIM[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol;
+        const cls = wrClass(wr);
+        const lbl = wrLabel(wr);
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}">${lbl}</div>`;
+      }
+    }
+
+    html += '</div>';
+    document.getElementById('acclim-tab-chart').innerHTML = html;
+  }
+
+  // ── Size the chart pane to fill from below header+tabbar to bottom of viewport ──
+  let _chartActive = false;
+  function sizeChartPane() {
+    const fixedTop  = document.getElementById('fixed-top');
+    const tabBar    = document.getElementById('acclim-tab-bar');
+    const chartPane = document.getElementById('acclim-tab-chart');
+    if (!chartPane) return;
+    const top = fixedTop.offsetHeight + tabBar.offsetHeight;
+    chartPane.style.top = top + 'px';
+  }
+
+  function switchAcclimTab(which) {
+    const isChart = which === 'chart';
+    document.getElementById('acclim-tab-result').style.display = isChart ? 'none' : '';
+    document.getElementById('acclim-tab-chart').style.display  = isChart ? 'block' : 'none';
+    document.getElementById('tab-btn-result').classList.toggle('active', !isChart);
+    document.getElementById('tab-btn-chart').classList.toggle('active',  isChart);
+    document.body.classList.toggle('chart-active', isChart);
+    _chartActive = isChart;
+    if (isChart) sizeChartPane();
+  }
+
+  // ── Legacy unit toggle (for non-acclimatized fallback table) ──
   function setUnit(unit) {
     currentUnit = unit;
     document.getElementById('btn-f').classList.toggle('active', unit === 'F');
     document.getElementById('btn-c').classList.toggle('active', unit === 'C');
-    // Update acclimatized table rows
     wbgtRows.acclim.forEach((row, i) => {
       const el = document.getElementById('wr-r' + (i + 1));
       if (el) el.textContent = unit === 'C' ? row.c : row.f;
@@ -259,23 +678,34 @@ body { overflow: auto; }
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const main = document.querySelector('main');
-    if (main) main.style.paddingTop = (fixedTop.offsetHeight + 40) + 'px';
+    if (main) main.style.paddingTop = (fixedTop.offsetHeight + 12) + 'px';
+    if (_chartActive) sizeChartPane();
   }
 
   async function init() {
     await initData();
     const s = WRC.get();
     workerStatus = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
-    setWorkerStatus(workerStatus);
 
-    // Activity badge in back bar
-    const act = s.activity || 'moderate';
-    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
-    const actLabels = { light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy' };
-    const badge = document.getElementById('back-bar-activity');
-    if (badge) badge.textContent = (emojiMap[act] || '') + ' ' + (actLabels[act] || '');
+    const isAcclim = workerStatus === 'acclimatized';
+    const hasSession = isAcclim && s.instrument === 'wbgt';
 
-    setUnit('F');
+    if (hasSession) {
+      // ── Two-tab view for acclimatized WBGT workers ──
+      document.getElementById('wbgt-acclim-tabs').style.display = '';
+      document.getElementById('wbgt-acclim-section').style.display = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display = 'none';
+
+      buildResultTab(s);
+      buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
+
+    } else {
+      // ── Fallback: original table view ──
+      document.getElementById('wbgt-acclim-section').style.display  = isAcclim ? '' : 'none';
+      document.getElementById('wbgt-unacclim-section').style.display = !isAcclim ? '' : 'none';
+      setUnit('F');
+    }
+
     buildBreadcrumbs();
     requestAnimationFrame(updateLayout);
     window.addEventListener('resize', updateLayout);
