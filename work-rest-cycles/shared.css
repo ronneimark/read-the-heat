@@ -384,8 +384,8 @@
     margin-left: 8px;
     padding: 5px 13px;
     border-radius: 20px;
-    background: #2a9d5c;
-    color: #fff;
+    background: #A6C5D7;
+    color: #1a3a4a;
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
@@ -393,8 +393,8 @@
     transition: background 0.14s;
   }
   .wrc-crumb-go:hover {
-    background: #218a4d;
-    color: #fff;
+    background: #8db4c8;
+    color: #1a3a4a;
   }
   /* hide breadcrumbs on very small screens to avoid overlap */
   @media (max-width: 540px) {
