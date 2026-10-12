@@ -339,7 +339,7 @@
         valid = false;
       }
       if (!valid) return;
-      WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal) });
+      WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal), dbtConservative: false });
     } else if (measCurrentInstrument === 'dbt') {
       const valEl = document.getElementById('meas-value');
       const val = valEl.value.trim();
