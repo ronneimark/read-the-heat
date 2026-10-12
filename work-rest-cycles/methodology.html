@@ -216,10 +216,13 @@ body { overflow: auto; }
     const stickyTitle = document.getElementById('methodology-sticky-title');
     const fixedH = fixedTop.offsetHeight;
     document.documentElement.style.setProperty('--fixed-top-h', fixedH + 'px');
-    const titleH = stickyTitle ? stickyTitle.offsetHeight : 0;
+    if (stickyTitle) {
+      // Push sticky title down so it starts flush below the fixed header
+      stickyTitle.style.marginTop = fixedH + 'px';
+      // Stick at the same position when scrolling
+      stickyTitle.style.top = fixedH + 'px';
+    }
     main.style.paddingTop = '16px';
-    // offset the sticky title below fixed-top
-    if (stickyTitle) stickyTitle.style.top = fixedH + 'px';
   }
   document.addEventListener('DOMContentLoaded', () => {
     buildBreadcrumbs();
