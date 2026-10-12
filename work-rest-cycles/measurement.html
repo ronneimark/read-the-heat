@@ -171,12 +171,8 @@
   display: block;
   background: rgba(255,255,255,0.12);
   cursor: zoom-in;
-  transition: transform 0.15s, box-shadow 0.15s;
 }
-.method-card-photo:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-}
+.card-left { position: relative; }
 
 /* 3D blue action buttons */
 .card-btn {
@@ -204,39 +200,66 @@
   box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35);
 }
 
-/* Photo expand — in-place zoom to viewport */
-.method-card-photo.photo-fixed {
-  position: fixed !important;
-  z-index: 9997;
-  margin: 0 !important;
-  max-height: none !important;
-  object-fit: cover;
-  cursor: zoom-out;
-  background: transparent;
-  transition: top .38s cubic-bezier(.4,0,.2,1),
-              left .38s cubic-bezier(.4,0,.2,1),
-              width .38s cubic-bezier(.4,0,.2,1),
-              height .38s cubic-bezier(.4,0,.2,1),
-              border-radius .38s cubic-bezier(.4,0,.2,1),
-              box-shadow .38s;
-}
-.method-card-photo.photo-fixed.photo-expanded {
-  box-shadow: 0 32px 80px rgba(0,0,20,0.5);
-}
-#photo-backdrop {
+/* Photo expand — overlay zoom (counter-the-cough pattern) */
+#photo-zoom-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,20,0.88);
   z-index: 9996;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .38s;
+  background: rgba(0,0,20,0.88);
   cursor: zoom-out;
+  transition: opacity .3s ease;
 }
-#photo-backdrop.visible {
-  opacity: 1;
-  pointer-events: auto;
+#photo-zoom-overlay[hidden] { display: none !important; }
+#photo-zoom-box {
+  position: fixed;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(0,0,20,0.55);
 }
+#photo-zoom-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#photo-zoom-close {
+  position: fixed;
+  z-index: 9997;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #001E62;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,20,0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+/* "Click to Enlarge" floating hint */
+.enl-hint {
+  position: absolute;
+  z-index: 5;
+  left: 0; top: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font: 700 12px/1 inherit;
+  letter-spacing: .02em;
+  color: #fff;
+  background: linear-gradient(165deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%),
+              linear-gradient(180deg, #1a3a8f 0%, #001E62 72%);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 999px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  padding: 5px 10px 5px 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 #001247, 0 4px 0 #000a26, 0 6px 10px rgba(0,0,0,0.3);
+  transition: opacity 0.2s ease;
+}
+.enl-hint.is-resting { animation: enl-bob 2.4s ease-in-out infinite; }
+@keyframes enl-bob { 0%,100%{translate:0 0} 50%{translate:0 -4px} }
+.enl-hint.is-hidden { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .enl-hint { transition: opacity 0.2s ease; } .enl-hint.is-resting { animation: none; } }
 
 /* Device info modal */
 #device-info-overlay {
@@ -336,7 +359,7 @@
       <div class="method-card method-card-full" style="--card-accent:#001E62">
         <div class="card-left">
           <h3>Wet Bulb Globe Thermometer<br><span style="font-size:0.72em;font-weight:600;opacity:0.75;">(WBGT)</span></h3>
-          <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors" onclick="expandPhoto(this)">
+          <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
         </div>
         <div class="card-right">
           <button class="card-btn" onclick="showDeviceInfo('wbgt')">Information</button>
@@ -347,7 +370,7 @@
       <div class="method-card method-card-full" style="--card-accent:#1a3a8f">
         <div class="card-left">
           <h3>Temperature + Humidity</h3>
-          <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors" onclick="expandPhoto(this)">
+          <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
         </div>
         <div class="card-right">
           <button class="card-btn" onclick="showDeviceInfo('trh')">Information</button>
@@ -358,7 +381,7 @@
       <div class="method-card method-card-full" style="--card-accent:#E05C2C">
         <div class="card-left">
           <h3>Heat Index</h3>
-          <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors" onclick="expandPhoto(this)">
+          <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
         </div>
         <div class="card-right">
           <button class="card-btn" onclick="showDeviceInfo('hi')">Information</button>
@@ -383,7 +406,10 @@
 </div><!-- /launcher -->
 
 <!-- ── Photo expand backdrop ── -->
-<div id="photo-backdrop" onclick="collapsePhoto()"></div>
+<div id="photo-zoom-overlay" hidden>
+  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
+</div>
 
 <!-- ── Device info modal ── -->
 <div id="device-info-overlay" hidden onclick="if(event.target===this)closeDeviceInfo()">
@@ -549,75 +575,140 @@
     window.location.href = measDestUrls[measCurrentInstrument];
   }
 
-  // ── Photo in-place expand ──
-  let _expandedPhoto = null;
+  // ── Photo zoom (counter-the-cough pattern) ──
+  (function () {
+    const overlay  = document.getElementById('photo-zoom-overlay');
+    const box      = document.getElementById('photo-zoom-box');
+    const zoomImg  = document.getElementById('photo-zoom-img');
+    const closeBtn = document.getElementById('photo-zoom-close');
+    const EASE_IN  = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const EASE_OUT = 'cubic-bezier(0.4, 0, 0.6, 1)';
+    const REDUCE   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TOUCH    = window.matchMedia('(hover: none)').matches;
+    let _srcImg = null, _closing = false, _closeRaf = 0;
 
-  function expandPhoto(img) {
-    if (_expandedPhoto) { collapsePhoto(); return; }
+    // Compute target rect: largest centered box preserving aspect ratio within 92% viewport
+    function targetRect(ratio) {
+      const maxW = window.innerWidth * 0.92, maxH = window.innerHeight * 0.92;
+      let w, h;
+      if (maxW / ratio <= maxH) { w = maxW; h = maxW / ratio; }
+      else { h = maxH; w = maxH * ratio; }
+      return { top: (window.innerHeight - h) / 2, left: (window.innerWidth - w) / 2, width: w, height: h };
+    }
 
-    const r = img.getBoundingClientRect();
-    img._origRect = { top: r.top, left: r.left, width: r.width, height: r.height };
+    // CSS transform that maps big box → small src rect (used as animation start)
+    function fromTransform(src) {
+      const b = box.getBoundingClientRect();
+      const sx = src.width / b.width, sy = src.height / b.height;
+      const tx = (src.left + src.width  / 2) - (b.left + b.width  / 2);
+      const ty = (src.top  + src.height / 2) - (b.top  + b.height / 2);
+      return `translate(${tx}px,${ty}px) scale(${sx},${sy})`;
+    }
 
-    // Compute target: fit natural image size inside 92% of viewport, maintaining ratio
-    const natW  = img.naturalWidth  || r.width;
-    const natH  = img.naturalHeight || r.height;
-    const ratio = natW / natH;
-    const maxW  = window.innerWidth  * 0.92;
-    const maxH  = window.innerHeight * 0.92;
-    let tW, tH;
-    if (maxW / ratio <= maxH) { tW = maxW; tH = maxW / ratio; }
-    else                       { tH = maxH; tW = maxH * ratio; }
-    const tTop  = (window.innerHeight - tH) / 2;
-    const tLeft = (window.innerWidth  - tW) / 2;
+    function placeBox(r) {
+      box.style.left   = r.left   + 'px';
+      box.style.top    = r.top    + 'px';
+      box.style.width  = r.width  + 'px';
+      box.style.height = r.height + 'px';
+    }
 
-    // Pin at current position without transition
-    img.style.transition = 'none';
-    img.classList.add('photo-fixed');
-    img.style.top    = r.top    + 'px';
-    img.style.left   = r.left   + 'px';
-    img.style.width  = r.width  + 'px';
-    img.style.height = r.height + 'px';
-    img.style.borderRadius = '5px';
-    _expandedPhoto = img;
+    function placeClose() {
+      const r = box.getBoundingClientRect();
+      const s = closeBtn.offsetWidth || 38;
+      let left = r.right  - s / 2, top = r.top - s / 2;
+      left = Math.min(Math.max(4, left), window.innerWidth  - s - 4);
+      top  = Math.min(Math.max(4, top),  window.innerHeight - s - 4);
+      closeBtn.style.left = left + 'px';
+      closeBtn.style.top  = top  + 'px';
+    }
 
-    document.getElementById('photo-backdrop').classList.add('visible');
+    function openZoom(img) {
+      if (_closing) return;
+      _srcImg = img;
+      const srcR  = img.getBoundingClientRect();
+      const ratio = (img.naturalWidth || srcR.width) / (img.naturalHeight || srcR.height);
+      const tgtR  = targetRect(ratio);
 
-    // Two rAFs: let browser paint pinned position, then animate to computed size
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      img.style.transition = '';
-      img.style.top    = tTop  + 'px';
-      img.style.left   = tLeft + 'px';
-      img.style.width  = tW    + 'px';
-      img.style.height = tH    + 'px';
-      img.style.borderRadius = '10px';
-      img.classList.add('photo-expanded');
-    }));
-  }
+      zoomImg.src = img.src;
+      zoomImg.alt = img.alt;
+      placeBox(tgtR);
+      overlay.hidden = false;
+      placeClose();
 
-  function collapsePhoto() {
-    const img = _expandedPhoto;
-    if (!img) return;
-    _expandedPhoto = null;
+      if (!REDUCE && box.animate) {
+        box.animate([{ transform: fromTransform(srcR), borderRadius: '5px' },
+                     { transform: 'none', borderRadius: '8px' }],
+                    { duration: 380, easing: EASE_IN, fill: 'none' });
+      }
+      closeBtn.focus();
+    }
 
-    const o = img._origRect;
-    img.classList.remove('photo-expanded');
-    img.style.top    = o.top    + 'px';
-    img.style.left   = o.left   + 'px';
-    img.style.width  = o.width  + 'px';
-    img.style.height = o.height + 'px';
-    img.style.borderRadius = '5px';
+    function closeZoom() {
+      if (_closing || overlay.hidden) return;
+      if (!REDUCE && box.animate && _srcImg) {
+        _closing = true;
+        const srcR = _srcImg.getBoundingClientRect();
+        const anim = box.animate([{ transform: 'none', borderRadius: '8px' },
+                                   { transform: fromTransform(srcR), borderRadius: '5px' }],
+                                  { duration: 280, easing: EASE_OUT });
+        anim.onfinish = () => { _closing = false; overlay.hidden = true; _srcImg = null; };
+      } else {
+        overlay.hidden = true; _srcImg = null;
+      }
+    }
 
-    document.getElementById('photo-backdrop').classList.remove('visible');
+    overlay.addEventListener('click', e => { if (e.target === overlay || e.target === box || e.target === zoomImg) closeZoom(); });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeDeviceInfo(); } });
+    window.addEventListener('resize', () => { if (!overlay.hidden && _srcImg) {
+      const ratio = (zoomImg.naturalWidth || 1) / (zoomImg.naturalHeight || 1);
+      placeBox(targetRect(ratio)); placeClose();
+    }});
 
-    img.addEventListener('transitionend', () => {
-      img.classList.remove('photo-fixed');
-      img.style.cssText = '';
-    }, { once: true });
-  }
+    // Wire up all method card photos
+    document.querySelectorAll('.method-card-photo').forEach(img => {
+      const wrap = img.parentElement;
+      if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+      img.style.cursor = 'zoom-in';
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { collapsePhoto(); closeDeviceInfo(); }
-  });
+      // "Click / Tap to Enlarge" hint
+      const hint = document.createElement('span');
+      hint.className = 'enl-hint is-resting';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.innerHTML = '<span style="margin-right:4px">&#128269;</span>' + (TOUCH ? 'Tap to Enlarge' : 'Click to Enlarge');
+      wrap.appendChild(hint);
+
+      function rest() {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        const x = Math.max(6, w - hint.offsetWidth  - 10);
+        const y = Math.max(6, h - hint.offsetHeight - 10);
+        hint.style.transform = `translate(${x}px,${y}px)`;
+        hint.classList.add('is-resting');
+      }
+      function follow(e) {
+        const r = wrap.getBoundingClientRect();
+        let x = (e.clientX - r.left) + 14, y = (e.clientY - r.top) + 16;
+        x = Math.min(Math.max(4, x), r.width  - hint.offsetWidth  - 4);
+        y = Math.min(Math.max(4, y), r.height - hint.offsetHeight - 4);
+        hint.style.transform = `translate(${x}px,${y}px)`;
+        hint.classList.remove('is-resting');
+      }
+      rest();
+      if (!TOUCH) {
+        wrap.addEventListener('mousemove', follow);
+        wrap.addEventListener('mouseleave', rest);
+      }
+      window.addEventListener('resize', rest);
+
+      // Hide hint while zoom is open
+      new MutationObserver(() => {
+        hint.classList.toggle('is-hidden', !overlay.hidden);
+        if (overlay.hidden) rest();
+      }).observe(overlay, { attributes: true, attributeFilter: ['hidden'] });
+
+      img.addEventListener('click', () => openZoom(img));
+    });
+  })();
 
   // ── Device info modal ──
   const DEVICE_INFO = {
