@@ -75,8 +75,8 @@
 
             <div class="intro-tab-panel" id="itab-2" role="tabpanel" hidden>
               <ul class="intro-uses">
-                <li>🌡️ <strong>WBGT meters</strong> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
-                <li>💧 <strong>Heat index meters</strong> (temperature + humidity) are a solid second choice.</li>
+                <li>🌡️ <button class="instrument-link" onclick="showInstrumentPhoto(event,'wbgt')"><strong>WBGT meters</strong></button> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
+                <li>💧 <button class="instrument-link" onclick="showInstrumentPhoto(event,'hi')"><strong>Heat Index or Temperature &amp; Relative Humidity meters</strong></button> are a solid second choice.</li>
                 <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Organizations relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it. <strong class="rights-statement">Workers and their representatives have every right to transparent access to those measurements.</strong></li>
               </ul>
               <!-- illustration slot -->
@@ -309,6 +309,45 @@
 }
 .rights-statement { color: #c0392b; }
 
+/* clickable instrument links */
+.instrument-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline dotted #1e5fa8;
+  text-underline-offset: 3px;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  display: inline;
+}
+.instrument-link:hover strong { color: #1e5fa8; }
+
+/* instrument photo panel */
+#instrument-photo-panel {
+  position: fixed;
+  z-index: 1100;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  overflow: hidden;
+  max-width: min(580px, 92vw);
+  animation: instrPanelIn .22s ease;
+}
+@keyframes instrPanelIn {
+  from { opacity: 0; transform: scale(.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+#instrument-photo-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (prefers-color-scheme: dark) {
+  #instrument-photo-panel { background: #1a2235; }
+}
+
 /* clickable steps */
 .intro-step-link {
   cursor: pointer;
@@ -360,6 +399,7 @@
     pop.classList.add('closing');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.getElementById('wrc-step-overlay')?.remove();
+    document.getElementById('instrument-photo-panel')?.remove();
     setTimeout(() => {
       pop.hidden = true;
       pop.classList.remove('closing');
@@ -390,6 +430,67 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeIntroPopover();
   });
+
+  const INSTRUMENT_PHOTOS = {
+    wbgt: 'images/wbgt-monitors.png',
+    hi:   'images/heat-index-trh-monitors.png',
+  };
+
+  function showInstrumentPhoto(e, key) {
+    e.stopPropagation();
+    const existing = document.getElementById('instrument-photo-panel');
+    if (existing) {
+      // If same panel already open, close it
+      if (existing.dataset.key === key) { existing.remove(); return; }
+      existing.remove();
+    }
+
+    const panel = document.createElement('div');
+    panel.id = 'instrument-photo-panel';
+    panel.dataset.key = key;
+
+    const img = document.createElement('img');
+    img.src = INSTRUMENT_PHOTOS[key];
+    img.alt = key === 'wbgt' ? 'WBGT Monitors' : 'Heat Index & Temperature/RH Monitors';
+    panel.appendChild(img);
+    document.body.appendChild(panel);
+
+    // Position: to the right of the popover if room, else to the left, else below
+    const popover = document.getElementById('intro-popover');
+    const pR = popover.getBoundingClientRect();
+    const panelW = Math.min(580, window.innerWidth * 0.92);
+    const margin = 12;
+
+    let left, top;
+    top = Math.max(8, pR.top);
+
+    if (pR.right + margin + panelW <= window.innerWidth) {
+      left = pR.right + margin;                         // right of popover
+    } else if (pR.left - margin - panelW >= 0) {
+      left = pR.left - margin - panelW;                 // left of popover
+    } else {
+      left = Math.max(8, (window.innerWidth - panelW) / 2); // centred below
+      top  = pR.bottom + margin;
+    }
+
+    // Clamp vertically
+    const maxTop = window.innerHeight - 200;
+    top = Math.min(top, maxTop);
+
+    panel.style.left = left + 'px';
+    panel.style.top  = top  + 'px';
+    panel.style.width = panelW + 'px';
+
+    // Close on any click elsewhere
+    setTimeout(() => {
+      document.addEventListener('click', function handler(ev) {
+        if (!panel.contains(ev.target)) {
+          panel.remove();
+          document.removeEventListener('click', handler);
+        }
+      });
+    }, 0);
+  }
 
   function highlightStep(e, n) {
     const NS = 'http://www.w3.org/2000/svg';
