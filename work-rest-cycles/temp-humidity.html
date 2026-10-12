@@ -424,11 +424,18 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
 #sched-dialog {
   border: none; border-radius: 16px; padding: 0;
-  max-width: min(640px, 94vw); width: 100%;
-  box-shadow: 0 8px 40px rgba(0,0,0,.32);
+  position: fixed; margin: 0;
+  max-width: min(640px, 94vw); width: 94vw;
+  max-height: 75vh; overflow-y: auto;
+  box-shadow: 0 -4px 36px rgba(0,0,0,.3);
   background: var(--warm-white,#F6F3EC);
 }
-#sched-dialog::backdrop { background: rgba(0,0,0,.55); }
+#sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
+#sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
+@keyframes schedOpen  { from { clip-path: inset(100% 0 0 0 round 16px); } to { clip-path: inset(0% 0 0 0 round 16px); } }
+@keyframes schedClose { from { clip-path: inset(0% 0 0 0 round 16px); }  to { clip-path: inset(100% 0 0 0 round 16px); } }
+#sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
+@keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
 .sched-dialog-inner { padding: 28px 28px 24px; }
 .sched-dialog-hdr {
   display: flex; justify-content: space-between; align-items: flex-start;
@@ -479,7 +486,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         <div class="sched-dialog-title" id="sched-dialog-title">📅 Daily Exposure Schedule</div>
         <div class="sched-dialog-sub">Times shown per 60-minute period in heat</div>
       </div>
-      <button class="sched-dialog-close" onclick="document.getElementById('sched-dialog').close()" aria-label="Close">✕</button>
+      <button class="sched-dialog-close" onclick="closeSchedModal()" aria-label="Close">✕</button>
     </div>
     <div class="sched-type-tabs">
       <button class="sched-type-tab active" onclick="switchSchedType('new',this)">New Worker <small style="font-weight:500;display:block">5-day ramp</small></button>
@@ -747,7 +754,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     return html;
   }
 
-  function openSchedModal() {
+  function openSchedModal(btn) {
     if (!_schedCell) return;
     const isNew = workerStatus !== 'unacclimatized-returning';
     const tabsEl = document.querySelector('.sched-type-tabs');
@@ -759,7 +766,24 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     }
     document.getElementById('sched-dialog-grid').innerHTML =
       '<div class="urec-sched-grid">' + _buildSchedRows(isNew ? SCHED_NEW : SCHED_RETURNING, _schedCell) + '</div>';
-    document.getElementById('sched-dialog').showModal();
+    const dlg = document.getElementById('sched-dialog');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      dlg.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+      dlg.style.left = '50%';
+      dlg.style.transform = 'translateX(-50%)';
+    }
+    dlg.showModal();
+  }
+
+  function closeSchedModal() {
+    const dlg = document.getElementById('sched-dialog');
+    dlg.classList.add('sched-closing');
+    dlg.addEventListener('animationend', function handler() {
+      dlg.classList.remove('sched-closing');
+      dlg.removeEventListener('animationend', handler);
+      dlg.close();
+    });
   }
 
   function switchSchedType(type, btn) {
@@ -771,7 +795,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   document.getElementById('sched-dialog').addEventListener('click', function(e) {
     const r = this.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) this.close();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeSchedModal();
   });
 
   function getHIRow(val, unit) {
@@ -1082,7 +1106,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-sub">${workerSub}</div>
         </div>
         ${monitoringHtml}
-        ${(workerLabel === 'Unacclimatized' && cell && cell.w !== null) ? `<button class="sched-modal-btn" onclick="openSchedModal()">📅 View Acclimatization Schedule</button>` : ''}
+        ${(workerLabel === 'Unacclimatized' && cell && cell.w !== null) ? `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
       </div>`;
     if (workerLabel === 'Unacclimatized' && cell && cell.w !== null) _schedCell = cell;
     return { rowIdx, colIdx };

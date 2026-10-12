@@ -443,12 +443,19 @@ body.chart-active { overflow: hidden; }
 }
 .sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
 #sched-dialog {
-  border: none; border-radius: 16px; padding: 0;
-  max-width: min(600px, 94vw); width: 100%;
-  box-shadow: 0 8px 40px rgba(0,0,0,.32);
+  border: none; border-radius: 12px; padding: 0;
+  position: fixed; margin: 0;
+  max-width: min(560px, 94vw); width: 94vw;
+  max-height: 75vh; overflow-y: auto;
+  box-shadow: 0 -4px 36px rgba(0,0,0,.3);
   background: var(--warm-white,#F6F3EC);
 }
-#sched-dialog::backdrop { background: rgba(0,0,0,.55); }
+#sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
+#sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
+@keyframes schedOpen  { from { clip-path: inset(100% 0 0 0 round 12px); } to { clip-path: inset(0% 0 0 0 round 12px); } }
+@keyframes schedClose { from { clip-path: inset(0% 0 0 0 round 12px); }  to { clip-path: inset(100% 0 0 0 round 12px); } }
+#sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
+@keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
 .sched-dialog-inner { padding: 28px 28px 24px; }
 .sched-dialog-hdr {
   display: flex; justify-content: space-between; align-items: flex-start;
@@ -473,7 +480,7 @@ body.chart-active { overflow: hidden; }
         <div class="sched-dialog-title" id="sched-dialog-title">📅 Daily Exposure Schedule</div>
         <div class="sched-dialog-sub" id="sched-dialog-sub"></div>
       </div>
-      <button class="sched-dialog-close" onclick="document.getElementById('sched-dialog').close()" aria-label="Close">✕</button>
+      <button class="sched-dialog-close" onclick="closeSchedModal()" aria-label="Close">✕</button>
     </div>
     <div id="sched-dialog-grid"></div>
     <div id="sched-dialog-foot1" style="background:var(--warn-bg,#FFF3E0);color:var(--warn-text,#7B2500);border-radius:6px;padding:6px 10px;font-weight:700;font-size:12px;border-left:3px solid var(--warn-text,#7B2500);margin-top:12px;">
@@ -1207,7 +1214,7 @@ body.chart-active { overflow: hidden; }
           </div>
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
-        ${isContinuous ? '' : `<button class="sched-modal-btn" onclick="openSchedModal()">📅 View Daily Exposure Schedule</button>`}
+        ${isContinuous ? '' : `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>`}
       </div>`;
   }
 
@@ -1235,12 +1242,32 @@ body.chart-active { overflow: hidden; }
     document.getElementById('unacclim-tab-chart').innerHTML = html;
   }
 
-  function openSchedModal() {
+  function openSchedModal(btn) {
     const d = window._schedData;
     if (!d) return;
     document.getElementById('sched-dialog-sub').textContent  = d.sub;
     document.getElementById('sched-dialog-grid').innerHTML   = '<div class="urec-sched-grid">' + d.dayRowsHtml + '</div>';
-    document.getElementById('sched-dialog').showModal();
+    const dlg = document.getElementById('sched-dialog');
+    // Position bottom of dialog at the button's top
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      const gap = 8;
+      const bottomFromViewport = window.innerHeight - rect.top + gap;
+      dlg.style.bottom = bottomFromViewport + 'px';
+      dlg.style.left = '50%';
+      dlg.style.transform = 'translateX(-50%)';
+    }
+    dlg.showModal();
+  }
+
+  function closeSchedModal() {
+    const dlg = document.getElementById('sched-dialog');
+    dlg.classList.add('sched-closing');
+    dlg.addEventListener('animationend', function handler() {
+      dlg.classList.remove('sched-closing');
+      dlg.removeEventListener('animationend', handler);
+      dlg.close();
+    });
   }
 
   // Close dialog on backdrop click
@@ -1248,7 +1275,7 @@ body.chart-active { overflow: hidden; }
     const rect = this.getBoundingClientRect();
     if (e.clientX < rect.left || e.clientX > rect.right ||
         e.clientY < rect.top  || e.clientY > rect.bottom) {
-      this.close();
+      closeSchedModal();
     }
   });
 
