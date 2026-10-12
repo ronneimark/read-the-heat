@@ -7,8 +7,8 @@
     --text:       #1A1A1A;
     --subtext:    #484F58;
 
-    --safe-bg:    #E8F5E9; --safe-text:    #1A5A1F;
-    --low-bg:     #F1F8E9; --low-text:     #2D5C1A;
+    --safe-bg:    #E0F5EE; --safe-text:    #005540;
+    --low-bg:     #EBF8F4; --low-text:     #006B50;
     --caution-bg: #FFFDE7; --caution-text: #5D3A00;
     --warn-bg:    #FFF3E0; --warn-text:    #7B2500;
     --high-bg:    #FFEBEE; --high-text:    #8B0000;
@@ -304,13 +304,13 @@
   /* current page pill — green */
   .wrc-crumb-current,
   .wrc-crumb-pending.wrc-crumb-current {
-    background: #1a7a3c !important;
+    background: #00966C !important;
     border-color: rgba(255,255,255,0.35) !important;
     color: #fff !important;
     font-style: normal !important;
   }
   .wrc-crumb-current:hover {
-    background: #155f30 !important;
+    background: #007A58 !important;
     color: #fff !important;
   }
   /* pending pill — no selection yet, red bg, italic white */
@@ -1095,14 +1095,14 @@
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
     overflow: hidden;
   }
-  .ls3-acclim-yes    { border-top: 4px solid #2E7D32; }
+  .ls3-acclim-yes    { border-top: 4px solid #00966C; }
   .ls3-acclim-no     { border-top: 4px solid #E65100; }
   .ls3-acclim-return { border-top: 4px solid #B45309; }
   .ls3-acclim-card:hover {
     box-shadow: 0 4px 18px rgba(0,0,0,0.10);
     transform: translateY(-2px);
   }
-  .ls3-acclim-yes:hover    { border-color: #2E7D32; }
+  .ls3-acclim-yes:hover    { border-color: #00966C; }
   .ls3-acclim-no:hover     { border-color: #E65100; }
   .ls3-acclim-return:hover { border-color: #B45309; }
   .ls3-acclim-icon { font-size: 28px; line-height: 1; }
@@ -1134,7 +1134,7 @@
     color: var(--navy);
     margin-top: 4px;
   }
-  .ls3-acclim-yes    .ls3-acclim-cta { color: #1A5A1F; }
+  .ls3-acclim-yes    .ls3-acclim-cta { color: #005540; }
   .ls3-acclim-no     .ls3-acclim-cta { color: #7B2500; }
   .ls3-acclim-return .ls3-acclim-cta { color: #92400E; }
   @media (max-width: 600px) {
@@ -1473,7 +1473,7 @@
     white-space: nowrap;
   }
   .status-btn:hover { border-color: var(--mid); color: var(--navy); }
-  .status-btn.active-acclim   { background: var(--safe-bg); border-color: #2E7D32; color: #1B5E20; }
+  .status-btn.active-acclim   { background: var(--safe-bg); border-color: #00966C; color: #005540; }
   .status-btn.active-unacclim { background: var(--warn-bg); border-color: #E65100; color: #BF360C; }
   .status-def {
     padding: 11px 16px 13px;
@@ -1484,8 +1484,8 @@
   }
   .status-def.def-acclim {
     background: var(--safe-bg);
-    color: #104A13;
-    border-left: 4px solid #2E7D32;
+    color: #004A37;
+    border-left: 4px solid #00966C;
   }
   .status-def.def-unacclim {
     background: var(--warn-bg);
@@ -1571,8 +1571,8 @@
     transition: width 0.3s ease;
   }
   .acclim-partial { background: linear-gradient(90deg, #E05C2C, #F5934A); }
-  .acclim-return  { background: linear-gradient(90deg, #2E7D32, #4CAF50); }
-  .acclim-full    { background: linear-gradient(90deg, #1A5A1F, #2E7D32); }
+  .acclim-return  { background: linear-gradient(90deg, #00966C, #33B08A); }
+  .acclim-full    { background: linear-gradient(90deg, #005540, #00966C); }
   .acclim-pct {
     font-size: 13px;
     font-weight: 700;

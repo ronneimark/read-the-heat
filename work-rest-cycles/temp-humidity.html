@@ -463,7 +463,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .urec-bar-wrap  { flex: 1; height: 14px; background: #E9EDEF; border-radius: 4px; overflow: hidden; }
 .urec-bar       { height: 100%; border-radius: 4px; }
 .urec-day-pct   { font-size: 13px; font-weight: 800; min-width: 36px; text-align: right; flex-shrink: 0; }
-.urec-time-work { color: #1A5A1F; font-weight: 700; display: block; font-size: 12px; }
+.urec-time-work { color: #005540; font-weight: 700; display: block; font-size: 12px; }
 .urec-time-rest { color: #7A1515; font-weight: 600; display: block; font-size: 12px; }
 .urec-time-out  { color: var(--subtext); display: block; font-size: 12px; }
 .urec-day-times { font-size: 12px; line-height: 1.25; min-width: 0; text-align: right; flex-shrink: 0; width: 180px; }
@@ -746,8 +746,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       }
       html += `<div class="urec-day-row${isFull?' urec-day-full':''}">
         <div class="urec-day-label">${d.day}</div>
-        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#2E7D32':accent}"></div></div>
-        <div class="urec-day-pct" style="color:${isFull?'#2E7D32':accent}">${d.pct}%</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%</div>
         <div class="urec-day-times">${timesHtml}</div>
       </div>`;
     });
@@ -974,9 +974,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     }
     if (cell.w === null) {
       return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="12"/>
-        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#1A5A1F">60</text>
-        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">min / hr</text>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#005540">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#00966C">min / hr</text>
       </svg>`;
     }
     const strokeColors = {45:'#E65100', 30:'#B71C1C', 15:'#8B0000'};

@@ -12,7 +12,7 @@ function navigate(url, updates) {
 
 // ── Activity metadata ──
 const activityMeta = {
-  light:    { label: 'Light Work',      kcal: '~150–200 kcal/hr (116–233 W)', color: '#2E7D32' },
+  light:    { label: 'Light Work',      kcal: '~150–200 kcal/hr (116–233 W)', color: '#00966C' },
   moderate: { label: 'Moderate Work',   kcal: '~200–350 kcal/hr (233–407 W)', color: '#F57F17' },
   heavy:    { label: 'Heavy Work',      kcal: '~350–500 kcal/hr (407–581 W)', color: '#E65100' },
   vh:       { label: 'Very Heavy Work', kcal: '>500 kcal/hr (>581 W)',         color: '#880E4F' },

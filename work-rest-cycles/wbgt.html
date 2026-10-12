@@ -423,7 +423,7 @@ body.chart-active { overflow: hidden; }
   font-size: clamp(10px,0.95vw,13px); line-height:1.25; min-width:0; flex-shrink:0;
   text-align: right; width: clamp(140px,18vw,230px);
 }
-.urec-time-work  { color: #1A5A1F; font-weight:700; display:block; }
+.urec-time-work  { color: #005540; font-weight:700; display:block; }
 .urec-time-rest  { color: #7A1515; font-weight:600; display:block; }
 .urec-time-out   { color: var(--subtext); display:block; }
 .urec-day-full .urec-time-work { color: #0D3B10; }
@@ -696,7 +696,7 @@ body.chart-active { overflow: hidden; }
       <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">Maximum increase: 20% per day. Continue at 100% through day 14 before considering fully acclimatized.</p>
     </div>
 
-    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #2E7D32;">
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #00966C;">
       <h4 style="font-size:15px; color:var(--navy); margin-bottom:4px; font-weight:700;">Returning Workers</h4>
       <p style="font-size:13px; color:var(--subtext); margin-bottom:14px; line-height:1.4">Prior heat exposure experience, absent ≥ 1 week — abbreviated 4-day ramp. Acclimatization can be regained in 2–3 days.</p>
       <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:50%"></div></div><span class="acclim-pct">50%</span></div>
@@ -748,7 +748,7 @@ body.chart-active { overflow: hidden; }
     </ul>
   </div>
 
-  <div class="note-box" style="margin-top:12px; border-left-color:#1A5A1F; background:#E8F5E9; color:#104A13;">
+  <div class="note-box" style="margin-top:12px; border-left-color:#005540; background:#E0F5EE; color:#004A37;">
     <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
   </div>
 
@@ -830,9 +830,9 @@ body.chart-active { overflow: hidden; }
 
     if (wr.w === 60) {
       return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="12"/>
-        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#1A5A1F">60</text>
-        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">min / hr</text>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#005540">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#00966C">min / hr</text>
       </svg>`;
     }
 
@@ -1088,7 +1088,7 @@ body.chart-active { overflow: hidden; }
     const rowLabel  = RAL_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
     const sched     = isNew ? SCHED_NEW : SCHED_RETURNING;
     const statusLabel = isNew ? 'New Worker' : 'Returning Worker';
-    const accent    = isNew ? '#E05C2C' : '#2E7D32';
+    const accent    = isNew ? '#E05C2C' : '#00966C';
 
     const bgMap = {'c-safe':'var(--safe-bg)','c-caution':'var(--caution-bg)','c-warn':'var(--warn-bg)','c-high':'var(--high-bg)','c-stop':'var(--stop-bg)'};
     const fgMap = {'c-safe':'var(--safe-text)','c-caution':'var(--caution-text)','c-warn':'var(--warn-text)','c-high':'var(--high-text)','c-stop':'var(--stop-text)'};
@@ -1119,9 +1119,9 @@ body.chart-active { overflow: hidden; }
       }
       if (wr.w === 60) {
         return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
-          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="9"/>
-          <text x="${cx}" y="${cy-5}" text-anchor="middle" dominant-baseline="middle" font-size="26" font-weight="900" fill="#1A5A1F">60</text>
-          <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="10" font-weight="700" fill="#2E7D32">min/hr</text>
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="9"/>
+          <text x="${cx}" y="${cy-5}" text-anchor="middle" dominant-baseline="middle" font-size="26" font-weight="900" fill="#005540">60</text>
+          <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="10" font-weight="700" fill="#00966C">min/hr</text>
         </svg>`;
       }
       const sc = {45:'#E65100',30:'#B71C1C',15:'#8B0000'}[wr.w]||'#1565C0';
@@ -1167,8 +1167,8 @@ body.chart-active { overflow: hidden; }
       }
       dayRowsHtml += `<div class="urec-day-row${isFull?' urec-day-full':''}">
         <div class="urec-day-label">${d.day}</div>
-        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#2E7D32':accent}"></div></div>
-        <div class="urec-day-pct" style="color:${isFull?'#2E7D32':accent}">${d.pct}%</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%</div>
         <div class="urec-day-times">${timesHtml}</div>
       </div>`;
     });
@@ -1285,16 +1285,16 @@ body.chart-active { overflow: hidden; }
     const sub    = isNew
       ? 'No prior heat exposure — must complete full ramp. Maximum increase of 20% per day. Full acclimatization typically takes 7–14 days of work.'
       : 'Prior experience, absent ≥1 week — abbreviated ramp. After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.';
-    const accent = isNew ? '#E05C2C' : '#2E7D32';
+    const accent = isNew ? '#E05C2C' : '#00966C';
     let barsHtml = '';
     sched.forEach(d => {
       const isFull = d.pct === 100;
       barsHtml += `<div style="display:flex;align-items:center;margin-bottom:12px">
         <span style="min-width:60px;font-weight:${isFull?800:600};font-size:14px">${d.day}</span>
         <div style="flex:1;height:22px;background:#E9EDEF;border-radius:4px;overflow:hidden;margin:0 12px">
-          <div style="width:${d.pct}%;height:100%;background:${isFull?'#2E7D32':accent};border-radius:4px"></div>
+          <div style="width:${d.pct}%;height:100%;background:${isFull?'#00966C':accent};border-radius:4px"></div>
         </div>
-        <span style="min-width:38px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#2E7D32':accent};font-size:14px">${d.pct}%</span>
+        <span style="min-width:38px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#00966C':accent};font-size:14px">${d.pct}%</span>
       </div>`;
     });
     document.getElementById('unacclim-tab-schedule').innerHTML = `
@@ -1304,7 +1304,7 @@ body.chart-active { overflow: hidden; }
       <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:#7B2500;background:#FFF3E0;color:#7B2500;font-weight:700;">
         ⚠ Completing this schedule means reaching 100% exposure — not full acclimatization. Full acclimatization may take <strong>up to 14 days</strong> of continued work in heat.
       </div>
-      <div class="note-box" style="margin-top:12px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E8F5E9'};color:${isNew?'#7A2800':'#104A13'}">
+      <div class="note-box" style="margin-top:12px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E0F5EE'};color:${isNew?'#7A2800':'#004A37'}">
         <strong>Remember:</strong> Apply RAL-based work-rest cycles <em>during all heat exposure periods</em>, regardless of the daily percentage.
         ${isNew?' Continue monitoring closely throughout the full 14-day acclimatization period.':' After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.'}
       </div>
@@ -1323,7 +1323,7 @@ body.chart-active { overflow: hidden; }
           <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
         </ul>
       </div>
-      <div class="note-box" style="margin-top:12px;border-left-color:#1A5A1F;background:#E8F5E9;color:#104A13">
+      <div class="note-box" style="margin-top:12px;border-left-color:#005540;background:#E0F5EE;color:#004A37">
         <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
       </div>
       <p style="font-size:12px;color:var(--subtext);margin-top:12px;line-height:1.6">
