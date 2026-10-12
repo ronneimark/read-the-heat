@@ -707,8 +707,8 @@
     const x1 = fromRight ? pR2.right : pR2.left;
     const y1 = e.clientY;
     // End point: near edge of the target ring (not dead-centre)
-    const x2 = fromRight ? tR.right + 8 : tR.left - 8;
-    const y2 = ty;
+    const x2 = tR.left + tR.width / 2;  // horizontal midpoint of target
+    const y2 = tR.bottom + 6;           // just below the target
     // Control points curve outward horizontally so the arrow flows left/right
     const cpOff = Math.abs(x2 - x1) * 0.5;
     const cp1x = fromRight ? x1 + cpOff : x1 - cpOff;
