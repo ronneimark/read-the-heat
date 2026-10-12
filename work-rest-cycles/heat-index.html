@@ -48,112 +48,160 @@ main { padding: 0; max-width: none; }
   font-family: inherit;
 }
 .acclim-tab-btn-title { font-size: 15px; font-weight: 800; line-height: 1.2; }
-.acclim-tab-btn-sub   { font-size: 11px; font-weight: 500; opacity: 0.75; letter-spacing: 0.02em; }
+.acclim-tab-btn-sub   { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; } /* no opacity — 4.5:1 required at 11px */
 .acclim-tab-btn.active { background: var(--navy, #1A2A3A); color: #fff; }
-.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
+.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; } /* white on navy passes at 0.75 */
 .acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
+.acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
 
-/* ── Result tab ── */
+/* ── Result tab — 2-column viewport-fit layout ── */
 #hi-tab-result-wrap {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   box-sizing: border-box;
-  padding: 24px 16px;
+  padding: 16px;
+  /* fill available viewport height below fixed header */
+  min-height: 0;
 }
 #hi-tab-result {
   width: 100%;
-  max-width: 860px;
+  max-width: 1060px;
   margin: 0 auto;
-}
-.result-inputs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: 1fr;
   gap: 14px;
-  margin-bottom: 28px;
+  min-height: 0;
+}
+
+/* Left column: the colored result block, fills full height */
+.result-main {
+  border-radius: 14px;
+  padding: 28px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  text-align: left;
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 0;
+}
+.result-main-inner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.result-clock  { flex-shrink: 0; }
+.result-text   { flex: 1; min-width: 0; }
+.result-label  {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.result-headline {
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+.result-subtext {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.result-source {
+  margin-top: 14px;
+  font-size: 10px;
+  font-style: italic;
+}
+.result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
+
+/* Right column: input cards + monitoring guidance + radiant strip stacked */
+.result-sidebar {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
 }
 .result-input-card {
   background: var(--surface, #F8FAFB);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 10px 14px;
   text-align: left;
+  flex-shrink: 0;
 }
 .result-input-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--subtext, #6B7785);
-  margin-bottom: 5px;
+  color: var(--subtext, #484F58);
+  margin-bottom: 3px;
 }
 .result-input-value {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--navy, #1A2A3A);
   line-height: 1.1;
 }
 .result-input-sub {
-  font-size: 12px;
-  color: var(--subtext, #6B7785);
-  margin-top: 3px;
+  font-size: 11px;
+  color: var(--subtext, #484F58);
+  margin-top: 2px;
   line-height: 1.3;
 }
-.result-main {
-  border-radius: 14px;
-  padding: 32px 28px;
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  text-align: left;
-}
-.result-clock  { flex-shrink: 0; }
-.result-text   { flex: 1; min-width: 0; }
-.result-label  {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  margin-bottom: 8px;
-}
-.result-headline {
-  font-size: clamp(26px, 4vw, 46px);
-  font-weight: 900;
-  line-height: 1.05;
-  margin-bottom: 10px;
-}
-.result-subtext {
-  font-size: 15px;
-  line-height: 1.55;
-  opacity: 0.8;
-  max-width: 440px;
-}
-.result-source {
-  margin-top: 20px;
-  font-size: 11px;
-  opacity: 0.6;
-  font-style: italic;
-}
-.result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
 
-/* Radiant heat note below result */
+/* Radiant heat note */
 .radiant-warn-strip {
-  margin-top: 20px;
-  padding: 12px 16px;
+  padding: 10px 12px;
   background: #FFF8E1;
   border-left: 4px solid #F59E0B;
   border-radius: 0 8px 8px 0;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
   color: #78350F;
+  flex-shrink: 0;
 }
-.radiant-warn-strip strong { margin-right: 4px; }
+.radiant-warn-strip strong { display: block; margin-bottom: 2px; }
 
-@media (max-width: 600px) {
-  .result-inputs { grid-template-columns: 1fr 1fr; }
-  .result-main   { flex-direction: column; text-align: center; gap: 20px; }
-  .result-subtext { max-width: 100%; }
+/* Monitoring guidance in sidebar */
+.result-monitoring {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+.result-monitoring-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--navy, #1A2A3A);
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Responsive: stack to single column on narrow screens */
+@media (max-width: 680px) {
+  #hi-tab-result {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: auto;
+  }
+  .result-main   { grid-column: 1; grid-row: 1; padding: 20px 16px; }
+  .result-sidebar { grid-column: 1; grid-row: 2; overflow-y: visible; }
+  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
 /* ── Chart tab (same as WBGT #acclim-tab-chart) ── */
@@ -300,7 +348,7 @@ body.hi-chart-active { overflow: hidden; }
               aria-selected="false" aria-controls="hi-tab-notes" tabindex="-1"
               onclick="switchHITab('notes')">
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
-        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+        <span class="acclim-tab-btn-sub">Hydration &amp; limitations</span>
       </button>
       <button class="acclim-tab-btn" id="hi-tab-btn-reference" role="tab"
               aria-selected="false" aria-controls="hi-tab-reference" tabindex="-1"
@@ -324,9 +372,9 @@ body.hi-chart-active { overflow: hidden; }
     <div id="hi-tab-reference" role="tabpanel" aria-labelledby="hi-tab-btn-reference" tabindex="0">
       <div class="toggle-row" style="padding:20px 20px 0">
         <span class="toggle-label">Temperature Units:</span>
-        <div class="toggle">
-          <button class="active" id="btn-hi-f" onclick="setHiUnit('F')">°F</button>
-          <button id="btn-hi-c" onclick="setHiUnit('C')">°C</button>
+        <div class="toggle" role="group" aria-label="Temperature unit">
+          <button class="active" id="btn-hi-f" aria-pressed="true" onclick="setHiUnit('F')">°F</button>
+          <button id="btn-hi-c" aria-pressed="false" onclick="setHiUnit('C')">°C</button>
         </div>
       </div>
       <div style="padding:0 20px">
@@ -335,11 +383,11 @@ body.hi-chart-active { overflow: hidden; }
           <table>
             <thead>
               <tr>
-                <th class="left" style="width:160px">Heat Index</th>
-                <th>Light Work</th>
-                <th>Moderate Work</th>
-                <th>Heavy Work</th>
-                <th>Very Heavy Work</th>
+                <th class="left" scope="col" style="width:160px">Heat Index</th>
+                <th scope="col">Light Work</th>
+                <th scope="col">Moderate Work</th>
+                <th scope="col">Heavy Work</th>
+                <th scope="col">Very Heavy Work</th>
               </tr>
             </thead>
             <tbody>
@@ -397,9 +445,9 @@ body.hi-chart-active { overflow: hidden; }
     <div style="padding:20px 20px 0">
       <div class="toggle-row">
         <span class="toggle-label">Temperature Units:</span>
-        <div class="toggle">
-          <button class="active" id="btn-hi-f2" onclick="setHiUnit('F')">°F</button>
-          <button id="btn-hi-c2" onclick="setHiUnit('C')">°C</button>
+        <div class="toggle" role="group" aria-label="Temperature unit">
+          <button class="active" id="btn-hi-f2" aria-pressed="true" onclick="setHiUnit('F')">°F</button>
+          <button id="btn-hi-c2" aria-pressed="false" onclick="setHiUnit('C')">°C</button>
         </div>
       </div>
     </div>
@@ -413,8 +461,8 @@ body.hi-chart-active { overflow: hidden; }
       <table>
         <thead>
           <tr>
-            <th class="left" style="width:160px">Heat Index</th>
-            <th>Light Work</th><th>Moderate Work</th><th>Heavy Work</th><th>Very Heavy Work</th>
+            <th class="left" scope="col" style="width:160px">Heat Index</th>
+            <th scope="col">Light Work</th><th scope="col">Moderate Work</th><th scope="col">Heavy Work</th><th scope="col">Very Heavy Work</th>
           </tr>
         </thead>
         <tbody>
@@ -604,44 +652,46 @@ body.hi-chart-active { overflow: hidden; }
 
     const valDisplay = val != null ? val + unitLabel : '—';
 
+    const monitoringHtml = rowIdx >= 0 && HI_RANGE_NOTES[rowIdx] ? `
+      <div class="result-monitoring">
+        <div class="result-monitoring-label">Monitoring &amp; Guidance — ${HI_RANGE_NOTES[rowIdx].range}</div>
+        ${HI_RANGE_NOTES[rowIdx].text}
+      </div>` : '';
+
     document.getElementById('hi-tab-result').innerHTML = `
-      <div class="result-inputs">
+      <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
+           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+        <div class="result-main-inner">
+          <div class="result-clock">${buildClockSvg(rowIdx >= 0 ? cell : {w:null,r:null})}</div>
+          <div class="result-text">
+            <div class="result-label">Recommended Work-Rest Cycle</div>
+            <div class="result-headline">${headline}</div>
+            <div class="result-subtext">${subtext}</div>
+            <div class="result-source">OSHA/NIOSH heat illness prevention guidance synthesized with NIOSH-based work-rest principles (NIOSH 2016)</div>
+          </div>
+        </div>
+      </div>
+      <div class="result-sidebar">
         <div class="result-input-card">
-          <div class="result-input-label">🌡️ Heat Index</div>
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Heat Index</div>
           <div class="result-input-value">${valDisplay}</div>
           <div class="result-input-sub">Range: ${rowLabel}</div>
         </div>
         <div class="result-input-card">
-          <div class="result-input-label">${ACT_EMOJI[activity]||'⚡'} Work Intensity</div>
+          <div class="result-input-label"><span aria-hidden="true">${ACT_EMOJI[activity]||'⚡'} </span>Work Intensity</div>
           <div class="result-input-value">${ACT_LABEL[activity]||'Moderate'}</div>
           <div class="result-input-sub">${ACT_FULL[activity]}</div>
         </div>
         <div class="result-input-card">
-          <div class="result-input-label">✅ Worker Status</div>
+          <div class="result-input-label"><span aria-hidden="true">✅ </span>Worker Status</div>
           <div class="result-input-value">Acclimatized</div>
           <div class="result-input-sub">NIOSH REL applies</div>
         </div>
-      </div>
-      <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
-           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
-        <div class="result-clock">${buildClockSvg(rowIdx >= 0 ? cell : {w:null,r:null})}</div>
-        <div class="result-text">
-          <div class="result-label">Recommended Work-Rest Cycle</div>
-          <div class="result-headline">${headline}</div>
-          <div class="result-subtext">${subtext}</div>
-          <div class="result-source">OSHA/NIOSH heat illness prevention guidance synthesized with NIOSH-based work-rest principles (NIOSH 2016)</div>
+        ${monitoringHtml}
+        <div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
         </div>
-      </div>
-      <div class="radiant-warn-strip">
-        <strong>⚠ Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
-      </div>
-      ${rowIdx >= 0 && HI_RANGE_NOTES[rowIdx] ? `
-      <div class="hi-notes-section" style="margin-top:20px">
-        <h3>Monitoring &amp; Guidance — ${HI_RANGE_NOTES[rowIdx].range}</h3>
-        <div class="hi-notes-block" style="margin-bottom:0">
-          <div class="hi-notes-text">${HI_RANGE_NOTES[rowIdx].text}</div>
-        </div>
-      </div>` : ''}`;
+      </div>`;
   }
 
   // ── Build chart tab ───────────────────────────────────────────────────────────
@@ -752,7 +802,10 @@ body.hi-chart-active { overflow: hidden; }
     _hiUnit = unit;
     ['btn-hi-f','btn-hi-c','btn-hi-f2','btn-hi-c2'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.classList.toggle('active', el.id.includes(unit === 'F' ? '-f' : '-c'));
+      if (!el) return;
+      const isActive = el.id.includes(unit === 'F' ? '-f' : '-c');
+      el.classList.toggle('active', isActive);
+      el.setAttribute('aria-pressed', String(isActive));
     });
     const hiPageRowsAcclim = [
       { id:'hi-a-r1', f:'Below 80°F<br>Below 27°C',  c:'Below 26.7°C' },
