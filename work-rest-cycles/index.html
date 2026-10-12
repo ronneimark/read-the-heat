@@ -203,7 +203,7 @@
   animation: popoverIn .5s cubic-bezier(0.34, 1.1, 0.64, 1);
   display: flex;
   flex-direction: column;
-  transition: opacity .3s ease;
+  transition: opacity .3s ease, mask-image .3s ease, -webkit-mask-image .3s ease;
 }
 .intro-popover[hidden] { display: none; }
 .intro-popover.closing {
@@ -638,6 +638,8 @@
   }
 
   function clearPopoverMask(pop) {
+    pop.style.maskImage = '';
+    pop.style.webkitMaskImage = '';
     pop.style.opacity = '';
     pop._maskedStep = null;
   }
@@ -739,14 +741,26 @@
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
     // No auto-fade — stays until next step click or modal close
 
-    // Check if popover overlaps the target; if so, fade it transparent
+    // Check if popover overlaps the target; fade the top of the modal transparent
+    // so the target (behind the modal's top) becomes visible while the clicked
+    // step (lower in the modal) stays fully opaque.
     clearPopoverMask(pop);
     requestAnimationFrame(() => {
       const pR = pop.getBoundingClientRect();
       const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
                          pR.bottom < tR.top  || pR.top  > tR.bottom);
       if (overlaps) {
-        pop.style.opacity = '0.15';
+        // Distance from modal top to target bottom (the zone to make transparent)
+        const fadeBuffer = 28; // extra px of feather below target
+        const transparentEndPx = tR.bottom - pR.top;
+        const opaqueStartPx = transparentEndPx + fadeBuffer;
+        const h = pR.height || 1;
+        const pct1 = Math.min(100, (transparentEndPx / h * 100)).toFixed(1);
+        const pct2 = Math.min(100, (opaqueStartPx   / h * 100)).toFixed(1);
+        // transparent at top → opaque below the target
+        const mask = `linear-gradient(to bottom, transparent 0%, transparent ${pct1}%, black ${pct2}%)`;
+        pop.style.maskImage = mask;
+        pop.style.webkitMaskImage = mask;
         pop._maskedStep = n;
       }
     });
