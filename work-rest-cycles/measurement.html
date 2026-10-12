@@ -160,41 +160,35 @@
 </div><!-- /fixed-top -->
 
 <div id="launcher">
-  <div class="launcher-screen active" id="ls4" style="padding:16px 24px 24px;">
+  <div class="launcher-screen active" id="ls4">
 
-    <div class="launcher-step">
-      <div class="launcher-step-label">Choose a measurement method</div>
-    </div>
+    <div class="ls4-header">Choose a measurement method</div>
 
-    <div class="method-cards">
-      <button class="method-card" style="--card-accent:#001E62" onclick="openMeasModal('wbgt')">
+    <div class="method-cards method-cards-full">
+      <button class="method-card method-card-full" style="--card-accent:#001E62" onclick="openMeasModal('wbgt')">
         <span class="method-card-icon">🌡️</span>
         <h3>WBGT</h3>
         <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
         <span class="method-card-tag">Requires WBGT meter</span>
       </button>
-      <button class="method-card" style="--card-accent:#1a3a8f" onclick="openMeasModal('trh')">
+      <button class="method-card method-card-full" style="--card-accent:#1a3a8f" onclick="openMeasModal('trh')">
         <span class="method-card-icon">💧</span>
         <h3>Temperature + Humidity</h3>
         <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
         <span class="method-card-tag">Thermometer + hygrometer</span>
       </button>
-      <button class="method-card" style="--card-accent:#E05C2C" onclick="openMeasModal('hi')">
+      <button class="method-card method-card-full" style="--card-accent:#E05C2C" onclick="openMeasModal('hi')">
         <span class="method-card-icon">🔥</span>
         <h3>Heat Index</h3>
         <p>The "feels like" temperature combining heat and humidity. Useful when only a standard thermometer and hygrometer are available. No specialized instrument needed.</p>
         <span class="method-card-tag">No special instrument</span>
       </button>
-      <button class="method-card" style="--card-accent:#6B7280" onclick="openMeasModal('dbt')">
+      <button class="method-card method-card-full" style="--card-accent:#6B7280" onclick="openMeasModal('dbt')">
         <span class="method-card-icon">🌡</span>
         <h3>Thermometer Only</h3>
         <p>Record a dry-bulb air temperature reading without humidity. <strong>Important limitations apply</strong> — dry-bulb temperature alone does not capture heat stress.</p>
         <span class="method-card-tag">Thermometer only</span>
       </button>
-    </div>
-
-    <div class="launcher-secondary">
-      <a class="secondary-link" href="#" onclick="openMethodologyModal(); return false;">📚 Methodology</a>
     </div>
 
   </div><!-- /ls4 -->
@@ -343,7 +337,7 @@
     const fixedTop = document.getElementById('fixed-top');
     const ls4 = document.getElementById('ls4');
     const fixedH = fixedTop.offsetHeight;
-    ls4.style.paddingTop = (fixedH + 16) + 'px';
+    ls4.style.top = fixedH + 'px';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
