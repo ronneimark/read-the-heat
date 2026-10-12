@@ -23,10 +23,8 @@
   border-radius: 0;
   width: 50%;
   height: 100%;
-  border-top: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  border-left: 1px solid var(--border); /* matches the 1px gap divider */
+  border: none;
+  border-left: 1px solid var(--border); /* mid-card divider only; top/right/bottom are the quadrant border */
   box-shadow: none;
   padding: 8px 14px 12px;
   display: flex;
@@ -291,18 +289,16 @@
       if (el) { el.value = measDefaults[id] ?? '74'; el.classList.remove('error'); }
     });
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
-    // Position overlay spanning full width but clamped to the card's grid row
+    // Position overlay exactly within the clicked card's bounds
     const overlay = document.getElementById('meas-modal-overlay');
     if (triggerEl) {
       const r = triggerEl.getBoundingClientRect();
-      overlay.style.top    = r.top  + 'px';
-      overlay.style.left   = '0';
-      overlay.style.width  = '100%';
+      overlay.style.top    = r.top    + 'px';
+      overlay.style.left   = r.left   + 'px';
+      overlay.style.width  = r.width  + 'px';
       overlay.style.height = r.height + 'px';
-      overlay.style.borderRadius = '0';
     } else {
       overlay.style.top = overlay.style.left = overlay.style.width = overlay.style.height = '';
-      overlay.style.borderRadius = '';
     }
 
     overlay.classList.add('open');
