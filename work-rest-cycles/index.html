@@ -609,13 +609,19 @@
     let left, top;
     top = Math.max(8, pR.top);
 
-    if (pR.right + margin + panelW <= window.innerWidth) {
-      left = pR.right + margin;                         // right of popover
-    } else if (pR.left - margin - panelW >= 0) {
-      left = pR.left - margin - panelW;                 // left of popover
+    const roomRight = window.innerWidth - pR.right - margin;
+    const roomLeft  = pR.left - margin;
+
+    if (roomRight >= roomLeft) {
+      // More room on the right — align to right edge of modal, clamp if needed
+      left = pR.right + margin;
+      const clampedW = Math.min(panelW, window.innerWidth - left - 8);
+      panel.style.width = Math.max(120, clampedW) + 'px';
     } else {
-      left = Math.max(8, (window.innerWidth - panelW) / 2); // centred below
-      top  = pR.bottom + margin;
+      // More room on the left — align to left edge of modal, clamp if needed
+      const clampedW = Math.min(panelW, roomLeft);
+      panel.style.width = Math.max(120, clampedW) + 'px';
+      left = pR.left - margin - parseFloat(panel.style.width);
     }
 
     // Clamp vertically
@@ -624,7 +630,6 @@
 
     panel.style.left = left + 'px';
     panel.style.top  = top  + 'px';
-    panel.style.width = panelW + 'px';
 
     // Close on any click elsewhere
     setTimeout(() => {
