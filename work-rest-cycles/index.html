@@ -105,6 +105,7 @@
             </div>
 
           </div><!-- /tab-panels -->
+          <div class="intro-rolled-hint">▲ tap to expand</div>
         </div><!-- /intro-popover -->
       </div><!-- /intro-anchor -->
     </div><!-- /ls1-header -->
@@ -207,6 +208,31 @@
 .intro-popover.closing {
   animation: popoverOut .45s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
+.intro-popover.rolled {
+  max-height: 44px !important;
+  overflow: hidden !important;
+  transition: max-height .35s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.intro-popover:not(.rolled) {
+  transition: max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.intro-rolled-hint {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy, #1a2235);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.intro-popover.rolled .intro-rolled-hint { opacity: 1; }
 @keyframes popoverIn {
   from {
     opacity: 0;
@@ -523,6 +549,8 @@
 
   function animateClosePopover(pop, btn) {
     if (pop.hidden || pop.classList.contains('closing')) return;
+    pop.classList.remove('rolled');
+    pop._rolledStep = null;
     pop.classList.add('closing');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.getElementById('wrc-step-overlay')?.remove();
@@ -624,6 +652,16 @@
   }
 
   function highlightStep(e, n) {
+    const pop = document.getElementById('intro-popover');
+
+    // If same step clicked while rolled — unroll and return
+    if (pop._rolledStep === n && pop.classList.contains('rolled')) {
+      pop.classList.remove('rolled');
+      pop._rolledStep = null;
+      positionIntroPopover();
+      return;
+    }
+
     const NS = 'http://www.w3.org/2000/svg';
 
     // Target: each step maps to the corresponding breadcrumb pill
@@ -705,7 +743,31 @@
     // Draw circle fast after arrow
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
     // No auto-fade — stays until next step click or modal close
+
+    // Check if popover overlaps the target; if so, roll it down
+    pop.classList.remove('rolled');
+    pop._rolledStep = null;
+    requestAnimationFrame(() => {
+      const pR = pop.getBoundingClientRect();
+      const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
+                         pR.bottom < tR.top  || pR.top  > tR.bottom);
+      if (overlaps) {
+        pop.classList.add('rolled');
+        pop._rolledStep = n;
+      }
+    });
   }
+
+  // Clicking the rolled popover itself expands it back
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('intro-popover').addEventListener('click', function(e) {
+      if (this.classList.contains('rolled')) {
+        this.classList.remove('rolled');
+        this._rolledStep = null;
+        positionIntroPopover();
+      }
+    });
+  });
 
   function ls1SelectSector(key) {
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
