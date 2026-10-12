@@ -424,6 +424,19 @@ function buildBreadcrumbs() {
     container.appendChild(resetBtn);
   }
 
+  // "Work-Rest Cycle →" button — shown when instrument is selected (value not required)
+  if (instrument && instrumentLabels[instrument]) {
+    const destMap = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
+    const dest = destMap[instrument] || 'wbgt.html';
+    const goBtn = document.createElement('a');
+    goBtn.className = 'wrc-crumb-go';
+    goBtn.href = dest;
+    goBtn.title = 'View your Work-Rest Cycle';
+    goBtn.setAttribute('aria-label', 'View Work-Rest Cycle');
+    goBtn.innerHTML = 'Work-Rest Cycle &#8594;';
+    container.appendChild(goBtn);
+  }
+
   // Mobile step indicator — shown in place of breadcrumbs on narrow screens
   let stepEl = document.getElementById('mobile-step-indicator');
   if (!stepEl) {
