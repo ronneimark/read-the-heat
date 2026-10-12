@@ -23,8 +23,12 @@
   border-radius: 0;
   width: 50%;             /* right half of the card's quadrant */
   height: 100%;
-  box-shadow: -6px 0 32px rgba(0,0,0,0.22);
-  padding: 18px 20px 16px;
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-left: none;
+  box-shadow: none;
+  padding: 10px 16px 14px;
   display: flex;
   flex-direction: column;
   overflow: hidden;       /* no scroll — content must fit */
@@ -121,16 +125,6 @@
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
-.meas-skip-link {
-  display: block;
-  text-align: center;
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--subtext);
-  text-decoration: none;
-  flex-shrink: 0;
-}
-.meas-skip-link:hover { color: var(--navy); text-decoration: underline; }
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -195,7 +189,7 @@
 <!-- ── Measurement input modal ── -->
 <div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
   <div id="meas-modal">
-    <div class="modal-sticky-header" style="margin:-18px -20px 14px;">
+    <div class="modal-sticky-header" style="margin:-10px -16px 12px;">
       <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
@@ -244,7 +238,6 @@
     </div>
 
     <button class="meas-submit-btn" onclick="submitMeasModal()">Find My Work-Rest Cycle →</button>
-    <a href="#" class="meas-skip-link" id="meas-skip-link">Skip — I don't have a reading yet</a>
   </div>
 </div>
 
@@ -275,11 +268,6 @@
       if (el) { el.value = ''; el.classList.remove('error'); }
     });
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
-    document.getElementById('meas-skip-link').onclick = e => {
-      e.preventDefault();
-      closeMeasModal();
-      window.location.href = measDestUrls[instrument];
-    };
     document.getElementById('meas-dbt-warning').hidden = (instrument !== 'dbt');
 
     // Position overlay within the clicked card's quadrant
