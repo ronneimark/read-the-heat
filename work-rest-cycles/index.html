@@ -12,7 +12,10 @@
 <div id="fixed-top">
   <div class="hazard-bar"></div>
   <header>
-    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="home-btn-stack">
+      <button class="intro-open-btn" onclick="openIntroModal()" title="How to use this tool" aria-label="How to use this tool">ℹ How to use</button>
+      <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    </div>
     <div class="header-inner">
       <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
       <div class="header-attribution">
@@ -29,6 +32,38 @@
     </div>
   </div>
 </div><!-- /fixed-top -->
+
+<!-- Intro modal -->
+<div class="intro-modal-backdrop" id="intro-modal-backdrop" onclick="closeIntroModal()" role="dialog" aria-modal="true" aria-labelledby="intro-modal-title" hidden>
+  <div class="intro-modal" onclick="event.stopPropagation()">
+    <div class="intro-modal-header">
+      <h2 class="intro-modal-title" id="intro-modal-title">ℹ How to use this tool</h2>
+      <button class="intro-modal-close" onclick="closeIntroModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="intro-modal-body">
+      <p class="intro-lead">This tool calculates <strong>NIOSH-recommended work-rest cycles</strong> for indoor workers exposed to heat — in about 30 seconds.</p>
+      <p class="intro-lead">Understanding heat risk means understanding conditions. This tool guides you through how <strong>work intensity interacts with environmental heat</strong> to determine safe exposure limits — and the more accurately those conditions are measured, the more protective the result.</p>
+      <ol class="intro-steps">
+        <li><strong>Pick your industry</strong> — choose the sector that best matches your workplace.</li>
+        <li><strong>Describe the work</strong> — select the physical activity level (light, moderate, or heavy).</li>
+        <li><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits.</li>
+        <li><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure.</li>
+      </ol>
+      <p class="intro-uses-label">A note on instruments:</p>
+      <ul class="intro-uses">
+        <li>🌡️ <strong>WBGT meters</strong> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
+        <li>💧 <strong>Heat index meters</strong> (temperature + humidity) are a solid second choice.</li>
+        <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Any organization relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it. <strong class="rights-statement">Workers and their representatives have every right to transparent access to those measurements.</strong></li>
+      </ul>
+      <p class="intro-uses-label">How people use it:</p>
+      <ul class="intro-uses">
+        <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
+        <li>🦺 <strong>Safety reps &amp; union stewards</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
+        <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <div id="launcher">
   <div class="launcher-screen active" id="ls1">
@@ -53,77 +88,102 @@
       <button class="ls1-sector-btn" data-sector="childcare" onclick="ls1SelectSector('childcare')"><img class="ls1-photo" src="images/industries/childcare.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Childcare</span></button>
     </div>
 
-    <div class="ls1-footer">
-      <div class="intro-panel" id="intro-panel">
-        <button class="intro-toggle" id="intro-toggle" onclick="toggleIntro()" aria-expanded="true" aria-controls="intro-body">
-          <span class="intro-toggle-label">ℹ How to use this tool</span>
-          <span class="intro-toggle-chevron" aria-hidden="true">▲</span>
-        </button>
-        <div class="intro-body" id="intro-body">
-          <p class="intro-lead">This tool calculates <strong>NIOSH-recommended work-rest cycles</strong> for indoor workers exposed to heat — in about 30 seconds.</p>
-          <p class="intro-lead">Understanding heat risk means understanding conditions. This tool guides you through how <strong>work intensity interacts with environmental heat</strong> to determine safe exposure limits — and the more accurately those conditions are measured, the more protective the result.</p>
-          <ol class="intro-steps">
-            <li><strong>Pick your industry</strong> — choose the sector that best matches your workplace above.</li>
-            <li><strong>Describe the work</strong> — select the physical activity level (light, moderate, or heavy).</li>
-            <li><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits.</li>
-            <li><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure.</li>
-          </ol>
-          <p class="intro-uses-label">A note on instruments:</p>
-          <ul class="intro-uses">
-            <li>🌡️ <strong>WBGT meters</strong> are the gold standard — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
-            <li>💧 <strong>Heat index meters</strong> (temperature + humidity) are a solid second choice.</li>
-            <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Any organization relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it. <strong style="color:#c0392b">Workers and their representatives have every right to transparent access to those measurements.</strong></li>
-          </ul>
-          <p class="intro-uses-label">How people use it:</p>
-          <ul class="intro-uses">
-            <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
-            <li>🦺 <strong>Safety reps &amp; union stewards</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
-            <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <div class="ls1-footer"></div>
   </div><!-- /ls1 -->
 </div><!-- /launcher -->
 
 <style>
-.intro-panel {
-  background: var(--card-bg, #f8f9fa);
-  border: 1px solid var(--border, #dee2e6);
-  border-radius: 10px;
-  margin: 12px 0 8px;
+/* ── "How to use" button stacked above the heart icon ── */
+.home-btn-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.intro-open-btn {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  /* blue 3-D effect */
+  background: linear-gradient(180deg, #4da6ff 0%, #1a7fd4 100%);
+  color: #fff;
+  box-shadow: 0 3px 0 #0d5fa0, 0 4px 6px rgba(0,0,0,.25);
+  transition: transform .1s, box-shadow .1s;
+}
+.intro-open-btn:hover { filter: brightness(1.08); }
+.intro-open-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #0d5fa0, 0 2px 3px rgba(0,0,0,.2);
+}
+
+/* ── Modal backdrop & dialog ── */
+.intro-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.intro-modal-backdrop[hidden] { display: none; }
+.intro-modal {
+  background: var(--modal-bg, #fff);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,.35);
   overflow: hidden;
-  font-size: .92rem;
 }
 @media (prefers-color-scheme: dark) {
-  .intro-panel { background: #1e2330; border-color: #334; }
+  .intro-modal { background: #1e2330; color: #e8eaf0; }
 }
-.intro-toggle {
-  width: 100%;
+.intro-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 10px 14px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border, #dee2e6);
+  flex-shrink: 0;
+}
+.intro-modal-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.intro-modal-close {
   background: none;
   border: none;
+  font-size: 1.1rem;
   cursor: pointer;
-  font-size: .92rem;
-  font-weight: 600;
   color: inherit;
-  text-align: left;
+  padding: 4px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  opacity: .7;
 }
-.intro-toggle:hover { opacity: .8; }
-.intro-toggle-chevron { transition: transform .2s; display: inline-block; font-size: .75rem; }
-.intro-toggle[aria-expanded="false"] .intro-toggle-chevron { transform: rotate(180deg); }
-.intro-body {
-  padding: 0 16px 14px;
-  display: block;
+.intro-modal-close:hover { opacity: 1; }
+.intro-modal-body {
+  padding: 16px 18px 20px;
+  overflow-y: auto;
+  font-size: .92rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
-.intro-body.collapsed { display: none; }
 .intro-lead { margin: 0 0 10px; }
 .intro-steps {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   padding-left: 1.4em;
   display: flex;
   flex-direction: column;
@@ -131,25 +191,30 @@
 }
 .intro-uses-label { margin: 0 0 6px; font-weight: 600; }
 .intro-uses {
-  margin: 0;
+  margin: 0 0 12px;
   padding-left: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
+.intro-uses:last-child { margin-bottom: 0; }
+.rights-statement { color: #c0392b; }
 </style>
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
-  function toggleIntro() {
-    const btn = document.getElementById('intro-toggle');
-    const body = document.getElementById('intro-body');
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', !expanded);
-    body.classList.toggle('collapsed', expanded);
-    try { localStorage.setItem('wrc-intro-open', !expanded); } catch(e) {}
+  function openIntroModal() {
+    document.getElementById('intro-modal-backdrop').hidden = false;
+    document.body.style.overflow = 'hidden';
   }
+  function closeIntroModal() {
+    document.getElementById('intro-modal-backdrop').hidden = true;
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeIntroModal();
+  });
 
   function ls1SelectSector(key) {
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
@@ -173,16 +238,6 @@
       document.querySelectorAll('.ls1-sector-btn').forEach(b =>
         b.classList.toggle('selected', b.dataset.sector === prev));
     }
-    // Restore intro panel open/closed state
-    try {
-      const saved = localStorage.getItem('wrc-intro-open');
-      if (saved === 'false') {
-        const btn = document.getElementById('intro-toggle');
-        const body = document.getElementById('intro-body');
-        btn.setAttribute('aria-expanded', 'false');
-        body.classList.add('collapsed');
-      }
-    } catch(e) {}
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
