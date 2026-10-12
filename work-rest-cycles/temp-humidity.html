@@ -2,18 +2,439 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Temperature + Humidity — Work-Rest Cycles</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Temperature + Humidity Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
 <style>
 body { overflow: auto; }
-/* Compact desktop header — matches map.php banner height */
+main { padding: 0; max-width: none; }
 @media (min-width: 601px) {
   header { height: 76px; overflow: hidden; }
   .header-attribution { display: none; }
   .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
   .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
 }
+
+/* ── T+RH input strip ── */
+#trh-inputs-strip {
+  background: #EBF0F5;
+  border-bottom: 4px solid var(--navy, #1A2A3A);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.trh-inputs-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.trh-field { display: flex; flex-direction: column; gap: 2px; }
+.trh-field label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-field input[type=number] {
+  width: 86px;
+  padding: 5px 8px;
+  border: 1px solid #AAB8C4;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  background: #fff;
+  color: var(--navy, #1A2A3A);
+  -moz-appearance: textfield;
+}
+.trh-field input[type=number]::-webkit-outer-spin-button,
+.trh-field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.trh-field input[type=number]:focus { outline: 2px solid #005FCC; outline-offset: 1px; }
+.trh-arrow { font-size: 20px; color: var(--subtext, #484F58); line-height: 1; padding-bottom: 4px; }
+.trh-hi-result { display: flex; flex-direction: column; gap: 2px; }
+.trh-hi-result-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-hi-result-value { font-size: 20px; font-weight: 900; color: var(--navy, #1A2A3A); min-width: 72px; }
+
+/* Result tab — derivation sentence */
+.result-derivation {
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 8px;
+  opacity: 0.88;
+  line-height: 1.4;
+}
+
+/* Formula check tab */
+.formula-check-pane { padding: 24px 20px 40px; max-width: 900px; margin: 0 auto; }
+.formula-check-pane h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--navy, #1A2A3A);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border, #D0D8E0);
+}
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 16px;
+}
+.formula-table th { text-align: left; padding: 6px 10px; background: var(--surface, #F0F4F8); font-weight: 700; border: 1px solid var(--border, #D0D8E0); }
+.formula-table td { padding: 6px 10px; border: 1px solid var(--border, #D0D8E0); }
+.formula-table .formula-total td { font-weight: 800; background: var(--surface, #F0F4F8); }
+.formula-code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--surface, #F0F4F8);
+  border: 1px solid var(--border, #D0D8E0);
+  border-radius: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.formula-temp-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  background: #FFF8E1;
+  border: 1px solid #E6B800;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #78350F;
+  margin-left: 6px;
+}
+
+/* Page-level formula footnote */
+.hi-formula-footnote {
+  border-top: 1px solid var(--border, #D0D8E0);
+  padding: 12px 20px 24px;
+  max-width: 900px;
+  margin: 20px auto 0;
+  font-size: 11px;
+  color: var(--subtext, #484F58);
+  line-height: 1.65;
+}
+.hi-formula-footnote strong { color: var(--navy, #1A2A3A); }
+
+/* ── Tab bar ── */
+.acclim-tab-bar {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  background: #D6DFE9;
+  padding: 8px 8px 0;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.acclim-tab-btn {
+  padding: 14px 20px 12px;
+  min-width: 130px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: inherit;
+}
+.acclim-tab-btn-title { font-size: 14px; font-weight: 800; line-height: 1.2; }
+.acclim-tab-btn-sub   { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; }
+.acclim-tab-btn.active { background: var(--navy, #1A2A3A); color: #fff; }
+.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
+.acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
+.acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
+
+/* ── Result tab — 2-column layout ── */
+#trh-tab-result-wrap,
+#trh-utab-result-wrap {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 16px;
+  min-height: 0;
+}
+#trh-tab-result,
+#trh-utab-result {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: 1fr;
+  gap: 14px;
+  min-height: 0;
+}
+
+/* Left column */
+.result-main {
+  border-radius: 14px;
+  padding: 28px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  text-align: left;
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 0;
+}
+.result-main-inner { display: flex; align-items: center; gap: 28px; }
+.result-clock  { flex-shrink: 0; }
+.result-text   { flex: 1; min-width: 0; }
+.result-label  {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.result-headline {
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+.result-subtext { font-size: 14px; line-height: 1.5; }
+.result-source  { margin-top: 14px; font-size: 10px; font-style: italic; }
+.result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
+
+/* Right column: sidebar */
+.result-sidebar {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+.result-input-card {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: left;
+  flex-shrink: 0;
+}
+.result-input-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--subtext, #484F58);
+  margin-bottom: 3px;
+}
+.result-input-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy, #1A2A3A);
+  line-height: 1.1;
+}
+.result-input-sub {
+  font-size: 11px;
+  color: var(--subtext, #484F58);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+/* Radiant heat note */
+.radiant-warn-strip {
+  padding: 10px 12px;
+  background: #FFF8E1;
+  border-left: 4px solid #F59E0B;
+  border-radius: 0 8px 8px 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #78350F;
+  flex-shrink: 0;
+}
+.radiant-warn-strip strong { display: block; margin-bottom: 2px; }
+
+/* Monitoring guidance in sidebar */
+.result-monitoring {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+.result-monitoring-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--navy, #1A2A3A);
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Responsive: stack to single column */
+@media (max-width: 680px) {
+  #trh-tab-result,
+  #trh-utab-result {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: auto;
+  }
+  .result-main    { grid-column: 1; grid-row: 1; padding: 20px 16px; }
+  .result-sidebar { grid-column: 1; grid-row: 2; overflow-y: visible; }
+  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
+}
+
+/* ── Chart tabs ── */
+#trh-tab-chart,
+#trh-utab-chart {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+}
+body.trh-chart-active,
+body.trh-unacclim-chart-active { overflow: hidden; }
+
+/* Unit toggle strip inside chart pane */
+.chart-unit-strip {
+  background: var(--surface, #F0F4F8);
+  border-bottom: 1px solid var(--border, #D0D8E0);
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.chart-unit-strip .toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--subtext, #484F58);
+}
+
+.acclim-chart-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 22% repeat(4, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  min-height: 0;
+}
+.acc-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 6px;
+  line-height: 1.15;
+  box-sizing: border-box;
+}
+.acc-cell:nth-child(5n) { border-right: none; }
+.acc-cell.acc-last-row  { border-bottom: none; }
+.acc-hdr {
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--surface, #F0F4F8);
+  color: var(--navy, #1A2A3A);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
+.acc-range {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy, #1A2A3A);
+  justify-content: flex-start;
+  padding-left: 12px;
+  background: var(--surface, #F8FAFB);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.acclim-chart-grid .c-safe,
+.acclim-chart-grid .c-low,
+.acclim-chart-grid .c-caution,
+.acclim-chart-grid .c-warn,
+.acclim-chart-grid .c-high,
+.acclim-chart-grid .c-stop {
+  font-size: clamp(13px, 2.5vh, 32px);
+  font-weight: 900;
+}
+.acc-user-col.acc-hdr { background: var(--navy, #1A2A3A); color: #fff; }
+.acc-range.acc-user-row { background: #E3EDF7; font-weight: 800; border-left: 4px solid var(--navy, #1A2A3A); }
+.acc-user-cell {
+  outline: 7px solid var(--navy, #1A2A3A);
+  outline-offset: -7px;
+  position: relative;
+  z-index: 1;
+  font-size: clamp(16px, 3.5vh, 44px) !important;
+}
+
+/* ── Notes tabs ── */
+#trh-tab-notes,
+#trh-utab-notes {
+  padding: 24px 20px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hi-notes-section { margin-bottom: 24px; }
+.hi-notes-section h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--navy, #1A2A3A);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border, #D0D8E0);
+}
+.hi-notes-block {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border, #D0D8E0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+.hi-notes-range { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--navy, #1A2A3A); margin-bottom: 4px; }
+.hi-notes-text  { font-size: 13px; line-height: 1.55; }
+
+/* ── Reference table tab ── */
+#trh-tab-reftable,
+#trh-utab-reftable {
+  padding: 16px 16px 40px;
+  overflow-x: auto;
+}
+.reftable-activity-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border, #D0D8E0);
+}
+.reftable-activity-strip .toggle-label { font-size: 12px; font-weight: 600; color: var(--subtext, #484F58); }
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -35,183 +456,154 @@ body { overflow: auto; }
     <div class="wrc-banner-strip-inner">
       <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
       <button class="strip-btn" onclick="openMethodologyModal()">📚 Methodology</button>
-      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+
+  <!-- Acclimatized tab bar -->
+  <div id="trh-acclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="trh-acclim-tab-bar" role="tablist" aria-label="Temperature and humidity acclimatized worker views">
+      <button class="acclim-tab-btn active" id="trh-tab-btn-result" role="tab"
+              aria-selected="true" aria-controls="trh-tab-result-wrap" tabindex="0"
+              onclick="switchTrhTab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
+        <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-tab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="trh-tab-chart" tabindex="-1"
+              onclick="switchTrhTab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-tab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="trh-tab-notes" tabindex="-1"
+              onclick="switchTrhTab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Hydration &amp; limitations</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-tab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="trh-tab-formula" tabindex="-1"
+              onclick="switchTrhTab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Step-by-step HI calculation</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-tab-btn-reftable" role="tab"
+              aria-selected="false" aria-controls="trh-tab-reftable" tabindex="-1"
+              onclick="switchTrhTab('reftable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>Reference Table</span>
+        <span class="acclim-tab-btn-sub">Full T+RH lookup grid</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Unacclimatized tab bar -->
+  <div id="trh-unacclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="trh-unacclim-tab-bar" role="tablist" aria-label="Temperature and humidity unacclimatized worker views">
+      <button class="acclim-tab-btn active" id="trh-utab-btn-result" role="tab"
+              aria-selected="true" aria-controls="trh-utab-result-wrap" tabindex="0"
+              onclick="switchTrhUnacclimTab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
+        <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-utab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="trh-utab-chart" tabindex="-1"
+              onclick="switchTrhUnacclimTab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-utab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="trh-utab-notes" tabindex="-1"
+              onclick="switchTrhUnacclimTab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Guidance &amp; limitations</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-utab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="trh-utab-formula" tabindex="-1"
+              onclick="switchTrhUnacclimTab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Step-by-step HI calculation</span>
+      </button>
+      <button class="acclim-tab-btn" id="trh-utab-btn-reftable" role="tab"
+              aria-selected="false" aria-controls="trh-utab-reftable" tabindex="-1"
+              onclick="switchTrhUnacclimTab('reftable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>Reference Table</span>
+        <span class="acclim-tab-btn-sub">Full T+RH lookup grid</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- T+RH input strip (always visible) -->
+  <div id="trh-inputs-strip">
+    <div class="trh-inputs-row" aria-live="polite">
+      <div class="trh-field">
+        <label for="trh-temp">Temperature (<span id="trh-unit-label">°F</span>)</label>
+        <input type="number" id="trh-temp" min="-50" max="200" step="0.1"
+               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
+      </div>
+      <div class="trh-field">
+        <label for="trh-rh">Relative Humidity (%)</label>
+        <input type="number" id="trh-rh" min="0" max="100" step="1"
+               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
+      </div>
+      <div class="trh-arrow" aria-hidden="true">→</div>
+      <div class="trh-hi-result">
+        <div class="trh-hi-result-label">Calculated Heat Index</div>
+        <div class="trh-hi-result-value" id="trh-calc-display" aria-live="polite">—</div>
+      </div>
     </div>
   </div>
 </div><!-- /fixed-top -->
 
 <main>
 
-  <h2>Temperature + Relative Humidity → Work-Rest Recommendation</h2>
-  <p class="desc">Find dry-bulb temperature in the left column and relative humidity across the top. Each cell shows the approximate Heat Index and the recommended work-rest cycle for the selected worker status and activity level. Heat index is derived from air temperature and RH; WBGT is a more complete measure for high-radiant environments. Indoor, no solar load. Standard work clothing assumed. <em>Note: NIOSH Recommended Alert Limits (RAL, for unacclimatized workers) and Recommended Exposure Limits (REL, for acclimatized workers) are expressed in WBGT units, not Heat Index. Unacclimatized thresholds in this tab are methodology-derived approximations — no NIOSH-published equivalent exists in HI units.</em></p>
-
-  <div class="toggle-row">
-    <span class="toggle-label">Activity Level:</span>
-    <div class="toggle">
-      <button class="act-btn" data-level="light"    onclick="setActivity('light')">🟢 Light</button>
-      <button class="act-btn active" data-level="moderate" onclick="setActivity('moderate')">🟡 Moderate</button>
-      <button class="act-btn" data-level="heavy"    onclick="setActivity('heavy')">🔴 Heavy</button>
-      <button class="act-btn" data-level="vh"       onclick="setActivity('vh')">⛔ Very Heavy</button>
+  <!-- ── Acclimatized tab panels ── -->
+  <div id="trh-acclim-tabs" style="display:none">
+    <div id="trh-tab-result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
+      <div id="trh-tab-result"></div>
     </div>
-  </div>
-
-  <div class="toggle-row">
-    <span class="toggle-label">Temperature Units:</span>
-    <div class="toggle">
-      <button class="active" id="btn-trh-f" onclick="setTrhUnit('F')">°F</button>
-      <button id="btn-trh-c" onclick="setTrhUnit('C')">°C</button>
+    <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0">
+      <div class="chart-unit-strip">
+        <span class="toggle-label">Temperature Units:</span>
+        <div class="toggle" role="group" aria-label="Temperature unit">
+          <button class="active" id="btn-trh-f" aria-pressed="true" onclick="setTrhUnit('F')">°F</button>
+          <button id="btn-trh-c" aria-pressed="false" onclick="setTrhUnit('C')">°C</button>
+        </div>
+      </div>
     </div>
+    <div id="trh-tab-notes" role="tabpanel" aria-labelledby="trh-tab-btn-notes" tabindex="0"></div>
+    <div id="trh-tab-formula" role="tabpanel" aria-labelledby="trh-tab-btn-formula" tabindex="0"></div>
+    <div id="trh-tab-reftable" role="tabpanel" aria-labelledby="trh-tab-btn-reftable" tabindex="0"></div>
   </div>
 
-  <div id="trh-unacclim-warning" style="display:none" class="note-box" style="border-left-color:#AE1515; background:#FFF0F0; color:#6D0000;">
-    <strong>⚠ Note:</strong> The unacclimatized work-rest cycles shown here do not capture the full acclimatization process recommended by NIOSH and OSHA. For more detailed guidance on acclimatization protocols, employers should follow the recommendations in the NIOSH Criteria Document.<br><br>
-    <em>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services. https://www.cdc.gov/niosh/docs/2016-106/</em>
+  <!-- ── Unacclimatized tab panels ── -->
+  <div id="trh-unacclim-tabs" style="display:none">
+    <div id="trh-utab-result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
+      <div id="trh-utab-result"></div>
+    </div>
+    <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0">
+      <div class="chart-unit-strip">
+        <span class="toggle-label">Temperature Units:</span>
+        <div class="toggle" role="group" aria-label="Temperature unit">
+          <button class="active" id="btn-trh-f2" aria-pressed="true" onclick="setTrhUnit('F')">°F</button>
+          <button id="btn-trh-c2" aria-pressed="false" onclick="setTrhUnit('C')">°C</button>
+        </div>
+      </div>
+    </div>
+    <div id="trh-utab-notes" role="tabpanel" aria-labelledby="trh-utab-btn-notes" tabindex="0"></div>
+    <div id="trh-utab-formula" role="tabpanel" aria-labelledby="trh-utab-btn-formula" tabindex="0"></div>
+    <div id="trh-utab-reftable" role="tabpanel" aria-labelledby="trh-utab-btn-reftable" tabindex="0"></div>
   </div>
 
-  <div class="table-wrap">
-    <table id="rh-table">
-      <thead>
-        <tr>
-          <th class="left" style="width:110px" id="trh-header">Temp (°F)</th>
-          <th>RH 10%</th>
-          <th>RH 20%</th>
-          <th>RH 30%</th>
-          <th>RH 40%</th>
-          <th>RH 50%</th>
-          <th>RH 60%</th>
-          <th>RH 70%</th>
-          <th>RH 80%</th>
-          <th>RH 90%</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 70°F / 21°C -->
-        <tr>
-          <td class="label" id="trh-r1">70°F / 21°C</td>
-          <td class="c-na hi-cell" data-hi="65">65<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="66">66<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="67">67<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="68">68<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="69">69<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="70">70<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="70">70<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
-        </tr>
-        <!-- 75°F / 24°C -->
-        <tr>
-          <td class="label" id="trh-r2">75°F / 24°C</td>
-          <td class="c-na hi-cell" data-hi="69">69<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="71">71<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="72">72<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="73">73<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="74">74<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="75">75<br><small>—</small></td>
-          <td class="c-na hi-cell" data-hi="76">76<br><small>—</small></td>
-          <td class="c-low hi-cell" data-hi="77">77<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="78">78<br><small>CONT*</small></td>
-        </tr>
-        <!-- 80°F / 27°C -->
-        <tr>
-          <td class="label" id="trh-r3">80°F / 27°C</td>
-          <td class="c-na hi-cell"  data-hi="75">75<br><small>—</small></td>
-          <td class="c-na hi-cell"  data-hi="77">77<br><small>—</small></td>
-          <td class="c-low hi-cell" data-hi="78">78<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="79">79<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="81">81<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="82">82<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="83">83<br><small>CONT*</small></td>
-          <td class="c-low hi-cell" data-hi="85">85<br><small>CONT*</small></td>
-          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
-        </tr>
-        <!-- 85°F / 29°C -->
-        <tr>
-          <td class="label" id="trh-r4">85°F / 29°C</td>
-          <td class="c-low hi-cell"    data-hi="79">79<br><small>CONT*</small></td>
-          <td class="c-low hi-cell"    data-hi="82">82<br><small>CONT*</small></td>
-          <td class="c-low hi-cell"    data-hi="84">84<br><small>CONT*</small></td>
-          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="88">88<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="90">90<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="93">93<br><small>45 / 15</small></td>
-          <td class="c-warn hi-cell"    data-hi="97">97<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="102">102<br><small>30 / 30</small></td>
-        </tr>
-        <!-- 90°F / 32°C -->
-        <tr>
-          <td class="label" id="trh-r5">90°F / 32°C</td>
-          <td class="c-low hi-cell"     data-hi="83">83<br><small>CONT*</small></td>
-          <td class="c-caution hi-cell" data-hi="86">86<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="88">88<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
-          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="100">100<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="106">106<br><small>30 / 30</small></td>
-          <td class="c-high hi-cell"    data-hi="113">113<br><small>15 / 45</small></td>
-          <td class="c-high hi-cell"    data-hi="122">122<br><small>15 / 45</small></td>
-        </tr>
-        <!-- 95°F / 35°C -->
-        <tr>
-          <td class="label" id="trh-r6">95°F / 35°C</td>
-          <td class="c-caution hi-cell" data-hi="87">87<br><small>45 / 15</small></td>
-          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
-          <td class="c-warn hi-cell"    data-hi="96">96<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="101">101<br><small>30 / 30</small></td>
-          <td class="c-high hi-cell"    data-hi="107">107<br><small>15 / 45</small></td>
-          <td class="c-high hi-cell"    data-hi="114">114<br><small>15 / 45</small></td>
-          <td class="c-stop hi-cell"    data-hi="124">124<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="136">136<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-        </tr>
-        <!-- 100°F / 38°C -->
-        <tr>
-          <td class="label" id="trh-r7">100°F / 38°C</td>
-          <td class="c-caution hi-cell" data-hi="91">91<br><small>45 / 15</small></td>
-          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="100">100<br><small>30 / 30</small></td>
-          <td class="c-high hi-cell"    data-hi="109">109<br><small>15 / 45</small></td>
-          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="129">129<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-        </tr>
-        <!-- 105°F / 41°C -->
-        <tr>
-          <td class="label" id="trh-r8">105°F / 41°C</td>
-          <td class="c-warn hi-cell"    data-hi="95">95<br><small>30 / 30</small></td>
-          <td class="c-warn hi-cell"    data-hi="101">101<br><small>30 / 30</small></td>
-          <td class="c-high hi-cell"    data-hi="109">109<br><small>15 / 45</small></td>
-          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="130">130<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-        </tr>
-        <!-- 110°F / 43°C -->
-        <tr>
-          <td class="label" id="trh-r9">110°F / 43°C</td>
-          <td class="c-warn hi-cell"    data-hi="99">99<br><small>30 / 30</small></td>
-          <td class="c-high hi-cell"    data-hi="107">107<br><small>15 / 45</small></td>
-          <td class="c-stop hi-cell"    data-hi="118">118<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="130">130<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-          <td class="c-stop hi-cell"    data-hi="999">—<br><small>DANGER!</small></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="note-box">
-    <strong>How to use:</strong> Set worker status at the top of the page, select the activity level, then find the row for current air temperature and column for relative humidity. Colors and cycles update automatically. <em>CONT*</em> = continuous work is acceptable but active monitoring, buddy system, and ready access to water are required.
-  </div>
-
-  <div class="note-box warn-note">
-    <strong>Limitations:</strong> Heat Index uses air temperature and relative humidity only — it does not account for air movement, radiant heat from hot equipment or surfaces, clothing, or metabolic rate. In high-radiant environments (kitchens, laundries, foundries, bakeries), measure WBGT directly. Heat index values shown are approximate; verify with NOAA tables or the Rothfusz regression equation.
+  <!-- Page-level formula footnote -->
+  <div class="hi-formula-footnote" id="trh-formula-footnote">
+    <strong>† Heat Index from Temperature + RH — Rothfusz Regression (NOAA, 1990):</strong>
+    HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
+    (where <em>T</em> = air temperature in °F, <em>RH</em> = relative humidity in %).
+    Adjustments: when RH &lt; 13% and 80°F &lt; T &lt; 112°F, subtract (13−RH)/4 × √((17−|T−95|)/17);
+    when RH &gt; 85% and 80°F &lt; T &lt; 87°F, add ((RH−85)/10) × ((87−T)/5).
+    When T &lt; 80°F or the simple estimate &lt; 80°F, the Steadman (1979) approximation applies:
+    HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
+    Source: Rothfusz, L.P. (1990). <em>The heat index equation</em>. NWS Technical Attachment SR 90-23.
+    Steadman, R.G. (1979). <em>The assessment of sultriness. Part I: A temperature-humidity index based on human physiology and clothing science.</em> Journal of Applied Meteorology, 18(7), 861–873.
   </div>
 
 </main>
@@ -219,34 +611,495 @@ body { overflow: auto; }
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
-  let workerStatus = 'acclimatized';
-  let trhUnit = 'F';
-  let currentLevel = 'moderate';
+  // ── Module state ──────────────────────────────────────────────────────────────
+  let workerStatus          = 'acclimatized';
+  let _hiCurrentTab         = 'result';
+  let _hiUnacclimCurrentTab = 'result';
+  let _hiUnit               = 'F';
+  let _hiRowIdx             = -1;
+  let _hiColIdx             = 1;
+  let _hiUnacclimRowIdx     = -1;
+  let _hiUnacclimColIdx     = 1;
+  let _hiStoredVal          = null;
+  let _hiStoredUnit         = 'F';
+  let _hiActivity           = 'moderate';
+  // T+RH is always the input mode on this page
+  let _hiTempValF           = null;   // stored always in °F
+  let _hiRhVal              = null;
+  let _hiCalcHI             = null;   // calculated HI in °F
 
-  const trhPageRows = [
-    { id:'trh-r1', f:'70.0°F',  c:'21.1°C' },
-    { id:'trh-r2', f:'75.0°F',  c:'23.9°C' },
-    { id:'trh-r3', f:'80.0°F',  c:'26.7°C' },
-    { id:'trh-r4', f:'85.0°F',  c:'29.4°C' },
-    { id:'trh-r5', f:'90.0°F',  c:'32.2°C' },
-    { id:'trh-r6', f:'95.0°F',  c:'35.0°C' },
-    { id:'trh-r7', f:'100.0°F', c:'37.8°C' },
-    { id:'trh-r8', f:'105.0°F', c:'40.6°C' },
-    { id:'trh-r9', f:'110.0°F', c:'43.3°C' }
+  // ── Acclimatized HI data ──────────────────────────────────────────────────────
+  const HI_BOUNDS_F = [80, 91, 103, 115, 130];
+  const HI_DATA = [
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null}, {w:null,r:null} ],
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null,star:true}, {w:45,r:15} ],
+    [ {w:null,r:null,star:true}, {w:45,r:15}, {w:30,r:30}, {w:15,r:45} ],
+    [ {w:45,r:15}, {w:30,r:30}, {w:15,r:45}, null ],
+    [ {w:30,r:30}, {w:15,r:45}, null, null ],
+    [ null, null, null, null ]
+  ];
+  const HI_ROW_LABELS_F = ['Below 80°F','80–90°F','91–103°F','103–115°F','115–130°F','Above 130°F'];
+  const HI_ROW_LABELS_C = ['Below 27°C','27–32°C','33–39°C','39–46°C','46–54°C','Above 54°C'];
+
+  // ── Unacclimatized HI data ────────────────────────────────────────────────────
+  const HI_UNACCLIM_BOUNDS_F = [72, 83, 95, 107, 122];
+  const HI_UNACCLIM_DATA = [
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null}, {w:null,r:null} ],
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null,star:true}, {w:45,r:15} ],
+    [ {w:null,r:null,star:true}, {w:45,r:15}, {w:30,r:30}, {w:15,r:45} ],
+    [ {w:45,r:15}, {w:30,r:30}, {w:15,r:45}, null ],
+    [ {w:30,r:30}, {w:15,r:45}, null, null ],
+    [ null, null, null, null ]
+  ];
+  const HI_UNACCLIM_ROW_LABELS_F = ['Below 72°F','72–82°F','83–95°F','95–107°F','107–122°F','Above 122°F'];
+  const HI_UNACCLIM_ROW_LABELS_C = ['Below 22°C','22–28°C','28–35°C','35–42°C','42–50°C','Above 50°C'];
+
+  // ── Monitoring notes ──────────────────────────────────────────────────────────
+  const HI_RANGE_NOTES = [
+    { range:'Below 80°F (Below 27°C)',  text:'Normal work practices; maintain standard hydration (8 oz water every 20 min). Train workers on heat illness signs.' },
+    { range:'80–90°F (27–32°C)',         text:'Implement basic precautions. Buddy system. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. *Monitor heavy workers closely.' },
+    { range:'91–103°F (33–39°C)',        text:'OSHA: Implement controls. Buddy system required. Enforce rest breaks in cool/shaded area. Hydration: 1 cup every 15–20 min. Watch new workers and unacclimatized workers especially.' },
+    { range:'103–115°F (39–46°C)',       text:'OSHA: Active monitoring; frequent vital sign checks. Cool-down periods in air-conditioned or ventilated rest areas. Hydration: 1 cup every 15 min. Consider limiting new workers to ≤20% of shift in heat.' },
+    { range:'115–130°F (46–54°C)',       text:'OSHA: Hazardous conditions. Engineering controls must be implemented or work suspended. Personal cooling (wet towels, cooling vests). Emergency response plan activated. Medical monitoring on-site.' },
+    { range:'Above 130°F (Above 54°C)', text:'Imminent danger. All work should cease until conditions are corrected. Evacuation if engineering controls cannot reduce heat to safe levels.' }
+  ];
+  const HI_UNACCLIM_RANGE_NOTES = [
+    { range:'Below 72°F (Below 22°C)',  text:'Normal work practices. Standard hydration, buddy system, and training on heat illness recognition. Unacclimatized workers require heightened supervisor attention.' },
+    { range:'72–82°F (22–28°C)',         text:'Implement precautions. Buddy system required. 1 cup (8 oz) water every 20 min. New workers: limit to lighter tasks initially. Monitor heavy workers closely.' },
+    { range:'83–95°F (28–35°C)',         text:'Active monitoring required. Enforce rest breaks in cool area. Hydration: 1 cup every 15–20 min. First week in heat: limit to 20% of shift exposure, increasing 20% per day.' },
+    { range:'95–107°F (35–42°C)',        text:'Hazardous for unacclimatized workers. Active monitoring; vital sign checks. Cool-down in air-conditioned rest areas. Consider removing unacclimatized workers from this environment.' },
+    { range:'107–122°F (42–50°C)',       text:'Unacclimatized workers should not be in this environment. Engineering controls must be implemented. Medical monitoring on-site. Emergency response plan activated.' },
+    { range:'Above 122°F (Above 50°C)', text:'Imminent danger for all workers. All work should cease until conditions are corrected.' }
   ];
 
-  function hiDisplay(hi_f) {
-    const wrap = (txt) => `<span style="font-size:10px">${txt}</span>`;
-    if (hi_f >= 999) return wrap('—');
-    if (trhUnit === 'C') {
-      const hi_c = Math.round((hi_f - 32) * 5 / 9 * 10) / 10;
-      return wrap(hi_c + '°C');
-    }
-    return wrap(hi_f + '°F');
+  // ── Shared helpers ────────────────────────────────────────────────────────────
+  const ACT_COL   = { light:0, moderate:1, heavy:2, vh:3 };
+  const ACT_LABEL = { light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy' };
+  const ACT_FULL  = { light:'Light Work', moderate:'Moderate Work', heavy:'Heavy Work', vh:'Very Heavy Work' };
+  const ACT_EMOJI = { light:'🟢', moderate:'🟡', heavy:'🟠', vh:'🔴' };
+
+  function getHIRow(val, unit) {
+    const f = unit === 'F' ? parseFloat(val) : parseFloat(val) * 9/5 + 32;
+    for (let i = 0; i < HI_BOUNDS_F.length; i++) if (f < HI_BOUNDS_F[i]) return i;
+    return 5;
+  }
+  function getHIUnacclimRow(val, unit) {
+    const f = unit === 'F' ? parseFloat(val) : parseFloat(val) * 9/5 + 32;
+    for (let i = 0; i < HI_UNACCLIM_BOUNDS_F.length; i++) if (f < HI_UNACCLIM_BOUNDS_F[i]) return i;
+    return 5;
+  }
+  function hiClass(cell) {
+    if (!cell)          return 'c-stop';
+    if (cell.w === null) return 'c-safe';
+    if (cell.w === 45)   return 'c-caution';
+    if (cell.w === 30)   return 'c-warn';
+    if (cell.w === 15)   return 'c-high';
+    return 'c-safe';
+  }
+  function hiLabel(cell) {
+    if (!cell)           return 'DANGER!';
+    if (cell.w === null) return cell.star ? 'Continuous*' : 'Continuous';
+    return cell.w + ' / ' + cell.r;
   }
 
-  function getTierForHI(hi) {
-    if (workerStatus === 'unacclimatized') {
+  // ── Rothfusz Heat Index regression (NOAA, 1990) ───────────────────────────────
+  function calcRothfuszHI(tempF, rh) {
+    const T = parseFloat(tempF), RH = Math.min(100, Math.max(0, parseFloat(rh)));
+    if (isNaN(T) || isNaN(RH)) return null;
+    const hiSimple = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    if (T < 80 || hiSimple < 80) return Math.round(hiSimple * 10) / 10;
+    let hi = -42.379
+      + 2.04901523  * T
+      + 10.14333127 * RH
+      - 0.22475541  * T  * RH
+      - 0.00683783  * T  * T
+      - 0.05481717  * RH * RH
+      + 0.00122874  * T  * T  * RH
+      + 0.00085282  * T  * RH * RH
+      - 0.00000199  * T  * T  * RH * RH;
+    if (RH < 13 && T >= 80 && T <= 112) {
+      hi -= (13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+    }
+    if (RH > 85 && T >= 80 && T <= 87) {
+      hi += ((RH - 85) / 10) * ((87 - T) / 5);
+    }
+    return Math.round(hi * 10) / 10;
+  }
+
+  // ── T+RH input handling ───────────────────────────────────────────────────────
+  function onTrhInput() {
+    const tempEl = document.getElementById('trh-temp');
+    const rhEl   = document.getElementById('trh-rh');
+    if (!tempEl || !rhEl) return;
+    const tempRaw = parseFloat(tempEl.value);
+    const rh      = parseFloat(rhEl.value);
+    const calcEl  = document.getElementById('trh-calc-display');
+    if (isNaN(tempRaw) || isNaN(rh)) {
+      _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      if (calcEl) calcEl.textContent = '—';
+      buildTrhResultTab();
+      buildTrhUnacclimResultTab();
+      buildTrhFormulaTab();
+      buildTrhUnacclimFormulaTab();
+      return;
+    }
+    const tempF = _hiUnit === 'C' ? Math.round((tempRaw * 9/5 + 32) * 10) / 10 : tempRaw;
+    _hiTempValF = tempF;
+    _hiRhVal    = rh;
+    _hiCalcHI   = calcRothfuszHI(tempF, rh);
+    if (calcEl) {
+      calcEl.textContent = _hiCalcHI != null
+        ? (_hiUnit === 'C'
+            ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+            : _hiCalcHI + '°F')
+        : '—';
+    }
+    if (_hiCalcHI != null) {
+      _hiStoredVal = _hiCalcHI; _hiStoredUnit = 'F';
+    }
+    buildTrhResultTab();
+    buildTrhUnacclimResultTab();
+    buildTrhFormulaTab();
+    buildTrhUnacclimFormulaTab();
+  }
+
+  // ── Formula Check tab builder ─────────────────────────────────────────────────
+  function _buildFormulaTab(paneId) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    const T = _hiTempValF, RH = _hiRhVal;
+    if (T == null || RH == null) {
+      pane.innerHTML = `<div class="formula-check-pane"><p style="margin-top:8px;font-size:14px;color:var(--subtext)">Enter a temperature and relative humidity above to see the step-by-step calculation.</p></div>`;
+      return;
+    }
+    const tDisplay = _hiUnit === 'C'
+      ? (Math.round((T - 32) * 5/9 * 10) / 10) + '°C'
+      : T + '°F';
+    const hiInUnit = _hiCalcHI != null
+      ? (_hiUnit === 'C' ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C' : _hiCalcHI + '°F')
+      : '—';
+    const hiSimpleVal = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    const usedSimple = T < 80 || hiSimpleVal < 80;
+    let html = `<div class="formula-check-pane">
+      <h3>Heat Index Calculation — Formula Check</h3>
+      <p style="margin:0 0 14px;font-size:13px;">
+        <strong>Inputs:</strong> Temperature = ${tDisplay}${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F used in formula</span>` : ''}, RH = ${RH}%<br>
+        <strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}<br>
+        <strong>Result:</strong> Heat Index = <strong>${hiInUnit}</strong>${_hiUnit === 'C' ? ` (${_hiCalcHI}°F internally)` : ''}
+      </p>`;
+    if (usedSimple) {
+      const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
+      html += `<h3>Steadman Simple Formula</h3>
+      <div class="formula-code">HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]
+   = 0.5 × [${T} + 61.0 + (${T} − 68.0) × 1.2 + ${RH} × 0.094]
+   = 0.5 × [${innerSum.toFixed(3)}]
+   = ${(innerSum / 2).toFixed(1)}°F</div>`;
+    } else {
+      const terms = [
+        ['Constant',               1,           -42.379,              -42.379],
+        ['2.04901523 × T',         T,           2.04901523,           2.04901523 * T],
+        ['10.14333127 × RH',       RH,          10.14333127,          10.14333127 * RH],
+        ['−0.22475541 × T × RH',  T*RH,        -0.22475541,          -0.22475541 * T * RH],
+        ['−0.00683783 × T²',      T*T,         -0.00683783,          -0.00683783 * T * T],
+        ['−0.05481717 × RH²',     RH*RH,       -0.05481717,          -0.05481717 * RH * RH],
+        ['0.00122874 × T² × RH',  T*T*RH,      0.00122874,           0.00122874 * T * T * RH],
+        ['0.00085282 × T × RH²',  T*RH*RH,     0.00085282,           0.00085282 * T * RH * RH],
+        ['−0.00000199 × T² × RH²',T*T*RH*RH,  -0.00000199,          -0.00000199 * T * T * RH * RH],
+      ];
+      const baseHI = terms.reduce((s, t) => s + t[3], 0);
+      const adj1Applied = RH < 13 && T >= 80 && T <= 112;
+      const adj2Applied = RH > 85 && T >= 80 && T <= 87;
+      html += `<h3>Rothfusz Regression Terms</h3>
+      <table class="formula-table">
+        <tr><th>Term</th><th>Value computed</th><th>Contribution</th></tr>`;
+      terms.forEach(t => {
+        const contrib = t[3];
+        html += `<tr><td>${t[0]}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
+      });
+      html += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
+      if (adj1Applied) {
+        const adj1val = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+        html += `<tr><td colspan="2">Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
+      }
+      if (adj2Applied) {
+        const adj2val = ((RH - 85) / 10) * ((87 - T) / 5);
+        html += `<tr><td colspan="2">High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
+      }
+      if (!adj1Applied && !adj2Applied) {
+        html += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
+      }
+      const finalHI = Math.round((baseHI + (adj1Applied ? -(13-RH)/4*Math.sqrt((17-Math.abs(T-95))/17) : 0) + (adj2Applied ? ((RH-85)/10)*((87-T)/5) : 0)) * 10) / 10;
+      html += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
+      </table>`;
+    }
+    html += `<p style="font-size:11px;color:var(--subtext);margin-top:4px;">See page footnote for full formula citation.</p></div>`;
+    pane.innerHTML = html;
+  }
+  function buildTrhFormulaTab()        { _buildFormulaTab('trh-tab-formula'); }
+  function buildTrhUnacclimFormulaTab() { _buildFormulaTab('trh-utab-formula'); }
+
+  // ── Clock SVG ─────────────────────────────────────────────────────────────────
+  function buildClockSvg(cell) {
+    const sz = 148, cx = sz/2, cy = sz/2, r = 58, circ = 2 * Math.PI * r;
+    if (!cell) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="10"/>
+        <text x="${cx}" y="${cy-6}" text-anchor="middle" dominant-baseline="middle" font-size="36" fill="#AE1515">⚠</text>
+        <text x="${cx}" y="${cy+22}" text-anchor="middle" font-size="13" font-weight="800" fill="#AE1515">DANGER</text>
+      </svg>`;
+    }
+    if (cell.w === null) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2E7D32" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#1A5A1F">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">min / hr</text>
+      </svg>`;
+    }
+    const strokeColors = {45:'#E65100', 30:'#B71C1C', 15:'#8B0000'};
+    const bgColors     = {45:'#FFF3E0', 30:'#FFEBEE', 15:'#FFCDD2'};
+    const sc = strokeColors[cell.w] || '#1565C0';
+    const bc = bgColors[cell.w]     || '#E3F0FF';
+    const workDash = (cell.w / 60) * circ;
+    return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="12"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="12"
+              stroke-dasharray="${workDash} ${circ - workDash}"
+              stroke-dashoffset="${circ * 0.25}" transform="rotate(0 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy-10}" text-anchor="middle" font-size="26" font-weight="900" fill="${sc}">${cell.w}</text>
+      <text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="12" font-weight="700" fill="${sc}">min work</text>
+      <text x="${cx}" y="${cy+27}" text-anchor="middle" font-size="11" fill="#555">${cell.r} min rest</text>
+    </svg>`;
+  }
+
+  // ── Shared result tab builder (always T+RH mode on this page) ─────────────────
+  function _buildResultTab(containerId, data, rowLabelsF, rowLabelsC, rangeNotes, getRowFn, workerLabel, workerSub, sourceNote) {
+    const unit = _hiUnit;
+    let val = _hiStoredVal;
+    if (val != null && _hiStoredUnit !== unit) {
+      val = unit === 'C'
+        ? Math.round((_hiStoredVal - 32) * 5/9 * 10) / 10
+        : Math.round((_hiStoredVal * 9/5 + 32) * 10) / 10;
+    }
+    const rowIdx   = val != null ? getRowFn(val, unit) : -1;
+    const colIdx   = _hiActivity in ACT_COL ? ACT_COL[_hiActivity] : 1;
+    const cell     = rowIdx >= 0 ? data[rowIdx][colIdx] : null;
+    const cls      = rowIdx >= 0 ? hiClass(cell) : 'c-safe';
+    const rowLabel = rowIdx >= 0 ? (unit === 'C' ? rowLabelsC[rowIdx] : rowLabelsF[rowIdx]) : '—';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+
+    const bgMap = { 'c-safe':'var(--safe-bg)', 'c-low':'var(--safe-bg)', 'c-caution':'var(--caution-bg)', 'c-warn':'var(--warn-bg)', 'c-high':'var(--high-bg)', 'c-stop':'var(--stop-bg)' };
+    const fgMap = { 'c-safe':'var(--safe-text)', 'c-low':'var(--safe-text)', 'c-caution':'var(--caution-text)', 'c-warn':'var(--warn-text)', 'c-high':'var(--high-text)', 'c-stop':'var(--stop-text)' };
+
+    let headline, subtext;
+    if (rowIdx < 0) {
+      headline = 'Enter temperature and RH';
+      subtext  = 'Enter air temperature and relative humidity in the strip above. The heat index will be calculated and your work-rest recommendation will appear here.';
+    } else if (!cell) {
+      headline = 'DANGER — Stop Work';
+      subtext  = 'Conditions exceed safe limits for ' + ACT_FULL[_hiActivity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
+    } else if (cell.w === null) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory rest break is required at this heat index level for ' + ACT_FULL[_hiActivity] + '. Stay hydrated — drink approximately 1 cup (8 oz) of water every 20 minutes.';
+    } else {
+      headline = cell.w + ' min work<br>' + cell.r + ' min rest';
+      subtext  = 'For every 60-minute period, take <strong>' + cell.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[_hiActivity].toLowerCase() + '. Provide water and a cool rest area.';
+    }
+
+    const valDisplay = val != null ? val + unitLabel : '—';
+
+    // Always T+RH mode on this page
+    let tempDisplay = '—', rhDisplay = '—', trhDerivation = '', trhCards = '';
+    if (_hiTempValF != null) {
+      tempDisplay = unit === 'C'
+        ? (Math.round((_hiTempValF - 32) * 5/9 * 10) / 10) + '°C'
+        : _hiTempValF + '°F';
+      rhDisplay = _hiRhVal != null ? _hiRhVal + '%' : '—';
+      if (_hiRhVal != null && val != null) {
+        trhDerivation = `<p class="result-derivation">Your air temperature of ${tempDisplay} and relative humidity of ${rhDisplay} yields a calculated Heat Index of ${valDisplay}.</p>`;
+      }
+      if (_hiTempValF != null && _hiRhVal != null) {
+        trhCards = `<div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Air Temperature</div>
+          <div class="result-input-value">${tempDisplay}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">💧 </span>Relative Humidity</div>
+          <div class="result-input-value">${rhDisplay}</div>
+        </div>`;
+      }
+    }
+
+    const monitoringRange = rowIdx >= 0 && rangeNotes[rowIdx]
+      ? (unit === 'C'
+          ? (rangeNotes[rowIdx].range.match(/\(([^)]+)\)/) || [])[1] || rangeNotes[rowIdx].range
+          : rangeNotes[rowIdx].range.replace(/\s*\([^)]*\)/g, ''))
+      : '';
+    const monitoringHtml = rowIdx >= 0 && rangeNotes[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${monitoringRange}</div>
+           ${rangeNotes[rowIdx].text}
+         </div>`
+      : '';
+
+    document.getElementById(containerId).innerHTML = `
+      <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
+           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+        <div class="result-main-inner">
+          <div class="result-clock">${buildClockSvg(rowIdx >= 0 ? cell : {w:null,r:null})}</div>
+          <div class="result-text">
+            <div class="result-label">Recommended Work-Rest Cycle</div>
+            <div class="result-headline">${headline}</div>
+            <div class="result-subtext">${subtext}</div>
+            <div class="result-source">${sourceNote}</div>
+            ${trhDerivation}
+          </div>
+        </div>
+      </div>
+      <div class="result-sidebar">
+        ${trhCards}
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Heat Index (calculated)</div>
+          <div class="result-input-value">${valDisplay}</div>
+          <div class="result-input-sub">Range: ${rowLabel}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">${ACT_EMOJI[_hiActivity]||'⚡'} </span>Work Intensity</div>
+          <div class="result-input-value">${ACT_LABEL[_hiActivity]||'Moderate'}</div>
+          <div class="result-input-sub">${ACT_FULL[_hiActivity]}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">✅ </span>Worker Status</div>
+          <div class="result-input-value">${workerLabel}</div>
+          <div class="result-input-sub">${workerSub}</div>
+        </div>
+        ${monitoringHtml}
+        <div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
+        </div>
+      </div>`;
+    return { rowIdx, colIdx };
+  }
+
+  function buildTrhResultTab() {
+    const res = _buildResultTab('trh-tab-result', HI_DATA, HI_ROW_LABELS_F, HI_ROW_LABELS_C, HI_RANGE_NOTES, getHIRow,
+      'Acclimatized', 'NIOSH REL applies',
+      'OSHA/NIOSH heat illness prevention guidance synthesized with NIOSH-based work-rest principles (NIOSH 2016)');
+    _hiRowIdx = res.rowIdx;
+    _hiColIdx = res.colIdx;
+  }
+
+  function buildTrhUnacclimResultTab() {
+    const res = _buildResultTab('trh-utab-result', HI_UNACCLIM_DATA, HI_UNACCLIM_ROW_LABELS_F, HI_UNACCLIM_ROW_LABELS_C,
+      HI_UNACCLIM_RANGE_NOTES, getHIUnacclimRow,
+      'Unacclimatized', 'NIOSH RAL applies',
+      'NIOSH RAL — methodology-derived HI approximation (NIOSH 2016). NIOSH RAL is expressed in WBGT; see WBGT tab for equation-confirmed values.');
+    _hiUnacclimRowIdx = res.rowIdx;
+    _hiUnacclimColIdx = res.colIdx;
+  }
+
+  // ── Chart builder ─────────────────────────────────────────────────────────────
+  function _buildChartTab(paneId, data, rowLabelsF, rowLabelsC, rowIdx, colIdx, gridLabel) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
+    const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    const existingGrid = pane.querySelector('.acclim-chart-grid');
+    if (existingGrid) existingGrid.remove();
+
+    let html = `<div class="acclim-chart-grid" role="grid" aria-label="${gridLabel}">`;
+    html += '<div role="row" style="display:contents">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">Heat Index</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}</div>`;
+    }
+    html += '</div>';
+    for (let ri = 0; ri < 6; ri++) {
+      const isUserRow = ri === rowIdx;
+      const isLastRow = ri === 5;
+      html += '<div role="row" style="display:contents">';
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}" role="rowheader" scope="row"${isUserRow ? ' aria-label="' + labels[ri].replace(/"/g,'&quot;') + ' — your heat index range"' : ''}>${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const cell       = data[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol && rowIdx >= 0;
+        const cls = hiClass(cell);
+        const lbl = hiLabel(cell);
+        const ariaLbl = isUserCell ? `${lbl} — your recommended work-rest cycle` : lbl;
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    pane.insertAdjacentHTML('beforeend', html);
+  }
+
+  function buildTrhChartTab() {
+    _buildChartTab('trh-tab-chart', HI_DATA, HI_ROW_LABELS_F, HI_ROW_LABELS_C, _hiRowIdx, _hiColIdx,
+      'Work-rest cycles by heat index and work intensity — acclimatized workers');
+  }
+  function buildTrhUnacclimChartTab() {
+    _buildChartTab('trh-utab-chart', HI_UNACCLIM_DATA, HI_UNACCLIM_ROW_LABELS_F, HI_UNACCLIM_ROW_LABELS_C,
+      _hiUnacclimRowIdx, _hiUnacclimColIdx,
+      'Work-rest cycles by heat index and work intensity — unacclimatized workers');
+  }
+
+  // ── Notes tab builders ────────────────────────────────────────────────────────
+  function _buildNotesContent(rangeNotes, extraTop) {
+    const unit = _hiUnit;
+    let html = extraTop || '';
+    html += `<div class="hi-notes-section">
+      <h3>Hydration Guidance</h3>
+      <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
+    </div>
+    <div class="hi-notes-section">
+      <h3>Radiant Heat Limitation</h3>
+      <div class="note-box warn-note" style="margin:0"><strong>Heat Index does not account for radiant heat from equipment, machinery, ovens, furnaces, or other hot surfaces.</strong> Heat index was developed for shade conditions with 5 mph wind. In indoor environments with direct radiant heat sources, very high or low air movement, or PPE/impermeable clothing — heat index <em>significantly underestimates</em> actual heat stress. If your work area has high levels of radiant heat, the work-rest cycles on this page may not adequately protect workers. WBGT is the preferred occupational heat stress measure in these settings.</div>
+    </div>`;
+    return html;
+  }
+
+  function buildTrhNotesTab() {
+    const pane = document.getElementById('trh-tab-notes');
+    if (!pane) return;
+    pane.innerHTML = _buildNotesContent(HI_RANGE_NOTES, null);
+  }
+
+  function buildTrhUnacclimNotesTab() {
+    const pane = document.getElementById('trh-utab-notes');
+    if (!pane) return;
+    const extra = `<div class="hi-notes-section">
+      <h3>Acclimatization Notice</h3>
+      <div class="note-box" style="margin:0; border-left-color:#AE1515; background:#FFF0F0; color:#6D0000;">
+        <strong><span aria-hidden="true">⚠ </span>Important:</strong> The unacclimatized work-rest cycles shown here do not capture the full acclimatization process recommended by NIOSH and OSHA. For detailed guidance on acclimatization protocols, employers should follow the recommendations in the NIOSH Criteria Document.<br><br>
+        <em>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106).</em><br><br>
+        <strong>Note:</strong> These values are methodology-derived HI approximations. NIOSH RAL is expressed in WBGT — see the WBGT tab for equation-confirmed values.
+      </div>
+    </div>`;
+    pane.innerHTML = _buildNotesContent(HI_UNACCLIM_RANGE_NOTES, extra);
+  }
+
+  // ── Reference table builder ───────────────────────────────────────────────────
+  // NWS/Rothfusz-derived lookup values (air temp rows × RH columns)
+  // Rows: 70, 75, 80, 85, 90, 95, 100, 105, 110 °F
+  // Cols: RH 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%
+  const REF_TEMPS_F = [70, 75, 80, 85, 90, 95, 100, 105, 110];
+  const REF_RHS     = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  // Pre-computed HI values (from NWS table, matching original temp-humidity.html)
+  const REF_HI = [
+    [65,66,67,68,69,70,70,71,71],
+    [69,71,72,73,74,75,76,77,78],
+    [75,77,78,79,81,82,83,85,86],
+    [79,82,84,86,88,90,93,97,102],
+    [83,86,88,91,95,100,106,113,122],
+    [87,91,96,101,107,114,124,136,999],
+    [91,95,100,109,118,129,999,999,999],
+    [95,101,109,118,130,999,999,999,999],
+    [99,107,118,130,999,999,999,999,999]
+  ];
+
+  function getTierForHI(hi, status) {
+    if (status === 'unacclimatized') {
       if (hi < 72)  return { light:{cls:'c-na',     txt:'—'},           moderate:{cls:'c-na',     txt:'—'},           heavy:{cls:'c-na',    txt:'—'},           vh:{cls:'c-na',    txt:'—'} };
       if (hi < 83)  return { light:{cls:'c-safe',   txt:'CONT'},  moderate:{cls:'c-safe',   txt:'CONT'},  heavy:{cls:'c-low',   txt:'CONT*'}, vh:{cls:'c-caution',txt:'45 / 15'} };
       if (hi < 95)  return { light:{cls:'c-low',    txt:'CONT*'}, moderate:{cls:'c-caution',txt:'45 / 15'},     heavy:{cls:'c-warn',  txt:'30 / 30'},     vh:{cls:'c-high',  txt:'15 / 45'} };
@@ -254,7 +1107,6 @@ body { overflow: auto; }
       if (hi < 122) return { light:{cls:'c-warn',   txt:'30 / 30'},     moderate:{cls:'c-high',   txt:'15 / 45'},     heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
       return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
     }
-    // Acclimatized (NIOSH REL-derived)
     if (hi < 80)  return { light:{cls:'c-na',     txt:'—'},           moderate:{cls:'c-na',     txt:'—'},           heavy:{cls:'c-na',    txt:'—'},           vh:{cls:'c-na',    txt:'—'} };
     if (hi < 91)  return { light:{cls:'c-safe',   txt:'CONT'},  moderate:{cls:'c-safe',   txt:'CONT'},  heavy:{cls:'c-low',   txt:'CONT*'}, vh:{cls:'c-caution',txt:'45 / 15'} };
     if (hi < 103) return { light:{cls:'c-low',    txt:'CONT*'}, moderate:{cls:'c-caution',txt:'45 / 15'},     heavy:{cls:'c-warn',  txt:'30 / 30'},     vh:{cls:'c-high',  txt:'15 / 45'} };
@@ -263,62 +1115,313 @@ body { overflow: auto; }
     return               { light:{cls:'c-stop',   txt:'DANGER!'},        moderate:{cls:'c-stop',   txt:'DANGER!'},        heavy:{cls:'c-stop',  txt:'DANGER!'},        vh:{cls:'c-stop',  txt:'DANGER!'} };
   }
 
-  function setActivity(level) {
-    currentLevel = level;
-    document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
-    document.querySelectorAll('.hi-cell[data-hi]').forEach(cell => {
-      const hi = parseInt(cell.dataset.hi);
-      const tier = getTierForHI(hi);
-      const rec  = tier[level];
-      cell.className = 'hi-cell ' + rec.cls;
-      cell.innerHTML = hiDisplay(hi) + '<br><small>' + rec.txt + '</small>';
-    });
+  function hiDisplayRef(hi_f) {
+    if (hi_f >= 999) return '<span style="font-size:10px">—</span>';
+    if (_hiUnit === 'C') {
+      const hi_c = Math.round((hi_f - 32) * 5 / 9 * 10) / 10;
+      return '<span style="font-size:10px">' + hi_c + '°C</span>';
+    }
+    return '<span style="font-size:10px">' + hi_f + '°F</span>';
   }
 
+  function _buildRefTable(paneId, status) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    const act = _hiActivity;
+    const unit = _hiUnit;
+
+    // Temperature header label
+    const tempHeaderLabel = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
+    // Row labels
+    const rowLabels = REF_TEMPS_F.map(f => {
+      if (unit === 'C') {
+        const c = Math.round((f - 32) * 5/9 * 10) / 10;
+        return c + '°C';
+      }
+      return f + '°F';
+    });
+
+    let html = `<div class="reftable-activity-strip">
+      <span class="toggle-label">Activity Level:</span>
+      <div class="toggle" role="group" aria-label="Activity level for reference table">
+        <button class="act-btn${act === 'light'    ? ' active' : ''}" onclick="setRefActivity('light',   '${paneId}')" data-level="light">🟢 Light</button>
+        <button class="act-btn${act === 'moderate' ? ' active' : ''}" onclick="setRefActivity('moderate','${paneId}')" data-level="moderate">🟡 Moderate</button>
+        <button class="act-btn${act === 'heavy'    ? ' active' : ''}" onclick="setRefActivity('heavy',   '${paneId}')" data-level="heavy">🔴 Heavy</button>
+        <button class="act-btn${act === 'vh'       ? ' active' : ''}" onclick="setRefActivity('vh',      '${paneId}')" data-level="vh">⛔ Very Heavy</button>
+      </div>
+      <div class="toggle" role="group" aria-label="Temperature unit" style="margin-left:auto">
+        <button class="${unit === 'F' ? 'active' : ''}" onclick="setTrhUnit('F')">°F</button>
+        <button class="${unit === 'C' ? 'active' : ''}" onclick="setTrhUnit('C')">°C</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+    <table id="reftable-${paneId}" style="min-width:600px">
+      <thead><tr>
+        <th class="left" style="width:100px">${tempHeaderLabel}</th>
+        <th>RH 10%</th><th>RH 20%</th><th>RH 30%</th><th>RH 40%</th>
+        <th>RH 50%</th><th>RH 60%</th><th>RH 70%</th><th>RH 80%</th><th>RH 90%</th>
+      </tr></thead>
+      <tbody>`;
+
+    REF_TEMPS_F.forEach((tempF, ri) => {
+      html += `<tr><td class="label">${rowLabels[ri]}</td>`;
+      REF_RHS.forEach((rh, ci) => {
+        const hi = REF_HI[ri][ci];
+        const tier = getTierForHI(hi, status);
+        const rec  = tier[act];
+        html += `<td class="hi-cell ${rec.cls}">${hiDisplayRef(hi)}<br><small>${rec.txt}</small></td>`;
+      });
+      html += `</tr>`;
+    });
+
+    html += `</tbody></table></div>
+    <div class="note-box" style="margin-top:12px">
+      <strong>How to use:</strong> Find the row for current air temperature and column for relative humidity.
+      <em>CONT*</em> = continuous work is acceptable but active monitoring, buddy system, and ready access to water are required.
+      Heat index values from NWS Rothfusz regression† — see page footnote.
+    </div>`;
+    pane.innerHTML = html;
+  }
+
+  function buildTrhRefTable()        { _buildRefTable('trh-tab-reftable', 'acclimatized'); }
+  function buildTrhUnacclimRefTable() { _buildRefTable('trh-utab-reftable', 'unacclimatized'); }
+
+  function setRefActivity(level, paneId) {
+    _hiActivity = level;
+    // Rebuild the current ref table
+    if (paneId === 'trh-tab-reftable')    buildTrhRefTable();
+    if (paneId === 'trh-utab-reftable')   buildTrhUnacclimRefTable();
+    // Also update result tabs so activity card stays in sync
+    buildTrhResultTab();
+    buildTrhUnacclimResultTab();
+    if (_hiCurrentTab === 'chart')         buildTrhChartTab();
+    if (_hiUnacclimCurrentTab === 'chart') buildTrhUnacclimChartTab();
+  }
+
+  // ── Grid font fitting ─────────────────────────────────────────────────────────
+  function fitGridHeaderSize(gridEl) {
+    if (!gridEl) return;
+    const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
+    if (!cells.length) return;
+    let lo = 70, hi = 420;
+    while (lo < hi) {
+      const mid = Math.floor((lo + hi + 1) / 2);
+      const fs  = (mid / 10) + 'px';
+      cells.forEach(c => c.style.fontSize = fs);
+      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
+      else lo = mid;
+    }
+    cells.forEach(c => c.style.fontSize = (lo / 10) + 'px');
+  }
+
+  function sizeTrhChartPane() {
+    const fixedTop = document.getElementById('fixed-top');
+    const pane     = document.getElementById('trh-tab-chart');
+    if (!pane) return;
+    pane.style.top = fixedTop.offsetHeight + 'px';
+    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
+  }
+  function sizeTrhUnacclimChartPane() {
+    const fixedTop = document.getElementById('fixed-top');
+    const pane     = document.getElementById('trh-utab-chart');
+    if (!pane) return;
+    pane.style.top = fixedTop.offsetHeight + 'px';
+    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────────────────────
+  function switchTrhTab(which) {
+    _hiCurrentTab = which;
+    const tabs = ['result','chart','notes','formula','reftable'];
+    tabs.forEach(t => {
+      const panelId = t === 'result' ? 'trh-tab-result-wrap' : 'trh-tab-' + t;
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        let disp = 'none';
+        if (t === which) {
+          if (t === 'result') disp = 'flex';
+          else if (t === 'chart') disp = 'flex';
+          else disp = 'block';
+        }
+        panel.style.display = disp;
+      }
+      const btn = document.getElementById('trh-tab-btn-' + t);
+      if (btn) {
+        btn.classList.toggle('active', t === which);
+        btn.setAttribute('aria-selected', String(t === which));
+        btn.tabIndex = (t === which) ? 0 : -1;
+      }
+    });
+    document.body.classList.toggle('trh-chart-active', which === 'chart');
+    if (which === 'chart') sizeTrhChartPane();
+  }
+
+  function switchTrhUnacclimTab(which) {
+    _hiUnacclimCurrentTab = which;
+    const tabs = ['result','chart','notes','formula','reftable'];
+    tabs.forEach(t => {
+      const panelId = t === 'result' ? 'trh-utab-result-wrap' : 'trh-utab-' + t;
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        let disp = 'none';
+        if (t === which) {
+          if (t === 'result') disp = 'flex';
+          else if (t === 'chart') disp = 'flex';
+          else disp = 'block';
+        }
+        panel.style.display = disp;
+      }
+      const btn = document.getElementById('trh-utab-btn-' + t);
+      if (btn) {
+        btn.classList.toggle('active', t === which);
+        btn.setAttribute('aria-selected', String(t === which));
+        btn.tabIndex = (t === which) ? 0 : -1;
+      }
+    });
+    document.body.classList.toggle('trh-unacclim-chart-active', which === 'chart');
+    if (which === 'chart') sizeTrhUnacclimChartPane();
+  }
+
+  // ── Unit toggle ───────────────────────────────────────────────────────────────
   function setTrhUnit(unit) {
-    trhUnit = unit;
-    document.getElementById('btn-trh-f').classList.toggle('active', unit === 'F');
-    document.getElementById('btn-trh-c').classList.toggle('active', unit === 'C');
-    const header = document.getElementById('trh-header');
-    if (header) header.innerHTML = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
-    trhPageRows.forEach(row => {
-      const cell = document.getElementById(row.id);
-      if (cell) cell.innerHTML = unit === 'C' ? row.c : row.f;
+    _hiUnit = unit;
+    // Update all unit toggle buttons
+    ['btn-trh-f','btn-trh-c','btn-trh-f2','btn-trh-c2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const isF = id.includes('-f');
+      const isActive = (unit === 'F') === isF;
+      el.classList.toggle('active', isActive);
+      el.setAttribute('aria-pressed', String(isActive));
     });
-    setActivity(currentLevel);
+    // Update T+RH strip unit label
+    const unitLabelEl = document.getElementById('trh-unit-label');
+    if (unitLabelEl) unitLabelEl.textContent = unit === 'C' ? '°C' : '°F';
+    // If there's a stored temperature, convert the input field value
+    if (_hiTempValF != null) {
+      const tempEl = document.getElementById('trh-temp');
+      if (tempEl) {
+        tempEl.value = unit === 'C'
+          ? Math.round((_hiTempValF - 32) * 5/9 * 10) / 10
+          : _hiTempValF;
+      }
+      onTrhInput();
+    }
+    // Rebuild charts if visible
+    if (_hiCurrentTab         === 'chart') buildTrhChartTab();
+    if (_hiUnacclimCurrentTab === 'chart') buildTrhUnacclimChartTab();
+    // Rebuild ref tables if visible
+    if (_hiCurrentTab         === 'reftable') buildTrhRefTable();
+    if (_hiUnacclimCurrentTab === 'reftable') buildTrhUnacclimRefTable();
+    // Rebuild result tabs
+    buildTrhResultTab();
+    buildTrhUnacclimResultTab();
   }
 
+  // ── Worker status ─────────────────────────────────────────────────────────────
   function setWorkerStatus(status) {
     workerStatus = status;
     WRC.set({ workerStatus: status });
-    const trhWarn = document.getElementById('trh-unacclim-warning');
-    if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
-    setActivity(currentLevel);
+    const isAcclim = status === 'acclimatized';
+    document.getElementById('trh-acclim-tabs').style.display             = isAcclim ? '' : 'none';
+    document.getElementById('trh-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
+    document.getElementById('trh-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
+    document.getElementById('trh-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
+    if (!isAcclim) {
+      document.body.classList.remove('trh-chart-active');
+    } else {
+      document.body.classList.remove('trh-unacclim-chart-active');
+      if (_hiCurrentTab === 'chart') document.body.classList.add('trh-chart-active');
+    }
+    updateLayout();
   }
 
+  // ── Layout ────────────────────────────────────────────────────────────────────
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
-    const main     = document.querySelector('main');
-    if (main) main.style.paddingTop = (fixedTop.offsetHeight + 40) + 'px';
+    const main = document.querySelector('main');
+    if (main) main.style.paddingTop = fixedTop.offsetHeight + 'px';
+    if (_hiCurrentTab         === 'chart' && workerStatus === 'acclimatized')   sizeTrhChartPane();
+    if (_hiUnacclimCurrentTab === 'chart' && workerStatus === 'unacclimatized') sizeTrhUnacclimChartPane();
   }
 
+  // ── Init ──────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     const s = WRC.get();
-    const status = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
-    const act    = s.activity    || 'moderate';
-    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const status   = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
+    const act      = s.activity || 'moderate';
     const actLabel = s.activityLabel || 'Moderate Work';
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
     const bbActivity = document.getElementById('back-bar-activity');
     if (bbActivity) bbActivity.textContent = (emojiMap[act] || '') + ' ' + actLabel;
 
-    currentLevel = act;
-    document.querySelectorAll('.act-btn').forEach(b => b.classList.toggle('active', b.dataset.level === act));
+    workerStatus  = status;
+    _hiActivity   = act;
+    const isAcclim = status === 'acclimatized';
+    document.getElementById('trh-acclim-tabs').style.display             = isAcclim ? '' : 'none';
+    document.getElementById('trh-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
+    document.getElementById('trh-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
+    document.getElementById('trh-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
 
-    workerStatus = status;
-    const trhWarn = document.getElementById('trh-unacclim-warning');
-    if (trhWarn) trhWarn.style.display = status === 'unacclimatized' ? '' : 'none';
+    // Sync unit before building
+    const sessionUnit = s.measUnit || 'F';
+    if (sessionUnit !== 'F') {
+      _hiUnit = sessionUnit;
+      const unitLabelEl = document.getElementById('trh-unit-label');
+      if (unitLabelEl) unitLabelEl.textContent = '°C';
+      ['btn-trh-f','btn-trh-c','btn-trh-f2','btn-trh-c2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isF = id.includes('-f');
+        el.classList.toggle('active', (sessionUnit === 'F') === isF);
+        el.setAttribute('aria-pressed', String((sessionUnit === 'F') === isF));
+      });
+    }
 
-    setActivity(act);
+    // Build all tab content
+    buildTrhResultTab();
+    buildTrhChartTab();
+    buildTrhNotesTab();
+    buildTrhFormulaTab();
+    buildTrhRefTable();
+    buildTrhUnacclimResultTab();
+    buildTrhUnacclimChartTab();
+    buildTrhUnacclimNotesTab();
+    buildTrhUnacclimFormulaTab();
+    buildTrhUnacclimRefTable();
+
+    // Activate first tab in each section
+    switchTrhTab('result');
+    switchTrhUnacclimTab('result');
+
+    // Keyboard nav — acclimatized tablist
+    document.getElementById('trh-acclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result','chart','notes','formula','reftable'];
+      const cur  = tabs.findIndex(t => document.getElementById('trh-tab-btn-' + t).getAttribute('aria-selected') === 'true');
+      let next = cur;
+      if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
+      else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); next = (cur - 1 + tabs.length) % tabs.length; }
+      else if (e.key === 'Home')                                 { e.preventDefault(); next = 0; }
+      else if (e.key === 'End')                                  { e.preventDefault(); next = tabs.length - 1; }
+      else return;
+      switchTrhTab(tabs[next]);
+      document.getElementById('trh-tab-btn-' + tabs[next]).focus();
+    });
+
+    // Keyboard nav — unacclimatized tablist
+    document.getElementById('trh-unacclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result','chart','notes','formula','reftable'];
+      const cur  = tabs.findIndex(t => document.getElementById('trh-utab-btn-' + t).getAttribute('aria-selected') === 'true');
+      let next = cur;
+      if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
+      else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); next = (cur - 1 + tabs.length) % tabs.length; }
+      else if (e.key === 'Home')                                 { e.preventDefault(); next = 0; }
+      else if (e.key === 'End')                                  { e.preventDefault(); next = tabs.length - 1; }
+      else return;
+      switchTrhUnacclimTab(tabs[next]);
+      document.getElementById('trh-utab-btn-' + tabs[next]).focus();
+    });
+
     setTimeout(buildBreadcrumbs, 0);
     updateLayout();
     window.addEventListener('resize', updateLayout);
