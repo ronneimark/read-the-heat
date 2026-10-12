@@ -395,15 +395,13 @@
       const btn = document.getElementById('intro-open-btn');
       const btnR = btn.getBoundingClientRect();
 
-      // Target: step 1 → first sector pill; 2-4 → that sector in the grid (representative)
-      // On this page only the sector grid is interactive; steps 2-4 highlight the grid too
-      // but with a note. For a richer tour, each step points to its own UI element.
-      const sectorBtns = document.querySelectorAll('.ls1-sector-btn');
+      // Target: each step maps to the corresponding breadcrumb pill in the nav bar
+      const crumbs = document.querySelectorAll('#wrc-breadcrumbs .wrc-crumb, #wrc-breadcrumbs .wrc-crumb-pending');
       const targets = {
-        1: sectorBtns[0],           // first industry pill
-        2: sectorBtns[3],           // just to show variety
-        3: sectorBtns[6],
-        4: sectorBtns[9],
+        1: crumbs[0],   // Industry
+        2: crumbs[1],   // Activity Level
+        3: crumbs[2],   // Acclimatization
+        4: crumbs[3],   // Instrument
       };
       const target = targets[n];
       if (!target) return;
