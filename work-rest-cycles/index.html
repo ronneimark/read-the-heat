@@ -466,44 +466,32 @@
     const pop = document.getElementById('intro-popover');
     const btn = document.getElementById('intro-open-btn');
     const btnRect = btn.getBoundingClientRect();
-    const gap = 10;
     const vpad = 12; /* min gap from viewport edges */
     const vpH = window.innerHeight;
+    const availH = vpH - vpad * 2; /* max usable height */
 
-    /* reset inline overrides so we can measure natural height */
+    /* reset so we can measure natural height */
     pop.style.top = '';
     pop.style.bottom = '';
     pop.style.maxHeight = '';
+    pop.style.overflowY = '';
     pop.style.position = 'fixed';
     pop.style.left = '50%';
     pop.style.transform = 'translateX(-50%)';
 
     const popH = pop.scrollHeight;
+    const btnMid = (btnRect.top + btnRect.bottom) / 2;
 
-    const spaceBelow = vpH - btnRect.bottom - gap - vpad;
-    const spaceAbove = btnRect.top - gap - vpad;
-
-    if (popH <= spaceBelow) {
-      /* fits below — standard position */
-      pop.style.top = (btnRect.bottom + gap) + 'px';
-      pop.style.bottom = '';
-      pop.style.maxHeight = spaceBelow + 'px';
-    } else if (popH <= spaceAbove) {
-      /* fits above */
-      pop.style.bottom = (vpH - btnRect.top + gap) + 'px';
-      pop.style.top = '';
-      pop.style.maxHeight = spaceAbove + 'px';
-    } else if (spaceAbove >= spaceBelow) {
-      /* more room above — open upward and constrain */
-      pop.style.bottom = (vpH - btnRect.top + gap) + 'px';
-      pop.style.top = '';
-      pop.style.maxHeight = spaceAbove + 'px';
-      pop.style.overflowY = 'auto';
+    if (popH <= availH) {
+      /* Content fits in viewport — place it centered on button, clamped to edges */
+      let top = btnMid - popH / 2;
+      top = Math.max(vpad, Math.min(top, vpH - vpad - popH));
+      pop.style.top = top + 'px';
+      pop.style.overflowY = 'visible';
     } else {
-      /* more room below — open downward and constrain */
-      pop.style.top = (btnRect.bottom + gap) + 'px';
-      pop.style.bottom = '';
-      pop.style.maxHeight = spaceBelow + 'px';
+      /* Content taller than viewport — fill the whole available height and scroll */
+      pop.style.top = vpad + 'px';
+      pop.style.maxHeight = availH + 'px';
       pop.style.overflowY = 'auto';
     }
   }
