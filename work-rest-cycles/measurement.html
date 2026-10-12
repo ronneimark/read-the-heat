@@ -210,7 +210,7 @@
   z-index: 9997;
   margin: 0 !important;
   max-height: none !important;
-  object-fit: contain;
+  object-fit: cover;
   cursor: zoom-out;
   background: transparent;
   transition: top .38s cubic-bezier(.4,0,.2,1),
@@ -556,6 +556,18 @@
     const r = img.getBoundingClientRect();
     img._origRect = { top: r.top, left: r.left, width: r.width, height: r.height };
 
+    // Compute target: fit natural image size inside 92% of viewport, maintaining ratio
+    const natW  = img.naturalWidth  || r.width;
+    const natH  = img.naturalHeight || r.height;
+    const ratio = natW / natH;
+    const maxW  = window.innerWidth  * 0.92;
+    const maxH  = window.innerHeight * 0.92;
+    let tW, tH;
+    if (maxW / ratio <= maxH) { tW = maxW; tH = maxW / ratio; }
+    else                       { tH = maxH; tW = maxH * ratio; }
+    const tTop  = (window.innerHeight - tH) / 2;
+    const tLeft = (window.innerWidth  - tW) / 2;
+
     // Pin at current position without transition
     img.style.transition = 'none';
     img.classList.add('photo-fixed');
@@ -568,14 +580,14 @@
 
     document.getElementById('photo-backdrop').classList.add('visible');
 
-    // Two rAFs: let the browser paint the pinned position first, then animate
+    // Two rAFs: let browser paint pinned position, then animate to computed size
     requestAnimationFrame(() => requestAnimationFrame(() => {
       img.style.transition = '';
-      img.style.top    = '0';
-      img.style.left   = '0';
-      img.style.width  = '100vw';
-      img.style.height = '100vh';
-      img.style.borderRadius = '0';
+      img.style.top    = tTop  + 'px';
+      img.style.left   = tLeft + 'px';
+      img.style.width  = tW    + 'px';
+      img.style.height = tH    + 'px';
+      img.style.borderRadius = '10px';
       img.classList.add('photo-expanded');
     }));
   }
