@@ -278,7 +278,7 @@ body { overflow: auto; }
 
   document.addEventListener('DOMContentLoaded', () => {
     const s = WRC.get();
-    const status = s.workerStatus || 'acclimatized';
+    const status = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
     const act    = s.activity    || 'moderate';
     const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
     const actLabel = s.activityLabel || 'Moderate Work';

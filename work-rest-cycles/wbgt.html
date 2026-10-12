@@ -265,7 +265,7 @@ body { overflow: auto; }
   async function init() {
     await initData();
     const s = WRC.get();
-    workerStatus = s.workerStatus || 'acclimatized';
+    workerStatus = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
     setWorkerStatus(workerStatus);
 
     // Activity badge in back bar

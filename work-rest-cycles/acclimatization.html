@@ -47,25 +47,34 @@
           <ul class="ls3-acclim-bullets">
             <li>Experienced worker in continuous heat exposure</li>
             <li>Returning worker absent fewer than 7 days</li>
-            <li><em>New workers:</em> 7–14 day graduated ramp — ≤20% of usual heat exposure on Day 1, +20% per day</li>
-            <li><em>Workers with prior experience:</em> 4-day return ramp (50% → 60% → 80% → 100%)</li>
-            <li>NIOSH (2016): acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload</li>
+            <li>Acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload (NIOSH, 2016)</li>
           </ul>
           <span class="ls3-acclim-cta">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
 
-        <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized')">
+        <button class="ls3-acclim-card ls3-acclim-no" onclick="commitWorkerStatus('unacclimatized-new')">
           <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
-          <div class="ls3-acclim-title">Unacclimatized</div>
-          <div class="ls3-acclim-desc">New to heat work, or returning after a week or more away. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong> — approximately 2–3&deg;C (3–5&deg;F) more restrictive than the REL.</div>
+          <div class="ls3-acclim-title">Unacclimatized — New Worker</div>
+          <div class="ls3-acclim-desc">Has not previously worked in heat or has not yet completed an acclimatization ramp. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong>.</div>
           <ul class="ls3-acclim-bullets">
-            <li>New employees who have not yet completed the acclimatization ramp</li>
-            <li>Workers returning after 7+ days away from heat exposure</li>
-            <li>Workers newly assigned to hot areas</li>
-            <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
+            <li>New employee starting heat work for the first time</li>
+            <li>Worker newly assigned to a hot area</li>
+            <li>NIOSH protocol: ≤20% of usual exposure on Day 1, +20% each day over 7–14 days</li>
             <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
           </ul>
-          <span class="ls3-acclim-cta">Select Unacclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="ls3-acclim-cta">Select New Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+        <button class="ls3-acclim-card ls3-acclim-return" onclick="commitWorkerStatus('unacclimatized-returning')">
+          <span class="ls3-acclim-icon">&#x1F504;</span>
+          <div class="ls3-acclim-title">Unacclimatized — Returning Worker</div>
+          <div class="ls3-acclim-desc">Previously acclimatized, but absent from heat work for 7 or more days. Uses the more protective <strong>NIOSH Recommended Alert Limits (RAL)</strong>.</div>
+          <ul class="ls3-acclim-bullets">
+            <li>Worker returning after 7+ days away from heat exposure</li>
+            <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
+            <li>NIOSH return protocol: 4-day ramp — 50% → 60% → 80% → 100% of usual exposure</li>
+          </ul>
+          <span class="ls3-acclim-cta">Select Returning Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
 
       </div>
@@ -78,7 +87,9 @@
 <script src="./lang-switch.js"></script>
 <script>
   function commitWorkerStatus(status) {
-    navigate('measurement.html', { workerStatus: status });
+    // Both unacclimatized variants use the RAL / unacclimatized lookup tables
+    const tableKey = status === 'acclimatized' ? 'acclimatized' : 'unacclimatized';
+    navigate('measurement.html', { workerStatus: status, workerStatusTable: tableKey });
   }
 
   function updateLayout() {

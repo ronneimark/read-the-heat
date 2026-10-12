@@ -359,8 +359,10 @@ function buildBreadcrumbs() {
   // Worker status
   const workerStatus = WRC.val('workerStatus', null);
   if (workerStatus) {
-    const statusLabel = workerStatus === 'acclimatized' ? '✅ Acclimatized' :
-                        workerStatus === 'unacclimatized' ? '🟠 Unacclimatized' : workerStatus;
+    const statusLabel = workerStatus === 'acclimatized'           ? '✅ Acclimatized' :
+                        workerStatus === 'unacclimatized-new'      ? '⚠️ New Worker' :
+                        workerStatus === 'unacclimatized-returning' ? '🔄 Returning Worker' :
+                        workerStatus === 'unacclimatized'           ? '🟠 Unacclimatized' : workerStatus;
     crumbs.push({ label: statusLabel, href: 'acclimatization.html', selected: true });
   } else {
     crumbs.push({ label: 'Acclimatization', href: 'acclimatization.html', selected: false });
