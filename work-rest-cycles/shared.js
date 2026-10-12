@@ -296,6 +296,102 @@ function openMethodologyModal() {
   if (closeBtn) closeBtn.focus();
 }
 
+// ── Individual Health Risk Factors modal ──
+function ensureHealthModal() {
+  if (document.getElementById('health-modal-overlay')) return;
+  const el = document.createElement('div');
+  el.innerHTML = `<div id="health-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="health-modal-title" onclick="if(event.target===this)closeHealthModal()">
+  <div id="health-modal">
+    <div class="modal-sticky-header">
+      <h2 id="health-modal-title">Individual Health Risk Factors</h2>
+      <button class="modal-close-btn" onclick="closeHealthModal()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="health-modal-body">
+
+    <div class="health-callout">
+      <strong>How to use this information:</strong> Workers with one or more of the factors below face elevated risk of heat-related illness at any temperature. If any apply, treat the next-higher acclimatization and work-rest protection tier as the baseline. When in doubt, consult a healthcare provider, occupational health nurse, or certified industrial hygienist.
+    </div>
+
+    <h3>Cardiovascular Disease &amp; Hypertension</h3>
+    <p>The cardiovascular system is the primary mechanism for moving heat from the body's core to the skin for dissipation. Heart disease, heart failure, and poorly controlled hypertension reduce this capacity. Many common cardiac medications (see below) also affect heat response directly.</p>
+
+    <h3>Obesity (BMI ≥ 30)</h3>
+    <p>Excess adipose tissue increases metabolic heat production during work and acts as insulation, slowing heat loss. Workers with obesity may generate significantly more heat at the same workload as leaner co-workers and have a reduced capacity to dissipate it through sweating relative to body mass.</p>
+
+    <h3>Diabetes</h3>
+    <p>Autonomic neuropathy — a common complication — can impair the sweating response, reducing evaporative cooling efficiency. Cardiovascular complications further limit circulatory heat transport. Blood glucose instability during heat stress can compound the physiological burden.</p>
+
+    <h3>Chronic Kidney Disease</h3>
+    <p>Impaired renal function limits the body's ability to regulate electrolytes lost through sweating and to maintain fluid balance. Dehydration — which occurs rapidly under heat stress — is more dangerous and harder to correct in workers with CKD.</p>
+
+    <h3>Prior Heat Illness</h3>
+    <p>A history of heat stroke markedly increases susceptibility to future heat illness. Heat stroke can cause lasting damage to the hypothalamic temperature regulation center. Workers who have experienced heat stroke should be managed as unacclimatized even when returning to familiar conditions, and the return-to-work ramp should be supervised.</p>
+
+    <h3>Age: 55 and Older</h3>
+    <p>Cardiovascular reserve declines with age, reducing the body's ability to increase cardiac output under heat stress. Sweat gland function and thirst response also diminish. Older workers are disproportionately represented in heat-related fatality data across all industries.</p>
+
+    <h3>Pregnancy</h3>
+    <p>Metabolic rate is elevated throughout pregnancy, increasing baseline heat production. Core body temperature rises faster during exertion, and fluid volume demands are higher. NIOSH recommends particular caution for pregnant workers in hot environments, especially during the first trimester.</p>
+
+    <h3>Medications That Affect Heat Stress</h3>
+    <p>Several drug classes directly impair the body's heat defense mechanisms. Workers taking any of the following should be considered at elevated risk:</p>
+    <div class="health-factor-grid">
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Diuretics</div>
+        <p>Promote fluid and electrolyte loss, accelerating dehydration. Common for hypertension and heart failure management.</p>
+      </div>
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Anticholinergics</div>
+        <p>Block the nerve signals that trigger sweating, severely impairing evaporative cooling. Found in allergy medications, bladder drugs, and some antidepressants.</p>
+      </div>
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Beta-blockers</div>
+        <p>Limit the heart rate increase needed to pump blood to the skin for cooling. Also mask tachycardia as an early warning sign of heat strain.</p>
+      </div>
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Antipsychotics &amp; some antidepressants</div>
+        <p>Can impair hypothalamic temperature regulation and reduce sweating. Associated with heat stroke in multiple occupational and clinical settings.</p>
+      </div>
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Stimulants (including some ADHD medications)</div>
+        <p>Increase metabolic heat production and can raise baseline heart rate, reducing cardiovascular reserve available for heat dissipation.</p>
+      </div>
+      <div class="health-factor-card">
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Thyroid medications</div>
+        <p>Hyperthyroid states — including over-supplementation — elevate metabolic rate and baseline body temperature, compounding heat load.</p>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--subtext);margin-top:4px">Workers should not be required to disclose specific medications. Supervisors and safety personnel should be aware that common prescribed drugs significantly alter heat tolerance and plan accordingly.</p>
+
+    <h3>Alcohol &amp; Substance Use</h3>
+    <p>Alcohol is a diuretic and vasodilator that disrupts the body's normal heat regulation. Working in heat after recent alcohol use increases dehydration risk and impairs judgment about early warning signs. Some stimulant substances substantially elevate core temperature independently of ambient heat.</p>
+
+    <h3>Inadequate Sleep &amp; Fatigue</h3>
+    <p>Sleep deprivation impairs cardiovascular efficiency and the perception of thermal discomfort. Fatigued workers are less likely to recognize and report early heat strain symptoms and may not self-pace appropriately during heavy exertion in heat.</p>
+
+    <hr class="divider" style="margin:20px 0">
+    <p style="font-size:12px;color:var(--subtext)"><strong>Source:</strong> National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106), Chapter 7. U.S. Department of Health and Human Services.</p>
+
+    </div>
+  </div>
+</div>`;
+  document.body.appendChild(el.firstElementChild);
+}
+
+function openHealthModal() {
+  ensureHealthModal();
+  document.getElementById('health-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const closeBtn = document.querySelector('#health-modal .modal-close-btn');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeHealthModal() {
+  const overlay = document.getElementById('health-modal-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 function closeMethodologyModal() {
   const overlay = document.getElementById('methodology-modal-overlay');
   if (overlay) overlay.classList.remove('open');
@@ -306,6 +402,7 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     closeActivityModal();
     closeMethodologyModal();
+    closeHealthModal();
   }
 });
 
