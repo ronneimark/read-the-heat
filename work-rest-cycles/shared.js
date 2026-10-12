@@ -371,6 +371,21 @@ function buildBreadcrumbs() {
   const instrumentLabels = { wbgt: '🌡️ WBGT', trh: '💧 Temp + Humidity', hi: '🔥 Heat Index' };
   if (instrument && instrumentLabels[instrument]) {
     crumbs.push({ label: instrumentLabels[instrument], href: 'measurement.html', selected: true });
+    // Value pill — show entered measurement alongside instrument
+    const measUnit  = WRC.val('measUnit', 'F');
+    const unitSuffix = measUnit === 'C' ? '°C' : '°F';
+    const measValue = WRC.val('measValue', null);
+    const measTemp  = WRC.val('measTemp', null);
+    const measRH    = WRC.val('measRH', null);
+    let valueLabel = null;
+    if (instrument === 'trh' && measTemp !== null && measRH !== null) {
+      valueLabel = measTemp + unitSuffix + ' / ' + measRH + '%';
+    } else if ((instrument === 'wbgt' || instrument === 'hi') && measValue !== null) {
+      valueLabel = measValue + unitSuffix;
+    }
+    if (valueLabel) {
+      crumbs.push({ label: valueLabel, href: 'measurement.html', selected: true, isValue: true });
+    }
   } else {
     crumbs.push({ label: 'Instrument', href: 'measurement.html', selected: false });
   }
@@ -385,10 +400,10 @@ function buildBreadcrumbs() {
       container.appendChild(sep);
     }
     const a = document.createElement('a');
-    a.className = c.selected ? 'wrc-crumb' : 'wrc-crumb-pending';
+    a.className = c.isValue ? 'wrc-crumb wrc-crumb-value' : (c.selected ? 'wrc-crumb' : 'wrc-crumb-pending');
     a.href = c.href;
     a.textContent = c.label;
-    a.title = c.selected ? 'Change selection' : 'Make a selection';
+    a.title = c.isValue ? 'Change measurement' : (c.selected ? 'Change selection' : 'Make a selection');
     container.appendChild(a);
   });
 

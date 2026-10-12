@@ -5,6 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Measurement Method — Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
+<style>
+/* ── Measurement input modal ── */
+#meas-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,10,30,0.60);
+  z-index: 9100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#meas-modal-overlay.open { display: flex; }
+#meas-modal {
+  background: #fff;
+  border-radius: 14px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  padding: 28px 28px 28px;
+  margin: auto;
+}
+.meas-instrument-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--subtext);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 18px;
+}
+.meas-field-group {
+  margin-bottom: 20px;
+}
+.meas-field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+  display: block;
+}
+.meas-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.meas-input {
+  flex: 1;
+  height: 52px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 0 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  min-width: 0;
+}
+.meas-input:focus { border-color: var(--navy); }
+.meas-input.error { border-color: #D50032; }
+.meas-unit-suffix {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--subtext);
+  flex-shrink: 0;
+}
+.meas-toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.meas-toggle button {
+  padding: 0 13px;
+  height: 52px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--subtext);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.meas-toggle button.active {
+  background: var(--navy);
+  color: #fff;
+}
+.meas-error-msg {
+  color: #D50032;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+}
+.meas-error-msg.visible { display: block; }
+.meas-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+.meas-submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.meas-submit-btn:hover { background: #002080; }
+.meas-submit-btn:active { transform: scale(0.98); }
+.meas-skip-link {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--subtext);
+  text-decoration: none;
+}
+.meas-skip-link:hover { color: var(--navy); text-decoration: underline; }
+</style>
 <script src="./lang-link.js"></script>
 </head>
 <body>
@@ -38,19 +167,19 @@
     </div>
 
     <div class="method-cards">
-      <button class="method-card" style="--card-accent:#001E62" onclick="navigate('wbgt.html', { instrument: 'wbgt' })">
+      <button class="method-card" style="--card-accent:#001E62" onclick="openMeasModal('wbgt')">
         <span class="method-card-icon">🌡️</span>
         <h3>WBGT</h3>
         <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
         <span class="method-card-tag">Requires WBGT meter</span>
       </button>
-      <button class="method-card" style="--card-accent:#1a3a8f" onclick="navigate('temp-humidity.html', { instrument: 'trh' })">
+      <button class="method-card" style="--card-accent:#1a3a8f" onclick="openMeasModal('trh')">
         <span class="method-card-icon">💧</span>
         <h3>Temperature + Humidity</h3>
         <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
         <span class="method-card-tag">Thermometer + hygrometer</span>
       </button>
-      <button class="method-card" style="--card-accent:#E05C2C" onclick="navigate('heat-index.html', { instrument: 'hi' })">
+      <button class="method-card" style="--card-accent:#E05C2C" onclick="openMeasModal('hi')">
         <span class="method-card-icon">🔥</span>
         <h3>Heat Index</h3>
         <p>The "feels like" temperature combining heat and humidity. Useful when only a standard thermometer and hygrometer are available. No specialized instrument needed.</p>
@@ -65,9 +194,138 @@
   </div><!-- /ls4 -->
 </div><!-- /launcher -->
 
+<!-- ── Measurement input modal ── -->
+<div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
+  <div id="meas-modal">
+    <div class="modal-sticky-header" style="margin:-28px -28px 20px;">
+      <h2 id="meas-modal-title" style="font-size:17px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
+      <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <!-- Single-value fields (WBGT / Heat Index) -->
+    <div id="meas-single-fields">
+      <div class="meas-field-group">
+        <label class="meas-field-label" id="meas-single-label" for="meas-value">WBGT Value</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-value" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+          <div class="meas-toggle">
+            <button id="meas-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-single-error">Please enter a value.</div>
+      </div>
+    </div>
+
+    <!-- Two-field layout (Temperature + Humidity) -->
+    <div id="meas-trh-fields" hidden>
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-temp">Air Temperature</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+          <div class="meas-toggle">
+            <button id="meas-trh-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-trh-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-temp-error">Please enter a temperature.</div>
+      </div>
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-rh">Relative Humidity</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off">
+          <span class="meas-unit-suffix">%</span>
+        </div>
+        <div class="meas-error-msg" id="meas-rh-error">Please enter a value between 0 and 100.</div>
+      </div>
+    </div>
+
+    <button class="meas-submit-btn" onclick="submitMeasModal()">Find My Work-Rest Cycle →</button>
+    <a href="#" class="meas-skip-link" id="meas-skip-link">Skip — I don't have a reading yet</a>
+  </div>
+</div>
+
 <script src="shared.js"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  let measCurrentInstrument = null;
+  let measCurrentUnit = 'F';
+  const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html' };
+  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Enter Temperature & Humidity', hi: 'Enter Your Heat Index' };
+  const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value' };
+
+  function openMeasModal(instrument) {
+    measCurrentInstrument = instrument;
+    measCurrentUnit = 'F';
+    WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
+    document.getElementById('meas-modal-title').textContent = measTitles[instrument];
+    const isTrh = instrument === 'trh';
+    document.getElementById('meas-single-fields').hidden = isTrh;
+    document.getElementById('meas-trh-fields').hidden = !isTrh;
+    if (!isTrh) document.getElementById('meas-single-label').textContent = measSingleLabels[instrument];
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id.endsWith('-f'));
+    });
+    ['meas-value','meas-temp','meas-rh'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('error'); }
+    });
+    document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
+    document.getElementById('meas-skip-link').onclick = e => {
+      e.preventDefault();
+      closeMeasModal();
+      window.location.href = measDestUrls[instrument];
+    };
+    document.getElementById('meas-modal-overlay').classList.add('open');
+    setTimeout(() => document.querySelector('#meas-modal input')?.focus(), 80);
+  }
+
+  function closeMeasModal() {
+    document.getElementById('meas-modal-overlay').classList.remove('open');
+  }
+
+  function setMeasUnit(unit) {
+    measCurrentUnit = unit;
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id.endsWith(unit === 'F' ? '-f' : '-c'));
+    });
+  }
+
+  function submitMeasModal() {
+    let valid = true;
+    if (measCurrentInstrument === 'trh') {
+      const tempEl = document.getElementById('meas-temp');
+      const rhEl   = document.getElementById('meas-rh');
+      const tempVal = tempEl.value.trim();
+      const rhVal   = rhEl.value.trim();
+      if (!tempVal) {
+        tempEl.classList.add('error');
+        document.getElementById('meas-temp-error').classList.add('visible');
+        valid = false;
+      }
+      if (!rhVal || parseFloat(rhVal) < 0 || parseFloat(rhVal) > 100) {
+        rhEl.classList.add('error');
+        document.getElementById('meas-rh-error').classList.add('visible');
+        valid = false;
+      }
+      if (!valid) return;
+      WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal) });
+    } else {
+      const valEl = document.getElementById('meas-value');
+      const val = valEl.value.trim();
+      if (!val) {
+        valEl.classList.add('error');
+        document.getElementById('meas-single-error').classList.add('visible');
+        return;
+      }
+      WRC.set({ measValue: parseFloat(val), measUnit: measCurrentUnit });
+    }
+    closeMeasModal();
+    window.location.href = measDestUrls[measCurrentInstrument];
+  }
+
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const ls4 = document.getElementById('ls4');

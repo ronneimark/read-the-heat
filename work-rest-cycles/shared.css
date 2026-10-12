@@ -218,6 +218,18 @@
     background: #b8002a;
     color: #fff;
   }
+  /* value pill — same link as instrument, lighter shade to signal it's supplementary */
+  .wrc-crumb-value {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.30);
+    font-style: normal;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .wrc-crumb-value:hover {
+    background: #b8002a;
+    border-color: rgba(255,255,255,0.50);
+  }
   .wrc-crumb-sep {
     color: rgba(255,255,255,0.28);
     font-size: 11px;
