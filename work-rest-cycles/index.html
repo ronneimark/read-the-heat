@@ -123,54 +123,53 @@
 /* ── heading row ── */
 .ls1-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
-.ls-heading { margin: 0; white-space: nowrap; }
+.ls-heading { margin: 0; text-align: center; }
 
 /* ── anchor wrapper ── */
 .intro-anchor {
   position: relative;
-  flex-shrink: 0;
 }
 
-/* ── dark-blue 3D button ── */
+/* ── red 3D button ── */
 .intro-open-btn {
-  font-size: .8rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: .03em;
   white-space: nowrap;
-  padding: 6px 14px;
-  border-radius: 7px;
+  padding: 10px 24px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(180deg, #1e5fa8 0%, #0d3d6e 100%);
+  background: linear-gradient(180deg, #e53935 0%, #b71c1c 100%);
   color: #fff;
-  box-shadow: 0 4px 0 #071f3a, 0 5px 8px rgba(0,0,0,.3);
+  box-shadow: 0 4px 0 #7b0d0d, 0 6px 10px rgba(0,0,0,.3);
   transition: transform .1s, box-shadow .1s;
   position: relative;
   z-index: 1001;
 }
-.intro-open-btn:hover { filter: brightness(1.15); }
+.intro-open-btn:hover { filter: brightness(1.12); }
 .intro-open-btn:active {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 #071f3a, 0 2px 4px rgba(0,0,0,.2);
+  box-shadow: 0 1px 0 #7b0d0d, 0 2px 4px rgba(0,0,0,.2);
 }
 
 /* ── popover shell ── */
 .intro-popover {
   position: absolute;
   top: calc(100% + 10px);
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: min(500px, 96vw);
   background: var(--modal-bg, #fff);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
   z-index: 1000;
   overflow: hidden;
-  transform-origin: top right;
+  transform-origin: top center;
   animation: popoverIn .32s cubic-bezier(.22,.68,0,1.1);
   display: flex;
   flex-direction: column;
@@ -180,13 +179,13 @@
   from {
     opacity: 0;
     clip-path: inset(0 0 100% 0 round 12px);
+    transform: translateX(-50%);
   }
-  40% {
-    opacity: 1;
-  }
+  40% { opacity: 1; transform: translateX(-50%); }
   to {
     opacity: 1;
     clip-path: inset(0 0 0% 0 round 12px);
+    transform: translateX(-50%);
   }
 }
 @media (prefers-color-scheme: dark) {
@@ -196,7 +195,7 @@
 /* triangle arrow */
 .intro-popover-arrow {
   position: absolute;
-  top: -7px; right: 20px;
+  top: -7px; left: 50%; transform: translateX(-50%);
   width: 14px; height: 7px;
   overflow: hidden;
   pointer-events: none;
