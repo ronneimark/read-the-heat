@@ -349,7 +349,7 @@
         return;
       }
       // Conservative ceiling: assume 100% RH and route through T+RH calculator
-      WRC.set({ measTemp: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
+      WRC.set({ measTemp: parseFloat(val), measValue: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
       closeMeasModal();
       window.location.href = 'temp-humidity.html';
       return;
