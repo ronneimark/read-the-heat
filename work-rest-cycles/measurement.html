@@ -136,6 +136,17 @@
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
+/* Method card photo */
+.method-card-photo {
+  width: 100%;
+  max-width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin: 8px 0 4px;
+  display: block;
+  background: rgba(255,255,255,0.15);
+}
 /* DBT warning on the Thermometer Only card */
 .meas-dbt-card-warning {
   background: #FFF3CD;
@@ -181,29 +192,24 @@
 
     <div class="method-cards method-cards-full">
       <button class="method-card method-card-full" style="--card-accent:#001E62" onclick="openMeasModal('wbgt', this)">
-        <span class="method-card-icon">🌡️</span>
         <h3>WBGT</h3>
-        <p>Wet Bulb Globe Temperature — the most complete heat stress index. Accounts for humidity, radiant heat, and air movement.</p>
-        <span class="method-card-tag">Requires WBGT meter</span>
+        <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
+        <span class="method-card-tag">Wet Bulb Globe Temperature</span>
       </button>
       <button class="method-card method-card-full" style="--card-accent:#1a3a8f" onclick="openMeasModal('trh', this)">
-        <span class="method-card-icon">💧</span>
         <h3>Temperature + Humidity</h3>
-        <p>Use dry-bulb temperature and relative humidity together. Good when you have a thermometer and hygrometer but no WBGT meter.</p>
+        <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
         <span class="method-card-tag">Thermometer + hygrometer</span>
       </button>
       <button class="method-card method-card-full" style="--card-accent:#E05C2C" onclick="openMeasModal('hi', this)">
-        <span class="method-card-icon">🔥</span>
         <h3>Heat Index</h3>
-        <p>The "feels like" temperature combining heat and humidity. Useful when only a standard thermometer and hygrometer are available. No specialized instrument needed.</p>
+        <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
         <span class="method-card-tag">Device that Records Heat Index</span>
       </button>
       <button class="method-card method-card-full" style="--card-accent:#6B7280" onclick="openMeasModal('dbt', this)">
-        <span class="method-card-icon">🌡</span>
         <h3>Thermometer Only</h3>
-        <p>No hygrometer available? Enter air temperature and we'll calculate work-rest using <strong>100% relative humidity</strong> — the most conservative possible assumption.</p>
-        <div class="meas-dbt-card-warning">⚠️ This is a ceiling estimate. The actual schedule may be less restrictive if humidity is lower, but it will never be less protective than necessary.</div>
-        <span class="method-card-tag">Thermometer only · conservative estimate</span>
+        <div class="meas-dbt-card-warning">⚠️ Conservative estimate using 100% relative humidity.</div>
+        <span class="method-card-tag">Thermometer only</span>
       </button>
     </div>
 
