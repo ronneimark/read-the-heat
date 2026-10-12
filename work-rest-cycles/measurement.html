@@ -21,44 +21,48 @@
 #meas-modal {
   background: #fff;
   border-radius: 0;
-  width: 50%;             /* right half of the card's quadrant */
+  width: 50%;
   height: 100%;
   border-top: 1px solid var(--border);
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   border-left: none;
   box-shadow: none;
-  padding: 10px 16px 14px;
+  padding: 8px 14px 12px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;       /* no scroll — content must fit */
+  overflow: hidden;
 }
 .meas-field-group {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+/* T+RH has two fields — compress them further */
+#meas-trh-fields .meas-field-group {
+  margin-bottom: 6px;
 }
 .meas-field-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--subtext);
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   display: block;
 }
 .meas-input-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 .meas-input {
   flex: 1;
-  height: 44px;
-  font-size: 20px;
+  height: 38px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--navy);
   border: 2px solid var(--border);
-  border-radius: 7px;
-  padding: 0 10px;
+  border-radius: 6px;
+  padding: 0 9px;
   outline: none;
   transition: border-color 0.15s;
   font-family: inherit;
@@ -67,7 +71,7 @@
 .meas-input:focus { border-color: var(--navy); }
 .meas-input.error { border-color: #D50032; }
 .meas-unit-suffix {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--subtext);
   flex-shrink: 0;
@@ -75,16 +79,16 @@
 .meas-toggle {
   display: flex;
   border: 2px solid var(--border);
-  border-radius: 7px;
+  border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
 }
 .meas-toggle button {
-  padding: 0 10px;
-  height: 44px;
+  padding: 0 9px;
+  height: 38px;
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--subtext);
   cursor: pointer;
@@ -97,30 +101,30 @@
 }
 .meas-error-msg {
   color: #D50032;
-  font-size: 11px;
-  margin-top: 3px;
+  font-size: 10px;
+  margin-top: 2px;
   display: none;
 }
 .meas-error-msg.visible { display: block; }
 .meas-divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 10px 0;
+  margin: 8px 0;
 }
 .meas-submit-btn {
   width: 100%;
-  padding: 11px;
+  padding: 9px;
   background: var(--navy);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 7px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.12s, transform 0.1s;
   letter-spacing: 0.02em;
-  margin-top: auto;      /* pushes to bottom of flex column */
+  margin-top: auto;
   flex-shrink: 0;
 }
 .meas-submit-btn:hover { background: #002080; }
@@ -202,7 +206,7 @@
 <!-- ── Measurement input modal ── -->
 <div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
   <div id="meas-modal">
-    <div class="modal-sticky-header" style="margin:-10px -16px 12px;">
+    <div class="modal-sticky-header" style="margin:-8px -14px 10px;">
       <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
@@ -255,7 +259,7 @@
   let measCurrentInstrument = null;
   let measCurrentUnit = 'F';
   const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
-  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Enter Temperature & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
+  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Temp & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
   const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
 
   function openMeasModal(instrument, triggerEl) {
