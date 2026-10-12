@@ -524,6 +524,9 @@ body.hi-chart-active { overflow: hidden; }
   let _hiUnit = 'F';
   let _hiRowIdx = -1;
   let _hiColIdx = 1;
+  let _hiStoredVal  = null;   // value as entered by the user
+  let _hiStoredUnit = 'F';    // unit of the stored value
+  let _hiActivity   = 'moderate';
 
   // ── HI lookup data ───────────────────────────────────────────────────────────
   // Bounds in °F: row i when val < HI_BOUNDS_F[i]
@@ -610,10 +613,26 @@ body.hi-chart-active { overflow: hidden; }
   }
 
   // ── Build result tab ──────────────────────────────────────────────────────────
-  function buildHIResultTab(s) {
-    const val      = s.hiF || s.heatIndex || s.measValue || null;
-    const unit     = s.hiUnit || s.measUnit || 'F';
-    const activity = s.activity || 'moderate';
+  function buildHIResultTab(s, overrideUnit) {
+    // s is the session state object on first call; overrideUnit is set when the unit toggle fires
+    const storedVal  = s.hiF || s.heatIndex || s.measValue || null;
+    const storedUnit = s.hiUnit || s.measUnit || 'F';
+    const activity   = s.activity || 'moderate';
+
+    // Persist for toggle rebuilds
+    if (storedVal  != null) { _hiStoredVal  = storedVal;  _hiStoredUnit = storedUnit; }
+    if (activity)            { _hiActivity   = activity; }
+
+    // Display unit: explicit override > current toggle state > session unit
+    const unit = overrideUnit || _hiUnit || storedUnit;
+
+    // Convert stored value to display unit on the fly
+    let val = _hiStoredVal;
+    if (val != null && _hiStoredUnit !== unit) {
+      val = unit === 'C'
+        ? Math.round((_hiStoredVal - 32) * 5/9 * 10) / 10
+        : Math.round((_hiStoredVal * 9/5 + 32) * 10) / 10;
+    }
     const rowIdx   = val != null ? getHIRow(val, unit) : -1;
     const colIdx   = activity in ACT_COL ? ACT_COL[activity] : 1;
     const cell     = rowIdx >= 0 ? HI_DATA[rowIdx][colIdx] : null;
@@ -652,9 +671,17 @@ body.hi-chart-active { overflow: hidden; }
 
     const valDisplay = val != null ? val + unitLabel : '—';
 
+    // Show only the relevant unit in the monitoring range label
+    // Range strings are like "91–103°F (33–39°C)" — extract °F part or °C part
+    const monitoringRange = rowIdx >= 0 && HI_RANGE_NOTES[rowIdx]
+      ? (unit === 'C'
+          ? (HI_RANGE_NOTES[rowIdx].range.match(/\(([^)]+)\)/) || [])[1] || HI_RANGE_NOTES[rowIdx].range
+          : HI_RANGE_NOTES[rowIdx].range.replace(/\s*\([^)]*\)/g, ''))
+      : '';
+
     const monitoringHtml = rowIdx >= 0 && HI_RANGE_NOTES[rowIdx] ? `
       <div class="result-monitoring">
-        <div class="result-monitoring-label">Monitoring &amp; Guidance — ${HI_RANGE_NOTES[rowIdx].range}</div>
+        <div class="result-monitoring-label">Monitoring &amp; Guidance — ${monitoringRange}</div>
         ${HI_RANGE_NOTES[rowIdx].text}
       </div>` : '';
 
@@ -836,6 +863,10 @@ body.hi-chart-active { overflow: hidden; }
     });
     // Rebuild chart with new labels
     if (_hiCurrentTab === 'chart') buildHIChartTab();
+    // Rebuild result tab so value and range label reflect new unit
+    if (_hiStoredVal != null) {
+      buildHIResultTab({ measValue: _hiStoredVal, measUnit: _hiStoredUnit, activity: _hiActivity }, unit);
+    }
   }
 
   // ── Worker status ─────────────────────────────────────────────────────────────
@@ -873,6 +904,10 @@ body.hi-chart-active { overflow: hidden; }
     document.getElementById('hi-acclim-tabs').style.display         = isAcclim ? '' : 'none';
     document.getElementById('hi-acclim-tab-bar-wrap').style.display = isAcclim ? '' : 'none';
     document.getElementById('hi-unacclim-section').style.display     = isAcclim ? 'none' : '';
+
+    // Sync unit toggle to session unit before building tabs
+    const sessionUnit = s.measUnit || 'F';
+    if (sessionUnit !== 'F') setHiUnit(sessionUnit);
 
     // Build all tab content
     buildHIResultTab(s);
