@@ -1378,6 +1378,30 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       });
     }
 
+    // Pre-populate from measurement.html if T+RH values were passed
+    const sessionTemp = s.measTemp;
+    const sessionRH   = s.measRH;
+    if (sessionTemp != null && sessionRH != null) {
+      const tempEl = document.getElementById('trh-temp');
+      const rhEl   = document.getElementById('trh-rh');
+      if (tempEl) tempEl.value = sessionTemp;   // already in sessionUnit
+      if (rhEl)   rhEl.value   = sessionRH;
+      // Compute and store internal state (always in °F)
+      const tempF = sessionUnit === 'C'
+        ? sessionTemp * 9/5 + 32
+        : sessionTemp;
+      _hiTempValF = tempF;
+      _hiRhVal    = sessionRH;
+      _hiCalcHI   = calcRothfuszHI(tempF, sessionRH);
+      const dispEl = document.getElementById('trh-calc-display');
+      if (dispEl && _hiCalcHI != null) {
+        const hiDisp = sessionUnit === 'C'
+          ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+          : Math.round(_hiCalcHI) + '°F';
+        dispEl.textContent = hiDisp;
+      }
+    }
+
     // Build all tab content
     buildTrhResultTab();
     buildTrhChartTab();
