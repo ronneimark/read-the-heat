@@ -185,6 +185,12 @@
         <p>The "feels like" temperature combining heat and humidity. Useful when only a standard thermometer and hygrometer are available. No specialized instrument needed.</p>
         <span class="method-card-tag">No special instrument</span>
       </button>
+      <button class="method-card" style="--card-accent:#6B7280" onclick="openMeasModal('dbt')">
+        <span class="method-card-icon">🌡</span>
+        <h3>Thermometer Only</h3>
+        <p>Record a dry-bulb air temperature reading without humidity. <strong>Important limitations apply</strong> — dry-bulb temperature alone does not capture heat stress.</p>
+        <span class="method-card-tag">Thermometer only</span>
+      </button>
     </div>
 
     <div class="launcher-secondary">
@@ -202,7 +208,13 @@
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
 
-    <!-- Single-value fields (WBGT / Heat Index) -->
+    <!-- Warning banner — shown for dry-bulb only -->
+    <div id="meas-dbt-warning" hidden style="background:#FFF3CD;border:1px solid #FBBF24;border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:13px;line-height:1.5;color:#78350F;">
+      <strong>⚠️ Dry-bulb temperature alone is not sufficient to determine heat stress.</strong>
+      It does not account for the effects of humidity or radiant heat from ovens, furnaces, and other hot equipment — factors that significantly increase physiological strain on workers. For a more complete assessment, use WBGT, Temperature + Humidity, or Heat Index instead.
+    </div>
+
+    <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
     <div id="meas-single-fields">
       <div class="meas-field-group">
         <label class="meas-field-label" id="meas-single-label" for="meas-value">WBGT Value</label>
@@ -250,9 +262,9 @@
 <script>
   let measCurrentInstrument = null;
   let measCurrentUnit = 'F';
-  const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html' };
-  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Enter Temperature & Humidity', hi: 'Enter Your Heat Index' };
-  const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value' };
+  const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
+  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Enter Temperature & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
+  const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
 
   function openMeasModal(instrument) {
     measCurrentInstrument = instrument;
@@ -277,6 +289,7 @@
       closeMeasModal();
       window.location.href = measDestUrls[instrument];
     };
+    document.getElementById('meas-dbt-warning').hidden = (instrument !== 'dbt');
     document.getElementById('meas-modal-overlay').classList.add('open');
     setTimeout(() => document.querySelector('#meas-modal input')?.focus(), 80);
   }

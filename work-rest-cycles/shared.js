@@ -370,7 +370,7 @@ function buildBreadcrumbs() {
 
   // Measurement instrument
   const instrument = WRC.val('instrument', null);
-  const instrumentLabels = { wbgt: '🌡️ WBGT', trh: '💧 Temp + Humidity', hi: '🔥 Heat Index' };
+  const instrumentLabels = { wbgt: '🌡️ WBGT', trh: '💧 Temp + Humidity', hi: '🔥 Heat Index', dbt: '🌡 Thermometer' };
   if (instrument && instrumentLabels[instrument]) {
     crumbs.push({ label: instrumentLabels[instrument], href: 'measurement.html', selected: true });
     // Value pill — show entered measurement alongside instrument
@@ -382,7 +382,7 @@ function buildBreadcrumbs() {
     let valueLabel = null;
     if (instrument === 'trh' && measTemp != null && measRH != null) {
       valueLabel = measTemp + unitSuffix + ' / ' + measRH + '%';
-    } else if ((instrument === 'wbgt' || instrument === 'hi') && measValue != null) {
+    } else if ((instrument === 'wbgt' || instrument === 'hi' || instrument === 'dbt') && measValue != null) {
       valueLabel = measValue + unitSuffix;
     }
     if (valueLabel) {
