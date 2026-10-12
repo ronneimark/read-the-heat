@@ -233,27 +233,31 @@
   .intro-tab-bar { border-color: #334; }
 }
 .intro-tab {
-  font-size: .78rem;
+  font-size: .9rem;
   font-weight: 700;
-  padding: 7px 12px 8px;
+  padding: 9px 16px 10px;
   border: none;
-  background: none;
+  background: rgba(0,0,0,.04);
   cursor: pointer;
-  color: var(--subtext, #666);
+  color: var(--subtext, #555);
   border-bottom: 3px solid transparent;
   margin-bottom: -2px;
-  border-radius: 6px 6px 0 0;
+  border-radius: 8px 8px 0 0;
   white-space: nowrap;
-  transition: color .12s, border-color .12s;
+  transition: color .12s, border-color .12s, background .12s;
+  flex: 1;
+  text-align: center;
 }
-.intro-tab:hover { color: var(--navy, #1a2e4a); }
+.intro-tab:hover { background: rgba(0,0,0,.07); color: var(--navy, #1a2e4a); }
 .intro-tab.active {
   color: #1e5fa8;
   border-bottom-color: #1e5fa8;
-  background: rgba(30,95,168,.06);
+  background: #fff;
 }
 @media (prefers-color-scheme: dark) {
-  .intro-tab.active { color: #7ab4f5; border-bottom-color: #7ab4f5; background: rgba(122,180,245,.08); }
+  .intro-tab { background: rgba(255,255,255,.06); }
+  .intro-tab:hover { background: rgba(255,255,255,.1); }
+  .intro-tab.active { color: #7ab4f5; border-bottom-color: #7ab4f5; background: #1a2235; }
 }
 
 /* tab panels */
