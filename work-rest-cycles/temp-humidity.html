@@ -9,10 +9,10 @@
 body { overflow: auto; }
 /* Compact desktop header — matches map.php banner height */
 @media (min-width: 601px) {
-  header { height: 76px; }
+  header { height: 76px; overflow: hidden; }
   .header-attribution { display: none; }
-  .header-inner { padding: 0; gap: 0; align-self: stretch; justify-content: center; }
-  .header-brand { max-height: none; height: 100%; width: 100%; object-fit: cover; object-position: center; margin-bottom: 0; }
+  .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
+  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
 }
 </style>
 <script src="./lang-link.js"></script>
