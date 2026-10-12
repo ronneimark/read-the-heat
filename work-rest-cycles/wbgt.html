@@ -439,12 +439,8 @@ body.chart-active { overflow: hidden; }
       <button class="strip-btn" onclick="openMethodologyModal()">📚 Methodology</button>
     </div>
   </div>
-</div><!-- /fixed-top -->
-
-<main>
-
-  <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
-  <div id="wbgt-acclim-tabs" style="display:none">
+  <!-- Tab bars live inside fixed-top so they stay pinned below the header -->
+  <div id="acclim-tab-bar-wrap" style="display:none">
     <div class="acclim-tab-bar" id="acclim-tab-bar">
       <button class="acclim-tab-btn active" id="tab-btn-result" onclick="switchAcclimTab('result')">
         <span class="acclim-tab-btn-title">📋 My Work-Rest Cycle</span>
@@ -455,6 +451,37 @@ body.chart-active { overflow: hidden; }
         <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
       </button>
     </div>
+  </div>
+  <div id="unacclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="unacclim-tab-bar" style="flex-wrap:wrap;">
+      <button class="unacclim-tab-btn active" id="utab-btn-0" onclick="switchUnacclimTab(0)">
+        <span class="acclim-tab-btn-title">📋 My Schedule</span>
+        <span class="acclim-tab-btn-sub">RAL &amp; daily exposure</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-1" onclick="switchUnacclimTab(1)">
+        <span class="acclim-tab-btn-title">📊 Full RAL Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; levels</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-2" onclick="switchUnacclimTab(2)">
+        <span class="acclim-tab-btn-title">📅 Acclim. Schedule</span>
+        <span class="acclim-tab-btn-sub">% of shift by day</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-3" onclick="switchUnacclimTab(3)">
+        <span class="acclim-tab-btn-title">📝 Notes</span>
+        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-4" onclick="switchUnacclimTab(4)">
+        <span class="acclim-tab-btn-title">🔍 Full Reference</span>
+        <span class="acclim-tab-btn-sub">Complete original view</span>
+      </button>
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<main>
+
+  <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
+  <div id="wbgt-acclim-tabs" style="display:none">
     <div id="acclim-tab-result-wrap"><div id="acclim-tab-result"></div></div>
     <div id="acclim-tab-chart"></div>
   </div>
@@ -563,28 +590,6 @@ body.chart-active { overflow: hidden; }
 
   <!-- ══ UNACCLIMATIZED 5-TAB VIEW ══ -->
   <div id="wbgt-unacclim-tabs" style="display:none">
-    <div class="acclim-tab-bar" id="unacclim-tab-bar" style="flex-wrap:wrap;">
-      <button class="unacclim-tab-btn active" id="utab-btn-0" onclick="switchUnacclimTab(0)">
-        <span class="acclim-tab-btn-title">📋 My Schedule</span>
-        <span class="acclim-tab-btn-sub">RAL &amp; daily exposure</span>
-      </button>
-      <button class="unacclim-tab-btn" id="utab-btn-1" onclick="switchUnacclimTab(1)">
-        <span class="acclim-tab-btn-title">📊 Full RAL Chart</span>
-        <span class="acclim-tab-btn-sub">All conditions &amp; levels</span>
-      </button>
-      <button class="unacclim-tab-btn" id="utab-btn-2" onclick="switchUnacclimTab(2)">
-        <span class="acclim-tab-btn-title">📅 Acclim. Schedule</span>
-        <span class="acclim-tab-btn-sub">% of shift by day</span>
-      </button>
-      <button class="unacclim-tab-btn" id="utab-btn-3" onclick="switchUnacclimTab(3)">
-        <span class="acclim-tab-btn-title">📝 Notes</span>
-        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
-      </button>
-      <button class="unacclim-tab-btn" id="utab-btn-4" onclick="switchUnacclimTab(4)">
-        <span class="acclim-tab-btn-title">🔍 Full Reference</span>
-        <span class="acclim-tab-btn-sub">Complete original view</span>
-      </button>
-    </div>
     <div id="unacclim-tab-0-wrap"><div id="unacclim-tab-result"></div></div>
     <div id="unacclim-tab-chart"></div>
     <div id="unacclim-tab-schedule" class="unacclim-tab-pane"></div>
@@ -889,19 +894,16 @@ body.chart-active { overflow: hidden; }
   let _chartActive = false;
   function sizeChartPane() {
     const fixedTop  = document.getElementById('fixed-top');
-    const tabBar    = document.getElementById('acclim-tab-bar');
     const chartPane = document.getElementById('acclim-tab-chart');
     if (!chartPane) return;
-    const top = fixedTop.offsetHeight + tabBar.offsetHeight;
-    chartPane.style.top = top + 'px';
+    chartPane.style.top = fixedTop.offsetHeight + 'px';
   }
 
   function sizeResultWrap() {
     const fixedTop = document.getElementById('fixed-top');
-    const tabBar   = document.getElementById('acclim-tab-bar');
     const wrap     = document.getElementById('acclim-tab-result-wrap');
     if (!wrap) return;
-    const avail = window.innerHeight - fixedTop.offsetHeight - tabBar.offsetHeight;
+    const avail = window.innerHeight - fixedTop.offsetHeight;
     wrap.style.minHeight = Math.max(avail, 320) + 'px';
   }
 
@@ -1172,18 +1174,16 @@ body.chart-active { overflow: hidden; }
 
   function sizeUnacclimChartPane() {
     const fixedTop = document.getElementById('fixed-top');
-    const tabBar   = document.getElementById('unacclim-tab-bar');
     const pane     = document.getElementById('unacclim-tab-chart');
     if (!pane) return;
-    pane.style.top = (fixedTop.offsetHeight + tabBar.offsetHeight) + 'px';
+    pane.style.top = fixedTop.offsetHeight + 'px';
   }
 
   function sizeUnacclimResultWrap() {
     const fixedTop = document.getElementById('fixed-top');
-    const tabBar   = document.getElementById('unacclim-tab-bar');
     const wrap     = document.getElementById('unacclim-tab-0-wrap');
-    if (!wrap || !fixedTop || !tabBar) return;
-    wrap.style.top = (fixedTop.offsetHeight + tabBar.offsetHeight) + 'px';
+    if (!wrap || !fixedTop) return;
+    wrap.style.top = fixedTop.offsetHeight + 'px';
   }
 
   let _unacclimChartActive = false;
@@ -1224,12 +1224,16 @@ body.chart-active { overflow: hidden; }
     });
   }
 
+  let _sessionMode = ''; // 'acclim' | 'unacclim' | ''
+
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const main = document.querySelector('main');
     if (main) main.style.paddingTop = fixedTop.offsetHeight + 'px';
     if (_chartActive) sizeChartPane();
-    if (_unacclimChartActive) sizeUnacclimChartPane();
+    else if (_unacclimChartActive) sizeUnacclimChartPane();
+    else if (_sessionMode === 'acclim') sizeResultWrap();
+    else if (_sessionMode === 'unacclim') sizeUnacclimResultWrap();
   }
 
   async function init() {
@@ -1242,24 +1246,30 @@ body.chart-active { overflow: hidden; }
     const hasUnacclimSession = !isAcclim && s.instrument === 'wbgt';
 
     if (hasAcclimSession) {
+      _sessionMode = 'acclim';
       // ── Two-tab view for acclimatized WBGT workers ──
-      document.getElementById('wbgt-acclim-tabs').style.display      = '';
-      document.getElementById('wbgt-acclim-section').style.display   = 'none';
-      document.getElementById('wbgt-unacclim-section').style.display = 'none';
-      document.getElementById('wbgt-unacclim-tabs').style.display    = 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display         = '';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = '';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display       = 'none';
 
       buildResultTab(s);
       buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
 
     } else if (hasUnacclimSession) {
+      _sessionMode = 'unacclim';
       // ── Five-tab view for unacclimatized WBGT workers ──
       // Clone legacy content BEFORE hiding source section
       buildUnacclimLegacyTab();
 
-      document.getElementById('wbgt-unacclim-tabs').style.display    = '';
-      document.getElementById('wbgt-acclim-tabs').style.display      = 'none';
-      document.getElementById('wbgt-acclim-section').style.display   = 'none';
-      document.getElementById('wbgt-unacclim-section').style.display = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display       = '';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = '';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display         = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = 'none';
 
       buildUnacclimResultTab(s);
       buildUnacclimChartTab(s.measUnit || 'F', window._wrcUnacclimRowIdx, window._wrcUnacclimColIdx);
@@ -1268,27 +1278,20 @@ body.chart-active { overflow: hidden; }
       switchUnacclimTab(0);
 
     } else {
+      _sessionMode = '';
       // ── Fallback: original table view ──
-      document.getElementById('wbgt-acclim-tabs').style.display      = 'none';
-      document.getElementById('wbgt-unacclim-tabs').style.display    = 'none';
-      document.getElementById('wbgt-acclim-section').style.display   = isAcclim ? '' : 'none';
-      document.getElementById('wbgt-unacclim-section').style.display = !isAcclim ? '' : 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display         = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display       = 'none';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = 'none';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = isAcclim ? '' : 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = !isAcclim ? '' : 'none';
       setUnit('F');
     }
 
     buildBreadcrumbs();
-    requestAnimationFrame(() => {
-      updateLayout();
-      if (hasAcclimSession) sizeResultWrap();
-      else if (hasUnacclimSession) sizeUnacclimResultWrap();
-    });
-    window.addEventListener('resize', () => {
-      updateLayout();
-      if (_chartActive) sizeChartPane();
-      else if (_unacclimChartActive) sizeUnacclimChartPane();
-      else if (hasAcclimSession) sizeResultWrap();
-      else if (hasUnacclimSession) sizeUnacclimResultWrap();
-    });
+    requestAnimationFrame(() => { updateLayout(); });
+    window.addEventListener('resize', () => { updateLayout(); });
   }
 
   document.addEventListener('DOMContentLoaded', init);
