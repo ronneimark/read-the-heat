@@ -210,7 +210,7 @@
   animation: popoverOut .45s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
 .intro-popover.rolled {
-  overflow: hidden !important;
+  overflow-y: auto;
   transition: max-height .35s cubic-bezier(.4,0,.2,1);
   cursor: pointer;
 }
@@ -749,13 +749,27 @@
       if (overlaps) {
         // Popover is bottom-anchored; shrink it so its top clears below the target
         const gap = 10;
-        const vpH = window.innerHeight;
         const popBottom = pR.bottom; /* fixed bottom position */
         const neededTop = tR.bottom + gap;
-        const rolledHeight = popBottom - neededTop;
-        pop.style.maxHeight = Math.max(44, rolledHeight) + 'px';
+        const rolledHeight = Math.max(44, popBottom - neededTop);
+
+        // Capture where the clicked list item sits before the roll
+        const clickedLi = e.currentTarget;
+        const liRectBefore = clickedLi.getBoundingClientRect();
+
+        pop.style.maxHeight = rolledHeight + 'px';
         pop.classList.add('rolled');
         pop._rolledStep = n;
+
+        // After the transition, scroll so the clicked item stays in view
+        setTimeout(() => {
+          const liRectAfter = clickedLi.getBoundingClientRect();
+          // How far the item shifted upward (positive = shifted up, now clipped off top)
+          const shift = liRectBefore.top - liRectAfter.top;
+          if (shift > 0) {
+            pop.scrollTop += shift;
+          }
+        }, 360); // just after the .35s transition
       }
     });
   }
