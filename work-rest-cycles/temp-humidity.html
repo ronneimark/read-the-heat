@@ -223,7 +223,7 @@ body { overflow: auto; }
   let trhUnit = 'F';
   let currentLevel = 'moderate';
 
-  const trhRows = [
+  const trhPageRows = [
     { id:'trh-r1', f:'70.0°F',  c:'21.1°C' },
     { id:'trh-r2', f:'75.0°F',  c:'23.9°C' },
     { id:'trh-r3', f:'80.0°F',  c:'26.7°C' },
@@ -281,7 +281,7 @@ body { overflow: auto; }
     document.getElementById('btn-trh-c').classList.toggle('active', unit === 'C');
     const header = document.getElementById('trh-header');
     if (header) header.innerHTML = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
-    trhRows.forEach(row => {
+    trhPageRows.forEach(row => {
       const cell = document.getElementById(row.id);
       if (cell) cell.innerHTML = unit === 'C' ? row.c : row.f;
     });

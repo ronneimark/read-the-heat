@@ -232,7 +232,7 @@ body { overflow: auto; }
 <script>
   let workerStatus = 'acclimatized';
 
-  const hiRowsAcclim = [
+  const hiPageRowsAcclim = [
     { id:'hi-a-r1', f:'Below 80.0°F',  c:'Below 26.7°C' },
     { id:'hi-a-r2', f:'80.0–90.0°F',   c:'26.7–32.2°C'  },
     { id:'hi-a-r3', f:'91.0–103.0°F',  c:'32.8–39.4°C'  },
@@ -241,7 +241,7 @@ body { overflow: auto; }
     { id:'hi-a-r6', f:'Above 130.0°F', c:'Above 54.4°C' }
   ];
 
-  const hiRowsUnacclim = [
+  const hiPageRowsUnacclim = [
     { id:'hi-u-r1', f:'Below 72.0°F',  c:'Below 22.2°C' },
     { id:'hi-u-r2', f:'72.0–82.0°F',   c:'22.2–27.8°C'  },
     { id:'hi-u-r3', f:'83.0–95.0°F',   c:'28.3–35.0°C'  },
@@ -253,11 +253,11 @@ body { overflow: auto; }
   function setHiUnit(unit) {
     document.getElementById('btn-hi-f').classList.toggle('active', unit === 'F');
     document.getElementById('btn-hi-c').classList.toggle('active', unit === 'C');
-    hiRowsAcclim.forEach(row => {
+    hiPageRowsAcclim.forEach(row => {
       const cell = document.getElementById(row.id);
       if (cell) cell.innerHTML = (unit === 'C' ? row.c : row.f);
     });
-    hiRowsUnacclim.forEach(row => {
+    hiPageRowsUnacclim.forEach(row => {
       const cell = document.getElementById(row.id);
       if (cell) cell.innerHTML = (unit === 'C' ? row.c : row.f);
     });
