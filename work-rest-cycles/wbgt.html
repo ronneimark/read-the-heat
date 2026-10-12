@@ -1094,7 +1094,10 @@ body.chart-active { overflow: hidden; }
           <div class="urec-sched-sub">${isNew?'New Worker — 5-day ramp':'Returning Worker — 4-day ramp'} &nbsp;·&nbsp; Times shown per 60-min period</div>
         </div>
         <div class="urec-sched-grid">${dayRowsHtml}</div>
-        <div class="urec-sched-foot">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
+        <div class="urec-sched-foot" style="background:var(--warn-bg,#FFF3E0);color:var(--warn-text,#7B2500);border-radius:6px;padding:6px 10px;font-style:normal;font-weight:700;font-size:clamp(10px,0.95vw,13px);border-left:3px solid var(--warn-text,#7B2500);">
+          ⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.
+        </div>
+        <div class="urec-sched-foot" style="margin-top:4px;">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
       </div>`;
   }
 
@@ -1144,9 +1147,12 @@ body.chart-active { overflow: hidden; }
       <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;padding-top:14px">${title}</h3>
       <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.55">${sub}</p>
       ${barsHtml}
-      <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E8F5E9'};color:${isNew?'#7A2800':'#104A13'}">
+      <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:#7B2500;background:#FFF3E0;color:#7B2500;font-weight:700;">
+        ⚠ Completing this schedule means reaching 100% exposure — not full acclimatization. Full acclimatization may take <strong>up to 14 days</strong> of continued work in heat.
+      </div>
+      <div class="note-box" style="margin-top:12px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E8F5E9'};color:${isNew?'#7A2800':'#104A13'}">
         <strong>Remember:</strong> Apply RAL-based work-rest cycles <em>during all heat exposure periods</em>, regardless of the daily percentage.
-        ${isNew?' For new workers, continue working at 100% exposure through day 14 before considering the worker fully acclimatized.':' After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.'}
+        ${isNew?' Continue monitoring closely throughout the full 14-day acclimatization period.':' After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.'}
       </div>
       <p style="font-size:12px;color:var(--subtext);margin-top:14px;font-style:italic">Source: NIOSH (2016) Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (Table B-3)</p>`;
   }
