@@ -449,10 +449,86 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 }
 .hi-notes-range { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--navy, #1A2A3A); margin-bottom: 4px; }
 .hi-notes-text  { font-size: 13px; line-height: 1.55; }
+
+/* ── Acclimatization schedule modal ── */
+.sched-modal-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy,#1A2A3A); color: #fff;
+  border: none; border-radius: 999px;
+  padding: 11px 22px; font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: background .15s, box-shadow .15s;
+}
+.sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+#sched-dialog {
+  border: none; border-radius: 16px; padding: 0;
+  max-width: min(640px, 94vw); width: 100%;
+  box-shadow: 0 8px 40px rgba(0,0,0,.32);
+  background: var(--warm-white,#F6F3EC);
+}
+#sched-dialog::backdrop { background: rgba(0,0,0,.55); }
+.sched-dialog-inner { padding: 28px 28px 24px; }
+.sched-dialog-hdr {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 16px; gap: 12px;
+}
+.sched-dialog-title { font-size: 18px; font-weight: 800; color: var(--navy,#1A2A3A); }
+.sched-dialog-sub   { font-size: 12px; color: var(--subtext,#6B7785); margin-top: 3px; }
+.sched-dialog-close {
+  background: none; border: none; cursor: pointer; font-size: 22px;
+  color: var(--subtext,#6B7785); line-height: 1; flex-shrink: 0; padding: 2px 4px;
+}
+.sched-dialog-close:hover { color: var(--navy,#1A2A3A); }
+.sched-type-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.sched-type-tab {
+  flex: 1; padding: 8px 12px; border: 2px solid var(--border,#CDD3DA);
+  border-radius: 8px; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 700; color: var(--subtext,#6B7785);
+  transition: all .13s;
+}
+.sched-type-tab.active { background: var(--navy,#1A2A3A); color: #fff; border-color: var(--navy,#1A2A3A); }
+.urec-sched-grid { display: flex; flex-direction: column; gap: 6px; }
+.urec-day-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border,#CDD3DA); }
+.urec-day-row:last-child { border-bottom: none; }
+.urec-day-label { font-size: 13px; font-weight: 700; min-width: 56px; flex-shrink: 0; }
+.urec-bar-wrap  { flex: 1; height: 14px; background: #E9EDEF; border-radius: 4px; overflow: hidden; }
+.urec-bar       { height: 100%; border-radius: 4px; }
+.urec-day-pct   { font-size: 13px; font-weight: 800; min-width: 36px; text-align: right; flex-shrink: 0; }
+.urec-time-work { color: #1A5A1F; font-weight: 700; display: block; font-size: 12px; }
+.urec-time-rest { color: #7A1515; font-weight: 600; display: block; font-size: 12px; }
+.urec-time-out  { color: var(--subtext); display: block; font-size: 12px; }
+.urec-day-times { font-size: 12px; line-height: 1.25; min-width: 0; text-align: right; flex-shrink: 0; width: 180px; }
+.urec-day-full .urec-time-work { color: #0D3B10; }
+.sched-foot-warn {
+  background: var(--warn-bg,#FFF3E0); color: var(--warn-text,#7B2500);
+  border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 12px;
+  border-left: 3px solid var(--warn-text,#7B2500); margin-top: 12px;
+}
+.sched-foot-note { font-size: 11px; color: var(--subtext); font-style: italic; margin-top: 6px; }
 </style>
 <script src="./lang-link.js"></script>
 </head>
 <body>
+
+<dialog id="sched-dialog" aria-labelledby="sched-dialog-title">
+  <div class="sched-dialog-inner">
+    <div class="sched-dialog-hdr">
+      <div>
+        <div class="sched-dialog-title" id="sched-dialog-title">📅 Daily Exposure Schedule</div>
+        <div class="sched-dialog-sub">Times shown per 60-minute period in heat</div>
+      </div>
+      <button class="sched-dialog-close" onclick="document.getElementById('sched-dialog').close()" aria-label="Close">✕</button>
+    </div>
+    <div class="sched-type-tabs">
+      <button class="sched-type-tab active" onclick="switchSchedType('new',this)">New Worker <small style="font-weight:500;display:block">5-day ramp</small></button>
+      <button class="sched-type-tab"        onclick="switchSchedType('ret',this)">Returning Worker <small style="font-weight:500;display:block">4-day ramp</small></button>
+    </div>
+    <div id="sched-dialog-grid"></div>
+    <div class="sched-foot-warn">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+    <div class="sched-foot-note">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
+  </div>
+</dialog>
 
 <div id="fixed-top">
   <div class="hazard-bar"></div>
@@ -684,6 +760,59 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   const ACT_LABEL = { light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy' };
   const ACT_FULL  = { light:'Light Work', moderate:'Moderate Work', heavy:'Heavy Work', vh:'Very Heavy Work' };
   const ACT_EMOJI = { light:'🟢', moderate:'🟡', heavy:'🟠', vh:'🔴' };
+
+  const SCHED_NEW       = [{day:'Day 1',pct:20},{day:'Day 2',pct:40},{day:'Day 3',pct:60},{day:'Day 4',pct:80},{day:'Day 5+',pct:100}];
+  const SCHED_RETURNING = [{day:'Day 1',pct:50},{day:'Day 2',pct:60},{day:'Day 3',pct:80},{day:'Day 4+',pct:100}];
+  let   _schedCell      = null; // stored for modal
+
+  function _buildSchedRows(sched, cell) {
+    const accent = '#E05C2C';
+    let html = '';
+    sched.forEach(d => {
+      const isFull  = d.pct === 100;
+      const f       = d.pct / 100;
+      const workMin = cell ? Math.round(cell.w * f) : 0;
+      const restMin = cell ? Math.round(cell.r * f) : 0;
+      const outside = cell ? (60 - workMin - restMin) : 0;
+      let timesHtml = '';
+      if (d.pct < 100) {
+        timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+          (restMin > 0 ? `<span class="urec-time-rest">${restMin} min rest in heat</span>` : '') +
+          `<span class="urec-time-out">${outside} min outside heat</span>`;
+      } else {
+        timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+          `<span class="urec-time-rest">${restMin} min rest in heat</span>`;
+      }
+      html += `<div class="urec-day-row${isFull?' urec-day-full':''}">
+        <div class="urec-day-label">${d.day}</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#2E7D32':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#2E7D32':accent}">${d.pct}%</div>
+        <div class="urec-day-times">${timesHtml}</div>
+      </div>`;
+    });
+    return html;
+  }
+
+  function openSchedModal() {
+    if (!_schedCell) return;
+    switchSchedType('new', document.querySelector('.sched-type-tab'));
+    // reset tab active state
+    document.querySelectorAll('.sched-type-tab').forEach((b,i) => b.classList.toggle('active', i===0));
+    document.getElementById('sched-dialog').showModal();
+  }
+
+  function switchSchedType(type, btn) {
+    document.querySelectorAll('.sched-type-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const sched = type === 'new' ? SCHED_NEW : SCHED_RETURNING;
+    document.getElementById('sched-dialog-grid').innerHTML =
+      '<div class="urec-sched-grid">' + _buildSchedRows(sched, _schedCell) + '</div>';
+  }
+
+  document.getElementById('sched-dialog').addEventListener('click', function(e) {
+    const r = this.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) this.close();
+  });
 
   function getHIRow(val, unit) {
     const f = unit === 'F' ? parseFloat(val) : parseFloat(val) * 9/5 + 32;
@@ -1016,7 +1145,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         <div class="radiant-warn-strip" role="note">
           <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
         </div>
+        ${(workerLabel === 'Unacclimatized' && cell && cell.w !== null) ? `<button class="sched-modal-btn" onclick="openSchedModal()">📅 View Acclimatization Schedule</button>` : ''}
       </div>`;
+    if (workerLabel === 'Unacclimatized' && cell && cell.w !== null) _schedCell = cell;
+    else if (workerLabel !== 'Unacclimatized') { /* leave _schedCell as-is */ }
     return { rowIdx, colIdx };
   }
 
