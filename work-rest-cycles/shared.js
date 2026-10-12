@@ -137,6 +137,7 @@ function ensureMethodologyModal() {
       <button class="modal-close-btn" onclick="closeMethodologyModal()" aria-label="Close">&#x2715;</button>
     </div>
 
+    <div id="methodology-modal-body">
     <div class="section-label">Primary Sources</div>
     <ul class="source-list">
       <li>American Conference of Governmental Industrial Hygienists. (2025). <em>Threshold limit values for chemical substances and physical agents and biological exposure indices.</em> ACGIH.</li>
@@ -276,6 +277,7 @@ function ensureMethodologyModal() {
       <br>• Check for updates to NIOSH criteria, OSHA standards, and state-specific requirements
       <br><br>
       Developed with support from GLC-OHS / UIC School of Public Health. For informational and educational use.
+    </div>
     </div>
   </div>
 </div>`;
