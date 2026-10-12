@@ -218,17 +218,24 @@
     background: #b8002a;
     color: #fff;
   }
-  /* value pill — same link as instrument, lighter shade to signal it's supplementary */
+  /* value pill — yellow, oversized, bleeds above and below the strip */
   .wrc-crumb-value {
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.30);
+    background: #FFD700;
+    border-color: rgba(0,0,0,0.15);
+    color: #111;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 800;
+    font-size: 15px;
     font-variant-numeric: tabular-nums;
+    padding: 6px 14px;
+    margin-block: -8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    letter-spacing: 0.01em;
   }
   .wrc-crumb-value:hover {
-    background: #b8002a;
-    border-color: rgba(255,255,255,0.50);
+    background: #f5c800;
+    border-color: rgba(0,0,0,0.25);
+    color: #111;
   }
   .wrc-crumb-sep {
     color: rgba(255,255,255,0.28);
