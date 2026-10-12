@@ -53,13 +53,97 @@
       <button class="ls1-sector-btn" data-sector="childcare" onclick="ls1SelectSector('childcare')"><img class="ls1-photo" src="images/industries/childcare.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Childcare</span></button>
     </div>
 
-    <div class="ls1-footer"></div>
+    <div class="ls1-footer">
+      <div class="intro-panel" id="intro-panel">
+        <button class="intro-toggle" id="intro-toggle" onclick="toggleIntro()" aria-expanded="true" aria-controls="intro-body">
+          <span class="intro-toggle-label">ℹ How to use this tool</span>
+          <span class="intro-toggle-chevron" aria-hidden="true">▲</span>
+        </button>
+        <div class="intro-body" id="intro-body">
+          <p class="intro-lead">This tool calculates <strong>NIOSH-recommended work-rest cycles</strong> for indoor workers exposed to heat — in about 30 seconds.</p>
+          <ol class="intro-steps">
+            <li><strong>Pick your industry</strong> — choose the sector that best matches your workplace above.</li>
+            <li><strong>Describe the work</strong> — select the physical activity level (light, moderate, or heavy).</li>
+            <li><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits.</li>
+            <li><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool calculates a conservative heat index and recommends work-rest minutes per hour.</li>
+          </ol>
+          <p class="intro-uses-label">How people use it:</p>
+          <ul class="intro-uses">
+            <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
+            <li>🦺 <strong>Safety reps &amp; union stewards</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
+            <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div><!-- /ls1 -->
 </div><!-- /launcher -->
 
+<style>
+.intro-panel {
+  background: var(--card-bg, #f8f9fa);
+  border: 1px solid var(--border, #dee2e6);
+  border-radius: 10px;
+  margin: 12px 0 8px;
+  overflow: hidden;
+  font-size: .92rem;
+}
+@media (prefers-color-scheme: dark) {
+  .intro-panel { background: #1e2330; border-color: #334; }
+}
+.intro-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: .92rem;
+  font-weight: 600;
+  color: inherit;
+  text-align: left;
+}
+.intro-toggle:hover { opacity: .8; }
+.intro-toggle-chevron { transition: transform .2s; display: inline-block; font-size: .75rem; }
+.intro-toggle[aria-expanded="false"] .intro-toggle-chevron { transform: rotate(180deg); }
+.intro-body {
+  padding: 0 16px 14px;
+  display: block;
+}
+.intro-body.collapsed { display: none; }
+.intro-lead { margin: 0 0 10px; }
+.intro-steps {
+  margin: 0 0 10px;
+  padding-left: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.intro-uses-label { margin: 0 0 6px; font-weight: 600; }
+.intro-uses {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+</style>
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  function toggleIntro() {
+    const btn = document.getElementById('intro-toggle');
+    const body = document.getElementById('intro-body');
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !expanded);
+    body.classList.toggle('collapsed', expanded);
+    try { localStorage.setItem('wrc-intro-open', !expanded); } catch(e) {}
+  }
+
   function ls1SelectSector(key) {
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
       b.classList.toggle('selected', b.dataset.sector === key));
@@ -82,6 +166,16 @@
       document.querySelectorAll('.ls1-sector-btn').forEach(b =>
         b.classList.toggle('selected', b.dataset.sector === prev));
     }
+    // Restore intro panel open/closed state
+    try {
+      const saved = localStorage.getItem('wrc-intro-open');
+      if (saved === 'false') {
+        const btn = document.getElementById('intro-toggle');
+        const body = document.getElementById('intro-body');
+        btn.setAttribute('aria-expanded', 'false');
+        body.classList.add('collapsed');
+      }
+    } catch(e) {}
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
