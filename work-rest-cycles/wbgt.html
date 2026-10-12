@@ -828,7 +828,7 @@ body.chart-active { overflow: hidden; }
       headline = 'Continuous Work';
       subtext  = 'No mandatory work-rest break is required at this WBGT level for ' + ACT_FULL[activity] + '. Stay hydrated — drink water before you feel thirsty.';
     } else {
-      headline = wr.w + ' min work &nbsp;·&nbsp; ' + wr.r + ' min rest';
+      headline = wr.w + ' min work<br>' + wr.r + ' min rest';
       subtext  = 'For every 60-minute period, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[activity].toLowerCase() + '. Provide water and shade at the rest station.';
     }
 
@@ -1040,7 +1040,7 @@ body.chart-active { overflow: hidden; }
       headline = 'Continuous Work';
       subtext  = 'No mandatory rest break at this WBGT for ' + ACT_FULL[activity] + '. Apply the daily schedule (right). Hydrate — drink before you feel thirsty.';
     } else {
-      headline = wr.w + ' min work &nbsp;·&nbsp; ' + wr.r + ' min rest';
+      headline = wr.w + ' min work<br>' + wr.r + ' min rest';
       subtext  = 'Per hour of heat exposure: ' + wr.r + ' min rest in cool shade. Apply during the daily exposure portion shown at right.';
     }
 
