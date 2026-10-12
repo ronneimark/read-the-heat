@@ -703,26 +703,33 @@ body.hi-chart-active { overflow: hidden; }
     const rowIdx   = _hiRowIdx;
     const colIdx   = _hiColIdx;
 
-    let html = '<div class="acclim-chart-grid">';
+    let html = '<div class="acclim-chart-grid" role="grid" aria-label="Work-rest cycles by heat index and work intensity">';
     // Header row
-    html += `<div class="acc-cell acc-hdr acc-range-hdr">Heat Index</div>`;
+    html += '<div role="row" style="display:contents">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">Heat Index</div>`;
     for (let ci = 0; ci < 4; ci++) {
       const isUser = ci === colIdx;
-      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}">${actNames[ci]}</div>`;
+      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}</div>`;
     }
+    html += '</div>';
     // Data rows (6)
     for (let ri = 0; ri < 6; ri++) {
       const isUserRow = ri === rowIdx;
       const isLastRow = ri === 5;
-      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}">${labels[ri]}</div>`;
+      html += '<div role="row" style="display:contents">';
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}" role="rowheader" scope="row"${isUserRow ? ' aria-label="' + labels[ri].replace(/"/g,'&quot;') + ' — your heat index range"' : ''}>${labels[ri]}</div>`;
       for (let ci = 0; ci < 4; ci++) {
         const cell       = HI_DATA[ri][ci];
         const isUserCol  = ci === colIdx;
         const isUserCell = isUserRow && isUserCol && rowIdx >= 0;
         const cls = hiClass(cell);
         const lbl = hiLabel(cell);
-        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}">${lbl}</div>`;
+        const ariaLabel = isUserCell
+          ? `${lbl} — your recommended work-rest cycle`
+          : lbl;
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLabel}">${lbl}</div>`;
       }
+      html += '</div>';
     }
     html += '</div>';
     pane.innerHTML = html;
