@@ -106,7 +106,6 @@
             </div>
 
           </div><!-- /tab-panels -->
-          <div class="intro-rolled-hint">▲ tap to expand</div>
         </div><!-- /intro-popover -->
       </div><!-- /intro-anchor -->
     </div><!-- /ls1-header -->
@@ -204,35 +203,12 @@
   animation: popoverIn .5s cubic-bezier(0.34, 1.1, 0.64, 1);
   display: flex;
   flex-direction: column;
+  transition: mask-image .3s ease, -webkit-mask-image .3s ease;
 }
 .intro-popover[hidden] { display: none; }
 .intro-popover.closing {
   animation: popoverOut .45s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
-.intro-popover.rolled {
-  overflow-y: auto;
-  transition: max-height .35s cubic-bezier(.4,0,.2,1);
-  cursor: pointer;
-}
-.intro-popover:not(.rolled) {
-  transition: max-height .35s cubic-bezier(.4,0,.2,1);
-}
-.intro-rolled-hint {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--navy, #1a2235);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .2s;
-}
-.intro-popover.rolled .intro-rolled-hint { opacity: 1; }
 @keyframes popoverIn {
   from {
     opacity: 0;
@@ -560,8 +536,7 @@
 
   function animateClosePopover(pop, btn) {
     if (pop.hidden || pop.classList.contains('closing')) return;
-    pop.classList.remove('rolled');
-    pop._rolledStep = null;
+    clearPopoverMask(pop);
     pop.classList.add('closing');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.getElementById('wrc-step-overlay')?.remove();
@@ -662,15 +637,19 @@
     }, 0);
   }
 
+  function clearPopoverMask(pop) {
+    pop.style.maskImage = '';
+    pop.style.webkitMaskImage = '';
+    pop._maskedStep = null;
+  }
+
   function highlightStep(e, n) {
     const pop = document.getElementById('intro-popover');
 
-    // If same step clicked while rolled — unroll and return
-    if (pop._rolledStep === n && pop.classList.contains('rolled')) {
-      pop.classList.remove('rolled');
-      pop.style.maxHeight = '';
-      pop._rolledStep = null;
-      positionIntroPopover();
+    // If same step clicked while masked — clear mask and return
+    if (pop._maskedStep === n) {
+      clearPopoverMask(pop);
+      document.getElementById('wrc-step-overlay')?.remove();
       return;
     }
 
@@ -761,53 +740,28 @@
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
     // No auto-fade — stays until next step click or modal close
 
-    // Check if popover overlaps the target; if so, roll it down just enough
-    pop.classList.remove('rolled');
-    pop.style.maxHeight = '';
-    pop._rolledStep = null;
+    // Check if popover overlaps the target; if so, fade it out over the overlap zone
+    clearPopoverMask(pop);
     requestAnimationFrame(() => {
       const pR = pop.getBoundingClientRect();
       const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
                          pR.bottom < tR.top  || pR.top  > tR.bottom);
       if (overlaps) {
-        // Popover is bottom-anchored; shrink it so its top clears below the target
-        const gap = 10;
-        const popBottom = pR.bottom; /* fixed bottom position */
-        const neededTop = tR.bottom + gap;
-        const rolledHeight = Math.max(44, popBottom - neededTop);
-
-        // Capture where the clicked list item sits before the roll
-        const clickedLi = e.currentTarget;
-        const liRectBefore = clickedLi.getBoundingClientRect();
-
-        pop.style.maxHeight = rolledHeight + 'px';
-        pop.classList.add('rolled');
-        pop._rolledStep = n;
-
-        // After the transition, scroll so the clicked item stays in view
-        setTimeout(() => {
-          const liRectAfter = clickedLi.getBoundingClientRect();
-          // How far the item shifted upward (positive = shifted up, now clipped off top)
-          const shift = liRectBefore.top - liRectAfter.top;
-          if (shift > 0) {
-            pop.scrollTop += shift;
-          }
-        }, 360); // just after the .35s transition
+        // Fade the modal to transparent starting just above the target top
+        const fadeBuffer = 24; // px of gradual fade above the target
+        const overlapTopPx = tR.top - pR.top;
+        const fadeStartPx = Math.max(0, overlapTopPx - fadeBuffer);
+        const h = pR.height;
+        const pct1 = (fadeStartPx / h * 100).toFixed(1);
+        const pct2 = (overlapTopPx / h * 100).toFixed(1);
+        const mask = `linear-gradient(to bottom, black 0%, black ${pct1}%, transparent ${pct2}%)`;
+        pop.style.maskImage = mask;
+        pop.style.webkitMaskImage = mask;
+        pop._maskedStep = n;
       }
     });
   }
 
-  // Clicking the rolled popover itself expands it back
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('intro-popover').addEventListener('click', function(e) {
-      if (this.classList.contains('rolled')) {
-        this.classList.remove('rolled');
-        this.style.maxHeight = '';
-        this._rolledStep = null;
-        positionIntroPopover();
-      }
-    });
-  });
 
   function ls1SelectSector(key) {
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
