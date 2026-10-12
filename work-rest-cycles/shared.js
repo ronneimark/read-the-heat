@@ -72,8 +72,11 @@ function ensureActivityModal() {
   const el = document.createElement('div');
   el.innerHTML = `<div id="activity-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title" onclick="if(event.target===this)closeActivityModal()">
   <div id="activity-modal">
-    <button class="modal-close-btn" onclick="closeActivityModal()" aria-label="Close">&#x2715;</button>
-    <h2 id="activity-modal-title">Determining Activity Level in Practice</h2>
+    <div class="modal-sticky-header">
+      <h2 id="activity-modal-title">Determining Activity Level in Practice</h2>
+      <button class="modal-close-btn" onclick="closeActivityModal()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="activity-modal-body">
     <p class="modal-sub">How to identify the correct work category — including when tasks vary, when PPE adds risk, and when to push back on a misclassification.</p>
     <div class="table-wrap">
       <table class="qa-table" style="table-layout:fixed;width:100%">
@@ -106,6 +109,7 @@ function ensureActivityModal() {
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
   </div>
 </div>`;
