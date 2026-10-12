@@ -749,8 +749,16 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   function openSchedModal() {
     if (!_schedCell) return;
-    document.querySelectorAll('.sched-type-tab').forEach((b,i) => b.classList.toggle('active', i===0));
-    switchSchedType('new', null);
+    const isNew = workerStatus !== 'unacclimatized-returning';
+    const tabsEl = document.querySelector('.sched-type-tabs');
+    if (workerStatus === 'unacclimatized-new' || workerStatus === 'unacclimatized-returning') {
+      tabsEl.style.display = 'none';
+    } else {
+      tabsEl.style.display = '';
+      document.querySelectorAll('.sched-type-tab').forEach((b,i) => b.classList.toggle('active', i === (isNew ? 0 : 1)));
+    }
+    document.getElementById('sched-dialog-grid').innerHTML =
+      '<div class="urec-sched-grid">' + _buildSchedRows(isNew ? SCHED_NEW : SCHED_RETURNING, _schedCell) + '</div>';
     document.getElementById('sched-dialog').showModal();
   }
 
@@ -1453,7 +1461,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   // ── Init ──────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     const s = WRC.get();
-    const status   = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
+    const status   = s.workerStatusTable || s.workerStatus || 'acclimatized';
     const act      = s.activity || 'moderate';
     const actLabel = s.activityLabel || 'Moderate Work';
     const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
