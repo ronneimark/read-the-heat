@@ -15,38 +15,6 @@ main { padding: 0; max-width: none; }
   .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
 }
 
-/* ── T+RH input strip ── */
-#trh-inputs-strip {
-  background: #EBF0F5;
-  border-bottom: 4px solid var(--navy, #1A2A3A);
-  padding: 6px 16px;
-  display: flex;
-  align-items: center;
-}
-.trh-inputs-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
-.trh-field { display: flex; flex-direction: column; gap: 2px; }
-.trh-field label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--subtext, #484F58);
-}
-.trh-field input[type=number] {
-  width: 86px;
-  padding: 5px 8px;
-  border: 1px solid #AAB8C4;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  background: #fff;
-  color: var(--navy, #1A2A3A);
-  -moz-appearance: textfield;
-}
-.trh-field input[type=number]::-webkit-outer-spin-button,
-.trh-field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
-.trh-field input[type=number]:focus { outline: 2px solid #005FCC; outline-offset: 1px; }
 
 /* Result tab — derivation sentence */
 .result-derivation {
@@ -524,20 +492,11 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     </div>
   </div>
 
-  <!-- T+RH input strip (always visible) -->
-  <div id="trh-inputs-strip">
-    <div class="trh-inputs-row">
-      <div class="trh-field">
-        <label for="trh-temp">Temperature (<span id="trh-unit-label">°F</span>)</label>
-        <input type="number" id="trh-temp" min="-50" max="200" step="0.1"
-               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
-      </div>
-      <div class="trh-field">
-        <label for="trh-rh">Relative Humidity (%)</label>
-        <input type="number" id="trh-rh" min="0" max="100" step="1"
-               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
-      </div>
-    </div>
+  <!-- Hidden inputs carry T+RH values from session state; no visible strip needed -->
+  <div hidden aria-hidden="true">
+    <input type="number" id="trh-temp">
+    <input type="number" id="trh-rh">
+    <span id="trh-unit-label"></span>
   </div>
 </div><!-- /fixed-top -->
 
