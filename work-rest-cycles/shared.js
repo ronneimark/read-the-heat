@@ -554,7 +554,7 @@ function buildBreadcrumbs() {
 
   // "Work-Rest Cycle →" button — shown when instrument is selected (value not required)
   if (instrument && instrumentLabels[instrument]) {
-    const destMap = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
+    const destMap = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'temp-humidity.html' };
     const dest = destMap[instrument] || 'wbgt.html';
     const goBtn = document.createElement('a');
     goBtn.className = 'wrc-crumb-go';
