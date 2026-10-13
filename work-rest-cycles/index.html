@@ -107,6 +107,17 @@
             </div>
 
           </div><!-- /tab-panels -->
+
+          <!-- health factors note — pinned below all tabs -->
+          <div class="intro-health-note">
+            <span class="intro-health-note-label">NOTE: Individual Health Factors</span>
+            play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
+            Health factors commonly impacting heat stress can be viewed on this site.
+            <button class="intro-health-note-link" onclick="highlightHealthBtn()" aria-label="Show health factors button location">
+              ↖ click to see
+            </button>
+          </div>
+
         </div><!-- /intro-popover -->
       </div><!-- /intro-anchor -->
     </div><!-- /ls1-header -->
@@ -133,6 +144,49 @@
 </div><!-- /launcher -->
 
 <style>
+/* ── health factors note ── */
+.intro-health-note {
+  margin: 0;
+  padding: 10px 14px;
+  border-top: 1.5px solid #e0c040;
+  background: #fffbe8;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #222;
+  border-radius: 0 0 8px 8px;
+}
+.intro-health-note-label {
+  font-weight: 700;
+  color: #D50032;
+}
+.intro-health-note-link {
+  display: inline-block;
+  margin-left: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #001E62;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.intro-health-note-link:hover { color: #D50032; }
+
+/* ── health button pulse highlight ── */
+@keyframes health-pulse-ring {
+  0%   { box-shadow: 0 0 0 0px rgba(243,185,24,0.9); }
+  50%  { box-shadow: 0 0 0 10px rgba(243,185,24,0.3); }
+  100% { box-shadow: 0 0 0 18px rgba(243,185,24,0); }
+}
+.health-btn-highlight {
+  animation: health-pulse-ring 0.6s ease-out 3;
+  outline: 3px solid #F3B918 !important;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
 /* ── heading row ── */
 .ls1-header {
   display: grid;
@@ -805,6 +859,109 @@
     });
   }
 
+
+  function highlightHealthBtn() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.health-btn');
+    if (!target) return;
+
+    // Remove any existing overlay
+    document.getElementById('wrc-step-overlay')?.remove();
+
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9999', overflow: 'visible'
+    });
+
+    // Shadow filter
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter');
+    filt.id = 'wrc-hh-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+
+    // Arrowhead marker (gold)
+    const marker = document.createElementNS(NS, 'marker');
+    marker.id = 'wrc-hh-ah';
+    marker.setAttribute('markerWidth', '10'); marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('refX', '10'); marker.setAttribute('refY', '3.5');
+    marker.setAttribute('orient', 'auto');
+    const mpoly = document.createElementNS(NS, 'polygon');
+    mpoly.setAttribute('points', '0 0, 10 3.5, 0 7');
+    mpoly.setAttribute('fill', '#D50032');
+    marker.appendChild(mpoly);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Arrow origin: from bottom of the health-note element, pointing up toward the button
+    const note = document.querySelector('.intro-health-note');
+    const nR = note ? note.getBoundingClientRect() : { left: tR.left + 80, top: tR.bottom + 80, width: 0 };
+    const x1 = nR.left + 80;
+    const y1 = nR.top - 8;
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    // Shorten arrow so it stops at edge of ring
+    const dx = cx - x1, dy = cy - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const ringR = Math.max(tR.width, tR.height) / 2 + 10;
+    const ratio = Math.max(0, (dist - ringR - 6)) / dist;
+    const x2 = x1 + dx * ratio;
+    const y2 = y1 + dy * ratio;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#D50032');
+    arrow.setAttribute('stroke-width', '3.5');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-hh-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-hh-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    // Gold tint fill + ring around health button
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', ringR);
+    tint.setAttribute('fill', 'rgba(243,185,24,0.18)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', ringR);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#F3B918');
+    ring.setAttribute('stroke-width', '5');
+    ring.setAttribute('filter', 'url(#wrc-hh-shadow)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    const circum = 2 * Math.PI * ringR;
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+
+    // Auto-fade after 2.5s
+    setTimeout(() => {
+      svg.style.transition = 'opacity .4s';
+      svg.style.opacity = '0';
+      setTimeout(() => svg.remove(), 450);
+    }, 2500);
+
+    // Click anywhere removes it
+    const dismiss = () => { svg.remove(); document.removeEventListener('click', dismiss); };
+    setTimeout(() => document.addEventListener('click', dismiss), 50);
+  }
 
   function ls1SelectSector(key) {
     document.querySelectorAll('.ls1-sector-btn').forEach(b =>
