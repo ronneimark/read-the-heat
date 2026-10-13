@@ -118,6 +118,14 @@
             </button>
           </div>
 
+          <!-- methodology note — secondary, pinned below health note -->
+          <div class="intro-health-note intro-method-note">
+            For more information on the methodology and sources used to build this tool, check out our information page.
+            <button class="intro-health-note-link" onclick="highlightMethodBtn()" aria-label="Show methodology button location">
+              ↗ click to see
+            </button>
+          </div>
+
         </div><!-- /intro-popover -->
       </div><!-- /intro-anchor -->
     </div><!-- /ls1-header -->
@@ -173,6 +181,12 @@
   text-underline-offset: 2px;
 }
 .intro-health-note-link:hover { color: #D50032; }
+.intro-method-note {
+  border-top: 1px dashed #c8d8b0;
+  background: #f5f9f0;
+  color: #444;
+  font-style: italic;
+}
 
 /* ── health button pulse highlight ── */
 @keyframes health-pulse-ring {
@@ -952,6 +966,104 @@
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
     // Dismiss on any click or keydown
+    const dismiss = () => {
+      svg.remove();
+      document.removeEventListener('click', dismiss);
+      document.removeEventListener('keydown', dismiss);
+    };
+    setTimeout(() => {
+      document.addEventListener('click', dismiss);
+      document.addEventListener('keydown', dismiss);
+    }, 50);
+  }
+
+  function highlightMethodBtn() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.method-btn');
+    if (!target) return;
+
+    document.getElementById('wrc-step-overlay')?.remove();
+
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9999', overflow: 'visible'
+    });
+
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter');
+    filt.id = 'wrc-mb-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+
+    const marker = document.createElementNS(NS, 'marker');
+    marker.id = 'wrc-mb-ah';
+    marker.setAttribute('markerWidth', '10'); marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('refX', '10'); marker.setAttribute('refY', '3.5');
+    marker.setAttribute('orient', 'auto');
+    const mpoly = document.createElementNS(NS, 'polygon');
+    mpoly.setAttribute('points', '0 0, 10 3.5, 0 7');
+    mpoly.setAttribute('fill', '#00966C');
+    marker.appendChild(mpoly);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Origin: from the method note area, pointing up-right to the method button
+    const note = document.querySelector('.intro-method-note');
+    const nR = note ? note.getBoundingClientRect() : { right: tR.left - 80, top: tR.bottom + 80 };
+    const x1 = nR.right - 60;
+    const y1 = nR.top - 8;
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    const dx = cx - x1, dy = cy - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const ringR = Math.max(tR.width, tR.height) / 2 + 10;
+    const ratio = Math.max(0, (dist - ringR - 6)) / dist;
+    const x2 = x1 + dx * ratio;
+    const y2 = y1 + dy * ratio;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#00966C');
+    arrow.setAttribute('stroke-width', '3.5');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-mb-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-mb-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', ringR);
+    tint.setAttribute('fill', 'rgba(0,150,108,0.15)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', ringR);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#00966C');
+    ring.setAttribute('stroke-width', '5');
+    ring.setAttribute('filter', 'url(#wrc-mb-shadow)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    const circum = 2 * Math.PI * ringR;
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+
+    // Stays until user clicks or presses a key
     const dismiss = () => {
       svg.remove();
       document.removeEventListener('click', dismiss);
