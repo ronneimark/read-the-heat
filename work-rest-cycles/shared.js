@@ -631,4 +631,16 @@ function updateLayout() {
 // ── Mobile table init (runs after DOM ready on all pages) ──
 document.addEventListener('DOMContentLoaded', function() {
   initMobileTables();
+
+  // ── Banner click-to-home ──
+  // Clicks on the banner (#fixed-top) that don't land on a button or link
+  // navigate back to index.html.
+  const fixedTopBanner = document.getElementById('fixed-top');
+  if (fixedTopBanner) {
+    fixedTopBanner.addEventListener('click', function(e) {
+      if (!e.target.closest('button, a')) {
+        window.location.href = 'index.html';
+      }
+    });
+  }
 });

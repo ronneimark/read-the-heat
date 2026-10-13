@@ -1570,6 +1570,7 @@
     z-index: 1000;
     background: #D50032; /* prevents warm-white body from bleeding through subpixel gaps */
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    cursor: pointer; /* banner is clickable (navigates home); buttons/links override this */
   }
   #def-panels-container {
     position: fixed;
