@@ -892,7 +892,7 @@
     marker.setAttribute('orient', 'auto');
     const mpoly = document.createElementNS(NS, 'polygon');
     mpoly.setAttribute('points', '0 0, 10 3.5, 0 7');
-    mpoly.setAttribute('fill', '#D50032');
+    mpoly.setAttribute('fill', '#00966C');
     marker.appendChild(mpoly);
     defs.appendChild(marker);
     svg.appendChild(defs);
@@ -915,7 +915,7 @@
     const arrow = document.createElementNS(NS, 'path');
     arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
     arrow.setAttribute('fill', 'none');
-    arrow.setAttribute('stroke', '#D50032');
+    arrow.setAttribute('stroke', '#00966C');
     arrow.setAttribute('stroke-width', '3.5');
     arrow.setAttribute('stroke-linecap', 'round');
     arrow.setAttribute('marker-end', 'url(#wrc-hh-ah)');
@@ -932,13 +932,13 @@
     // Gold tint fill + ring around health button
     const tint = document.createElementNS(NS, 'circle');
     tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', ringR);
-    tint.setAttribute('fill', 'rgba(243,185,24,0.18)');
+    tint.setAttribute('fill', 'rgba(0,150,108,0.15)');
     svg.appendChild(tint);
 
     const ring = document.createElementNS(NS, 'circle');
     ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', ringR);
     ring.setAttribute('fill', 'none');
-    ring.setAttribute('stroke', '#F3B918');
+    ring.setAttribute('stroke', '#00966C');
     ring.setAttribute('stroke-width', '5');
     ring.setAttribute('filter', 'url(#wrc-hh-shadow)');
     ring.setAttribute('stroke-linecap', 'round');
