@@ -1125,7 +1125,8 @@
     // Click anywhere → dismiss overlay and restore modal
     svg.style.pointerEvents = 'all';
     svg.style.cursor = 'pointer';
-    svg.addEventListener('click', () => {
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
       svg.remove();
       clearPopoverMask(pop);
       restorePopoverFullHeight();
@@ -1304,19 +1305,22 @@
     svg.appendChild(ring);
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
-    // Dismiss on any click or keydown; also restore popover mask
+    // Click on overlay → dismiss without closing modal
     const pop = document.getElementById('intro-popover');
-    const dismiss = () => {
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
       svg.remove();
       clearPopoverMask(pop);
       restorePopoverFullHeight();
-      document.removeEventListener('click', dismiss);
-      document.removeEventListener('keydown', dismiss);
-    };
-    setTimeout(() => {
-      document.addEventListener('click', dismiss);
-      document.addEventListener('keydown', dismiss);
-    }, 50);
+    });
+    document.addEventListener('keydown', function onKey() {
+      svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+      document.removeEventListener('keydown', onKey);
+    });
   }
 
   function highlightMethodBtn(e) {
@@ -1404,19 +1408,22 @@
     svg.appendChild(ring);
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
-    // Stays until user clicks or presses a key; also restore popover mask
+    // Click on overlay → dismiss without closing modal
     const pop2 = document.getElementById('intro-popover');
-    const dismiss = () => {
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
       svg.remove();
       clearPopoverMask(pop2);
       restorePopoverFullHeight();
-      document.removeEventListener('click', dismiss);
-      document.removeEventListener('keydown', dismiss);
-    };
-    setTimeout(() => {
-      document.addEventListener('click', dismiss);
-      document.addEventListener('keydown', dismiss);
-    }, 50);
+    });
+    document.addEventListener('keydown', function onKey2() {
+      svg.remove();
+      clearPopoverMask(pop2);
+      restorePopoverFullHeight();
+      document.removeEventListener('keydown', onKey2);
+    });
   }
 
   function ls1SelectSector(key) {
