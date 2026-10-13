@@ -115,7 +115,7 @@
             <span class="intro-health-note-label">NOTE: Individual Health Factors</span>
             play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
             Health factors commonly impacting heat stress can be viewed on this site.
-            <button class="intro-health-note-link" onclick="highlightHealthBtn()" aria-label="Show health factors button location">
+            <button class="intro-health-note-link" onclick="highlightHealthBtn(event)" aria-label="Show health factors button location">
               ↖ click to see
             </button>
           </div>
@@ -123,7 +123,7 @@
           <!-- methodology note — secondary, pinned below health note -->
           <div class="intro-health-note intro-method-note">
             For more information on the methodology and sources used to build this tool, check out our information page.
-            <button class="intro-health-note-link" onclick="highlightMethodBtn()" aria-label="Show methodology button location">
+            <button class="intro-health-note-link" onclick="highlightMethodBtn(event)" aria-label="Show methodology button location">
               ↗ click to see
             </button>
           </div>
@@ -904,7 +904,7 @@
     pop.style.top = '';
   }
 
-  function highlightHealthBtn() {
+  function highlightHealthBtn(e) {
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.health-btn');
@@ -942,11 +942,9 @@
     defs.appendChild(marker);
     svg.appendChild(defs);
 
-    // Arrow origin: from bottom of the health-note element, pointing up toward the button
-    const note = document.querySelector('.intro-health-note');
-    const nR = note ? note.getBoundingClientRect() : { left: tR.left + 80, top: tR.bottom + 80, width: 0 };
-    const x1 = nR.left + 80;
-    const y1 = nR.top - 8;
+    // Arrow origin: from the click point
+    const x1 = e ? e.clientX : tR.left - 60;
+    const y1 = e ? e.clientY : tR.top + tR.height / 2;
     const cx = tR.left + tR.width / 2;
     const cy = tR.top + tR.height / 2;
     // Shorten arrow so it stops at edge of ring
@@ -1008,7 +1006,7 @@
     }, 50);
   }
 
-  function highlightMethodBtn() {
+  function highlightMethodBtn(e) {
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.method-btn');
@@ -1043,11 +1041,9 @@
     defs.appendChild(marker);
     svg.appendChild(defs);
 
-    // Origin: from the method note area, pointing up-right to the method button
-    const note = document.querySelector('.intro-method-note');
-    const nR = note ? note.getBoundingClientRect() : { right: tR.left - 80, top: tR.bottom + 80 };
-    const x1 = nR.right - 60;
-    const y1 = nR.top - 8;
+    // Arrow origin: from the click point
+    const x1 = e ? e.clientX : tR.right + 60;
+    const y1 = e ? e.clientY : tR.top + tR.height / 2;
     const cx = tR.left + tR.width / 2;
     const cy = tR.top + tR.height / 2;
     const dx = cx - x1, dy = cy - y1;
