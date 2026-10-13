@@ -547,9 +547,19 @@ body { background: #F6F3EC !important; }
       // Offset below card's border-top + ::before accent bar (5px in full layout)
       const borderTop = parseFloat(getComputedStyle(triggerEl).borderTopWidth) || 0;
       const BAR_H = borderTop + 5;
+      let overlayWidth = r.width;
+      // For left-column cards: clip overlay so its right edge stops at the green divider
+      const divV = document.getElementById('grid-div-v');
+      if (divV) {
+        const dvr = divV.getBoundingClientRect();
+        // divider falls inside this card → it's a left-column card
+        if (dvr.left > r.left && dvr.left < r.right) {
+          overlayWidth = dvr.left - r.left;
+        }
+      }
       overlay.style.top    = (r.top + BAR_H) + 'px';
-      overlay.style.left   = r.left   + 'px';
-      overlay.style.width  = r.width  + 'px';
+      overlay.style.left   = r.left + 'px';
+      overlay.style.width  = overlayWidth + 'px';
       overlay.style.height = (r.height - BAR_H) + 'px';
     } else {
       overlay.style.top = overlay.style.left = overlay.style.width = overlay.style.height = '';
