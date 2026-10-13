@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indoor Heat Stress: Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
-<script src="./lang-link.js"></script>
+<link rel="preload" as="image" href="images/read-the-heat-logo-transparent.png">
+<script src="./lang-link.js" defer></script>
 </head>
 <body>
 
@@ -672,9 +673,9 @@
   });
 
   const INSTRUMENT_PHOTOS = {
-    wbgt: 'images/wbgt-monitors.png',
-    hi:   'images/heat-index-monitors.png',
-    trh:  'images/trh-monitors.png',
+    wbgt: 'images/wbgt-monitors.jpg',
+    hi:   'images/heat-index-monitors.jpg',
+    trh:  'images/trh-monitors.jpg',
   };
 
   function showInstrumentPhoto(e, key) {
@@ -896,6 +897,7 @@
 
 
   function highlightHealthBtn() {
+    closeIntroPopover();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.health-btn');
     if (!target) return;
@@ -999,6 +1001,7 @@
   }
 
   function highlightMethodBtn() {
+    closeIntroPopover();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.method-btn');
     if (!target) return;
