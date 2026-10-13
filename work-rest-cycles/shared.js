@@ -230,7 +230,7 @@ function ensureMethodologyModal() {
       <br>• Tables assume indoor setting with <em>no direct solar load</em>. All WBGT values assume natural WBGT (NWBGTi) or indoor measurement.
       <br>• Radiant heat sources (ovens, machinery, steam lines, dryers) can dramatically elevate effective heat stress beyond what air temperature or heat index captures. WBGT measured on-site is the only reliable method in these environments.
       <br>• Air movement matters: fans can reduce heat stress significantly; still air in a hot room is more hazardous than the dry-bulb temperature alone suggests.
-      <br>• PPE and clothing dramatically affect allowable exposure. Impermeable suits can require reducing thresholds by 10–11°C WBGT equivalent.
+      <br>• PPE and clothing dramatically affect allowable exposure. Impermeable suits can require reducing thresholds by 10–11°C WBGT equivalent (ACGIH, 2025, Table 2).
     </div>
 
     <hr class="divider">
