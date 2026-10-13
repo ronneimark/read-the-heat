@@ -860,7 +860,7 @@
     display: block;
     width: 100%;
     padding: 10px 5px;
-    background: rgba(4, 20, 42, .88);
+    background: #001E62;
     color: white;
     font-size: clamp(12px, 1.05vw, 16px);
     font-weight: 700;
@@ -886,7 +886,7 @@
     border-color: #D50032;
     box-shadow: 0 0 0 3px rgba(213,0,50,.3);
   }
-  .ls1-sector-btn.selected .ls1-sector-label { background: #001E62; }
+  .ls1-sector-btn.selected .ls1-sector-label { background: #D50032; }
   .ls1-footer {
     flex-shrink: 0;
     padding: 8px 12px 12px;
