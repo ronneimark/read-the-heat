@@ -532,34 +532,54 @@
 <script>
   function positionIntroPopover() {
     const pop = document.getElementById('intro-popover');
-    const btn = document.getElementById('intro-open-btn');
-    const btnRect = btn.getBoundingClientRect();
-    const vpad = 4; /* min gap from viewport edges */
-    const vpH = window.innerHeight;
-    const availH = vpH - vpad * 2; /* max usable height */
+    const vpad = 4;           /* min gap from viewport edges, px */
+    const vpH  = window.innerHeight;
+    const vpW  = window.innerWidth;
+    const availH = vpH - vpad * 2;
 
-    /* reset so we can measure natural height */
-    pop.style.top = '';
-    pop.style.bottom = '';
-    pop.style.maxHeight = '';
-    pop.style.overflowY = '';
-    pop.style.position = 'fixed';
-    pop.style.left = '50%';
-    pop.style.transform = 'translateX(-50%)';
+    /* ── Step 1: reset sizing so we can measure freely ── */
+    pop.style.top        = '';
+    pop.style.bottom     = '';
+    pop.style.maxHeight  = '';
+    pop.style.overflowY  = '';
+    pop.style.width      = '';
+    pop.style.maxWidth   = '';
+    pop.style.position   = 'fixed';
+    pop.style.left       = '50%';
+    pop.style.transform  = 'translateX(-50%)';
 
-    const popH = pop.scrollHeight;
+    /* ── Step 2: on desktop/laptop widen until content fits or we hit the
+       viewport edge, so no vertical scroll is needed.
+       On narrow screens (≤ 767px) skip this and fall straight to scroll. ── */
+    if (vpW >= 768) {
+      /* Start from the CSS min-width equivalent */
+      const minW = Math.min(680, vpW * 0.96);
+      const maxW = vpW * 0.96;          /* never bleed off screen */
+      const step = 20;                  /* px increments */
 
-    /* Always anchor bottom to viewport floor so shrinking cuts from the top */
+      pop.style.width = minW + 'px';
+
+      /* Widen in steps until scrollHeight ≤ availH or we hit maxW */
+      let w = minW;
+      while (pop.scrollHeight > availH && w < maxW) {
+        w = Math.min(w + step, maxW);
+        pop.style.width = w + 'px';
+      }
+    } else {
+      pop.style.width = Math.min(680, vpW * 0.96) + 'px';
+    }
+
+    /* ── Step 3: position vertically ── */
     pop.style.bottom = vpad + 'px';
 
-    if (popH <= availH) {
-      /* Content fits — float above floor, top determined by content height */
-      pop.style.top = '';
+    if (pop.scrollHeight <= availH) {
+      /* Content fits at this width — no scroll needed */
+      pop.style.top       = '';
       pop.style.maxHeight = '';
       pop.style.overflowY = 'visible';
     } else {
-      /* Taller than full viewport — pin top too and scroll */
-      pop.style.top = vpad + 'px';
+      /* Even at max width it's taller than the viewport — pin top and scroll */
+      pop.style.top       = vpad + 'px';
       pop.style.maxHeight = availH + 'px';
       pop.style.overflowY = 'auto';
     }
