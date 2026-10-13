@@ -179,22 +179,18 @@
           </div><!-- /tab-panels -->
 
           <!-- health factors note — pinned below all tabs -->
-          <div class="intro-health-note">
+          <button class="intro-health-note" onclick="highlightHealthBtn(event)" aria-label="Show health factors button location">
             <span class="intro-health-note-label">NOTE: Individual Health Factors</span>
             play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
             Health factors commonly impacting heat stress can be viewed on this site.
-            <button class="intro-health-note-link" onclick="highlightHealthBtn(event)" aria-label="Show health factors button location">
-              ↖ click to see
-            </button>
-          </div>
+            <span class="intro-health-note-link">↖ click to see</span>
+          </button>
 
           <!-- methodology note — secondary, pinned below health note -->
-          <div class="intro-health-note intro-method-note">
+          <button class="intro-health-note intro-method-note" onclick="highlightMethodBtn(event)" aria-label="Show methodology button location">
             For more information on the methodology and sources used to build this tool, check out our information page.
-            <button class="intro-health-note-link" onclick="highlightMethodBtn(event)" aria-label="Show methodology button location">
-              ↗ click to see
-            </button>
-          </div>
+            <span class="intro-health-note-link">↗ click to see</span>
+          </button>
 
         </div><!-- /intro-popover -->
       </div><!-- /intro-anchor -->
@@ -224,39 +220,44 @@
 <style>
 /* ── health factors note ── */
 .intro-health-note {
+  display: block;
+  width: 100%;
+  text-align: left;
   margin: 0;
   padding: 7px 12px;
   border-top: 1.5px solid #e0c040;
   background: #fffbe8;
   font-size: 0.75rem;
+  font-family: inherit;
   line-height: 1.45;
   color: #222;
   border-radius: 0 0 8px 8px;
+  cursor: pointer;
+  transition: background .12s;
 }
+.intro-health-note:hover { background: #fff5c0; }
 .intro-health-note-label {
   font-weight: 700;
   color: #D50032;
 }
 .intro-health-note-link {
-  display: inline-block;
+  display: inline;
   margin-left: 4px;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: #001E62;
-  cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.intro-health-note-link:hover { color: #D50032; }
+.intro-health-note:hover .intro-health-note-link { color: #D50032; }
 .intro-method-note {
   border-top: 1px dashed #c8d8b0;
   background: #f5f9f0;
   color: #444;
   font-style: italic;
+  border-radius: 0 0 8px 8px;
 }
+.intro-method-note:hover { background: #eaf3e4; }
 
 /* ── health button pulse highlight ── */
 @keyframes health-pulse-ring {
