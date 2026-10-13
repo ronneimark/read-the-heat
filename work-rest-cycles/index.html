@@ -951,16 +951,16 @@
     svg.appendChild(ring);
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
-    // Auto-fade after 2.5s
+    // Dismiss on any click or keydown
+    const dismiss = () => {
+      svg.remove();
+      document.removeEventListener('click', dismiss);
+      document.removeEventListener('keydown', dismiss);
+    };
     setTimeout(() => {
-      svg.style.transition = 'opacity .4s';
-      svg.style.opacity = '0';
-      setTimeout(() => svg.remove(), 450);
-    }, 2500);
-
-    // Click anywhere removes it
-    const dismiss = () => { svg.remove(); document.removeEventListener('click', dismiss); };
-    setTimeout(() => document.addEventListener('click', dismiss), 50);
+      document.addEventListener('click', dismiss);
+      document.addEventListener('keydown', dismiss);
+    }, 50);
   }
 
   function ls1SelectSector(key) {
