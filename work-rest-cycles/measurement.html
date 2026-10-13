@@ -14,16 +14,24 @@ body { background: #F6F3EC !important; }
   gap: 0 !important;
   background: transparent !important;
   border-top: 3px solid #001E62 !important;
+  position: relative !important; /* for ::after vertical divider */
 }
 /* Red divider: bottom of top row / top of bottom row */
 .method-card-full:nth-child(3),
 .method-card-full:nth-child(4) {
   border-top: 3px solid #D50032 !important;
 }
-/* Green divider: right of left column / left of right column */
-.method-card-full:nth-child(1),
-.method-card-full:nth-child(3) {
-  border-right: 3px solid #00966C !important;
+/* Green vertical divider via pseudo-element — avoids border-corner artifact */
+.method-cards-full::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 3px;
+  background: #00966C;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* ── Measurement input modal ── */
