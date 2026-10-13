@@ -9,6 +9,23 @@
 body { background: #F6F3EC !important; }
 .method-card { background: #FEF8E0 !important; }
 
+/* ── Full-page colored borders for the 2×2 card grid ── */
+.method-cards-full {
+  gap: 0 !important;
+  background: transparent !important;
+  border-top: 3px solid #001E62 !important;
+}
+/* Red divider: bottom of top row / top of bottom row */
+.method-card-full:nth-child(3),
+.method-card-full:nth-child(4) {
+  border-top: 3px solid #D50032 !important;
+}
+/* Green divider: right of left column / left of right column */
+.method-card-full:nth-child(1),
+.method-card-full:nth-child(3) {
+  border-right: 3px solid #00966C !important;
+}
+
 /* ── Measurement input modal ── */
 #meas-modal-overlay {
   display: none;
@@ -515,7 +532,9 @@ body { background: #F6F3EC !important; }
     const overlay = document.getElementById('meas-modal-overlay');
     if (triggerEl) {
       const r = triggerEl.getBoundingClientRect();
-      const BAR_H = 4; // height of .method-card::before accent bar
+      // Offset below card's border-top + ::before accent bar (5px in full layout)
+      const borderTop = parseFloat(getComputedStyle(triggerEl).borderTopWidth) || 0;
+      const BAR_H = borderTop + 5;
       overlay.style.top    = (r.top + BAR_H) + 'px';
       overlay.style.left   = r.left   + 'px';
       overlay.style.width  = r.width  + 'px';
