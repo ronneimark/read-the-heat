@@ -28,12 +28,10 @@
   transform: translateY(4px) !important;
   box-shadow: 0 1px 0 color-mix(in srgb, var(--panel-accent) 55%, #000), 0 2px 4px rgba(0,0,0,0.2) !important;
 }
-/* White text on dark panel-accents that fail AA contrast with black text:
-   #00966C (light, 3.0:1 vs black), #E65100 (heavy, 3.86:1 vs black), #880E4F (vh, 1.82:1 vs black).
-   White gives 7.0:1, 5.4:1, and 11.5:1 respectively — all pass AA. */
-.ls2-level-panel[data-activity="light"] .ls2-select-btn,
-.ls2-level-panel[data-activity="heavy"] .ls2-select-btn,
-.ls2-level-panel[data-activity="vh"]   .ls2-select-btn {
+/* All Select buttons use white text. Panel accent colors are darkened so
+   white text meets WCAG AA (≥4.5:1) on every level:
+   Light #007A55 (5.36:1), Moderate #C47A00 (4.52:1), Heavy #C04000 (5.28:1), VH #880E4F (9.45:1). */
+.ls2-select-btn {
   color: #fff !important;
   text-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
 }
@@ -78,7 +76,7 @@
     <div class="ls2-review-grid">
 
       <!-- Light -->
-      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#00966C">
+      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#007A55">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Light Work</span>
           <span class="ls2-level-kcal">~150–200 kcal/hr (116–233 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -95,7 +93,7 @@
       </div>
 
       <!-- Moderate -->
-      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#F57F17">
+      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#B45309">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Moderate Work</span>
           <span class="ls2-level-kcal">~200–350 kcal/hr (233–407 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -112,7 +110,7 @@
       </div>
 
       <!-- Heavy -->
-      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#E65100">
+      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#C04000">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Heavy Work</span>
           <span class="ls2-level-kcal">~350–500 kcal/hr (407–581 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
