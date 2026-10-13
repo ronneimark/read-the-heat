@@ -25,11 +25,10 @@ body { background: #F6F3EC !important; }
   height: 3px;
   left: 0; right: 0;
   background: #D50032;
-  z-index: 3; /* red on top so it reads as continuous */
+  z-index: 2;
 }
 .grid-div-v {
   width: 6px;
-  top: 0; bottom: 0;
   background: #00966C;
   z-index: 2;
 }
@@ -437,7 +436,8 @@ body { background: #F6F3EC !important; }
 
       <!-- Measured grid dividers — positioned by positionGridDividers() -->
       <div class="grid-div-h" id="grid-div-h" aria-hidden="true"></div>
-      <div class="grid-div-v" id="grid-div-v" aria-hidden="true"></div>
+      <div class="grid-div-v" id="grid-div-v-top" aria-hidden="true"></div>
+      <div class="grid-div-v" id="grid-div-v-bot" aria-hidden="true"></div>
 
     </div>
 
@@ -549,7 +549,7 @@ body { background: #F6F3EC !important; }
       const BAR_H = borderTop + 5;
       let overlayWidth = r.width;
       // For left-column cards: clip overlay so its right edge stops at the green divider
-      const divV = document.getElementById('grid-div-v');
+      const divV = document.getElementById('grid-div-v-top');
       if (divV) {
         const dvr = divV.getBoundingClientRect();
         // divider falls inside this card → it's a left-column card
@@ -838,11 +838,25 @@ body { background: #F6F3EC !important; }
     const card3Rect = cards[2].getBoundingClientRect(); // bottom-left card
     const card2Rect = cards[1].getBoundingClientRect(); // top-right card
     // Red horizontal: sits at the top edge of the bottom-row cards
+    const redTop = card3Rect.top - gridRect.top;
+    const redH   = 3;
     const divH = document.getElementById('grid-div-h');
-    if (divH) divH.style.top = (card3Rect.top - gridRect.top) + 'px';
-    // Green vertical: centered on the column boundary
-    const divV = document.getElementById('grid-div-v');
-    if (divV) divV.style.left = (card2Rect.left - gridRect.left - 3) + 'px';
+    if (divH) divH.style.top = redTop + 'px';
+    // Green vertical: two segments that stop/start at the red line (no overlap)
+    const vLeft = (card2Rect.left - gridRect.left - 3) + 'px';
+    const gridH = grid.offsetHeight;
+    const divTop = document.getElementById('grid-div-v-top');
+    if (divTop) {
+      divTop.style.left   = vLeft;
+      divTop.style.top    = '0px';
+      divTop.style.height = redTop + 'px';
+    }
+    const divBot = document.getElementById('grid-div-v-bot');
+    if (divBot) {
+      divBot.style.left   = vLeft;
+      divBot.style.top    = (redTop + redH) + 'px';
+      divBot.style.height = (gridH - redTop - redH) + 'px';
+    }
   }
 
   function updateLayout() {
