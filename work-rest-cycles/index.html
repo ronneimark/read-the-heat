@@ -476,28 +476,56 @@
 :root[data-theme="dark"] .instr-pill { background: #1a2c4a; border-color: #3a5c8a; color: #7ab4f5; }
 :root[data-theme="dark"] .instrument-link:hover .instr-pill { background: #1f3557; border-color: #6096d8; }
 
-/* instrument photo panel */
-#instrument-photo-panel {
+/* ── Instrument photo zoom (same pattern as measurement.html) ── */
+#photo-zoom-overlay {
   position: fixed;
-  z-index: 1100;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  inset: 0;
+  z-index: 9996;
+  background: rgba(0,0,20,0.88);
+  cursor: zoom-out;
+  transition: opacity .3s ease;
+}
+#photo-zoom-overlay[hidden] { display: none !important; }
+#photo-zoom-box {
+  position: fixed;
+  line-height: 0;
+  border-radius: 8px;
   overflow: hidden;
-  max-width: min(580px, 92vw);
-  animation: instrPanelIn .22s ease;
+  box-shadow: 0 16px 56px rgba(0,0,20,0.55);
 }
-@keyframes instrPanelIn {
-  from { opacity: 0; transform: scale(.94); }
-  to   { opacity: 1; transform: scale(1); }
-}
-#instrument-photo-panel img {
+#photo-zoom-box img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
-@media (prefers-color-scheme: dark) {
-  #instrument-photo-panel { background: #1a2235; }
+#photo-zoom-close {
+  position: fixed;
+  z-index: 9997;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #001E62;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,20,0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+.instr-enl-hint {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: #fff;
+  background: #001E62;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 999px;
+  padding: 2px 8px;
+  vertical-align: middle;
+  pointer-events: none;
 }
 
 /* clickable steps */
@@ -639,7 +667,7 @@
     pop.classList.add('closing');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.getElementById('wrc-step-overlay')?.remove();
-    document.getElementById('instrument-photo-panel')?.remove();
+    window._introZoom?.close();
     setTimeout(() => {
       pop.hidden = true;
       pop.classList.remove('closing');
@@ -666,6 +694,9 @@
   }
 
   document.addEventListener('click', e => {
+    // Don't close the intro modal when the user is interacting with the photo zoom overlay
+    const zoomOverlay = document.getElementById('photo-zoom-overlay');
+    if (zoomOverlay && !zoomOverlay.hidden && zoomOverlay.contains(e.target)) return;
     if (!document.getElementById('intro-anchor').contains(e.target)) closeIntroPopover();
   });
   document.addEventListener('keydown', e => {
@@ -682,65 +713,119 @@
     trh:  'images/trh-monitors.jpg',
   };
 
+  // ── Instrument photo zoom (same pattern as measurement.html) ──
+  (function () {
+    const overlay  = document.getElementById('photo-zoom-overlay');
+    const box      = document.getElementById('photo-zoom-box');
+    const zoomImg  = document.getElementById('photo-zoom-img');
+    const closeBtn = document.getElementById('photo-zoom-close');
+    const EASE_IN  = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const EASE_OUT = 'cubic-bezier(0.4, 0, 0.6, 1)';
+    const REDUCE   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let _srcImg = null, _closing = false;
+
+    function targetRect(ratio) {
+      const maxW = window.innerWidth * 0.92, maxH = window.innerHeight * 0.92;
+      let w, h;
+      if (maxW / ratio <= maxH) { w = maxW; h = maxW / ratio; }
+      else { h = maxH; w = maxH * ratio; }
+      return { top: (window.innerHeight - h) / 2, left: (window.innerWidth - w) / 2, width: w, height: h };
+    }
+    function fromTransform(src) {
+      const b = box.getBoundingClientRect();
+      const sx = src.width / b.width, sy = src.height / b.height;
+      const tx = (src.left + src.width  / 2) - (b.left + b.width  / 2);
+      const ty = (src.top  + src.height / 2) - (b.top  + b.height / 2);
+      return `translate(${tx}px,${ty}px) scale(${sx},${sy})`;
+    }
+    function placeBox(r) {
+      box.style.left = r.left + 'px'; box.style.top    = r.top    + 'px';
+      box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
+    }
+    function placeClose() {
+      const r = box.getBoundingClientRect(), s = closeBtn.offsetWidth || 38;
+      let left = r.right - s / 2, top = r.top - s / 2;
+      left = Math.min(Math.max(4, left), window.innerWidth  - s - 4);
+      top  = Math.min(Math.max(4, top),  window.innerHeight - s - 4);
+      closeBtn.style.left = left + 'px'; closeBtn.style.top = top + 'px';
+    }
+
+    function openZoom(img) {
+      if (_closing) return;
+      _srcImg = img;
+      const srcR  = img.getBoundingClientRect();
+      const ratio = (img.naturalWidth || srcR.width) / (img.naturalHeight || srcR.height);
+      const tgtR  = targetRect(ratio);
+      zoomImg.src = img.src; zoomImg.alt = img.alt;
+      placeBox(tgtR);
+      overlay.hidden = false;
+      placeClose();
+      if (!REDUCE && box.animate) {
+        box.animate([{ transform: fromTransform(srcR), borderRadius: '5px' },
+                     { transform: 'none', borderRadius: '8px' }],
+                    { duration: 380, easing: EASE_IN, fill: 'none' });
+      }
+      closeBtn.focus();
+    }
+
+    function closeZoom() {
+      if (_closing || overlay.hidden) return;
+      if (!REDUCE && box.animate && _srcImg) {
+        _closing = true;
+        const srcR = _srcImg.getBoundingClientRect();
+        const anim = box.animate([{ transform: 'none', borderRadius: '8px' },
+                                   { transform: fromTransform(srcR), borderRadius: '5px' }],
+                                  { duration: 280, easing: EASE_OUT });
+        anim.onfinish = () => { _closing = false; overlay.hidden = true; _srcImg = null; };
+      } else { overlay.hidden = true; _srcImg = null; }
+    }
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay || e.target === box || e.target === zoomImg) closeZoom();
+    });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+    window.addEventListener('resize', () => {
+      if (!overlay.hidden && _srcImg) {
+        const ratio = (zoomImg.naturalWidth || 1) / (zoomImg.naturalHeight || 1);
+        placeBox(targetRect(ratio)); placeClose();
+      }
+    });
+
+    // Expose openZoom for showInstrumentPhoto
+    window._introZoom = { open: openZoom, close: closeZoom, overlay };
+  })();
+
   function showInstrumentPhoto(e, key) {
     e.stopPropagation();
-    const existing = document.getElementById('instrument-photo-panel');
-    if (existing) {
-      // If same panel already open, close it
-      if (existing.dataset.key === key) { existing.remove(); return; }
-      existing.remove();
+    // Build a temporary hidden img to zoom from the click point
+    const zoom = window._introZoom;
+    // If zoom already showing the same key, close it
+    if (!zoom.overlay.hidden && zoom.overlay.dataset.key === key) {
+      zoom.close(); return;
     }
+    zoom.overlay.dataset.key = key;
 
-    const panel = document.createElement('div');
-    panel.id = 'instrument-photo-panel';
-    panel.dataset.key = key;
+    const altMap = { wbgt: 'WBGT Monitors', hi: 'Heat Index Meters', trh: 'Temperature and Relative Humidity Monitors' };
+    // Create a tiny off-screen proxy img so the zoom animation originates from the click
+    const proxy = document.createElement('img');
+    proxy.src = INSTRUMENT_PHOTOS[key];
+    proxy.alt = altMap[key] || key;
+    // Position proxy at click point (zero-size, invisible)
+    Object.assign(proxy.style, {
+      position: 'fixed', left: e.clientX + 'px', top: e.clientY + 'px',
+      width: '1px', height: '1px', opacity: '0', pointerEvents: 'none'
+    });
+    document.body.appendChild(proxy);
 
-    const img = document.createElement('img');
-    img.src = INSTRUMENT_PHOTOS[key];
-    img.alt = key === 'wbgt' ? 'WBGT Monitors' : key === 'hi' ? 'Heat Index Meters' : 'Temperature and Relative Humidity Monitors';
-    panel.appendChild(img);
-    document.body.appendChild(panel);
-
-    // Position: to the right of the popover if room, else to the left, else below
-    const popover = document.getElementById('intro-popover');
-    const pR = popover.getBoundingClientRect();
-    const panelW = Math.min(580, window.innerWidth * 0.92);
-    const margin = 12;
-
-    let left, top;
-    top = Math.max(8, pR.top);
-
-    const roomRight = window.innerWidth - pR.right - margin;
-    const roomLeft  = pR.left - margin;
-
-    if (roomRight >= roomLeft) {
-      // More room on the right — align to right edge of modal, clamp if needed
-      left = pR.right + margin;
-      const clampedW = Math.min(panelW, window.innerWidth - left - 8);
-      panel.style.width = Math.max(120, clampedW) + 'px';
-    } else {
-      // More room on the left — align to left edge of modal, clamp if needed
-      const clampedW = Math.min(panelW, roomLeft);
-      panel.style.width = Math.max(120, clampedW) + 'px';
-      left = pR.left - margin - parseFloat(panel.style.width);
+    function doOpen() {
+      zoom.open(proxy);
+      // Clean up proxy once image naturally loads into zoomImg
+      document.getElementById('photo-zoom-img').addEventListener('load', () => proxy.remove(), { once: true });
     }
-
-    // Clamp vertically
-    const maxTop = window.innerHeight - 200;
-    top = Math.min(top, maxTop);
-
-    panel.style.left = left + 'px';
-    panel.style.top  = top  + 'px';
-
-    // Close on any click elsewhere
-    setTimeout(() => {
-      document.addEventListener('click', function handler(ev) {
-        if (!panel.contains(ev.target)) {
-          panel.remove();
-          document.removeEventListener('click', handler);
-        }
-      });
-    }, 0);
+    // Wait for naturalWidth to be available (may already be cached)
+    if (proxy.complete && proxy.naturalWidth) { doOpen(); }
+    else { proxy.addEventListener('load', doOpen, { once: true }); }
   }
 
   function clearPopoverMask(pop) {
@@ -1148,5 +1233,11 @@
     window.addEventListener('resize', updateLayout);
   });
 </script>
+
+<!-- ── Instrument photo zoom overlay ── -->
+<div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
+  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
+</div>
 </body>
 </html>
