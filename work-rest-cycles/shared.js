@@ -638,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const fixedTopBanner = document.getElementById('fixed-top');
   if (fixedTopBanner) {
     fixedTopBanner.addEventListener('click', function(e) {
-      if (!e.target.closest('button, a')) {
+      if (!e.target.closest('button, a, select, label')) {
         window.location.href = 'index.html';
       }
     });
