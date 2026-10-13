@@ -76,8 +76,9 @@
                 <li class="intro-step-link" onclick="highlightStep(event,1)"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
                 <li class="intro-step-link" onclick="highlightStep(event,2)"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
                 <li class="intro-step-link" onclick="highlightStep(event,3)"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,4)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,5)"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,4)"><strong>Clothing &amp; PPE</strong> — indicate whether the worker is wearing standard clothing or impermeable/vapor-barrier PPE. A +10°C correction is applied to the WBGT for impermeable PPE. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,5)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" onclick="highlightStep(event,6)"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
               </ol>
               <!-- illustration slot -->
               <div class="intro-illus-slot" aria-hidden="true"></div>
@@ -667,9 +668,9 @@
 
     const NS = 'http://www.w3.org/2000/svg';
 
-    // Target: steps 1–4 → breadcrumb pills; step 5 → Work-Rest Cycle button
+    // Target: steps 1–5 → breadcrumb pills; step 6 → Work-Rest Cycle button
     let target;
-    if (n === 5) {
+    if (n === 6) {
       target = document.querySelector('.wrc-crumb-go');
     } else {
       const crumbs = document.querySelectorAll('#wrc-breadcrumbs .wrc-crumb, #wrc-breadcrumbs .wrc-crumb-pending');
