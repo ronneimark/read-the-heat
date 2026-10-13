@@ -855,10 +855,14 @@ body.chart-active { overflow: hidden; }
 
   // ── Build result tab content ──
   function buildResultTab(s) {
-    const val      = s.measValue;
+    const rawVal   = s.measValue;
     const unit     = s.measUnit || 'F';
     const activity = s.activity || 'moderate';
     const unitLabel = unit === 'C' ? '°C' : '°F';
+    const adjustC  = s.clothingAdjustC || 0;
+    const adjustF  = s.clothingAdjustF || 0;
+    const adjust   = unit === 'C' ? adjustC : adjustF;
+    const val      = rawVal != null ? rawVal + adjust : rawVal;
     const rowIdx   = getWBGTRow(val, unit);
     const colIdx   = activity in ACT_COL ? ACT_COL[activity] : 1;
     const wr       = WR_ACCLIM[rowIdx][colIdx];
@@ -893,15 +897,19 @@ body.chart-active { overflow: hidden; }
       subtext  = 'For every 60-minute period, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[activity].toLowerCase() + '. Provide water and shade at the rest station.';
     }
 
-    const valDisplay = val != null ? val + unitLabel : '—';
+    const rawDisplay = rawVal != null ? rawVal + unitLabel : '—';
+    const valDisplay = val   != null ? val   + unitLabel : '—';
+    const clothingNote = adjust > 0
+      ? `<div class="result-input-sub" style="color:#bf360c;font-weight:700">+${adjust}${unitLabel} clothing correction applied → effective ${valDisplay}</div>`
+      : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
 
     document.getElementById('acclim-tab-result').innerHTML = `
       <div id="acclim-tab-result">
         <div class="result-inputs">
           <div class="result-input-card">
             <div class="result-input-label">🌡️ WBGT Reading</div>
-            <div class="result-input-value">${valDisplay}</div>
-            <div class="result-input-sub">Range: ${rowLabel}</div>
+            <div class="result-input-value">${rawDisplay}</div>
+            ${clothingNote}
           </div>
           <div class="result-input-card">
             <div class="result-input-label">${ACT_EMOJI[activity] || '⚡'} Work Intensity</div>
@@ -1076,11 +1084,15 @@ body.chart-active { overflow: hidden; }
   }
 
   function buildUnacclimResultTab(s) {
-    const val       = s.measValue;
+    const rawVal    = s.measValue;
     const unit      = s.measUnit || 'F';
     const activity  = s.activity || 'moderate';
     const isNew     = s.workerStatus === 'unacclimatized-new';
     const unitLabel = unit === 'C' ? '°C' : '°F';
+    const adjustC   = s.clothingAdjustC || 0;
+    const adjustF   = s.clothingAdjustF || 0;
+    const adjust    = unit === 'C' ? adjustC : adjustF;
+    const val       = rawVal != null ? rawVal + adjust : rawVal;
     const rowIdx    = getRALRow(val, unit);
     const colIdx    = activity in ACT_COL ? ACT_COL[activity] : 1;
     const wr        = WR_UNACCLIM[rowIdx][colIdx];
@@ -1105,7 +1117,11 @@ body.chart-active { overflow: hidden; }
       subtext  = 'Per hour of heat exposure: ' + wr.r + ' min rest in cool shade. Apply during the daily exposure portion shown at right.';
     }
 
-    const valDisplay = val != null ? val + unitLabel : '—';
+    const rawDisplay = rawVal != null ? rawVal + unitLabel : '—';
+    const valDisplay = val    != null ? val   + unitLabel : '—';
+    const clothingNote = adjust > 0
+      ? `<div class="result-input-sub" style="color:#bf360c;font-weight:700">+${adjust}${unitLabel} clothing correction applied → effective ${valDisplay}</div>`
+      : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
 
     // Build clock SVG sized for the narrower half-viewport layout
     function buildSmallClock(wr) {
@@ -1190,8 +1206,8 @@ body.chart-active { overflow: hidden; }
         <div class="urec-badges">
           <div class="urec-badge">
             <div class="urec-badge-label">🌡️ WBGT</div>
-            <div class="urec-badge-value">${valDisplay}</div>
-            <div class="urec-badge-sub">${rowLabel}</div>
+            <div class="urec-badge-value">${rawDisplay}</div>
+            ${clothingNote}
           </div>
           <div class="urec-badge">
             <div class="urec-badge-label">${ACT_EMOJI[activity]||'⚡'} Work</div>

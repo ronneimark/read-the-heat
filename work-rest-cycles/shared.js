@@ -496,6 +496,15 @@ function buildBreadcrumbs() {
     crumbs.push({ label: 'Acclimatization', href: 'acclimatization.html', selected: false });
   }
 
+  // Clothing / PPE
+  const clothingType = WRC.val('clothingType', null);
+  if (clothingType) {
+    const clothingLabel = clothingType === 'impermeable' ? '🦺 Impermeable PPE' : '👕 Standard Clothing';
+    crumbs.push({ label: clothingLabel, href: 'clothing.html', selected: true });
+  } else {
+    crumbs.push({ label: 'Clothing/PPE', href: 'clothing.html', selected: false });
+  }
+
   // Measurement instrument
   const instrument = WRC.val('instrument', null);
   const instrumentLabels = { wbgt: '🌡️ WBGT', trh: '💧 Temp + Humidity', hi: '🔥 Heat Index', dbt: '🌡 Thermometer' };
