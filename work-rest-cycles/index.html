@@ -690,8 +690,20 @@
       pointerEvents: 'none', zIndex: '9998',
     });
 
-    // Arrowhead marker
+    // Arrowhead marker + drop-shadow filter
     const defs = document.createElementNS(NS, 'defs');
+
+    const filter = document.createElementNS(NS, 'filter');
+    filter.setAttribute('id', 'wrc-shadow');
+    filter.setAttribute('x', '-20%'); filter.setAttribute('y', '-20%');
+    filter.setAttribute('width', '140%'); filter.setAttribute('height', '140%');
+    const shadow = document.createElementNS(NS, 'feDropShadow');
+    shadow.setAttribute('dx', '0'); shadow.setAttribute('dy', '0');
+    shadow.setAttribute('stdDeviation', '3');
+    shadow.setAttribute('flood-color', '#000');
+    shadow.setAttribute('flood-opacity', '0.6');
+    filter.appendChild(shadow); defs.appendChild(filter);
+
     const marker = document.createElementNS(NS, 'marker');
     marker.setAttribute('id', 'wrc-ah');
     marker.setAttribute('markerWidth', '9'); marker.setAttribute('markerHeight', '6');
@@ -699,7 +711,7 @@
     marker.setAttribute('orient', 'auto');
     const tip = document.createElementNS(NS, 'polygon');
     tip.setAttribute('points', '0 0, 9 3, 0 6');
-    tip.setAttribute('fill', '#00966C');
+    tip.setAttribute('fill', '#00C47A');
     marker.appendChild(tip); defs.appendChild(marker); svg.appendChild(defs);
 
     // Arrow exits from the left or right edge of the modal (never top/bottom)
@@ -724,10 +736,11 @@
     const arrow = document.createElementNS(NS, 'path');
     arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
     arrow.setAttribute('fill', 'none');
-    arrow.setAttribute('stroke', '#00966C');
+    arrow.setAttribute('stroke', '#00C47A');
     arrow.setAttribute('stroke-width', '4');
     arrow.setAttribute('stroke-linecap', 'round');
     arrow.setAttribute('marker-end', 'url(#wrc-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-shadow)');
     svg.appendChild(arrow);
     document.body.appendChild(svg);
 
@@ -752,8 +765,9 @@
     const ring = document.createElementNS(NS, 'circle');
     ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', r);
     ring.setAttribute('fill', 'none');
-    ring.setAttribute('stroke', '#00966C');
+    ring.setAttribute('stroke', '#00C47A');
     ring.setAttribute('stroke-width', '6');
+    ring.setAttribute('filter', 'url(#wrc-shadow)');
     ring.setAttribute('stroke-linecap', 'round');
     ring.style.transformOrigin = `${cx}px ${cy}px`;
     ring.style.transform = 'rotate(-90deg)';
