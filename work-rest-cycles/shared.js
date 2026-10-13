@@ -635,10 +635,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // ── Banner click-to-home ──
   // Clicks on the banner (#fixed-top) that don't land on a button or link
   // navigate back to index.html.
-  const fixedTopBanner = document.getElementById('fixed-top');
-  if (fixedTopBanner) {
-    fixedTopBanner.addEventListener('click', function(e) {
-      if (!e.target.closest('button, a, select, label')) {
+  const redBanner = document.querySelector('#fixed-top header');
+  if (redBanner) {
+    redBanner.addEventListener('click', function(e) {
+      if (!e.target.closest('button, a')) {
         window.location.href = 'index.html';
       }
     });
