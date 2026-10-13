@@ -781,25 +781,6 @@
     ls4.style.top = fixedH + 'px';
   }
 
-  function markMeasurementSelected(instrument) {
-    document.querySelectorAll('.method-card[data-instrument]').forEach(c => {
-      const h3 = c.querySelector('.card-left h3');
-      const existing = h3 && h3.querySelector('.wrc-selected-check');
-      if (existing) existing.remove();
-    });
-    if (!instrument) return;
-    const card = document.querySelector(`.method-card[data-instrument="${instrument}"]`);
-    if (!card) return;
-    const h3 = card.querySelector('.card-left h3');
-    if (h3) {
-      const badge = document.createElement('span');
-      badge.className = 'wrc-selected-check';
-      badge.setAttribute('aria-hidden', 'true');
-      badge.textContent = '✔️';
-      h3.appendChild(badge);
-    }
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     const s = WRC.get();
     const labelEl = document.getElementById('ls4-activity-label');
@@ -827,7 +808,6 @@
       }
     }
 
-    markMeasurementSelected(s.instrument || null);
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);

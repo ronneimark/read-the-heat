@@ -162,27 +162,7 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
-  function markClothingSelected(type) {
-    document.querySelectorAll('.ls4-clothing-card').forEach(c => {
-      const titleEl = c.querySelector('.ls4-clothing-title');
-      const existing = titleEl && titleEl.querySelector('.wrc-selected-check');
-      if (existing) existing.remove();
-    });
-    if (!type) return;
-    const card = document.querySelector(`.ls4-clothing-card[data-clothing="${type}"]`);
-    if (!card) return;
-    const titleEl = card.querySelector('.ls4-clothing-title');
-    if (titleEl) {
-      const badge = document.createElement('span');
-      badge.className = 'wrc-selected-check';
-      badge.setAttribute('aria-hidden', 'true');
-      badge.textContent = '✔️';
-      titleEl.appendChild(badge);
-    }
-  }
-
   function commitClothing(type, adjustC) {
-    markClothingSelected(type);
     navigate('measurement.html', {
       clothingType: type,
       clothingAdjustC: adjustC,
@@ -200,7 +180,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    markClothingSelected(WRC.val('clothingType', null));
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);

@@ -225,27 +225,7 @@
     if (e.key === 'Escape') closeAcclimAbout();
   });
 
-  function markAcclimSelected(status) {
-    document.querySelectorAll('.ls3-acclim-card').forEach(c => {
-      const titleEl = c.querySelector('.ls3-acclim-title');
-      const existing = titleEl && titleEl.querySelector('.wrc-selected-check');
-      if (existing) existing.remove();
-    });
-    if (!status) return;
-    const card = document.querySelector(`.ls3-acclim-card[data-worker-status="${status}"]`);
-    if (!card) return;
-    const titleEl = card.querySelector('.ls3-acclim-title');
-    if (titleEl) {
-      const badge = document.createElement('span');
-      badge.className = 'wrc-selected-check';
-      badge.setAttribute('aria-hidden', 'true');
-      badge.textContent = '✔️';
-      titleEl.appendChild(badge);
-    }
-  }
-
   function commitWorkerStatus(status) {
-    markAcclimSelected(status);
     // Both unacclimatized variants use the RAL / unacclimatized lookup tables
     const tableKey = status === 'acclimatized' ? 'acclimatized' : 'unacclimatized';
     navigate('clothing.html', { workerStatus: status, workerStatusTable: tableKey });
@@ -268,7 +248,6 @@
     const kcalEl = document.getElementById('ls3-activity-kcal-hint');
     if (summEl) summEl.textContent = label;
     if (kcalEl) kcalEl.textContent = kcal;
-    markAcclimSelected(s.workerStatus || null);
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);

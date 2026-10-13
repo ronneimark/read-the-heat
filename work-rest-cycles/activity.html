@@ -153,29 +153,7 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
-  function markActivitySelected(level) {
-    document.querySelectorAll('.ls2-level-panel').forEach(p => {
-      const nameEl = p.querySelector('.ls2-level-name');
-      const existing = nameEl && nameEl.querySelector('.wrc-selected-check');
-      if (existing) existing.remove();
-      p.classList.remove('wrc-panel-selected');
-    });
-    if (!level) return;
-    const panel = document.querySelector(`.ls2-level-panel[data-activity="${level}"]`);
-    if (!panel) return;
-    panel.classList.add('wrc-panel-selected');
-    const nameEl = panel.querySelector('.ls2-level-name');
-    if (nameEl) {
-      const badge = document.createElement('span');
-      badge.className = 'wrc-selected-check';
-      badge.setAttribute('aria-hidden', 'true');
-      badge.textContent = '✔️';
-      nameEl.appendChild(badge);
-    }
-  }
-
   function commitActivity(level) {
-    markActivitySelected(level);
     const m = activityMeta[level];
     navigate('acclimatization.html', {
       activity: level,
@@ -196,7 +174,6 @@
   async function init() {
     await initData();
     const sector = WRC.val('sector', 'restaurant');
-    markActivitySelected(WRC.val('activity', null));
     const data = sectorData[sector] || {};
     ['light','moderate','heavy','vh'].forEach(level => {
       const ul = document.getElementById('ls2-ex-' + level);
