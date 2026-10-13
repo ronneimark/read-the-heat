@@ -191,8 +191,8 @@ function ensureMethodologyModal() {
       <strong>Acclimatization Status — Tool Workflow</strong><br><br>
       Before entering a temperature measurement, users select the worker's acclimatization status. This determines which NIOSH exposure limit applies:<br><br>
       <strong>Acclimatized (REL):</strong> Workers who have completed a full acclimatization protocol and have not been absent from heat work for seven or more consecutive days. The NIOSH Recommended Exposure Limit (REL) applies. Acclimatization increases sweating efficiency, stabilizes cardiovascular response, and lowers core body temperature and heart rate at equivalent workloads (NIOSH, 2016).<br><br>
-      <strong>Unacclimatized — New Worker (RAL):</strong> Workers starting heat exposure for the first time, or newly assigned to a hot work area. The NIOSH Recommended Alert Limit (RAL) applies. NIOSH protocol recommends no more than 20% of usual heat exposure on Day 1, increasing by approximately 20% per day over 7–14 days.<br><br>
-      <strong>Unacclimatized — Returning Worker (RAL):</strong> Workers previously acclimatized but absent from heat work for seven or more consecutive days. The RAL also applies. NIOSH return protocol: 4-day ramp — 50% → 60% → 80% → 100% of usual exposure. Workers with cardiovascular disease, obesity, certain medications, or a history of prior heat illness should also be considered unacclimatized for conservative planning purposes.<br><br>
+      <strong>Unacclimatized — New Worker (RAL):</strong> Workers starting heat exposure for the first time, or newly assigned to a hot work area. The NIOSH Recommended Alert Limit (RAL) applies. NIOSH protocol recommends no more than 20% of usual heat exposure on Day 1, increasing by approximately 20% per day over 7–14 days (NIOSH, 2016, p. 105).<br><br>
+      <strong>Unacclimatized — Returning Worker (RAL):</strong> Workers previously acclimatized but absent from heat work for seven or more consecutive days. The RAL also applies. NIOSH return protocol: 4-day ramp — 50% → 60% → 80% → 100% of usual exposure (NIOSH, 2016, p. 105). Workers with cardiovascular disease, obesity, certain medications, or a history of prior heat illness should also be considered unacclimatized for conservative planning purposes.<br><br>
       NIOSH (2016, p. 40): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death."</em>
     </div>
 
@@ -367,23 +367,23 @@ function ensureHealthModal() {
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Anticholinergics</div>
-        <p>Block the nerve signals that trigger sweating, severely impairing evaporative cooling. Found in allergy medications, bladder drugs, and some antidepressants.</p>
+        <p>Block the nerve signals that trigger sweating, severely impairing evaporative cooling. Found in allergy medications, bladder drugs, and some antidepressants (NIOSH, 2016, Ch. 7).</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Beta-blockers</div>
-        <p>Limit the heart rate increase needed to pump blood to the skin for cooling. Also mask tachycardia as an early warning sign of heat strain.</p>
+        <p>Limit the heart rate increase needed to pump blood to the skin for cooling. Also mask tachycardia as an early warning sign of heat strain (NIOSH, 2016, Ch. 7).</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Antipsychotics &amp; some antidepressants</div>
-        <p>Can impair hypothalamic temperature regulation and reduce sweating. Associated with heat stroke in multiple occupational and clinical settings.</p>
+        <p>Can impair hypothalamic temperature regulation and reduce sweating. Associated with heat stroke in multiple occupational and clinical settings (NIOSH, 2016, Ch. 7).</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Stimulants (including some ADHD medications)</div>
-        <p>Increase metabolic heat production and can raise baseline heart rate, reducing cardiovascular reserve available for heat dissipation.</p>
+        <p>Increase metabolic heat production and can raise baseline heart rate, reducing cardiovascular reserve available for heat dissipation (NIOSH, 2016, Ch. 7).</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Thyroid medications</div>
-        <p>Hyperthyroid states — including over-supplementation — elevate metabolic rate and baseline body temperature, compounding heat load.</p>
+        <p>Hyperthyroid states — including over-supplementation — elevate metabolic rate and baseline body temperature, compounding heat load (NIOSH, 2016, Ch. 7).</p>
       </div>
     </div>
     <p style="font-size:12px;color:var(--subtext);margin-top:4px">Workers should not be required to disclose specific medications. Supervisors and safety personnel should be aware that common prescribed drugs significantly alter heat tolerance and plan accordingly.</p>
