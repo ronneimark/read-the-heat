@@ -548,6 +548,12 @@
 }
 </style>
 
+<!-- ── Instrument photo zoom overlay (must be before the inline script so the IIFE can find these elements) ── -->
+<div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
+  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
+</div>
+
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
@@ -1223,10 +1229,5 @@
   });
 </script>
 
-<!-- ── Instrument photo zoom overlay ── -->
-<div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
-  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
-  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
-</div>
 </body>
 </html>
