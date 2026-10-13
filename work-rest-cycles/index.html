@@ -229,11 +229,11 @@
 /* ── health factors note ── */
 .intro-health-note {
   margin: 0;
-  padding: 10px 14px;
+  padding: 7px 12px;
   border-top: 1.5px solid #e0c040;
   background: #fffbe8;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  font-size: 0.75rem;
+  line-height: 1.45;
   color: #222;
   border-radius: 0 0 8px 8px;
 }
@@ -365,7 +365,7 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  width: min(680px, 96vw);
+  width: min(520px, 96vw);
   background: #F6F3EC;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
@@ -435,37 +435,37 @@
 /* preamble — warm cream above the tab bar */
 .intro-preamble {
   background: #FEF8E0;
-  padding: 14px 18px 12px;
+  padding: 10px 16px 9px;
   border-radius: 12px 12px 0 0;
 }
 .intro-preamble-tagline {
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 800;
   color: #001E62;
-  line-height: 1.4;
-  margin: 0 0 8px;
+  line-height: 1.35;
+  margin: 0 0 6px;
 }
 .intro-preamble-chips {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 }
 .intro-chip {
-  font-size: .68rem;
+  font-size: .63rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: .07em;
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 999px;
   background: #001E62;
   color: #fff;
 }
 .intro-chip.chip-red { background: #D50032; }
 .intro-preamble-sub {
-  font-size: .82rem;
+  font-size: .76rem;
   color: #3a4858;
-  line-height: 1.45;
+  line-height: 1.4;
   margin: 0;
 }
 
@@ -537,11 +537,11 @@
   flex: 1;
 }
 .intro-tab-panel {
-  padding: 14px 18px 18px;
-  font-size: 1.08rem;
+  padding: 10px 14px 12px;
+  font-size: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 .intro-tab-panel[hidden] { display: none; }
 
@@ -558,7 +558,7 @@
 .intro-steps::before {
   content: '';
   position: absolute;
-  left: 19px; top: 22px; bottom: 22px;
+  left: 14px; top: 18px; bottom: 18px;
   width: 2px;
   background: linear-gradient(to bottom, #001E62 0%, rgba(0,30,98,0.15) 100%);
   border-radius: 2px;
@@ -567,9 +567,9 @@
 .intro-step {
   display: flex;
   align-items: flex-start;
-  gap: 11px;
-  padding: 7px 8px 7px 0;
-  border-radius: 9px;
+  gap: 9px;
+  padding: 4px 6px 4px 0;
+  border-radius: 8px;
   cursor: pointer;
   transition: background .13s;
   position: relative;
@@ -579,45 +579,45 @@
 .intro-step:focus-visible { outline: 2px solid #005FCC; outline-offset: 1px; }
 .step-badge {
   flex-shrink: 0;
-  width: 34px; height: 34px;
+  width: 28px; height: 28px;
   border-radius: 50%;
   background: #001E62;
   color: #fff;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 12px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,30,98,0.35);
+  box-shadow: 0 2px 6px rgba(0,30,98,0.30);
   position: relative;
   z-index: 1;
   margin-top: 1px;
 }
 .intro-step:last-child .step-badge {
   background: linear-gradient(135deg, #D50032 0%, #8B0000 100%);
-  box-shadow: 0 2px 8px rgba(213,0,50,0.35);
-  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(213,0,50,0.30);
+  font-size: 15px;
 }
 .step-body {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 .step-title {
   font-weight: 800;
-  font-size: .9rem;
+  font-size: .82rem;
   color: #001E62;
   line-height: 1.25;
   display: block;
 }
 .step-desc {
-  font-size: .8rem;
+  font-size: .73rem;
   color: #3a4858;
-  line-height: 1.45;
+  line-height: 1.4;
   display: block;
 }
 .step-cue {
-  font-size: .7rem;
+  font-size: .65rem;
   font-weight: 700;
   color: #D50032;
   opacity: 0;
@@ -632,9 +632,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin: 8px 0 0;
-  font-size: .75rem;
+  gap: 5px;
+  margin: 5px 0 0;
+  font-size: .68rem;
   font-weight: 700;
   color: #001E62;
   opacity: .55;
