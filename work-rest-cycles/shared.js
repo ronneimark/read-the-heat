@@ -548,7 +548,7 @@ function buildBreadcrumbs() {
     const isCurrent = c.href === currentPage;
     const a = document.createElement('a');
     a.className = c.isValue ? 'wrc-crumb wrc-crumb-value' : (c.selected ? 'wrc-crumb' : 'wrc-crumb-pending');
-    if (isCurrent) a.classList.add('wrc-crumb-current');
+    if (isCurrent) { a.classList.add('wrc-crumb-current'); a.setAttribute('aria-current', 'page'); }
     a.href = c.href;
     a.textContent = c.label;
     a.title = c.isValue ? 'Change measurement' : (c.selected ? 'Change selection' : 'Make a selection');

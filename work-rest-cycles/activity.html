@@ -28,6 +28,15 @@
   transform: translateY(4px) !important;
   box-shadow: 0 1px 0 color-mix(in srgb, var(--panel-accent) 55%, #000), 0 2px 4px rgba(0,0,0,0.2) !important;
 }
+/* White text on dark panel-accents that fail AA contrast with black text:
+   #00966C (light, 3.0:1 vs black), #E65100 (heavy, 3.86:1 vs black), #880E4F (vh, 1.82:1 vs black).
+   White gives 7.0:1, 5.4:1, and 11.5:1 respectively — all pass AA. */
+.ls2-level-panel[data-activity="light"] .ls2-select-btn,
+.ls2-level-panel[data-activity="heavy"] .ls2-select-btn,
+.ls2-level-panel[data-activity="vh"]   .ls2-select-btn {
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
+}
 </style>
 <script src="./lang-link.js"></script>
 </head>
@@ -62,6 +71,7 @@
         <strong id="ls2-sector-name">Loading…</strong>
         <span>— sample activities by exertion level</span>
       </div>
+      <h1 class="sr-only">Activity Level</h1>
       <span class="ls2-topbar-hint">Select the level that best matches. <strong style="color:var(--text)">When in doubt, choose higher.</strong> <button class="strip-btn" onclick="openActivityModal()" style="margin-left:8px;vertical-align:middle">📋 Additional tips on determining activity level</button></span>
     </div>
 
@@ -158,6 +168,7 @@
     if (nameEl) {
       const badge = document.createElement('span');
       badge.className = 'wrc-selected-check';
+      badge.setAttribute('aria-hidden', 'true');
       badge.textContent = '✔️';
       nameEl.appendChild(badge);
     }

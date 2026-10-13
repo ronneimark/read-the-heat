@@ -132,7 +132,7 @@
 
     <div class="ls3-acclim-wrap">
       <div class="launcher-step">
-        <p class="ls-heading">Has this worker completed heat acclimatization?</p>
+        <h1 class="ls-heading">Has this worker completed heat acclimatization?</h1>
       </div>
 
       <div style="text-align:center;margin-bottom:4px;">
@@ -238,6 +238,7 @@
     if (titleEl) {
       const badge = document.createElement('span');
       badge.className = 'wrc-selected-check';
+      badge.setAttribute('aria-hidden', 'true');
       badge.textContent = '✔️';
       titleEl.appendChild(badge);
     }

@@ -34,7 +34,7 @@
 
     <!-- heading row with How to use button -->
     <div class="ls1-header">
-      <p class="ls-heading">What industry is this work in?</p>
+      <h1 class="ls-heading">What industry is this work in?</h1>
       <div class="intro-anchor" id="intro-anchor">
         <button class="intro-open-btn" id="intro-open-btn"
                 onclick="toggleIntroPopover()"
@@ -54,15 +54,15 @@
 
           <!-- tab bar -->
           <div class="intro-tab-bar" role="tablist">
-            <button class="intro-tab active" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)">
+            <button class="intro-tab active" id="itab-btn-1" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)">
               <span class="intro-tab-title">How to use</span>
               <span class="intro-tab-sub">Step-by-step guide</span>
             </button>
-            <button class="intro-tab"        role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)">
+            <button class="intro-tab"        id="itab-btn-2" role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)">
               <span class="intro-tab-title">Measuring heat</span>
               <span class="intro-tab-sub">Instruments &amp; methods</span>
             </button>
-            <button class="intro-tab"        role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)">
+            <button class="intro-tab"        id="itab-btn-3" role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)">
               <span class="intro-tab-title">How it's used</span>
               <span class="intro-tab-sub">Regulatory context</span>
             </button>
@@ -71,20 +71,20 @@
           <!-- tab panels -->
           <div class="intro-tab-panels">
 
-            <div class="intro-tab-panel active" id="itab-1" role="tabpanel">
+            <div class="intro-tab-panel active" id="itab-1" role="tabpanel" aria-labelledby="itab-btn-1">
               <ol class="intro-steps">
-                <li class="intro-step-link" onclick="highlightStep(event,1)"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,2)"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,3)"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,4)"><strong>Clothing &amp; PPE</strong> — indicate whether the worker is wearing standard clothing or impermeable/vapor-barrier PPE. A +10°C correction is applied to the WBGT for impermeable PPE. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,5)"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" onclick="highlightStep(event,6)"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,1)}"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,2)}"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,3)}"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,4)}"><strong>Clothing &amp; PPE</strong> — indicate whether the worker is wearing standard clothing or impermeable/vapor-barrier PPE. A +10°C correction is applied to the WBGT for impermeable PPE. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,5)}"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
+                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,6)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
               </ol>
               <!-- illustration slot -->
               <div class="intro-illus-slot" aria-hidden="true"></div>
             </div>
 
-            <div class="intro-tab-panel" id="itab-2" role="tabpanel" hidden>
+            <div class="intro-tab-panel" id="itab-2" role="tabpanel" aria-labelledby="itab-btn-2" hidden>
               <ul class="intro-uses">
                 <li>🌡️ <button class="instrument-link" onclick="showInstrumentPhoto(event,'wbgt')"><span class="instr-pill">📷 WBGT Monitors</span></button> are the gold standard (NIOSH, 2016; ACGIH, 2025) — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
                 <li>💧 <button class="instrument-link" onclick="showInstrumentPhoto(event,'hi')"><span class="instr-pill">📷 Heat Index Meters</span></button> or <button class="instrument-link" onclick="showInstrumentPhoto(event,'trh')"><span class="instr-pill">📷 Temperature and Relative Humidity Monitors</span></button> are a solid second choice.</li>
@@ -95,7 +95,7 @@
               <div class="intro-illus-slot" aria-hidden="true"></div>
             </div>
 
-            <div class="intro-tab-panel" id="itab-3" role="tabpanel" hidden>
+            <div class="intro-tab-panel" id="itab-3" role="tabpanel" aria-labelledby="itab-btn-3" hidden>
               <ul class="intro-uses">
                 <li>👷 <strong>Workers</strong> — identify the breaks you and your co-workers can push for based on health and safety needs.</li>
                 <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>

@@ -115,7 +115,7 @@
     <div class="ls4-clothing-wrap">
 
       <div class="launcher-step">
-        <p class="ls-heading">What type of clothing or PPE is the worker wearing?</p>
+        <h1 class="ls-heading">What type of clothing or PPE is the worker wearing?</h1>
       </div>
 
       <div class="ls4-clothing-cards">
@@ -175,6 +175,7 @@
     if (titleEl) {
       const badge = document.createElement('span');
       badge.className = 'wrc-selected-check';
+      badge.setAttribute('aria-hidden', 'true');
       badge.textContent = '✔️';
       titleEl.appendChild(badge);
     }
