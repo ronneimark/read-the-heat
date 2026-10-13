@@ -49,8 +49,12 @@
 
           <!-- intro paragraph above tabs -->
           <div class="intro-preamble">
-            <p><strong>This tool calculates NIOSH-recommended work-rest cycles for indoor workers exposed to heat — in about 30 seconds.</strong></p>
-            <p>The purpose of this site is to identify the need for breaks from work in hot conditions based on the intensity of the work and the environmental conditions:</p>
+            <p class="intro-preamble-tagline">Get your NIOSH-recommended work-rest schedule in about 30 seconds.</p>
+            <div class="intro-preamble-chips">
+              <span class="intro-chip">6 steps</span>
+              <span class="intro-chip chip-red">~30 seconds</span>
+            </div>
+            <p class="intro-preamble-sub">Follow each step below — pick your industry, describe the work, check acclimatization status, note clothing &amp; PPE, then enter the heat reading. Your personalized recommendation appears at the end.</p>
           </div>
 
           <!-- tab bar -->
@@ -74,13 +78,78 @@
 
             <div class="intro-tab-panel active" id="itab-1" role="tabpanel" aria-labelledby="itab-btn-1">
               <ol class="intro-steps">
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,1)}"><strong>Pick your industry</strong> — choose the sector that best matches your workplace. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,2)}"><strong>Describe the work</strong> — select the physical activity level (light, moderate, heavy, or very heavy). <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,3)}"><strong>Acclimatization status</strong> — indicate whether the worker is new, returning after time off, or fully acclimatized. This affects the safe exposure limits. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,4)}"><strong>Clothing &amp; PPE</strong> — indicate whether the worker is wearing standard clothing or impermeable/vapor-barrier PPE. A +10°C correction is applied to the WBGT for impermeable PPE. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,5)}"><strong>Measure and enter the heat</strong> — use a WBGT meter, a thermometer + humidity reading, or a standard thermometer. The tool recommends work-rest minutes per hour based on what you can measure. <span class="step-hint">↗ click to see</span></li>
-                <li class="intro-step-link" role="button" tabindex="0" onclick="highlightStep(event,6)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}"><strong>View recommended work-rest cycle</strong> — once all inputs are entered, follow the arrow to see your personalized work-rest schedule. <span class="step-hint step-hint-go" id="step5-hint">↗ click to see</span></li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,1)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,1)}">
+                  <div class="step-badge">1</div>
+                  <div class="step-body">
+                    <span class="step-title">Pick your industry</span>
+                    <span class="step-desc">Choose the sector that best matches your workplace.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,2)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,2)}">
+                  <div class="step-badge">2</div>
+                  <div class="step-body">
+                    <span class="step-title">Describe the work</span>
+                    <span class="step-desc">Select the physical activity level — light, moderate, heavy, or very heavy.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,3)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,3)}">
+                  <div class="step-badge">3</div>
+                  <div class="step-body">
+                    <span class="step-title">Acclimatization status</span>
+                    <span class="step-desc">Is the worker new, returning after time off, or fully acclimatized? This directly affects safe exposure limits.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,4)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,4)}">
+                  <div class="step-badge">4</div>
+                  <div class="step-body">
+                    <span class="step-title">Clothing &amp; PPE</span>
+                    <span class="step-desc">Standard clothing, or impermeable/vapor-barrier PPE? Impermeable gear adds a +10 °C WBGT correction automatically.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,5)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,5)}">
+                  <div class="step-badge">5</div>
+                  <div class="step-body">
+                    <span class="step-title">Measure and enter the heat</span>
+                    <span class="step-desc">Use a WBGT meter, thermometer + humidity, or a plain thermometer. The tool adapts to whatever you can measure.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0"
+                    onclick="highlightStep(event,6)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}">
+                  <div class="step-badge" aria-hidden="true">→</div>
+                  <div class="step-body">
+                    <span class="step-title">Get your work-rest recommendation</span>
+                    <span class="step-desc">Your personalized NIOSH work-rest schedule appears — with minutes of work and rest per hour.</span>
+                    <span class="step-cue" id="step5-hint">↗ Show me on the page</span>
+                  </div>
+                </li>
+
               </ol>
+              <div class="intro-steps-cta" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                Follow the steps below to get your recommendation
+              </div>
               <!-- illustration slot -->
               <div class="intro-illus-slot" aria-hidden="true"></div>
             </div>
@@ -297,7 +366,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: min(680px, 96vw);
-  background: var(--modal-bg, #fff);
+  background: #F6F3EC;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
   z-index: 1002;
@@ -354,7 +423,7 @@
   content: '';
   position: absolute;
   width: 12px; height: 12px;
-  background: var(--modal-bg, #fff);
+  background: #FEF8E0;
   transform: rotate(45deg);
   top: 3px; left: 1px;
   box-shadow: -2px -2px 4px rgba(0,0,0,.1);
@@ -363,12 +432,42 @@
   .intro-popover-arrow::after { background: #1a2235; }
 }
 
-/* preamble */
+/* preamble — warm cream above the tab bar */
 .intro-preamble {
-  padding: 14px 18px 0;
-  font-size: 1.08rem;
+  background: #FEF8E0;
+  padding: 14px 18px 12px;
+  border-radius: 12px 12px 0 0;
 }
-.intro-preamble p { margin: 0 0 6px; }
+.intro-preamble-tagline {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #001E62;
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+.intro-preamble-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 7px;
+}
+.intro-chip {
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #001E62;
+  color: #fff;
+}
+.intro-chip.chip-red { background: #D50032; }
+.intro-preamble-sub {
+  font-size: .82rem;
+  color: #3a4858;
+  line-height: 1.45;
+  margin: 0;
+}
 
 /* tab bar */
 .intro-tab-bar {
@@ -446,13 +545,104 @@
 }
 .intro-tab-panel[hidden] { display: none; }
 
+/* ── Step-by-step track ── */
 .intro-steps {
+  list-style: none;
+  padding: 0 0 0 6px;
   margin: 0;
-  padding-left: 1.3em;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  position: relative;
 }
+/* vertical connector line */
+.intro-steps::before {
+  content: '';
+  position: absolute;
+  left: 19px; top: 22px; bottom: 22px;
+  width: 2px;
+  background: linear-gradient(to bottom, #001E62 0%, rgba(0,30,98,0.15) 100%);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.intro-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 7px 8px 7px 0;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background .13s;
+  position: relative;
+}
+.intro-step:hover  { background: rgba(0,30,98,0.06); }
+.intro-step:active { background: rgba(0,30,98,0.11); }
+.intro-step:focus-visible { outline: 2px solid #005FCC; outline-offset: 1px; }
+.step-badge {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #001E62;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,30,98,0.35);
+  position: relative;
+  z-index: 1;
+  margin-top: 1px;
+}
+.intro-step:last-child .step-badge {
+  background: linear-gradient(135deg, #D50032 0%, #8B0000 100%);
+  box-shadow: 0 2px 8px rgba(213,0,50,0.35);
+  font-size: 18px;
+}
+.step-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.step-title {
+  font-weight: 800;
+  font-size: .9rem;
+  color: #001E62;
+  line-height: 1.25;
+  display: block;
+}
+.step-desc {
+  font-size: .8rem;
+  color: #3a4858;
+  line-height: 1.45;
+  display: block;
+}
+.step-cue {
+  font-size: .7rem;
+  font-weight: 700;
+  color: #D50032;
+  opacity: 0;
+  transition: opacity .12s;
+  display: block;
+  margin-top: 1px;
+}
+.intro-step:hover .step-cue { opacity: 1; }
+
+/* nudge below steps */
+.intro-steps-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: .75rem;
+  font-weight: 700;
+  color: #001E62;
+  opacity: .55;
+  letter-spacing: .02em;
+  pointer-events: none;
+  user-select: none;
+}
+
 .intro-uses {
   margin: 0;
   padding-left: 0;
@@ -545,24 +735,8 @@
 /* zoom-in cursor signals enlargeability */
 .instrument-link { cursor: zoom-in; }
 
-/* clickable steps */
-.intro-step-link {
-  cursor: pointer;
-  border-radius: 6px;
-  padding: 5px 7px;
-  margin-left: -7px;
-  transition: background .15s;
-  list-style-position: inside;
-}
-.intro-step-link:hover { background: rgba(229,57,53,.09); }
-.step-hint {
-  font-size: .75em;
-  color: #e53935;
-  font-weight: 600;
-  margin-left: 4px;
-  opacity: .7;
-  white-space: nowrap;
-}
+/* legacy step-hint — no longer rendered but kept for safety */
+.step-hint { display: none; }
 @keyframes drawPath { to { stroke-dashoffset: 0; } }
 
 /* illustration placeholder — invisible until an image is placed */

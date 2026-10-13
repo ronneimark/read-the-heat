@@ -217,7 +217,7 @@
   }
   #health-modal-overlay.open { display: flex; }
   #health-modal {
-    background: #fff;
+    background: #F6F3EC;
     border-radius: 12px;
     max-width: 820px;
     width: 100%;
@@ -434,7 +434,7 @@
   }
   #activity-modal-overlay.open { display: flex; }
   #activity-modal {
-    background: #fff;
+    background: #F6F3EC;
     border-radius: 12px;
     max-width: 820px;
     width: 100%;
@@ -501,7 +501,7 @@
   }
   #methodology-modal-overlay.open { display: flex; }
   #methodology-modal {
-    background: #fff;
+    background: #F6F3EC;
     border-radius: 12px;
     max-width: 820px;
     width: 100%;

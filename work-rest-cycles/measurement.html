@@ -46,7 +46,7 @@ body { background: #F6F3EC !important; }
 }
 #meas-modal-overlay.open { display: flex; }
 #meas-modal {
-  background: #FEF8E0;
+  background: #F6F3EC;
   border-radius: 0;
   width: 50%;
   height: 100%;
@@ -307,7 +307,7 @@ body { background: #F6F3EC !important; }
 }
 #device-info-overlay[hidden] { display: none !important; }
 #device-info-modal {
-  background: #FEF8E0;
+  background: #F6F3EC;
   border-radius: 12px;
   width: min(520px, 92vw);
   max-height: 82vh;
@@ -453,7 +453,7 @@ body { background: #F6F3EC !important; }
 <!-- ── Device info modal ── -->
 <div id="device-info-overlay" hidden onclick="if(event.target===this)closeDeviceInfo()">
   <div id="device-info-modal" role="dialog" aria-modal="true" aria-labelledby="device-info-title">
-    <div class="modal-sticky-header" style="margin:-8px -18px 10px;padding:10px 18px;background:#FEF8E0;box-shadow:none;border-bottom:1px solid var(--border);">
+    <div class="modal-sticky-header" style="margin:-8px -18px 10px;padding:10px 18px;background:#F6F3EC;box-shadow:none;border-bottom:1px solid var(--border);">
       <h2 id="device-info-title" style="font-size:15px;font-weight:800;color:#000;margin:0;"></h2>
       <button id="device-info-close" class="modal-close-btn" onclick="closeDeviceInfo()" aria-label="Close">&#x2715;</button>
     </div>
@@ -464,7 +464,7 @@ body { background: #F6F3EC !important; }
 <!-- ── Measurement input modal ── -->
 <div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
   <div id="meas-modal">
-    <div class="modal-sticky-header" style="margin:-8px -14px 10px;background:#FEF8E0;box-shadow:none;border-bottom:1px solid var(--border);">
+    <div class="modal-sticky-header" style="margin:-8px -14px 10px;background:#F6F3EC;box-shadow:none;border-bottom:1px solid var(--border);">
       <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
