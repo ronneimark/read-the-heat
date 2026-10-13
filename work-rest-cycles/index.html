@@ -1125,6 +1125,15 @@
     arrow.setAttribute('marker-end', 'url(#wrc-ah)');
     arrow.setAttribute('filter', 'url(#wrc-shadow)');
     svg.appendChild(arrow);
+    // Click anywhere → dismiss overlay and restore modal
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', () => {
+      svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+    });
+
     document.body.appendChild(svg);
 
     // Animate arrow draw
@@ -1298,9 +1307,12 @@
     svg.appendChild(ring);
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
-    // Dismiss on any click or keydown
+    // Dismiss on any click or keydown; also restore popover mask
+    const pop = document.getElementById('intro-popover');
     const dismiss = () => {
       svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
       document.removeEventListener('click', dismiss);
       document.removeEventListener('keydown', dismiss);
     };
@@ -1395,9 +1407,12 @@
     svg.appendChild(ring);
     setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
 
-    // Stays until user clicks or presses a key
+    // Stays until user clicks or presses a key; also restore popover mask
+    const pop2 = document.getElementById('intro-popover');
     const dismiss = () => {
       svg.remove();
+      clearPopoverMask(pop2);
+      restorePopoverFullHeight();
       document.removeEventListener('click', dismiss);
       document.removeEventListener('keydown', dismiss);
     };
