@@ -619,7 +619,7 @@
     margin-bottom: 28px;
   }
   .method-card {
-    background: #fff;
+    background: #FEF8E0;
     border: 1.5px solid var(--border);
     border-radius: 12px;
     padding: 22px 22px 20px;
@@ -1096,7 +1096,7 @@
     min-height: 0;
   }
   .ls3-acclim-card {
-    background: #fff;
+    background: #FEF8E0;
     border: 2px solid var(--border);
     border-radius: 12px;
     padding: 24px 24px 20px;
@@ -1371,7 +1371,7 @@
     margin-bottom: 24px;
   }
   .activity-card {
-    background: #fff;
+    background: #FEF8E0;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 12px 14px;
@@ -1397,7 +1397,7 @@
 
   /* ── WORK-REST KEY ── */
   .wr-key {
-    background: #fff;
+    background: #FEF8E0;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 14px 18px;
