@@ -896,8 +896,16 @@
   }
 
 
+  function restorePopoverFullHeight() {
+    const pop = document.getElementById('intro-popover');
+    if (!pop || pop.hidden) return;
+    pop.style.maxHeight = '';
+    pop.style.overflowY = 'visible';
+    pop.style.top = '';
+  }
+
   function highlightHealthBtn() {
-    closeIntroPopover();
+    restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.health-btn');
     if (!target) return;
@@ -1001,7 +1009,7 @@
   }
 
   function highlightMethodBtn() {
-    closeIntroPopover();
+    restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.method-btn');
     if (!target) return;
