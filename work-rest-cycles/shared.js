@@ -525,7 +525,16 @@ function buildBreadcrumbs() {
         const hiSuffix = derivedHIUnit === 'C' ? '°C' : '°F';
         valueLabel += ' → HI: ' + derivedHI + hiSuffix;
       }
-    } else if ((instrument === 'wbgt' || instrument === 'hi' || instrument === 'dbt') && measValue != null) {
+    } else if (instrument === 'dbt' && measValue != null) {
+      // Thermometer Only: show entered temp / 100% RH assumed → calculated HI
+      valueLabel = measValue + unitSuffix + ' / 100%';
+      const derivedHI     = WRC.val('derivedHI', null);
+      const derivedHIUnit = WRC.val('derivedHIUnit', 'F');
+      if (derivedHI != null) {
+        const hiSuffix = derivedHIUnit === 'C' ? '°C' : '°F';
+        valueLabel += ' → HI: ' + derivedHI + hiSuffix;
+      }
+    } else if ((instrument === 'wbgt' || instrument === 'hi') && measValue != null) {
       valueLabel = measValue + unitSuffix;
     }
     if (valueLabel) {
