@@ -913,6 +913,11 @@
   function restorePopoverFullHeight() {
     const pop = document.getElementById('intro-popover');
     if (!pop || pop.hidden) return;
+    // Clear any CSS mask gradient that was fading the top of the modal
+    // transparent (applied when a step target overlapped the popover).
+    // This must happen BEFORE positionIntroPopover so the layout pass
+    // measures the fully-visible modal, not the masked/clipped version.
+    clearPopoverMask(pop);
     // Re-run the full layout pass so height is recalculated for the current
     // tab's content. Simply clearing maxHeight isn't enough — the popover is
     // fixed to bottom:4px so excess height silently overflows above the
