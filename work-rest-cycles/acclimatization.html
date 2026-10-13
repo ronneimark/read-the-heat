@@ -144,7 +144,7 @@
 
       <div class="ls3-acclim-cards">
 
-        <div class="ls3-acclim-card ls3-acclim-yes">
+        <div class="ls3-acclim-card ls3-acclim-yes" data-worker-status="acclimatized">
           <span class="ls3-acclim-icon">&#x2705;</span>
           <div class="ls3-acclim-title">Acclimatized</div>
           <div class="ls3-acclim-desc"><strong style="font-size:1em;font-size:calc(1em + 1px);">Has completed heat acclimatization and has not been absent from heat work for a week or more.</strong> Work-rest cycles use the NIOSH Recommended Exposure Limits (REL).</div>
@@ -156,7 +156,7 @@
           <button class="ls3-acclim-cta" onclick="commitWorkerStatus('acclimatized')">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
 
-        <div class="ls3-acclim-card ls3-acclim-no">
+        <div class="ls3-acclim-card ls3-acclim-no" data-worker-status="unacclimatized-new">
           <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
           <div class="ls3-acclim-title">New Worker — Unacclimatized</div>
           <div class="ls3-acclim-desc"><strong style="font-size:calc(1em + 1px);">Has not previously worked in heat or has not yet completed an acclimatization ramp.</strong> Uses the more protective NIOSH Recommended Alert Limits (RAL).</div>
@@ -168,7 +168,7 @@
           <button class="ls3-acclim-cta" onclick="commitWorkerStatus('unacclimatized-new')">Select New Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
 
-        <div class="ls3-acclim-card ls3-acclim-return">
+        <div class="ls3-acclim-card ls3-acclim-return" data-worker-status="unacclimatized-returning">
           <span class="ls3-acclim-icon">&#x1F504;</span>
           <div class="ls3-acclim-title">Returning Worker — Unacclimatized</div>
           <div class="ls3-acclim-desc"><strong style="font-size:calc(1em + 1px);">Previously acclimatized, but absent from heat work for 7 or more days.</strong> Uses the more protective NIOSH Recommended Alert Limits (RAL).</div>
@@ -225,7 +225,26 @@
     if (e.key === 'Escape') closeAcclimAbout();
   });
 
+  function markAcclimSelected(status) {
+    document.querySelectorAll('.ls3-acclim-card').forEach(c => {
+      const titleEl = c.querySelector('.ls3-acclim-title');
+      const existing = titleEl && titleEl.querySelector('.wrc-selected-check');
+      if (existing) existing.remove();
+    });
+    if (!status) return;
+    const card = document.querySelector(`.ls3-acclim-card[data-worker-status="${status}"]`);
+    if (!card) return;
+    const titleEl = card.querySelector('.ls3-acclim-title');
+    if (titleEl) {
+      const badge = document.createElement('span');
+      badge.className = 'wrc-selected-check';
+      badge.textContent = '✔️';
+      titleEl.appendChild(badge);
+    }
+  }
+
   function commitWorkerStatus(status) {
+    markAcclimSelected(status);
     // Both unacclimatized variants use the RAL / unacclimatized lookup tables
     const tableKey = status === 'acclimatized' ? 'acclimatized' : 'unacclimatized';
     navigate('clothing.html', { workerStatus: status, workerStatusTable: tableKey });
@@ -248,6 +267,7 @@
     const kcalEl = document.getElementById('ls3-activity-kcal-hint');
     if (summEl) summEl.textContent = label;
     if (kcalEl) kcalEl.textContent = kcal;
+    markAcclimSelected(s.workerStatus || null);
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);

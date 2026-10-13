@@ -68,7 +68,7 @@
     <div class="ls2-review-grid">
 
       <!-- Light -->
-      <div class="ls2-level-panel" style="--panel-accent:#00966C">
+      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#00966C">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Light Work</span>
           <span class="ls2-level-kcal">~150–200 kcal/hr (116–233 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -85,7 +85,7 @@
       </div>
 
       <!-- Moderate -->
-      <div class="ls2-level-panel" style="--panel-accent:#F57F17">
+      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#F57F17">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Moderate Work</span>
           <span class="ls2-level-kcal">~200–350 kcal/hr (233–407 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -102,7 +102,7 @@
       </div>
 
       <!-- Heavy -->
-      <div class="ls2-level-panel" style="--panel-accent:#E65100">
+      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#E65100">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Heavy Work</span>
           <span class="ls2-level-kcal">~350–500 kcal/hr (407–581 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -119,7 +119,7 @@
       </div>
 
       <!-- Very Heavy -->
-      <div class="ls2-level-panel" style="--panel-accent:#880E4F">
+      <div class="ls2-level-panel" data-activity="vh" style="--panel-accent:#880E4F">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Very Heavy Work</span>
           <span class="ls2-level-kcal">&gt;500 kcal/hr (&gt;581 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
@@ -143,7 +143,28 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  function markActivitySelected(level) {
+    document.querySelectorAll('.ls2-level-panel').forEach(p => {
+      const nameEl = p.querySelector('.ls2-level-name');
+      const existing = nameEl && nameEl.querySelector('.wrc-selected-check');
+      if (existing) existing.remove();
+      p.classList.remove('wrc-panel-selected');
+    });
+    if (!level) return;
+    const panel = document.querySelector(`.ls2-level-panel[data-activity="${level}"]`);
+    if (!panel) return;
+    panel.classList.add('wrc-panel-selected');
+    const nameEl = panel.querySelector('.ls2-level-name');
+    if (nameEl) {
+      const badge = document.createElement('span');
+      badge.className = 'wrc-selected-check';
+      badge.textContent = '✔️';
+      nameEl.appendChild(badge);
+    }
+  }
+
   function commitActivity(level) {
+    markActivitySelected(level);
     const m = activityMeta[level];
     navigate('acclimatization.html', {
       activity: level,
@@ -164,6 +185,7 @@
   async function init() {
     await initData();
     const sector = WRC.val('sector', 'restaurant');
+    markActivitySelected(WRC.val('activity', null));
     const data = sectorData[sector] || {};
     ['light','moderate','heavy','vh'].forEach(level => {
       const ul = document.getElementById('ls2-ex-' + level);

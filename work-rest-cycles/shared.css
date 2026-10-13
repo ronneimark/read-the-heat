@@ -887,6 +887,19 @@
     box-shadow: 0 0 0 3px rgba(213,0,50,.3);
   }
   .ls1-sector-btn.selected .ls1-sector-label { background: #D50032; }
+
+/* ── Selected-step checkmark badge ── */
+.wrc-selected-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1;
+  margin-left: 0.35em;
+  vertical-align: middle;
+}
+
   .ls1-footer {
     flex-shrink: 0;
     padding: 8px 12px 12px;
