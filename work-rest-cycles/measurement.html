@@ -11,7 +11,7 @@
   display: none;
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,10,30,0.45);
+  background: #FEF8E0;
   z-index: 9100;
   align-items: stretch;   /* modal stretches full height of overlay */
   justify-content: flex-end; /* modal hugs the right edge */
@@ -521,11 +521,21 @@
     }
 
     overlay.classList.add('open');
+
+    // Hide "Click to Enlarge" hint on the active card while modal is open
+    openMeasModal._activeHint = triggerEl?.querySelector('.enl-hint') ?? null;
+    if (openMeasModal._activeHint) openMeasModal._activeHint.classList.add('is-hidden');
+
     setTimeout(() => document.querySelector('#meas-modal input')?.focus(), 80);
   }
 
   function closeMeasModal() {
     document.getElementById('meas-modal-overlay').classList.remove('open');
+    // Restore the hint
+    if (openMeasModal._activeHint) {
+      openMeasModal._activeHint.classList.remove('is-hidden');
+      openMeasModal._activeHint = null;
+    }
   }
 
   function setMeasUnit(unit) {
