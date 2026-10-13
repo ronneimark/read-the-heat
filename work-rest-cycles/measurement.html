@@ -14,37 +14,24 @@ body { background: #F6F3EC !important; }
   gap: 0 !important;
   background: transparent !important;
   border-top: 3px solid #001E62 !important;
-  position: relative !important; /* for ::after vertical divider */
+  position: relative !important;
 }
-/* Red divider: bottom of top row / top of bottom row */
-.method-card-full:nth-child(3),
-.method-card-full:nth-child(4) {
-  border-top: 3px solid #D50032 !important;
-}
-/* Green vertical divider — two segments so it doesn't bleed into horizontal borders */
-/* Top segment: from below navy border (3px) to above red border (50%) */
-.method-cards-full::before {
-  content: '';
+/* Measured dividers — positioned by JS to avoid percentage-guessing */
+.grid-div-h, .grid-div-v {
   position: absolute;
-  top: 3px;
-  bottom: calc(50% + 3px);
-  left: calc(50% - 3px);
-  width: 6px;
-  background: #00966C;
   pointer-events: none;
-  z-index: 0;
 }
-/* Bottom segment: from below red border (50% + 3px) to bottom */
-.method-cards-full::after {
-  content: '';
-  position: absolute;
-  top: calc(50% + 3px);
-  bottom: 0;
-  left: calc(50% - 3px);
+.grid-div-h {
+  height: 3px;
+  left: 0; right: 0;
+  background: #D50032;
+  z-index: 3; /* red on top so it reads as continuous */
+}
+.grid-div-v {
   width: 6px;
+  top: 0; bottom: 0;
   background: #00966C;
-  pointer-events: none;
-  z-index: 0;
+  z-index: 2;
 }
 
 /* ── Measurement input modal ── */
@@ -448,6 +435,10 @@ body { background: #F6F3EC !important; }
         </div>
       </div>
 
+      <!-- Measured grid dividers — positioned by positionGridDividers() -->
+      <div class="grid-div-h" id="grid-div-h" aria-hidden="true"></div>
+      <div class="grid-div-v" id="grid-div-v" aria-hidden="true"></div>
+
     </div>
 
   </div><!-- /ls4 -->
@@ -828,11 +819,28 @@ body { background: #F6F3EC !important; }
     document.getElementById('device-info-overlay').hidden = true;
   }
 
+  function positionGridDividers() {
+    const grid = document.querySelector('.method-cards-full');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.method-card-full');
+    if (cards.length < 3) return;
+    const gridRect  = grid.getBoundingClientRect();
+    const card3Rect = cards[2].getBoundingClientRect(); // bottom-left card
+    const card2Rect = cards[1].getBoundingClientRect(); // top-right card
+    // Red horizontal: sits at the top edge of the bottom-row cards
+    const divH = document.getElementById('grid-div-h');
+    if (divH) divH.style.top = (card3Rect.top - gridRect.top) + 'px';
+    // Green vertical: centered on the column boundary
+    const divV = document.getElementById('grid-div-v');
+    if (divV) divV.style.left = (card2Rect.left - gridRect.left - 3) + 'px';
+  }
+
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const ls4 = document.getElementById('ls4');
     const fixedH = fixedTop.offsetHeight;
     ls4.style.top = fixedH + 'px';
+    positionGridDividers();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
