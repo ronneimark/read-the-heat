@@ -21,16 +21,30 @@ body { background: #F6F3EC !important; }
 .method-card-full:nth-child(4) {
   border-top: 3px solid #D50032 !important;
 }
-/* Green vertical divider via pseudo-element — avoids border-corner artifact */
+/* Green vertical divider — two segments so it doesn't bleed into horizontal borders */
+/* Top segment: from below navy border (3px) to above red border (50%) */
+.method-cards-full::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: calc(50% + 3px);
+  left: calc(50% - 3px);
+  width: 6px;
+  background: #00966C;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Bottom segment: from below red border (50% + 3px) to bottom */
 .method-cards-full::after {
   content: '';
   position: absolute;
-  top: 0; bottom: 0;
-  left: calc(50% - 1.5px);
-  width: 3px;
+  top: calc(50% + 3px);
+  bottom: 0;
+  left: calc(50% - 3px);
+  width: 6px;
   background: #00966C;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 /* ── Measurement input modal ── */
