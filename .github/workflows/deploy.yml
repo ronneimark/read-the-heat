@@ -1,55 +1,103 @@
-# On every push to main, rsyncs work-rest-cycles/ → public_html/work-rest-cycles/
-# over SSH using key-based auth.
+# Deploys the site whenever a change reaches the main branch (or when run by hand from the
+# Actions tab). It asks cPanel to do exactly what the two buttons on cPanel's Git Version
+# Control page do - "Update from Remote" (pull from GitHub) and "Deploy HEAD Commit" (copy
+# the files to the live folder, as set in .cpanel.yml). The deploy path and the folders a
+# deploy skips are set only in .cpanel.yml.
 #
-# Repository secrets required:
-#   CPANEL_HOST       SSH hostname (e.g. server123.greengeeks.net)
-#   CPANEL_USERNAME   cPanel / SSH username
-#   SSH_PRIVATE_KEY   Ed25519 private key (public key authorized in cPanel SSH Key Manager)
-name: Deploy to GreenGeeks via SSH
+# Needs these repository secrets (Settings > Secrets and variables > Actions):
+#   CPANEL_HOST       the cPanel address, e.g. server123.greengeeks.net (no https://, no :2083)
+#   CPANEL_USER       the cPanel username (workerpo)
+#   CPANEL_TOKEN      a cPanel API token (cPanel > Security > Manage API Tokens)
+#   CPANEL_REPO_ROOT  the repository's path on the server, as shown under "Repository Path"
+#                     on cPanel's Git Version Control page
+#                     e.g. /home/workerpo/repositories/work-rest-cycles
+
+name: Deploy to cPanel
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p 2222 "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
-          ssh-keyscan "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
-
-      - name: Test SSH connection (port 2222)
+      - name: Check the secrets are set
         env:
-          SSH_HOST: ${{ secrets.CPANEL_HOST }}
-          SSH_USER: ${{ secrets.CPANEL_USERNAME }}
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2222 -v \
-            "$SSH_USER@$SSH_HOST" echo "SSH OK port 2222" 2>&1 || true
+          missing=""
+          for v in CPANEL_HOST CPANEL_USER CPANEL_TOKEN CPANEL_REPO_ROOT; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secrets:$missing (Settings > Secrets and variables > Actions)"
+            exit 1
+          fi
 
-      - name: Test SSH connection (port 22)
+      - name: Update from Remote (cPanel pulls the new commit from GitHub)
         env:
-          SSH_HOST: ${{ secrets.CPANEL_HOST }}
-          SSH_USER: ${{ secrets.CPANEL_USERNAME }}
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 22 -v \
-            "$SSH_USER@$SSH_HOST" echo "SSH OK port 22" 2>&1 || true
+          resp=$(curl -sS --fail-with-body --max-time 120 \
+            -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" \
+            --get "https://${CPANEL_HOST}:2083/execute/VersionControl/update" \
+            --data-urlencode "repository_root=${CPANEL_REPO_ROOT}" \
+            --data-urlencode "branch=main")
+          echo "$resp" | jq '{status, errors, messages, head: .data.last_update.identifier}' || echo "$resp"
+          [ "$(echo "$resp" | jq -r .status)" = "1" ] || { echo "::error::cPanel could not pull from GitHub"; exit 1; }
 
-      - name: Deploy via rsync over SSH
+      - name: Deploy HEAD Commit (cPanel copies the files to the live folder)
         env:
-          SSH_HOST: ${{ secrets.CPANEL_HOST }}
-          SSH_USER: ${{ secrets.CPANEL_USERNAME }}
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 22" \
-            work-rest-cycles/ \
-            "$SSH_USER@$SSH_HOST:public_html/work-rest-cycles/"
+          api() { curl -sS --fail-with-body --max-time 120 -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" --get "https://${CPANEL_HOST}:2083/execute/$1" "${@:2}"; }
+          repo() { api VersionControl/retrieve | jq --arg r "${CPANEL_REPO_ROOT%/}" '.data[] | select((.repository_root|rtrimstr("/")) == $r)'; }
+
+          # Can cPanel deploy this repository right now?
+          info=$(repo)
+          echo "$info" | jq '{deployable, branch, head: .last_update.identifier, last_deployment: .last_deployment.timestamps}'
+          if [ "$(echo "$info" | jq -r .deployable)" != "1" ]; then
+            echo "::error::cPanel says this repository can't be deployed right now (usually its copy on the server has local changes, or .cpanel.yml is missing)."
+            exit 1
+          fi
+
+          resp=$(api VersionControlDeployment/create --data-urlencode "repository_root=${CPANEL_REPO_ROOT}")
+          echo "$resp" | jq '{status, errors, deploy_id: .data.deploy_id, log: .data.log_path}'
+          [ "$(echo "$resp" | jq -r .status)" = "1" ] || { echo "::error::cPanel could not start the deploy"; exit 1; }
+          id=$(echo "$resp" | jq -r .data.deploy_id)
+
+          # Wait for cPanel to finish copying (it runs the deploy in the background).
+          for i in $(seq 1 24); do
+            sleep 5
+            d=$(repo | jq '.last_deployment')
+            if [ "$(echo "$d" | jq -r .deploy_id)" = "$id" ]; then
+              if [ "$(echo "$d" | jq -r '.timestamps.succeeded // empty')" != "" ]; then
+                echo "Deployed commit $(echo "$d" | jq -r '.repository_state.identifier // .sha // empty' | cut -c1-7) to the live folder."
+                exit 0
+              fi
+              if [ "$(echo "$d" | jq -r '.timestamps.failed // .timestamps.canceled // empty')" != "" ]; then
+                echo "$d" | jq .
+                echo "::error::cPanel's deploy failed. Its log on the server: $(echo "$d" | jq -r .log_path)"
+                exit 1
+              fi
+            fi
+          done
+          echo "$(repo | jq '.last_deployment')"
+          echo "::error::The deploy didn't finish within 2 minutes. Check cPanel > Git Version Control > Manage > Pull or Deploy."
+          exit 1
