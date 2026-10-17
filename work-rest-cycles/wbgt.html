@@ -202,6 +202,13 @@ main { padding: 0; max-width: none; }
   color: #fff;
   margin-top: 12px;
 }
+/* When monitoring card is a direct child of urec-left (unacclimatized tab),
+   it sits in a flex column — make it full-width, gap handles spacing */
+.urec-left > .result-monitoring {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+}
 .result-monitoring-label {
   font-size: 10px;
   font-weight: 700;
@@ -1469,8 +1476,8 @@ body.chart-active { overflow: hidden; }
               <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
             </div>`;
           })()}
-          ${unacclimMonitoringHtml}
         </div>
+        ${unacclimMonitoringHtml}
         <div class="result-sidebar">
           <div class="result-input-card">
             <div class="result-input-label">🌡️ WBGT Reading</div>
