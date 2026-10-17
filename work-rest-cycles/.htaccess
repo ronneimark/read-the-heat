@@ -2,6 +2,11 @@
 # Read the Heat & Take a Beat — GreenGeeks performance config
 # ============================================================
 
+# ----- Vanity redirect for QR code / shareable short link -----
+# Change the destination here if the tool ever moves — the QR never needs updating.
+Redirect 301 /work-rest-cycles/app https://workerpowerforhealth.com/work-rest-cycles/
+
+
 # ----- Gzip / deflate compression -----
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css text/javascript
