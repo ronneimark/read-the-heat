@@ -246,13 +246,56 @@
 
     <div class="ls1-footer">
       <!-- QR code: hidden on phones (they are already on mobile); visible on desktop -->
-      <div class="qr-install-block" aria-label="Scan to open on your phone">
-        <img class="qr-install-img" src="data:image/png;base64,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" alt="QR code — scan with your phone to open and install" width="80" height="80">
+      <div class="qr-install-block" id="qr-install-block" aria-label="Scan to open on your phone">
+        <canvas id="qr-canvas" class="qr-install-img" width="80" height="80" aria-label="QR code — scan with your phone to open and install"></canvas>
         <div class="qr-install-text">
           <strong>On your phone?</strong><br>
           Scan to open &amp; install the<br><em>Heat-Beat</em> app
         </div>
       </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+      <script>
+      (function () {
+        var BASE_URL = 'https://workerpowerforhealth.com/work-rest-cycles/app';
+        function buildQR() {
+          var lang = (typeof current === 'function') ? current() : 'en';
+          var url = lang && lang !== 'en' ? BASE_URL + '?lang=' + encodeURIComponent(lang) : BASE_URL;
+          var canvas = document.getElementById('qr-canvas');
+          if (!canvas || typeof QRCode === 'undefined') return;
+          /* QRCode writes to a container div; we render into a temp div then copy to canvas */
+          var tmp = document.createElement('div');
+          tmp.style.display = 'none';
+          document.body.appendChild(tmp);
+          try {
+            new QRCode(tmp, {
+              text: url,
+              width: 80,
+              height: 80,
+              colorDark: '#001E62',
+              colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.M
+            });
+            /* QRCode appends a canvas child; copy it */
+            var src = tmp.querySelector('canvas');
+            if (src) {
+              canvas.width = src.width;
+              canvas.height = src.height;
+              canvas.getContext('2d').drawImage(src, 0, 0);
+              canvas.setAttribute('aria-label',
+                lang && lang !== 'en'
+                  ? 'QR code — scan with your phone to open app in your language'
+                  : 'QR code — scan with your phone to open and install');
+            }
+          } catch (e) {}
+          document.body.removeChild(tmp);
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', buildQR);
+        } else {
+          buildQR();
+        }
+      })();
+      </script>
     </div>
   </div><!-- /ls1 -->
 </div><!-- /launcher -->
@@ -971,7 +1014,7 @@
     background: #f4f2ef; border: 1px solid #d5d2cc; border-radius: 10px;
     padding: 10px 14px; max-width: 300px;
   }
-  .qr-install-img {
+  .qr-install-img, #qr-canvas {
     flex-shrink: 0; border-radius: 4px;
     border: 2px solid #001E62;
   }
