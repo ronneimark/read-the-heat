@@ -335,7 +335,62 @@ main { padding: 0; max-width: none; }
 }
 
 /* Mobile: simplified result view */
+/* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
+.hi-trh-switch-chip { display: none; }
+
+/* ── Mobile: strip hidden in header; appears inline in content when active ── */
 @media (max-width: 768px) {
+  /* Strip banished from fixed header */
+  #hi-trh-strip { display: none !important; }
+
+  /* When moved into <main> by JS, show as a compact card */
+  #hi-trh-strip.mobile-trh-inline {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    position: static; /* in normal flow, NOT fixed */
+    border-bottom-width: 1px; /* override the thick bottom border */
+  }
+  /* Hide the label & toggle buttons inside the inline strip — switch chip handles it */
+  #hi-trh-strip.mobile-trh-inline .trh-strip-label,
+  #hi-trh-strip.mobile-trh-inline .trh-mode-toggle { display: none !important; }
+
+  /* Inline T+RH inputs — full width */
+  #hi-trh-strip.mobile-trh-inline .trh-inputs-row {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  #hi-trh-strip.mobile-trh-inline .trh-field input[type=number] { width: 100%; box-sizing: border-box; }
+  #hi-trh-strip.mobile-trh-inline .trh-arrow { display: none; }
+  #hi-trh-strip.mobile-trh-inline .trh-hi-result { flex: 1; }
+
+  /* Show the inline switch chip on mobile */
+  .hi-trh-switch-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--navy, #1A2A3A);
+    background: transparent;
+    border: 1px solid var(--navy, #1A2A3A);
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.72;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+  .hi-trh-switch-chip:hover { opacity: 1; }
+
   /* Override shared.css "padding: 16px !important" shorthand */
   main { padding-top: var(--fixed-top-h, 100px) !important; }
 
@@ -964,6 +1019,43 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     buildHIUnacclimFormulaTab();
   }
 
+  // ── Mobile: move T+RH strip in/out of <main> ─────────────────────────────────
+  function mobileTrhToggle(toTrh) {
+    if (window.innerWidth > 768) {
+      // On desktop just call setHiInputMode normally (strip is always visible)
+      setHiInputMode(toTrh ? 'trh' : 'hi');
+      return;
+    }
+    const strip    = document.getElementById('hi-trh-strip');
+    const main     = document.querySelector('main');
+    const fixedTop = document.getElementById('fixed-top');
+    if (toTrh) {
+      // Move strip into main as an inline section
+      if (strip.parentElement !== main) main.insertBefore(strip, main.firstChild);
+      strip.classList.add('mobile-trh-inline');
+      // Show a small title row inside the strip on mobile
+      let mHeader = strip.querySelector('.mobile-trh-header');
+      if (!mHeader) {
+        mHeader = document.createElement('div');
+        mHeader.className = 'mobile-trh-header';
+        mHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:2px';
+        mHeader.innerHTML = `<span style="font-size:12px;font-weight:700;color:var(--navy,#1A2A3A)">Enter Temp + RH</span>`;
+        strip.insertBefore(mHeader, strip.firstChild);
+      }
+      // Force inputs row visible
+      const row = document.getElementById('hi-trh-inputs-row');
+      if (row) row.style.display = 'flex';
+      setHiInputMode('trh');
+    } else {
+      // Move strip back to fixedTop (CSS hides it there on mobile)
+      strip.classList.remove('mobile-trh-inline');
+      const mHeader = strip.querySelector('.mobile-trh-header');
+      if (mHeader) mHeader.remove();
+      if (strip.parentElement !== fixedTop) fixedTop.appendChild(strip);
+      setHiInputMode('hi');
+    }
+  }
+
   function onTrhInput() {
     const tempEl = document.getElementById('hi-trh-temp');
     const rhEl   = document.getElementById('hi-trh-rh');
@@ -1206,6 +1298,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-label"><span aria-hidden="true">🌡️ </span>${hiCardLabel}</div>
           <div class="result-input-value">${valDisplay}</div>
           <div class="result-input-sub">Range: ${rowLabel}</div>
+          ${inTrhMode
+            ? `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(false)" aria-label="Switch to direct heat index entry">↔ Enter Heat Index directly</button>`
+            : `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(true)" aria-label="Switch to temperature and humidity entry">↔ Temp + RH</button>`
+          }
         </div>
         <div class="result-input-card">
           <div class="result-input-label"><span aria-hidden="true">${ACT_EMOJI[_hiActivity]||'⚡'} </span>Work Intensity</div>
