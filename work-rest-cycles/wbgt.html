@@ -1542,6 +1542,11 @@ body.chart-active { overflow: hidden; }
     buildBreadcrumbs();
     requestAnimationFrame(() => { updateLayout(); });
     window.addEventListener('resize', () => { updateLayout(); });
+    window.addEventListener('load', () => { updateLayout(); });
+    if (window.ResizeObserver) {
+      new ResizeObserver(() => { updateLayout(); })
+        .observe(document.getElementById('fixed-top'));
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);
