@@ -842,15 +842,14 @@
     background: #f3f4f7 !important;
   }
 
-  /* close button: fixed just below the blue strip, right-aligned */
+  /* close button: fixed at bottom-right of the modal */
   .intro-popover-close {
     display: flex !important;
     position: fixed !important;
-    top: 238px !important;   /* 601–768px: header(191)+hazard(10)+strip(37) */
-    right: 12px !important;
-    /* override absolute positioning from base style */
+    bottom: 16px !important;
+    right: 16px !important;
+    top: auto !important;
     left: auto !important;
-    bottom: auto !important;
   }
 }
 
@@ -862,13 +861,10 @@
   :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
 }
 
-/* Recalculate tops when header collapses to 80px (≤600px) */
+/* Recalculate top when header collapses to 80px (≤600px) */
 @media (max-width: 600px) {
   .intro-anchor {
     top: 126px !important; /* hazard(10) + header(80) + strip(~36) */
-  }
-  .intro-popover-close {
-    top: 126px !important;
   }
 }
 
