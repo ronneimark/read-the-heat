@@ -824,16 +824,51 @@
     flex: none !important;
     min-height: 0 !important;
   }
-  /* close button — visible on mobile only */
+
+  /* reinstate health/method notes that shared.css hides on mobile */
+  .intro-health-note,
+  .intro-method-note { display: block !important; }
+  /* separator line between panel content and the notes */
+  .intro-health-note:first-of-type {
+    border-top: 2px solid #c8d8b0 !important;
+    margin-top: 6px !important;
+  }
+
+  /* sticky tab bar — sticks to top of the scrolling modal */
+  .intro-tab-bar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    background: #f3f4f7 !important;
+  }
+
+  /* close button: fixed just below the blue strip, right-aligned */
   .intro-popover-close {
     display: flex !important;
+    position: fixed !important;
+    top: 238px !important;   /* 601–768px: header(191)+hazard(10)+strip(37) */
+    right: 12px !important;
+    /* override absolute positioning from base style */
+    left: auto !important;
+    bottom: auto !important;
   }
 }
 
-/* Recalculate top when header collapses to 80px (≤600px) */
+/* sticky tab bar dark-mode tint on mobile */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+  .intro-tab-bar { background: #1e2a38 !important; }
+}
+@media (max-width: 768px) {
+  :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
+}
+
+/* Recalculate tops when header collapses to 80px (≤600px) */
 @media (max-width: 600px) {
   .intro-anchor {
     top: 126px !important; /* hazard(10) + header(80) + strip(~36) */
+  }
+  .intro-popover-close {
+    top: 126px !important;
   }
 }
 
