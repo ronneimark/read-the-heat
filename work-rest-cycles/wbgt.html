@@ -216,6 +216,10 @@ main { padding: 0; max-width: none; }
     align-items: flex-start !important;
   }
 
+  /* Override shared.css "padding: 16px !important" shorthand which
+     blocks the JS-set paddingTop. Use the CSS var set by updateLayout(). */
+  main { padding-top: var(--fixed-top-h, 100px) !important; }
+
   /* Sticky schedule button wrapper on mobile */
   .mobile-sched-sticky {
     display: flex;

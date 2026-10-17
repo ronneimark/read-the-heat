@@ -336,6 +336,9 @@ main { padding: 0; max-width: none; }
 
 /* Mobile: simplified result view */
 @media (max-width: 768px) {
+  /* Override shared.css "padding: 16px !important" shorthand */
+  main { padding-top: var(--fixed-top-h, 100px) !important; }
+
   /* Hide tab bars — no switching on mobile */
   #hi-acclim-tab-bar-wrap,
   #hi-unacclim-tab-bar-wrap { display: none !important; }

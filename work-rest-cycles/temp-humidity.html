@@ -285,6 +285,9 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
 /* Mobile: simplified result view */
 @media (max-width: 768px) {
+  /* Override shared.css "padding: 16px !important" shorthand */
+  main { padding-top: var(--fixed-top-h, 100px) !important; }
+
   /* Hide tab bars — no switching on mobile */
   #trh-acclim-tab-bar-wrap,
   #trh-unacclim-tab-bar-wrap { display: none !important; }
