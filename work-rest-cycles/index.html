@@ -36,14 +36,14 @@
       <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
     </div>
   </div>
-</div><!-- /fixed-top -->
 
-<!-- Install banner (phones & tablets only; shown by JS) -->
-<div id="install-banner" style="display:none;" role="region" aria-label="Install this site">
-  <span class="install-banner-text">Install on your phone for quick, one-tap access</span>
-  <button type="button" id="install-banner-btn" class="install-banner-btn">Add to Home Screen</button>
-  <button type="button" id="install-banner-dismiss" class="install-banner-dismiss" aria-label="Dismiss">&#x2715;</button>
-</div>
+  <!-- Install banner inside #fixed-top so it stays visible below the header -->
+  <div id="install-banner" style="display:none;" role="region" aria-label="Install this site">
+    <span class="install-banner-text">Install on your phone for quick, one-tap access</span>
+    <button type="button" id="install-banner-btn" class="install-banner-btn">Add to Home Screen</button>
+    <button type="button" id="install-banner-dismiss" class="install-banner-dismiss" aria-label="Dismiss">&#x2715;</button>
+  </div>
+</div><!-- /fixed-top -->
 
 <!-- iOS install instructions (shown when tapping Add to Home Screen on iPhone/iPad) -->
 <div id="ios-install-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="ios-modal-title">
@@ -1764,10 +1764,10 @@
   var deferredPrompt = null;
 
   function showBanner() {
-    if (banner) banner.style.display = 'flex';
+    if (banner) { banner.style.display = 'flex'; if(typeof updateLayout==='function') updateLayout(); }
   }
   function hideBanner() {
-    if (banner) banner.style.display = 'none';
+    if (banner) { banner.style.display = 'none'; if(typeof updateLayout==='function') updateLayout(); }
   }
 
   if (!IS_MOBILE || IS_STANDALONE || dismissed) return;
