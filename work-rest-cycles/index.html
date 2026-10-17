@@ -244,7 +244,16 @@
       <button class="ls1-sector-btn" data-sector="childcare" onclick="ls1SelectSector('childcare')"><img class="ls1-photo" src="images/industries/childcare.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Childcare</span></button>
     </div>
 
-    <div class="ls1-footer"></div>
+    <div class="ls1-footer">
+      <!-- QR code: hidden on phones (they are already on mobile); visible on desktop -->
+      <div class="qr-install-block" aria-label="Scan to open on your phone">
+        <img class="qr-install-img" src="data:image/png;base64,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" alt="QR code — scan to open on your phone" width="80" height="80">
+        <div class="qr-install-text">
+          <strong>On your phone?</strong><br>
+          Scan to open &amp; install the<br><em>Heat-Beat</em> app
+        </div>
+      </div>
+    </div>
   </div><!-- /ls1 -->
 </div><!-- /launcher -->
 
@@ -950,6 +959,28 @@
   .header-inner { padding: 4px 0 !important; gap: 3px !important; }
   .header-brand { max-height: 52px !important; }
   .header-attribution { display: none !important; }
+}
+
+/* ── QR install block (desktop only) ── */
+.qr-install-block {
+  display: none; /* hidden on phones — they already have the install banner */
+}
+@media (min-width: 761px) {
+  .qr-install-block {
+    display: flex; align-items: center; gap: 12px;
+    background: #f4f2ef; border: 1px solid #d5d2cc; border-radius: 10px;
+    padding: 10px 14px; max-width: 300px;
+  }
+  .qr-install-img {
+    flex-shrink: 0; border-radius: 4px;
+    border: 2px solid #001E62;
+  }
+  .qr-install-text {
+    font: 400 13px/1.4 'Source Sans 3','Segoe UI',Arial,sans-serif;
+    color: #1c1c24;
+  }
+  .qr-install-text strong { color: #001E62; font-size: 14px; }
+  .qr-install-text em { color: #D50032; font-style: normal; font-weight: 600; }
 }
 
 /* ── Install banner ── */
