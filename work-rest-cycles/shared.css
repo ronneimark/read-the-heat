@@ -1927,6 +1927,18 @@
     .ls2-topbar-hint  { font-size: 13px !important; }
   }
 
+/* ── Mobile: hide "Show me on this page" cues and arrow/ring highlights ── */
+  @media (max-width: 768px) {
+    /* Hide the "↗ Show me on the page" spans so the intro-step rows still read as plain text */
+    .step-cue { display: none !important; }
+    /* Remove pointer cursor from intro-step items (clicking them no longer does anything visible) */
+    .intro-step { cursor: default !important; }
+    /* Hide the standalone "↗ click to see" and health/method highlight buttons */
+    .intro-health-note-link,
+    .intro-health-note,
+    .intro-method-note { display: none !important; }
+  }
+
   @media print {
     .back-bar, #launcher, .toggle-row { display: none; }
     .tab-panel { display: block !important; page-break-before: always; }

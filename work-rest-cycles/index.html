@@ -1036,6 +1036,7 @@
   }
 
   function highlightStep(e, n) {
+    if (window.innerWidth <= 768) return;
     const pop = document.getElementById('intro-popover');
 
     // If same step clicked while masked — clear mask and return
@@ -1221,6 +1222,7 @@
   }
 
   function highlightHealthBtn(e) {
+    if (window.innerWidth <= 768) return;
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.health-btn');
@@ -1329,6 +1331,7 @@
   }
 
   function highlightMethodBtn(e) {
+    if (window.innerWidth <= 768) return;
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.method-btn');
