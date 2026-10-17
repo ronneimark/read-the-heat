@@ -34,7 +34,7 @@
   text-shadow: 0 1px 3px rgba(80,0,0,0.4);
   animation: acclim-btn-pulse 2s ease-out infinite, acclim-btn-bob 3s ease-in-out infinite;
   transition: transform .08s, box-shadow .08s, background .12s;
-  margin-bottom: 18px;
+  margin-bottom: 0;
   position: relative;
 }
 .acclim-about-btn::after {
@@ -162,13 +162,10 @@
   <div class="launcher-screen active" id="ls3">
 
     <div class="ls3-acclim-wrap">
-      <div class="launcher-step">
-        <h1 class="ls-heading">Has this worker completed heat acclimatization?</h1>
-      </div>
-
-      <div style="text-align:center;margin-bottom:4px;">
-        <button class="acclim-about-btn" onclick="openAcclimAbout()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div class="launcher-step" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">
+        <h1 class="ls-heading" style="margin:0;">Has this worker completed heat acclimatization?</h1>
+        <button class="acclim-about-btn" onclick="openAcclimAbout()" style="margin-bottom:0;font-size:0.82em;padding:7px 16px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:17px;height:17px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           About Acclimatization
         </button>
       </div>
