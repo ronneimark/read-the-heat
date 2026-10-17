@@ -1664,6 +1664,14 @@
       font-size: clamp(15px, 4.5vw, 20px) !important;
     }
 
+    /* Activity topbar: stack sector banner above hint + button */
+    .ls2-topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .ls2-topbar-hint { flex: none; }
+
     /* Activity review grid: single column on mobile */
     .ls2-review-grid {
       grid-template-columns: 1fr !important;
