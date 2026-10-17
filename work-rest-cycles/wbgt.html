@@ -108,6 +108,11 @@ main { padding: 0; max-width: none; }
   gap: 14px;
   margin-bottom: 28px;
 }
+.result-inputs.result-inputs-below {
+  grid-template-columns: 1fr;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
 .result-input-card {
   background: var(--surface, #F8FAFB);
   border: 1px solid var(--border);
@@ -180,7 +185,7 @@ main { padding: 0; max-width: none; }
 }
 
 @media (max-width: 600px) {
-  .result-inputs { grid-template-columns: 1fr 1fr; }
+  .result-inputs:not(.result-inputs-below) { grid-template-columns: 1fr 1fr; }
   .result-main { flex-direction: column; text-align: center; gap: 20px; }
   .result-subtext { max-width: 100%; }
 }
@@ -488,6 +493,14 @@ body.chart-active { overflow: hidden; }
 }
 .urec-badges {
   display: flex; gap: clamp(6px,1vw,14px); width: 100%; justify-content: center;
+}
+.urec-badges.urec-badges-below {
+  flex-direction: column;
+  margin-top: 14px;
+}
+.urec-badges.urec-badges-below .urec-badge {
+  flex: none;
+  width: 100%;
 }
 .urec-badge {
   flex: 1; background: var(--surface,#F8FAFB);
@@ -1116,24 +1129,6 @@ body.chart-active { overflow: hidden; }
 
     document.getElementById('acclim-tab-result').innerHTML = `
       <div id="acclim-tab-result">
-        <div class="result-inputs">
-          <div class="result-input-card">
-            <div class="result-input-label">🌡️ WBGT Reading</div>
-            <div class="result-input-value">${rawDisplay}</div>
-            ${clothingNote}
-          </div>
-          <div class="result-input-card">
-            <div class="result-input-label">${ACT_EMOJI[activity] || '⚡'} Work Intensity</div>
-            <div class="result-input-value">${ACT_LABEL[activity] || 'Moderate'}</div>
-            <div class="result-input-sub">${ACT_FULL[activity]}</div>
-          </div>
-          <div class="result-input-card">
-            <div class="result-input-label">✅ Worker Status</div>
-            <div class="result-input-value">Acclimatized</div>
-            <div class="result-input-sub">NIOSH REL applies</div>
-          </div>
-        </div>
-
         <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
           <div class="result-clock">${buildClockSvg(wr)}</div>
@@ -1157,6 +1152,24 @@ body.chart-active { overflow: hidden; }
             </div>`;
           })()}
           ${monitoringHtml}
+        </div>
+
+        <div class="result-inputs result-inputs-below">
+          <div class="result-input-card">
+            <div class="result-input-label">🌡️ WBGT Reading</div>
+            <div class="result-input-value">${rawDisplay}</div>
+            ${clothingNote}
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">${ACT_EMOJI[activity] || '⚡'} Work Intensity</div>
+            <div class="result-input-value">${ACT_LABEL[activity] || 'Moderate'}</div>
+            <div class="result-input-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">✅ Worker Status</div>
+            <div class="result-input-value">Acclimatized</div>
+            <div class="result-input-sub">NIOSH REL applies</div>
+          </div>
         </div>
       </div>`;
 
@@ -1445,23 +1458,6 @@ body.chart-active { overflow: hidden; }
           <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
           <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
         </div>`}
-        <div class="urec-badges">
-          <div class="urec-badge">
-            <div class="urec-badge-label">🌡️ WBGT</div>
-            <div class="urec-badge-value">${rawDisplay}</div>
-            ${clothingNote}
-          </div>
-          <div class="urec-badge">
-            <div class="urec-badge-label">${ACT_EMOJI[activity]||'⚡'} Work</div>
-            <div class="urec-badge-value">${ACT_LABEL[activity]||'Moderate'}</div>
-            <div class="urec-badge-sub">${ACT_FULL[activity]}</div>
-          </div>
-          <div class="urec-badge">
-            <div class="urec-badge-label">⏳ Status</div>
-            <div class="urec-badge-value">${statusLabel}</div>
-            <div class="urec-badge-sub">NIOSH RAL</div>
-          </div>
-        </div>
         <div class="urec-rec-block${cls==='c-stop'?' result-danger':''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
           <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
@@ -1484,6 +1480,23 @@ body.chart-active { overflow: hidden; }
             </div>`;
           })()}
           ${unacclimMonitoringHtml}
+        </div>
+        <div class="urec-badges urec-badges-below">
+          <div class="urec-badge">
+            <div class="urec-badge-label">🌡️ WBGT</div>
+            <div class="urec-badge-value">${rawDisplay}</div>
+            ${clothingNote}
+          </div>
+          <div class="urec-badge">
+            <div class="urec-badge-label">${ACT_EMOJI[activity]||'⚡'} Work</div>
+            <div class="urec-badge-value">${ACT_LABEL[activity]||'Moderate'}</div>
+            <div class="urec-badge-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="urec-badge">
+            <div class="urec-badge-label">⏳ Status</div>
+            <div class="urec-badge-value">${statusLabel}</div>
+            <div class="urec-badge-sub">NIOSH RAL</div>
+          </div>
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>`;
