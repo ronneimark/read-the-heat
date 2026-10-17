@@ -666,7 +666,10 @@ body.chart-active { overflow: hidden; }
   <header>
     <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
     <div class="header-inner">
-      <img class="header-brand" src="images/read-the-heat-logo-wide.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <picture>
+        <source media="(max-width: 768px)" srcset="images/read-the-heat-logo-transparent.png">
+        <img class="header-brand" src="images/read-the-heat-logo-wide.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      </picture>
       <div class="header-attribution">
         <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
         <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
