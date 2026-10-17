@@ -307,6 +307,8 @@ main { padding: 0; max-width: none; }
     justify-content: center;
     border-radius: 10px;
   }
+  /* Hide desktop sidebar button on mobile — mobile-sched-sticky handles it */
+  .desktop-sched-btn { display: none !important; }
   /* Inline schedule panel (shown below sticky button on mobile) */
   .mobile-sched-inline {
     background: var(--surface, #F8FAFB);
@@ -617,6 +619,7 @@ body.chart-active { overflow: hidden; }
   transition: background .15s, box-shadow .15s;
 }
 .sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
 #sched-dialog {
   border: none; border-radius: 12px; padding: 0;
   position: fixed; margin: 0;
@@ -1492,6 +1495,7 @@ body.chart-active { overflow: hidden; }
             <div class="result-input-value">${statusLabel}</div>
             <div class="result-input-sub">NIOSH RAL</div>
           </div>
+          <button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>`;
