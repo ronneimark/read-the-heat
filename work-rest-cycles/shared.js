@@ -632,18 +632,22 @@ function buildBreadcrumbs() {
       mainStrip.after(strip2);
     }
     const inst = s.instrument;
-    const unit = s.measUnit || '°F';
-    const unitStr = unit.startsWith('°') ? unit : '°' + unit;
-    const instLabels = { wbgt: 'WBGT', trh: 'Temp + RH', hi: 'Heat Index', dbt: 'Dry Bulb' };
+    const measUnit = s.measUnit || 'F';
+    const unitSuffix = measUnit === 'C' ? '°C' : '°F';
+    const instLabels = { wbgt: 'WBGT', trh: 'Temp + RH', hi: 'Heat Index', dbt: 'Thermometer' };
     const instLabel = instLabels[inst] || inst;
+    const derivedHI = s.derivedHI != null ? s.derivedHI : null;
+    const derivedHIUnit = s.derivedHIUnit || 'F';
+    const hiSuffix = derivedHIUnit === 'C' ? '°C' : '°F';
     let valStr = '';
-    if (inst === 'trh') {
-      valStr = s.measTemp != null ? `${s.measTemp}${unitStr}` : '';
-      if (s.measRH != null) valStr += ` / ${s.measRH}% RH`;
-    } else if (inst === 'dbt') {
-      valStr = s.measTemp != null ? `${s.measTemp}${unitStr}` : '';
-    } else {
-      valStr = s.measValue != null ? `${s.measValue}${unitStr}` : '';
+    if (inst === 'trh' && s.measTemp != null && s.measRH != null) {
+      valStr = `${s.measTemp}${unitSuffix} / ${s.measRH}%`;
+      if (derivedHI != null) valStr += ` → HI: ${derivedHI}${hiSuffix}`;
+    } else if (inst === 'dbt' && s.measValue != null) {
+      valStr = `${s.measValue}${unitSuffix} / 100%`;
+      if (derivedHI != null) valStr += ` → HI: ${derivedHI}${hiSuffix}`;
+    } else if ((inst === 'wbgt' || inst === 'hi') && s.measValue != null) {
+      valStr = `${s.measValue}${unitSuffix}`;
     }
     strip2.innerHTML = `<span class="wrc-result-pill">${instLabel}: ${valStr}</span>`;
     strip2.style.display = '';
