@@ -283,6 +283,31 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
+/* Mobile: release fixed panes to flow layout */
+@media (max-width: 768px) {
+  body.trh-chart-active,
+  body.trh-unacclim-chart-active { overflow: auto !important; }
+
+  #trh-tab-result-wrap,
+  #trh-utab-result-wrap {
+    height: auto !important;
+    min-height: 60vh;
+    overflow: visible !important;
+  }
+
+  #trh-tab-chart,
+  #trh-utab-chart {
+    position: static !important;
+    height: auto !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+  }
+  .trh-chart-grid {
+    height: auto !important;
+    min-height: 360px;
+  }
+}
+
 /* ── Chart tabs ── */
 #trh-tab-chart,
 #trh-utab-chart {

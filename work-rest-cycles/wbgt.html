@@ -185,6 +185,48 @@ main { padding: 0; max-width: none; }
   .result-subtext { max-width: 100%; }
 }
 
+/* ── Mobile: release fixed-position panes to normal scroll flow ──
+   On mobile the header (#fixed-top) grows with context + result strips
+   and multi-row tab bar. Converting to flow layout keeps content
+   visible regardless of header height; main's paddingTop handles offset. */
+@media (max-width: 768px) {
+  body.chart-active { overflow: auto !important; }
+
+  /* Result pane (tab 0) — full-width scrollable card */
+  #unacclim-tab-0-wrap {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+  #unacclim-tab-0-wrap .urec-left {
+    flex: none !important;
+    border-right: none !important;
+    max-width: 100% !important;
+    padding: 12px 14px 20px !important;
+  }
+
+  /* Chart panes — scrollable */
+  #acclim-tab-chart,
+  #unacclim-tab-chart {
+    position: static !important;
+    height: auto !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+  }
+  .acclim-chart-grid {
+    height: auto !important;
+    min-height: 360px;
+  }
+
+  /* Acclim result pane (tab) — already flow, just ensure min height */
+  #acclim-tab-result-wrap {
+    min-height: 60vh;
+    align-items: flex-start !important;
+  }
+}
+
 /* ── Chart tab ── */
 #acclim-tab-chart {
   position: fixed;

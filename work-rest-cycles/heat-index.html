@@ -334,6 +334,31 @@ main { padding: 0; max-width: none; }
   .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
+/* Mobile: release fixed panes to flow layout */
+@media (max-width: 768px) {
+  body.hi-chart-active,
+  body.hi-unacclim-chart-active { overflow: auto !important; }
+
+  #hi-tab-result-wrap,
+  #hi-utab-result-wrap {
+    height: auto !important;
+    min-height: 60vh;
+    overflow: visible !important;
+  }
+
+  #hi-tab-chart,
+  #hi-utab-chart {
+    position: static !important;
+    height: auto !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+  }
+  .hi-chart-grid {
+    height: auto !important;
+    min-height: 360px;
+  }
+}
+
 /* ── Chart tabs — fixed, full-screen, flex column ── */
 #hi-tab-chart,
 #hi-utab-chart {
