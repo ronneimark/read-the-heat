@@ -1744,6 +1744,8 @@
     flex-shrink: 0;
     user-select: none;
     border: 2px solid rgba(255,255,255,0.25);
+    text-decoration: none;
+    cursor: pointer;
   }
   .wrc-sdot-done {
     background: #1A7A4A;

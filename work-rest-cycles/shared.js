@@ -615,9 +615,10 @@ function buildBreadcrumbs() {
     dotsEl.id = 'mobile-step-indicator';
     container.parentNode.insertBefore(dotsEl, container);
   }
+  const stepUrls = ['index.html', 'activity.html', 'acclimatization.html', 'clothing.html', 'measurement.html'];
   dotsEl.style.display = isMobile ? 'flex' : 'none';
   dotsEl.innerHTML = stepDone.map((done, i) =>
-    `<span class="wrc-sdot${done ? ' wrc-sdot-done' : ''}" aria-label="Step ${i+1}">${i+1}</span>`
+    `<a class="wrc-sdot${done ? ' wrc-sdot-done' : ''}" href="${stepUrls[i]}" aria-label="Step ${i+1}">${i+1}</a>`
   ).join('');
 
   // ── Second strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
