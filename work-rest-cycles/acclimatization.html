@@ -162,14 +162,13 @@
   <div class="launcher-screen active" id="ls3">
 
     <div class="ls3-acclim-wrap">
-      <div class="launcher-step" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
-        <h1 class="ls-heading" style="margin:0;text-align:left;">Has this worker completed heat acclimatization?</h1>
-        <div style="width:100%;display:flex;justify-content:center;">
+      <div class="launcher-step" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;">
+        <h1 class="ls-heading" style="margin:0;text-align:left;min-width:0;">Has this worker completed heat acclimatization?</h1>
         <button class="acclim-about-btn" onclick="openAcclimAbout()" style="margin-bottom:0;font-size:0.82em;padding:7px 16px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:17px;height:17px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           About Acclimatization
         </button>
-        </div>
+        <div></div>
       </div>
 
       <div class="ls3-acclim-cards">
