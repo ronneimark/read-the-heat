@@ -802,14 +802,13 @@
   }
 
   /* "How to use this site" bar: full-width, centered button */
+  /* top is set dynamically by updateLayout() via JS */
   .intro-anchor {
     position: fixed !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
     z-index: 500 !important;
-    /* default top for 601–768 px (header=191 + hazard=10 + strip≈37) */
-    top: 238px !important;
     background: #F6F3EC !important;
     padding: 6px 16px !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.10) !important;
@@ -843,10 +842,10 @@
   }
 
   /* close button: fixed just below the blue strip, right side */
+  /* top is set dynamically by updateLayout() via JS */
   .intro-popover-close {
     display: flex !important;
     position: fixed !important;
-    top: 244px !important;   /* 601–768px: anchor top(238) + half bar padding */
     right: 12px !important;
     bottom: auto !important;
     left: auto !important;
@@ -859,16 +858,6 @@
 }
 @media (max-width: 768px) {
   :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
-}
-
-/* Recalculate tops when header collapses to 80px (≤600px) */
-@media (max-width: 600px) {
-  .intro-anchor {
-    top: 126px !important; /* hazard(10) + header(80) + strip(~36) */
-  }
-  .intro-popover-close {
-    top: 132px !important;
-  }
 }
 
 /* ── Critical mobile overrides — declared here (plain CSS, no :root nesting)
@@ -948,12 +937,15 @@
 
     /* ── Step 3: position vertically ── */
     if (vpW <= 768) {
-      /* Mobile: pin top just below the blue strip so modal starts there */
-      const stripBottom = vpW <= 600 ? 126 : 238;   /* hazard+header+strip */
+      /* Mobile: pin top just below ALL fixed headers (measured live) */
+      const fixedTopEl = document.getElementById('fixed-top');
+      const anchor = document.getElementById('intro-anchor');
+      const fixedH = (fixedTopEl ? fixedTopEl.offsetHeight : 0)
+                   + (anchor ? anchor.offsetHeight : 0);
       const bpad = 8;                                /* gap from bottom */
-      pop.style.top       = stripBottom + 'px';
+      pop.style.top       = fixedH + 'px';
       pop.style.bottom    = bpad + 'px';
-      pop.style.maxHeight = (vpH - stripBottom - bpad) + 'px';
+      pop.style.maxHeight = (vpH - fixedH - bpad) + 'px';
       pop.style.overflowY = 'auto';
     } else {
       pop.style.bottom = vpad + 'px';
@@ -1598,7 +1590,22 @@
   }
 
   function updateLayout() {
-    const fixedH = document.getElementById('fixed-top').offsetHeight;
+    const fixedTop = document.getElementById('fixed-top');
+    if (!fixedTop) return;
+    const fixedH = fixedTop.offsetHeight;
+
+    // Position the "How to use" bar flush below fixed-top
+    const anchor = document.getElementById('intro-anchor');
+    if (anchor && window.innerWidth <= 768) {
+      anchor.style.top = fixedH + 'px';
+      // Close button sits vertically centered within the anchor bar
+      const closeBtn = document.querySelector('.intro-popover-close');
+      if (closeBtn) {
+        const anchorH = anchor.offsetHeight || 36;
+        closeBtn.style.top = (fixedH + Math.floor((anchorH - 32) / 2)) + 'px';
+      }
+    }
+
     const ls1 = document.getElementById('ls1');
     ls1.style.paddingTop = (fixedH + 16) + 'px';
     ls1.style.height = window.innerHeight + 'px';
