@@ -84,37 +84,37 @@ main { padding: 0; max-width: none; }
 /* ── Result tab — flush below tab bar, centered ── */
 #acclim-tab-result-wrap {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   box-sizing: border-box;
-  padding: 24px 16px;
+  padding: 16px;
 }
 #acclim-tab-result {
   width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
+  max-width: 1060px;
   display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 16px;
-  align-items: start;
-}
-.result-main {
-  text-align: left;
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: 1fr;
+  gap: 14px;
+  min-height: 0;
 }
 .result-sidebar {
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 100%;
 }
 @media (max-width: 768px) {
   #acclim-tab-result {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: auto;
   }
   .result-sidebar {
+    grid-column: 1;
     grid-row: 2;
   }
-  #acclim-tab-result .result-sidebar { display: none; }
 }
 .result-input-card {
   background: var(--surface, #F8FAFB);
@@ -145,10 +145,18 @@ main { padding: 0; max-width: none; }
 
 .result-main {
   border-radius: 14px;
-  padding: 32px 28px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 0;
+}
+.result-main-inner {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 28px;
 }
 .result-clock {
   flex-shrink: 0;
@@ -189,7 +197,8 @@ main { padding: 0; max-width: none; }
 
 @media (max-width: 768px) {
   .result-inputs:not(.result-inputs-below) { grid-template-columns: 1fr 1fr; }
-  .result-main { flex-direction: column; text-align: center; gap: 20px; }
+  .result-main { grid-column: 1; grid-row: 1; padding: 20px 16px; }
+  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
   .result-subtext { max-width: 100%; }
 }
 
@@ -1184,12 +1193,14 @@ body.chart-active { overflow: hidden; }
     document.getElementById('acclim-tab-result').innerHTML = `
         <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
-          <div class="result-clock">${buildClockSvg(wr)}</div>
-          <div class="result-text">
-            <div class="result-label">Recommended Work-Rest Cycle</div>
-            <div class="result-headline">${headline}</div>
-            <div class="result-subtext">${subtext}</div>
-            <div class="result-source">NIOSH Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (2016), Table B-2</div>
+          <div class="result-main-inner">
+            <div class="result-clock">${buildClockSvg(wr)}</div>
+            <div class="result-text">
+              <div class="result-label">Recommended Work-Rest Cycle</div>
+              <div class="result-headline">${headline}</div>
+              <div class="result-subtext">${subtext}</div>
+              <div class="result-source">NIOSH Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (2016), Table B-2</div>
+            </div>
           </div>
           ${(function(){
             const u = buildShareUrl();
