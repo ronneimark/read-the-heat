@@ -1829,6 +1829,26 @@
     transition: background 0.12s, color 0.12s;
   }
   .wrc-sdot-reset:hover { background: rgba(255,255,255,0.24); color: #fff; }
+  .wrc-sdot-results {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-decoration: none;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 3px 9px 3px 11px;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .wrc-sdot-results:hover { background: rgba(255,255,255,0.28); }
+  /* Reset button sits after Results — no left auto needed when both present */
+  .wrc-sdot-results + .wrc-sdot-reset { margin-left: 6px; }
   /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
   .wrc-sdot {
     width: 26px;

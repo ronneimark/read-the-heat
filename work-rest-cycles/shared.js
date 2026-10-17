@@ -621,6 +621,18 @@ function buildBreadcrumbs() {
     `<a class="wrc-sdot${done ? ' wrc-sdot-done' : ''}" href="${stepUrls[i]}" aria-label="Step ${i+1}">${i+1}</a>`
   ).join('');
 
+  // Mobile Results button — shown when all 5 steps are complete
+  if (stepDone[4]) {
+    const resultUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'temp-humidity.html' };
+    const resultUrl = resultUrls[s.instrument] || 'wbgt.html';
+    const mResults = document.createElement('a');
+    mResults.className = 'wrc-sdot-results';
+    mResults.href = resultUrl;
+    mResults.setAttribute('aria-label', 'Return to results');
+    mResults.innerHTML = 'Results <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M2 5.5h7M6 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    dotsEl.appendChild(mResults);
+  }
+
   // Mobile reset button — circular arrow, right edge of the dots row
   if (anySelected) {
     const mReset = document.createElement('button');
