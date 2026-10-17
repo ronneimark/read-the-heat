@@ -90,56 +90,25 @@ main { padding: 0; max-width: none; }
   width: 100%;
   max-width: 860px;
   margin: 0 auto;
-  text-align: center;
-}
-.result-inputs {
-  justify-items: center;
-}
-.result-input-card {
-  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 16px;
+  align-items: start;
 }
 .result-main {
   text-align: left;
 }
-
-.result-inputs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.result-inputs.result-inputs-below {
-  grid-template-columns: 1fr;
-  margin-top: 14px;
-  margin-bottom: 0;
+.result-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 @media (max-width: 600px) {
-  .result-inputs.result-inputs-below {
-    margin-left: -16px;
-    margin-right: -16px;
-    gap: 0;
+  #acclim-tab-result {
+    grid-template-columns: 1fr;
   }
-  .result-inputs.result-inputs-below .result-input-card {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-  }
-  .result-inputs.result-inputs-below .result-input-card:last-child {
-    border-bottom: none;
-  }
-  .urec-badges.urec-badges-below {
-    margin-left: -14px;
-    margin-right: -14px;
-  }
-  .urec-badges.urec-badges-below .urec-badge {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-  }
-  .urec-badges.urec-badges-below .urec-badge:last-child {
-    border-bottom: none;
+  .result-sidebar {
+    grid-row: 2;
   }
 }
 .result-input-card {
@@ -1183,7 +1152,7 @@ body.chart-active { overflow: hidden; }
           ${monitoringHtml}
         </div>
 
-        <div class="result-inputs result-inputs-below">
+        <div class="result-sidebar">
           <div class="result-input-card">
             <div class="result-input-label">🌡️ WBGT Reading</div>
             <div class="result-input-value">${rawDisplay}</div>
@@ -1510,21 +1479,21 @@ body.chart-active { overflow: hidden; }
           })()}
           ${unacclimMonitoringHtml}
         </div>
-        <div class="urec-badges urec-badges-below">
-          <div class="urec-badge">
-            <div class="urec-badge-label">🌡️ WBGT</div>
-            <div class="urec-badge-value">${rawDisplay}</div>
+        <div class="result-sidebar">
+          <div class="result-input-card">
+            <div class="result-input-label">🌡️ WBGT Reading</div>
+            <div class="result-input-value">${rawDisplay}</div>
             ${clothingNote}
           </div>
-          <div class="urec-badge">
-            <div class="urec-badge-label">${ACT_EMOJI[activity]||'⚡'} Work</div>
-            <div class="urec-badge-value">${ACT_LABEL[activity]||'Moderate'}</div>
-            <div class="urec-badge-sub">${ACT_FULL[activity]}</div>
+          <div class="result-input-card">
+            <div class="result-input-label">${ACT_EMOJI[activity]||'⚡'} Work Intensity</div>
+            <div class="result-input-value">${ACT_LABEL[activity]||'Moderate'}</div>
+            <div class="result-input-sub">${ACT_FULL[activity]}</div>
           </div>
-          <div class="urec-badge">
-            <div class="urec-badge-label">⏳ Status</div>
-            <div class="urec-badge-value">${statusLabel}</div>
-            <div class="urec-badge-sub">NIOSH RAL</div>
+          <div class="result-input-card">
+            <div class="result-input-label">⏳ Worker Status</div>
+            <div class="result-input-value">${statusLabel}</div>
+            <div class="result-input-sub">NIOSH RAL</div>
           </div>
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
