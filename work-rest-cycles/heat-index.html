@@ -1653,7 +1653,15 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const main = document.querySelector('main');
-    if (main) main.style.paddingTop = fixedTop.offsetHeight + 'px';
+    if (main) {
+      const h = fixedTop.offsetHeight + 'px';
+      // Drive the CSS custom property so the !important rule in the mobile
+      // media query picks up the live header height (a plain inline-style
+      // assignment loses to !important stylesheet rules).
+      document.documentElement.style.setProperty('--fixed-top-h', h);
+      // Also set directly for desktop, where the media-query rule is absent.
+      main.style.setProperty('padding-top', h, 'important');
+    }
     if (_hiCurrentTab         === 'chart' && workerStatus === 'acclimatized')   sizeHIChartPane();
     if (_hiUnacclimCurrentTab === 'chart' && workerStatus === 'unacclimatized') sizeHIUnacclimChartPane();
   }
