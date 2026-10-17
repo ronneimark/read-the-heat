@@ -505,6 +505,21 @@ body.chart-active { overflow: hidden; }
 @keyframes schedClose { from { clip-path: inset(0% 0 0 0 round 12px); }  to { clip-path: inset(100% 0 0 0 round 12px); } }
 #sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
 @keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
+
+/* Mobile: bottom sheet slides up from screen edge */
+@media (max-width: 768px) {
+  #sched-dialog {
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    transform: none !important;
+    width: 100% !important; max-width: 100% !important;
+    border-radius: 18px 18px 0 0 !important;
+    max-height: 82vh;
+  }
+  #sched-dialog[open]         { animation: schedOpenSheet  .32s cubic-bezier(.22,.68,0,1.1) both; }
+  #sched-dialog.sched-closing { animation: schedCloseSheet .24s cubic-bezier(.55,0,1,.45)   both; }
+  @keyframes schedOpenSheet  { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes schedCloseSheet { from { transform: translateY(0);    } to { transform: translateY(100%); } }
+}
 .sched-dialog-inner { padding: 28px 28px 24px; }
 .sched-dialog-hdr {
   display: flex; justify-content: space-between; align-items: flex-start;
@@ -1317,14 +1332,19 @@ body.chart-active { overflow: hidden; }
     document.getElementById('sched-dialog-sub').textContent  = d.sub;
     document.getElementById('sched-dialog-grid').innerHTML   = '<div class="urec-sched-grid">' + d.dayRowsHtml + '</div>';
     const dlg = document.getElementById('sched-dialog');
-    // Position bottom of dialog at the button's top
-    if (btn) {
+    if (window.innerWidth > 768 && btn) {
+      // Desktop: position above the button
       const rect = btn.getBoundingClientRect();
       const gap = 8;
       const bottomFromViewport = window.innerHeight - rect.top + gap;
       dlg.style.bottom = bottomFromViewport + 'px';
       dlg.style.left = '50%';
       dlg.style.transform = 'translateX(-50%)';
+    } else {
+      // Mobile: CSS handles bottom-sheet positioning; clear any inline overrides
+      dlg.style.bottom = '';
+      dlg.style.left = '';
+      dlg.style.transform = '';
     }
     dlg.showModal();
   }
