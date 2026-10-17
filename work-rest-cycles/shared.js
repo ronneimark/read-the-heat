@@ -78,42 +78,55 @@ function ensureActivityModal() {
     </div>
     <div id="activity-modal-body">
     <p class="modal-sub">How to identify the correct work category — including when tasks vary, when PPE adds risk, and when to push back on a misclassification.</p>
-    <div class="table-wrap">
-      <table class="qa-table" style="table-layout:fixed;width:100%">
-        <thead>
-          <tr>
-            <th class="left" style="width:30%">Question</th>
-            <th style="width:70%;text-align:left">Guidance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="label">A job involves different tasks throughout a shift. Which activity level applies?</td>
-            <td style="text-align:left;font-size:14px">Use the highest activity level sustained for 30 continuous minutes or more. If the work alternates between light and heavy tasks in short bursts, moderate is usually appropriate. When in doubt, use the more protective (higher) category — this is especially important when advocating for a worker or assessing risk.</td>
-          </tr>
-          <tr>
-            <td class="label">The physical demands of the job seem harder than the category description suggests. How can the actual metabolic rate be determined?</td>
-            <td style="text-align:left;font-size:14px">Workers and their representatives have the right to request that metabolic rate be properly assessed. <strong>ISO 8996:2021</strong> provides a systematic measurement and estimation approach. The <strong>2024 Adult Compendium of Physical Activities</strong> (Herrmann et al., 2024) offers an extensive task-level MET/kcal reference. Heart rate monitoring during actual work is the most practical field method and can be done by a worker, union rep, or industrial hygienist. If a job is being assessed at a lower activity level than the work actually involves, that directly affects how protective the recommended work-rest schedule is.</td>
-          </tr>
-          <tr>
-            <td class="label">Does wearing PPE, a uniform, or other special clothing affect the heat stress risk?</td>
-            <td style="text-align:left;font-size:14px">Yes — significantly. PPE does not change metabolic rate, but impermeable clothing severely limits sweat evaporation and increases physiological heat strain. Apply WBGT clothing correction factors (e.g., +10–11&deg;C WBGT equivalent for fully impermeable suits). Workers in coveralls, chemical suits, or heavy protective gear face substantially greater heat illness risk at any given temperature than workers in standard clothing — and standard work-rest schedules based on WBGT alone will underestimate that risk.</td>
-          </tr>
-          <tr>
-            <td class="label">What should happen when very heavy work is being done in high heat — and a work-rest schedule alone doesn't seem sufficient?</td>
-            <td style="text-align:left;font-size:14px">At WBGT above ~26–27&deg;C (79–81&deg;F), very heavy continuous work is hazardous for all workers regardless of acclimatization status. Work-rest cycles are a control measure of last resort — engineering controls (spot cooling, task rotation, mechanization of the heaviest tasks) should be the first line of response. Workers and advocates can raise this under OSHA's General Duty Clause if engineering controls are feasible but not implemented. A certified industrial hygienist (CIH) can document the hazard and recommend controls.</td>
-          </tr>
-          <tr>
-            <td class="label">How can a worker or union representative identify the correct activity level for a job — especially if they disagree with how management has categorized it?</td>
-            <td style="text-align:left;font-size:14px">Start by comparing the job tasks to the activity level descriptions in Step 2. If the actual work involves more exertion than the assigned category suggests, document it — video of the tasks, heart rate data, or a written task description. Workers have the right under OSHA Section 8(a) to request an inspection, and unions can raise misclassification of physical demand in collective bargaining or grievance procedures. A worker center, occupational health clinic, or industrial hygienist can provide independent assessment.</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="qa-accordion">
+      <div class="qa-item">
+        <button class="qa-question" aria-expanded="false" onclick="toggleQA(this)">
+          <span>A job involves different tasks throughout a shift. Which activity level applies?</span>
+          <span class="qa-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="qa-answer" hidden>Use the highest activity level sustained for 30 continuous minutes or more. If the work alternates between light and heavy tasks in short bursts, moderate is usually appropriate. When in doubt, use the more protective (higher) category — this is especially important when advocating for a worker or assessing risk.</div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" aria-expanded="false" onclick="toggleQA(this)">
+          <span>The physical demands of the job seem harder than the category description suggests. How can the actual metabolic rate be determined?</span>
+          <span class="qa-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="qa-answer" hidden>Workers and their representatives have the right to request that metabolic rate be properly assessed. <strong>ISO 8996:2021</strong> provides a systematic measurement and estimation approach. The <strong>2024 Adult Compendium of Physical Activities</strong> (Herrmann et al., 2024) offers an extensive task-level MET/kcal reference. Heart rate monitoring during actual work is the most practical field method and can be done by a worker, union rep, or industrial hygienist. If a job is being assessed at a lower activity level than the work actually involves, that directly affects how protective the recommended work-rest schedule is.</div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" aria-expanded="false" onclick="toggleQA(this)">
+          <span>Does wearing PPE, a uniform, or other special clothing affect the heat stress risk?</span>
+          <span class="qa-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="qa-answer" hidden>Yes — significantly. PPE does not change metabolic rate, but impermeable clothing severely limits sweat evaporation and increases physiological heat strain. Apply WBGT clothing correction factors (e.g., +10–11&deg;C WBGT equivalent for fully impermeable suits). Workers in coveralls, chemical suits, or heavy protective gear face substantially greater heat illness risk at any given temperature than workers in standard clothing — and standard work-rest schedules based on WBGT alone will underestimate that risk.</div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" aria-expanded="false" onclick="toggleQA(this)">
+          <span>What should happen when very heavy work is being done in high heat — and a work-rest schedule alone doesn't seem sufficient?</span>
+          <span class="qa-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="qa-answer" hidden>At WBGT above ~26–27&deg;C (79–81&deg;F), very heavy continuous work is hazardous for all workers regardless of acclimatization status. Work-rest cycles are a control measure of last resort — engineering controls (spot cooling, task rotation, mechanization of the heaviest tasks) should be the first line of response. Workers and advocates can raise this under OSHA's General Duty Clause if engineering controls are feasible but not implemented. A certified industrial hygienist (CIH) can document the hazard and recommend controls.</div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" aria-expanded="false" onclick="toggleQA(this)">
+          <span>How can a worker or union representative identify the correct activity level for a job — especially if they disagree with how management has categorized it?</span>
+          <span class="qa-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="qa-answer" hidden>Start by comparing the job tasks to the activity level descriptions in Step 2. If the actual work involves more exertion than the assigned category suggests, document it — video of the tasks, heart rate data, or a written task description. Workers have the right under OSHA Section 8(a) to request an inspection, and unions can raise misclassification of physical demand in collective bargaining or grievance procedures. A worker center, occupational health clinic, or industrial hygienist can provide independent assessment.</div>
+      </div>
     </div>
     </div>
   </div>
 </div>`;
   document.body.appendChild(el.firstElementChild);
+}
+
+function toggleQA(btn) {
+  const item = btn.closest('.qa-item');
+  const answer = item.querySelector('.qa-answer');
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  answer.hidden = expanded;
 }
 
 function openActivityModal() {
