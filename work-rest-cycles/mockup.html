@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Read the Heat — Device Preview</title>
+<link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
 <meta name="description" content="See Read the Heat &amp; Take a Beat as it looks and works on a phone or tablet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,16 +31,17 @@
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   html, body { margin: 0; height: 100%; }
-  body {
+  body.mockup-page {
     background: var(--bg);
     color: var(--ink);
     font: 400 15px/1.4 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   /* ── SITE HEADER: override fixed positioning so it sits in flex flow ── */
-  #fixed-top { position: static; box-shadow: none; cursor: default; }
+  body.mockup-page #fixed-top { position: static; box-shadow: none; cursor: default; }
   /* Reduce the header's own pointer on the strip */
   .wrc-banner-strip { cursor: default; }
 
@@ -124,18 +128,16 @@
   .btn svg { width: 16px; height: 16px; }
 
   /* ── MAIN AREA ───────────────────────────────────────────────────────── */
-  main {
+  body.mockup-page main {
     flex: 1;
     min-height: 0;
     position: relative;
-    padding: 14px 18px 18px;
+    padding: 0;
+    max-width: none;
   }
 
   /* ── STAGE ───────────────────────────────────────────────────────────── */
   .stage {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
     position: absolute;
     inset: 0;
     display: flex;
@@ -250,7 +252,7 @@
   .loading span { font-size: 12px; color: var(--muted); }
 
   /* ── ASIDE ───────────────────────────────────────────────────────────── */
-  aside {
+  body.mockup-page aside {
     position: absolute;
     top: 14px;
     right: 18px;
@@ -302,7 +304,7 @@
   @media (max-width: 1100px) { aside { display: none !important; } }
 </style>
 </head>
-<body>
+<body class="mockup-page">
 
 <div id="fixed-top">
   <div class="hazard-bar"></div>
