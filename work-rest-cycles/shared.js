@@ -650,6 +650,9 @@ function buildBreadcrumbs() {
   } else if (strip2) {
     strip2.style.display = 'none';
   }
+
+  // Re-measure layout now that the strip DOM is settled
+  updateLayout();
 }
 
 // ── updateLayout (generic — pages override as needed) ──
@@ -657,7 +660,13 @@ function updateLayout() {
   const fixedTop = document.getElementById('fixed-top');
   if (!fixedTop) return;
   const defPanel = document.getElementById('def-panels-container');
-  const fixedH = fixedTop.offsetHeight;
+
+  // Sum all fixed elements stacked at the top
+  let fixedH = fixedTop.offsetHeight;
+  const strip2 = document.getElementById('wrc-result-strip');
+  if (strip2 && strip2.style.display !== 'none') fixedH += strip2.offsetHeight;
+  // intro-anchor bar (index.html) adds its own height via its page override; skip here
+
   if (defPanel) {
     defPanel.style.top = fixedH + 'px';
   }
