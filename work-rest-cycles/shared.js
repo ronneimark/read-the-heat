@@ -592,24 +592,63 @@ function buildBreadcrumbs() {
     container.appendChild(goBtn);
   }
 
-  // Mobile step indicator — shown in place of breadcrumbs on narrow screens
-  let stepEl = document.getElementById('mobile-step-indicator');
-  if (!stepEl) {
-    stepEl = document.createElement('div');
-    stepEl.id = 'mobile-step-indicator';
-    // Insert before the breadcrumbs container so it sits at the left of the strip
-    container.parentNode.insertBefore(stepEl, container);
+  // ── Mobile step dots (5 circles, red→green, shown instead of breadcrumbs on narrow screens) ──
+  const s = WRC.get();
+  const stepDone = [
+    !!s.sector,
+    !!s.activity,
+    !!s.workerStatus,
+    !!s.clothingType,
+    !!(s.instrument && (s.measValue != null || s.measTemp != null))
+  ];
+
+  const isMobile = window.innerWidth <= 768;
+
+  // Hide breadcrumbs + strip label on mobile; show dots instead
+  container.style.display = isMobile ? 'none' : '';
+  const stripLabel = document.querySelector('.wrc-strip-label');
+  if (stripLabel) stripLabel.style.display = isMobile ? 'none' : '';
+
+  let dotsEl = document.getElementById('mobile-step-indicator');
+  if (!dotsEl) {
+    dotsEl = document.createElement('div');
+    dotsEl.id = 'mobile-step-indicator';
+    container.parentNode.insertBefore(dotsEl, container);
   }
-  const page = window.location.pathname.split('/').pop() || 'index.html';
-  const stepMap = {
-    'index.html': 1, '': 1,
-    'activity.html': 2,
-    'acclimatization.html': 3,
-    'measurement.html': 4,
-    'wbgt.html': 4, 'heat-index.html': 4, 'temp-humidity.html': 4,
-  };
-  const stepNum = stepMap[page] || 1;
-  stepEl.textContent = 'Step ' + stepNum + ' of 4';
+  dotsEl.style.display = isMobile ? 'flex' : 'none';
+  dotsEl.innerHTML = stepDone.map((done, i) =>
+    `<span class="wrc-sdot${done ? ' wrc-sdot-done' : ''}" aria-label="Step ${i+1}">${i+1}</span>`
+  ).join('');
+
+  // ── Second strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
+  const mainStrip = document.querySelector('.wrc-banner-strip');
+  let strip2 = document.getElementById('wrc-result-strip');
+
+  if (stepDone[4] && mainStrip && window.innerWidth <= 768) {
+    if (!strip2) {
+      strip2 = document.createElement('div');
+      strip2.id = 'wrc-result-strip';
+      mainStrip.after(strip2);
+    }
+    const inst = s.instrument;
+    const unit = s.measUnit || '°F';
+    const unitStr = unit.startsWith('°') ? unit : '°' + unit;
+    const instLabels = { wbgt: 'WBGT', trh: 'Temp + RH', hi: 'Heat Index', dbt: 'Dry Bulb' };
+    const instLabel = instLabels[inst] || inst;
+    let valStr = '';
+    if (inst === 'trh') {
+      valStr = s.measTemp != null ? `${s.measTemp}${unitStr}` : '';
+      if (s.measRH != null) valStr += ` / ${s.measRH}% RH`;
+    } else if (inst === 'dbt') {
+      valStr = s.measTemp != null ? `${s.measTemp}${unitStr}` : '';
+    } else {
+      valStr = s.measValue != null ? `${s.measValue}${unitStr}` : '';
+    }
+    strip2.innerHTML = `<span class="wrc-result-pill">${instLabel}: ${valStr}</span>`;
+    strip2.style.display = '';
+  } else if (strip2) {
+    strip2.style.display = 'none';
+  }
 }
 
 // ── updateLayout (generic — pages override as needed) ──

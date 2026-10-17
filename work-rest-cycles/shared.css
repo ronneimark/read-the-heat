@@ -1720,22 +1720,52 @@
     .strip-btn { font-size: 11px; padding: 3px 10px; }
   }
 
-  /* ── Mobile step indicator (shown instead of breadcrumbs) ── */
+  /* ── Mobile step dots (5 circles, hidden on desktop) ── */
   #mobile-step-indicator {
-    display: none;  /* JS inserts; CSS shows on mobile */
-    color: rgba(255,255,255,0.90);
+    display: none;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 4px 0;
+  }
+  /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
+  .wrc-sdot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #C8102E;
+    color: #fff;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.3px;
-    padding: 3px 10px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    user-select: none;
+    border: 2px solid rgba(255,255,255,0.25);
+  }
+  .wrc-sdot-done {
+    background: #1A7A4A;
+    border-color: rgba(255,255,255,0.40);
+  }
+
+  /* ── Second strip: result pill after step 5 (JS-injected, mobile only) ── */
+  #wrc-result-strip {
+    background: #001E62;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    justify-content: center;
+    padding: 5px 12px;
+  }
+  .wrc-result-pill {
+    background: #FFD700;
+    color: #001E62;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 3px 18px;
     border-radius: 20px;
     white-space: nowrap;
-    flex-shrink: 0;
-  }
-  @media (max-width: 540px) {
-    #mobile-step-indicator { display: inline-flex; align-items: center; }
   }
 
   /* ── Back bar: compact on phones ── */
