@@ -300,6 +300,8 @@ body { background: #F6F3EC !important; }
 .enl-hint.is-hidden { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .enl-hint { transition: opacity 0.2s ease; } .enl-hint.is-resting { animation: none; } }
 @media (max-width: 768px) {
+  /* Suppress "(WBGT)" subtitle in the title bar — name fits on one line */
+  .method-card-full[data-instrument="wbgt"] h3 span { display: none !important; }
   .enl-hint {
     font-size: 9px !important;
     padding: 3px 7px !important;
