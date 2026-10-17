@@ -868,7 +868,23 @@ body { background: #F6F3EC !important; }
     const fixedTop = document.getElementById('fixed-top');
     const ls4 = document.getElementById('ls4');
     const fixedH = fixedTop.offsetHeight;
-    ls4.style.top = fixedH + 'px';
+
+    if (window.innerWidth <= 768) {
+      // On mobile #ls4 is position:static — use paddingTop, not top
+      ls4.style.top = '';
+      ls4.style.paddingTop = (fixedH + 10) + 'px';
+
+      // Equalize all four card heights to the tallest
+      const cards = ls4.querySelectorAll('.method-card-full');
+      cards.forEach(c => { c.style.height = ''; });
+      let maxH = 0;
+      cards.forEach(c => { maxH = Math.max(maxH, c.offsetHeight); });
+      if (maxH > 0) cards.forEach(c => { c.style.height = maxH + 'px'; });
+    } else {
+      ls4.style.paddingTop = '';
+      ls4.style.top = fixedH + 'px';
+    }
+
     positionGridDividers();
   }
 
