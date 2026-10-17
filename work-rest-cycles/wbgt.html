@@ -298,7 +298,8 @@ main { padding: 0; max-width: none; }
     z-index: 50;
     background: var(--warm-white, #F6F3EC);
     padding: 10px 14px;
-    margin: -12px -14px 12px;
+    margin: 0 -14px 0;
+    border-top: 1px solid var(--border, #D8DFE8);
     border-bottom: 1px solid var(--border, #D8DFE8);
   }
   .mobile-sched-sticky .sched-modal-btn {
@@ -1452,10 +1453,6 @@ body.chart-active { overflow: hidden; }
     // Inject into the two-panel wrapper directly
     document.getElementById('unacclim-tab-0-wrap').innerHTML = `
       <div class="urec-left urec-left-full">
-        <div class="mobile-sched-sticky">
-          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
-          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
-        </div>
         <div class="urec-rec-block${cls==='c-stop'?' result-danger':''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
           <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
@@ -1475,6 +1472,10 @@ body.chart-active { overflow: hidden; }
           })()}
         </div>
         ${unacclimMonitoringHtml}
+        <div class="mobile-sched-sticky">
+          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+        </div>
         <div class="result-sidebar">
           <div class="result-input-card">
             <div class="result-input-label">🌡️ WBGT Reading</div>
