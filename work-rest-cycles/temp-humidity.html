@@ -345,6 +345,23 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
   /* Show hint inside colored block */
   .mobile-result-hint { display: flex; }
+
+  /* Mobile schedule sticky button */
+  .mobile-sched-sticky {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: var(--fixed-top-h, 80px);
+    z-index: 50;
+    background: var(--warm-white, #F6F3EC);
+    padding: 10px 14px;
+    margin: 0 -14px 0;
+    border-top: 1px solid var(--border, #D8DFE8);
+    border-bottom: 1px solid var(--border, #D8DFE8);
+  }
+  .mobile-sched-sticky .sched-modal-btn { width: 100%; justify-content: center; border-radius: 10px; margin-top: 0; }
+  /* Hide desktop sidebar button on mobile */
+  .desktop-sched-btn { display: none !important; }
 }
 
 /* ── Chart tabs ── */
@@ -481,6 +498,10 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .reftable-activity-strip .toggle-label { font-size: 12px; font-weight: 600; color: var(--subtext, #484F58); }
 
 /* ── Acclimatization schedule modal ── */
+/* Mobile sticky button wrapper — hidden by default, shown inside media query */
+.mobile-sched-sticky { display: none; }
+/* Desktop sidebar button — hidden on mobile inside media query */
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
 .sched-modal-btn {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--navy,#1A2A3A); color: #fff;
@@ -501,8 +522,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 }
 #sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
 #sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
-@keyframes schedOpen  { from { clip-path: inset(100% 0 0 0 round 16px); } to { clip-path: inset(0% 0 0 0 round 16px); } }
-@keyframes schedClose { from { clip-path: inset(0% 0 0 0 round 16px); }  to { clip-path: inset(100% 0 0 0 round 16px); } }
+@keyframes schedOpen  { from { clip-path: inset(0 0 100% 0 round 16px); } to { clip-path: inset(0 0 0% 0 round 16px); } }
+@keyframes schedClose { from { clip-path: inset(0 0 0% 0 round 16px); }  to { clip-path: inset(0 0 100% 0 round 16px); } }
 #sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
 @keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
 .sched-dialog-inner { padding: 28px 28px 24px; }
@@ -1182,6 +1203,10 @@ body.trh-unacclim-chart-active { overflow: hidden; }
           </div>`;
         })()}
         ${monitoringHtml}
+        ${(workerLabel === 'Unacclimatized' && cell) ? `<div class="mobile-sched-sticky">
+          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>
+          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+        </div>` : ''}
       </div>
       <div class="result-sidebar">
         ${trhCards}
@@ -1201,7 +1226,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-sub">${workerSub}</div>
         </div>
         ${(function(){ const s=WRC.get(); return s.clothingAdjustC > 0 ? `<div class="radiant-warn-strip" role="note" style="background:#fff3e0;border-color:#e65100;color:#7f2900"><strong><span aria-hidden="true">🦺 </span>Impermeable PPE selected:</strong> The +${s.clothingAdjustC}°C / +${s.clothingAdjustF}°F clothing correction cannot be applied to Heat Index. For impermeable PPE, use <a href="wbgt.html" style="color:#c74600">WBGT</a> where the correction is applied automatically.</div>` : ''; })()}
-        ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
+        ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
       </div>`;
     if (workerLabel === 'Unacclimatized' && cell) _schedCell = cell;
     return { rowIdx, colIdx };
