@@ -629,7 +629,7 @@ function buildBreadcrumbs() {
     mResults.className = 'wrc-sdot-results';
     mResults.href = resultUrl;
     mResults.setAttribute('aria-label', 'Return to results');
-    mResults.innerHTML = 'Results <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M2 5.5h7M6 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    mResults.innerHTML = '🟰';
     dotsEl.appendChild(mResults);
   }
 
