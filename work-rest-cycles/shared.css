@@ -1845,8 +1845,8 @@
     flex-shrink: 0;
   }
   .wrc-sdot-results:hover { background: #ffe033; }
-  /* Reset button sits immediately after Results — tight together */
-  .wrc-sdot-results + .wrc-sdot-reset { margin-left: 4px; }
+  /* Reset button: same auto margin as results, so spacing is equal on both sides */
+  .wrc-sdot-results + .wrc-sdot-reset { margin-left: auto; }
   /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
   .wrc-sdot {
     width: 26px;
