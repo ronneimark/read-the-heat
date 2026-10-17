@@ -3,670 +3,547 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Read the Heat — Device Mockups</title>
+<title>Read the Heat — Device Preview</title>
+<meta name="description" content="See Read the Heat &amp; Take a Beat as it looks and works on a phone or tablet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<!--
+  Device preview for Read the Heat & Take a Beat.
+  Modelled on the Counter the Cough device-preview.html layout:
+  horizontal controls bar, browser chrome, stage + aside info panel.
+  Address of a view: mockup.html?d=<device>&p=<page>&r=1 (r=1 = tablet sideways)
+-->
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg:        #0f1117;
-    --surface:   #1a1f2e;
-    --panel:     #222840;
-    --border:    #2e3650;
-    --accent:    #D50032;
-    --navy:      #001E62;
-    --text:      #e8eaf0;
-    --muted:     #7a839e;
-    --label:     #a0a8c0;
-    --active-bg: #1e2a4a;
-    --active-bd: #4a6fc0;
-    font-family: 'Inter', system-ui, sans-serif;
+    --navy:   #001E62;
+    --red:    #D50032;
+    --amber:  #E07B00;
+    --ink:    #1c1c24;
+    --muted:  #6b6970;
+    --line:   #d5d2cc;
+    --bg:     #ededea;
+    --surface: #fff;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 15px/1.4 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
   }
 
-  html, body { height: 100%; background: var(--bg); color: var(--text); overflow: hidden; }
-
-  /* ── OUTER LAYOUT ── */
-  .workspace {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    grid-template-rows: 48px 1fr;
-    height: 100%;
+  /* ── HEADER ─────────────────────────────────────────────────────────── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
   }
+  header h1 {
+    margin: 0;
+    font: 600 20px/1.1 'Oswald', sans-serif;
+    letter-spacing: .3px;
+  }
+  header h1 span { color: var(--amber); }
+  header .sub { color: #b8bdd4; font-size: 14px; }
+  header a.home {
+    margin-left: auto;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #ffffff55;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  header a.home:hover { background: #ffffff1a; }
 
-  /* ── TOP BAR ── */
-  .topbar {
-    grid-column: 1 / -1;
+  /* ── CONTROLS BAR ────────────────────────────────────────────────────── */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    padding: 10px 18px;
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
   }
-  .topbar-mark { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .topbar-title { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.01em; }
-  .topbar-sub { font-size: 11px; color: var(--muted); }
-  .topbar-spacer { flex: 1; }
+  .grp { display: flex; align-items: center; gap: 6px; }
+  .grp > label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
 
-  /* Device mode buttons */
-  .device-modes {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 3px;
+  /* Segmented control */
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    overflow: hidden;
   }
-  .mode-btn {
-    display: flex;
+  .seg button {
+    border: 0;
+    background: var(--surface);
+    padding: 6px 12px;
+    font: 600 14px 'Source Sans 3', sans-serif;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+
+  /* Select and generic buttons */
+  select, .btn {
+    font: 400 14px 'Source Sans 3', sans-serif;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--ink);
+    padding: 6px 9px;
+  }
+  select { max-width: 260px; }
+  .btn {
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 4px 10px;
-    border: none;
-    border-radius: 5px;
-    background: transparent;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.12s, color 0.12s;
+    text-decoration: none;
   }
-  .mode-btn:hover { background: var(--active-bg); color: var(--text); }
-  .mode-btn.active { background: var(--active-bg); color: #fff; box-shadow: inset 0 0 0 1px var(--active-bd); }
-  .mode-icon { font-size: 13px; line-height: 1; }
+  .btn:hover,
+  .seg button:hover:not([aria-pressed="true"]) { background: #f0eeea; }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .btn svg { width: 16px; height: 16px; }
 
-  .topbar-badge {
-    font-size: 10px; font-weight: 600; color: var(--muted);
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 4px; padding: 2px 7px;
-    letter-spacing: 0.04em; text-transform: uppercase;
+  /* ── MAIN AREA ───────────────────────────────────────────────────────── */
+  main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    gap: 18px;
+    padding: 14px 18px 18px;
   }
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    overflow-y: auto;
-    padding: 12px 0 20px;
-  }
-  .sidebar-section-label {
-    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted);
-    padding: 12px 16px 6px;
-  }
-  .sidebar-section-label:first-child { padding-top: 4px; }
-  .nav-btn {
-    display: flex; align-items: center; gap: 10px;
-    width: 100%; padding: 9px 16px;
-    background: none; border: none; border-left: 2px solid transparent;
-    cursor: pointer; text-align: left; color: var(--label);
-    font-size: 12.5px; font-family: inherit; font-weight: 500;
-    transition: background 0.12s, color 0.12s, border-color 0.12s;
-    line-height: 1.3;
-  }
-  .nav-btn:hover { background: var(--panel); color: var(--text); }
-  .nav-btn.active { background: var(--active-bg); border-left-color: var(--active-bd); color: #fff; }
-  .nav-icon {
-    width: 28px; height: 28px; border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; flex-shrink: 0; background: var(--panel);
-  }
-  .nav-btn.active .nav-icon { background: rgba(74,111,192,0.25); }
-  .nav-text { flex: 1; min-width: 0; }
-  .nav-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav-desc {
-    display: block; font-size: 10px; color: var(--muted); font-weight: 400;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
-  }
-  .nav-btn.active .nav-desc { color: #a0b8e0; }
-  .sidebar-divider { height: 1px; background: var(--border); margin: 8px 16px; }
-  .reload-btn {
-    display: flex; align-items: center; gap: 8px;
-    margin: 8px 12px 0; padding: 7px 12px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 7px; color: var(--muted); font-size: 11.5px;
-    font-family: inherit; font-weight: 500; cursor: pointer;
-    transition: background 0.12s, color 0.12s;
-  }
-  .reload-btn:hover { background: var(--active-bg); color: var(--text); }
-  .reload-btn svg { flex-shrink: 0; }
-  .sidebar-note {
-    margin: 12px 14px 0; padding: 8px 10px;
-    background: rgba(213,0,50,0.08); border: 1px solid rgba(213,0,50,0.2);
-    border-radius: 6px; font-size: 10.5px; color: #f08090; line-height: 1.5;
-  }
-
-  /* ── STAGE ── */
+  /* ── STAGE ───────────────────────────────────────────────────────────── */
   .stage {
-    display: flex; align-items: center; justify-content: center;
-    gap: 32px;
-    background: var(--bg); overflow: auto;
-    position: relative; padding: 32px;
-  }
-  .stage::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 24px 24px; pointer-events: none;
-  }
-
-  /* ── DEVICE WRAPPER (positions, clips, holds scaled space) ── */
-  .device-wrap {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-    flex-shrink: 0;
-  }
-  .device-wrap[hidden] { display: none; }
-
-  /* Scale container: sets the layout footprint, clips the scaled frame */
-  .device-scale-clip {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
     position: relative;
-    overflow: visible; /* children use transform, clip handled by parent size */
-    flex-shrink: 0;
-  }
-
-  /* ── SHARED FRAME SHELL ── */
-  .device-frame {
-    position: absolute; top: 0; left: 0;
-    transform-origin: top left;
-    filter: drop-shadow(0 24px 60px rgba(0,0,0,0.65));
-  }
-
-  /* ── PHONE FRAME (390×780 screen) ── */
-  .phone-frame {
-    width: 426px;   /* 390 + 18×2 side bezels */
-    height: 860px;  /* 780 + 48 top + 32 bottom */
-    background: #1c1c1e;
-    border-radius: 52px;
-    border: 1px solid #3a3a3c;
-    box-shadow: inset 0 0 0 1px #555, inset 0 1px 0 #666, 0 0 0 1px #0a0a0a;
-    position: absolute; top: 0; left: 0;
-    display: flex; flex-direction: column;
+    display: flex;
     align-items: center;
-    padding: 48px 18px 32px;
+    justify-content: center;
+    overflow: hidden;
   }
-  /* side buttons */
-  .phone-frame::before {
-    content: ''; position: absolute; left: -3px; top: 100px;
-    width: 3px; height: 36px; background: #2c2c2e;
-    border-radius: 2px 0 0 2px;
-    box-shadow: 0 44px 0 #2c2c2e, 0 88px 0 #2c2c2e;
+  .scaler { transform-origin: center center; flex: none; }
+
+  /* ── DEVICE SHELL ────────────────────────────────────────────────────── */
+  .device {
+    background: #111;
+    border-radius: var(--rad);
+    padding: var(--bez);
+    box-shadow: 0 0 0 2px #2c2c33, 0 18px 45px #0003;
+    position: relative;
   }
-  .phone-frame::after {
-    content: ''; position: absolute; right: -3px; top: 140px;
-    width: 3px; height: 64px; background: #2c2c2e;
-    border-radius: 0 2px 2px 0;
+  /* Notch / camera pill */
+  .device::before {
+    content: '';
+    position: absolute;
+    background: #1f1f25;
+    border-radius: 3px;
   }
-  .dynamic-island {
-    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-    width: 120px; height: 34px; background: #000; border-radius: 20px; z-index: 10;
+  .device.phone::before {
+    width: 54px; height: 5px;
+    top: calc(var(--bez) / 2 - 2px);
+    left: calc(50% - 27px);
   }
-  .phone-screen {
-    width: 390px; height: 780px;
-    background: #F6F3EC; border-radius: 36px; overflow: hidden;
-    position: relative; flex-shrink: 0;
+  .device.phone.side::before {
+    width: 5px; height: 54px;
+    left: calc(var(--bez) / 2 - 2px);
+    top: calc(50% - 27px);
   }
-  .phone-home-indicator {
-    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-    width: 120px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px;
+  .device.tablet::before {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    top: calc(var(--bez) / 2 - 3px);
+    left: calc(50% - 3px);
+  }
+  .device.tablet.side::before {
+    left: calc(var(--bez) / 2 - 3px);
+    top: calc(50% - 3px);
   }
 
-  /* ── IPAD PORTRAIT FRAME (768×1024 screen) ── */
-  .ipad-v-frame {
-    width: 800px;   /* 768 + 16×2 */
-    height: 1114px; /* 1024 + 50 top + 40 bottom */
-    background: #1c1c1e;
-    border-radius: 28px;
-    border: 1px solid #3a3a3c;
-    box-shadow: inset 0 0 0 1px #555, inset 0 1px 0 #666, 0 0 0 1px #0a0a0a;
-    position: absolute; top: 0; left: 0;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 50px 16px 40px;
-  }
-  /* power button */
-  .ipad-v-frame::before {
-    content: ''; position: absolute; right: -3px; top: 120px;
-    width: 3px; height: 44px; background: #2c2c2e;
-    border-radius: 0 2px 2px 0;
-  }
-  /* volume buttons */
-  .ipad-v-frame::after {
-    content: ''; position: absolute; left: -3px; top: 160px;
-    width: 3px; height: 36px; background: #2c2c2e;
-    border-radius: 2px 0 0 2px;
-    box-shadow: 0 50px 0 #2c2c2e;
-  }
-  .ipad-v-camera {
-    position: absolute; top: 23px; left: 50%; transform: translateX(-50%);
-    width: 10px; height: 10px; background: #2a2a2c; border-radius: 50%;
-    border: 1px solid #444; z-index: 10;
-  }
-  .ipad-v-screen {
-    width: 768px; height: 1024px;
-    background: #F6F3EC; border-radius: 8px; overflow: hidden;
-    position: relative; flex-shrink: 0;
-  }
-  .ipad-home-indicator {
-    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-    width: 140px; height: 4px; background: rgba(255,255,255,0.25); border-radius: 2px;
+  /* Screen area */
+  .screen {
+    background: #fff;
+    border-radius: var(--srad);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── IPAD LANDSCAPE FRAME (1024×768 screen) ── */
-  .ipad-h-frame {
-    width: 1114px;  /* 1024 + 50 left + 40 right */
-    height: 800px;  /* 768 + 16×2 */
-    background: #1c1c1e;
-    border-radius: 28px;
-    border: 1px solid #3a3a3c;
-    box-shadow: inset 0 0 0 1px #555, inset 0 1px 0 #666, 0 0 0 1px #0a0a0a;
-    position: absolute; top: 0; left: 0;
-    display: flex; flex-direction: row; align-items: center;
-    padding: 16px 40px 16px 50px;
+  /* Browser chrome */
+  .chrome {
+    flex: none;
+    height: 38px;
+    background: #f1f1f3;
+    border-bottom: 1px solid #d9d9de;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    font-size: 13px;
+    color: #555;
   }
-  /* power button on top */
-  .ipad-h-frame::before {
-    content: ''; position: absolute; top: -3px; right: 160px;
-    width: 44px; height: 3px; background: #2c2c2e;
-    border-radius: 2px 2px 0 0;
+  .chrome .url {
+    flex: 1;
+    min-width: 0;
+    background: #fff;
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
   }
-  /* volume buttons on top */
-  .ipad-h-frame::after {
-    content: ''; position: absolute; top: -3px; left: 200px;
-    width: 36px; height: 3px; background: #2c2c2e;
-    border-radius: 2px 2px 0 0;
-    box-shadow: 50px 0 0 #2c2c2e;
-  }
-  .ipad-h-camera {
-    position: absolute; left: 23px; top: 50%; transform: translateY(-50%);
-    width: 10px; height: 10px; background: #2a2a2c; border-radius: 50%;
-    border: 1px solid #444; z-index: 10;
-  }
-  .ipad-h-screen {
-    width: 1024px; height: 768px;
-    background: #F6F3EC; border-radius: 8px; overflow: hidden;
-    position: relative; flex-shrink: 0;
-  }
-  .ipad-h-home-indicator {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    width: 4px; height: 140px; background: rgba(255,255,255,0.25); border-radius: 2px;
+  .chrome .lock { color: #3a8a4e; }
+
+  iframe {
+    border: 0;
+    display: block;
+    flex: 1;
+    width: 100%;
+    background: #fff;
   }
 
-  /* ── SHARED SCREEN ELEMENTS ── */
-  .device-iframe {
-    width: 100%; height: 100%; border: none; display: block;
+  /* Loading overlay */
+  .loading {
+    position: absolute;
+    inset: 0;
+    background: #f5f5f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 5;
+    border-radius: var(--srad);
+    transition: opacity .25s;
   }
-  .loading-overlay {
-    position: absolute; inset: 0;
-    background: #F6F3EC;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 12px; z-index: 5;
-    transition: opacity 0.3s;
+  .loading.gone { opacity: 0; pointer-events: none; }
+  .spin {
+    width: 26px; height: 26px;
+    border: 3px solid var(--red);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
   }
-  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-  .loading-spinner {
-    width: 28px; height: 28px;
-    border: 3px solid #D50032; border-top-color: transparent;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-  }
-  .loading-label { font-size: 12px; color: #484F58; font-family: 'Helvetica Neue', Arial, sans-serif; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .loading span { font-size: 12px; color: var(--muted); }
 
-  /* ── DEVICE LABEL ── */
-  .device-label-block {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  /* ── ASIDE ───────────────────────────────────────────────────────────── */
+  aside {
+    width: 260px;
+    flex: none;
+    font-size: 14px;
+    color: var(--ink);
+    overflow: auto;
   }
-  .device-label-name {
-    font-size: 12px; font-weight: 600; color: var(--label); letter-spacing: 0.01em;
+  aside .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
   }
-  .device-label-dims {
-    font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums;
+  aside h2 {
+    margin: 0 0 6px;
+    font: 600 15px 'Oswald', sans-serif;
+    color: var(--navy);
+    letter-spacing: .3px;
   }
+  aside p { margin: 0 0 6px; }
+  aside .k { color: var(--muted); }
+  .note { font-size: 13px; color: var(--muted); }
+
+  .pill {
+    display: inline-block;
+    border-radius: 99px;
+    padding: 1px 9px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .pill.ph { background: #fde8ec; color: #8b0021; }
+  .pill.dt { background: #e8eef8; color: #002b8b; }
+
+  /* ── PHONE-ONLY MESSAGE ──────────────────────────────────────────────── */
+  .onphone {
+    display: none;
+    padding: 26px 18px;
+  }
+  .onphone a { color: var(--navy); font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .bar, main { display: none; }
+    .onphone { display: block; }
+  }
+  @media (max-width: 1100px) { aside { display: none; } }
 </style>
 </head>
 <body>
 
-<div class="workspace">
+<header>
+  <h1>Read the Heat <span>&amp; Take a Beat</span></h1>
+  <div class="sub">The live tool, as it looks and works on a phone or tablet</div>
+  <a class="home" href="./activity.html">&larr; Back to the tool</a>
+</header>
 
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="topbar-mark"></div>
-    <span class="topbar-title">Read the Heat &amp; Take a Beat</span>
-    <span class="topbar-sub">— Device Preview</span>
-    <div class="topbar-spacer"></div>
-
-    <!-- Device mode selector -->
-    <div class="device-modes">
-      <button class="mode-btn active" data-mode="phone" onclick="setMode(this)">
-        <span class="mode-icon">📱</span> iPhone
-      </button>
-      <button class="mode-btn" data-mode="ipad-v" onclick="setMode(this)">
-        <span class="mode-icon">⬜</span> iPad
-      </button>
-      <button class="mode-btn" data-mode="ipad-h" onclick="setMode(this)">
-        <span class="mode-icon">▬</span> iPad Landscape
-      </button>
-      <button class="mode-btn" data-mode="compare" onclick="setMode(this)">
-        <span class="mode-icon">⊞</span> Compare All
-      </button>
+<div class="bar" role="toolbar" aria-label="Preview settings">
+  <div class="grp"><label>Device</label>
+    <div class="seg" id="kind">
+      <button type="button" data-kind="phone" aria-pressed="true">Phone</button>
+      <button type="button" data-kind="tablet" aria-pressed="false">Tablet</button>
     </div>
-
-    <span class="topbar-badge">Live</span>
-  </header>
-
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-
-    <div class="sidebar-section-label">Launchers</div>
-
-    <button class="nav-btn active" data-src="activity.html" onclick="loadPage(this)">
-      <div class="nav-icon">🏃</div>
-      <div class="nav-text">
-        <span class="nav-name">Activity Level</span>
-        <span class="nav-desc">Step 2 — Work intensity</span>
-      </div>
-    </button>
-
-    <button class="nav-btn" data-src="index.html" onclick="loadPage(this)">
-      <div class="nav-icon">🏠</div>
-      <div class="nav-text">
-        <span class="nav-name">Home / Sector Select</span>
-        <span class="nav-desc">Step 1 — Industry sector</span>
-      </div>
-    </button>
-
-    <div class="sidebar-section-label">Calculators</div>
-
-    <button class="nav-btn" data-src="wbgt.html" onclick="loadPage(this)">
-      <div class="nav-icon">🌡</div>
-      <div class="nav-text">
-        <span class="nav-name">WBGT</span>
-        <span class="nav-desc">Wet-bulb globe temp</span>
-      </div>
-    </button>
-
-    <button class="nav-btn" data-src="heat-index.html" onclick="loadPage(this)">
-      <div class="nav-icon">🔆</div>
-      <div class="nav-text">
-        <span class="nav-name">Heat Index</span>
-        <span class="nav-desc">NWS apparent temp</span>
-      </div>
-    </button>
-
-    <button class="nav-btn" data-src="temp-humidity.html" onclick="loadPage(this)">
-      <div class="nav-icon">💧</div>
-      <div class="nav-text">
-        <span class="nav-name">Temp + Humidity</span>
-        <span class="nav-desc">Dry-bulb &amp; RH</span>
-      </div>
-    </button>
-
-    <div class="sidebar-section-label">Reference</div>
-
-    <button class="nav-btn" data-src="clothing.html" onclick="loadPage(this)">
-      <div class="nav-icon">🦺</div>
-      <div class="nav-text">
-        <span class="nav-name">Clothing Factors</span>
-        <span class="nav-desc">PPE correction guide</span>
-      </div>
-    </button>
-
-    <button class="nav-btn" data-src="acclimatization.html" onclick="loadPage(this)">
-      <div class="nav-icon">📅</div>
-      <div class="nav-text">
-        <span class="nav-name">Acclimatization</span>
-        <span class="nav-desc">New-worker schedules</span>
-      </div>
-    </button>
-
-    <button class="nav-btn" data-src="methodology.html" onclick="loadPage(this)">
-      <div class="nav-icon">📚</div>
-      <div class="nav-text">
-        <span class="nav-name">Methodology</span>
-        <span class="nav-desc">Sources &amp; approach</span>
-      </div>
-    </button>
-
-    <div class="sidebar-divider"></div>
-
-    <button class="reload-btn" onclick="reloadAll()">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-        <path d="M10.5 6a4.5 4.5 0 1 1-1.32-3.18M10.5 1.5V4.5H7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Reset current page
-    </button>
-
-    <div class="sidebar-note">
-      Loads live from the repo. Changes to any page file are reflected on reload.
+    <select id="model" aria-label="Model"></select>
+    <div class="seg" id="orient" hidden aria-label="Tablet direction">
+      <button type="button" data-r="0" aria-pressed="true">Upright</button>
+      <button type="button" data-r="1" aria-pressed="false">Sideways</button>
     </div>
+  </div>
+  <div class="grp"><label for="page">Page</label>
+    <select id="page">
+      <option value="activity.html">Activity Level</option>
+      <option value="index.html">Home / Sector Select</option>
+      <option value="wbgt.html">WBGT Calculator</option>
+      <option value="heat-index.html">Heat Index</option>
+      <option value="temp-humidity.html">Temp + Humidity</option>
+      <option value="clothing.html">Clothing Factors</option>
+      <option value="acclimatization.html">Acclimatization</option>
+      <option value="methodology.html">Methodology</option>
+    </select>
+  </div>
+  <div class="grp">
+    <button type="button" class="btn" id="reload" title="Reload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+    </button>
+    <button type="button" class="btn" id="fit" aria-pressed="true" title="Shrink device to fit window, or show at full size">Fit to window</button>
+    <a class="btn" id="newtab" href="./activity.html" target="_blank" rel="noopener" title="Open this page in its own tab">Open page ↗</a>
+  </div>
+</div>
 
-  </nav>
-
-  <!-- STAGE -->
-  <main class="stage" id="stage">
-
-    <!-- ── PHONE ── -->
-    <div class="device-wrap" id="wrap-phone">
-      <div class="device-scale-clip" id="clip-phone">
-        <div class="device-frame phone-frame" id="frame-phone">
-          <div class="dynamic-island"></div>
-          <div class="phone-screen">
-            <div class="loading-overlay" id="loading-phone">
-              <div class="loading-spinner"></div>
-              <span class="loading-label">Loading…</span>
-            </div>
-            <iframe
-              class="device-iframe"
-              id="iframe-phone"
-              src="./activity.html"
-              title="iPhone preview"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-              onload="onLoad('phone')"
-            ></iframe>
+<main>
+  <div class="stage" id="stage">
+    <div class="scaler" id="scaler">
+      <div class="device phone" id="device">
+        <div class="screen" id="screen">
+          <div class="chrome">
+            <span class="lock" aria-hidden="true">&#128274;</span>
+            <div class="url" id="url">read-the-heat.app</div>
           </div>
-          <div class="phone-home-indicator"></div>
+          <div class="loading" id="loading"><div class="spin"></div><span>Loading…</span></div>
+          <iframe id="frame" title="The tool, as shown on the chosen device"></iframe>
         </div>
       </div>
-      <div class="device-label-block">
-        <span class="device-label-name">iPhone 14 Pro</span>
-        <span class="device-label-dims">390 × 780 pt</span>
-      </div>
     </div>
+  </div>
 
-    <!-- ── IPAD PORTRAIT ── -->
-    <div class="device-wrap" id="wrap-ipad-v" hidden>
-      <div class="device-scale-clip" id="clip-ipad-v">
-        <div class="device-frame ipad-v-frame" id="frame-ipad-v">
-          <div class="ipad-v-camera"></div>
-          <div class="ipad-v-screen">
-            <div class="loading-overlay" id="loading-ipad-v">
-              <div class="loading-spinner"></div>
-              <span class="loading-label">Loading…</span>
-            </div>
-            <iframe
-              class="device-iframe"
-              id="iframe-ipad-v"
-              src="./activity.html"
-              title="iPad portrait preview"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-              onload="onLoad('ipad-v')"
-            ></iframe>
-          </div>
-          <div class="ipad-home-indicator"></div>
-        </div>
-      </div>
-      <div class="device-label-block">
-        <span class="device-label-name">iPad Air · Portrait</span>
-        <span class="device-label-dims">768 × 1024 pt</span>
-      </div>
+  <aside>
+    <div class="card">
+      <h2>What you're seeing</h2>
+      <p id="info"></p>
+      <p><span class="k">Layout:</span> <span id="layout"></span></p>
+      <p class="note">The tool switches to its phone layout at 600 px wide or narrower. A tablet held upright gets the phone layout; turned sideways it gets the wider layout.</p>
     </div>
-
-    <!-- ── IPAD LANDSCAPE ── -->
-    <div class="device-wrap" id="wrap-ipad-h" hidden>
-      <div class="device-scale-clip" id="clip-ipad-h">
-        <div class="device-frame ipad-h-frame" id="frame-ipad-h">
-          <div class="ipad-h-camera"></div>
-          <div class="ipad-h-screen">
-            <div class="loading-overlay" id="loading-ipad-h">
-              <div class="loading-spinner"></div>
-              <span class="loading-label">Loading…</span>
-            </div>
-            <iframe
-              class="device-iframe"
-              id="iframe-ipad-h"
-              src="./activity.html"
-              title="iPad landscape preview"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-              onload="onLoad('ipad-h')"
-            ></iframe>
-          </div>
-          <div class="ipad-h-home-indicator"></div>
-        </div>
-      </div>
-      <div class="device-label-block">
-        <span class="device-label-name">iPad Air · Landscape</span>
-        <span class="device-label-dims">1024 × 768 pt</span>
-      </div>
+    <div class="card">
+      <h2>It's the live tool</h2>
+      <p>Everything inside the frame is the real app — changes to any page file show up here on reload. Tap, scroll, and fill in fields as on a real device.</p>
+      <p class="note">The frame loads the file directly from the repo, so all calculators and cross-page links work normally.</p>
     </div>
+    <div class="card">
+      <h2>Share this view</h2>
+      <p class="note">The address in your browser's address bar keeps the device, page, and orientation, so you can copy and send it.</p>
+    </div>
+  </aside>
+</main>
 
-  </main>
+<div class="onphone">
+  <p>You're already on a phone — the tool itself is the phone version.</p>
+  <p><a href="./activity.html">Go to the tool &rarr;</a></p>
 </div>
 
 <script>
-  // Natural (design) dimensions for each device frame (outer shell)
-  const SIZES = {
-    'phone':  { w: 426,  h: 860  },
-    'ipad-v': { w: 800,  h: 1114 },
-    'ipad-h': { w: 1114, h: 800  },
+(function () {
+  'use strict';
+
+  var DEVICES = {
+    phone: [
+      { id: 'iphone15',  name: 'iPhone 15 / 16',         w: 393, h: 852 },
+      { id: 'iphonese',  name: 'iPhone SE (small)',        w: 375, h: 667 },
+      { id: 'iphonemax', name: 'iPhone Pro Max (large)',   w: 430, h: 932 },
+      { id: 'pixel',     name: 'Google Pixel 8',           w: 412, h: 915 },
+      { id: 'galaxy',    name: 'Samsung Galaxy S24',       w: 360, h: 780 }
+    ],
+    tablet: [
+      { id: 'ipad',      name: 'iPad (10th gen.)',         w: 820,  h: 1180 },
+      { id: 'ipadmini',  name: 'iPad mini',                w: 744,  h: 1133 },
+      { id: 'ipadpro',   name: 'iPad Pro 13"',             w: 1024, h: 1366 },
+      { id: 'galaxytab', name: 'Samsung Galaxy Tab S9',    w: 800,  h: 1280 }
+    ]
   };
 
-  // Which devices each mode shows
-  const MODES = {
-    'phone':   ['phone'],
-    'ipad-v':  ['ipad-v'],
-    'ipad-h':  ['ipad-h'],
-    'compare': ['phone', 'ipad-v', 'ipad-h'],
+  var ALL = {};
+  Object.keys(DEVICES).forEach(function (k) {
+    DEVICES[k].forEach(function (d) { d.kind = k; ALL[d.id] = d; });
+  });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var frame   = $('frame'),
+      stage   = $('stage'),
+      scaler  = $('scaler'),
+      device  = $('device'),
+      screen  = $('screen'),
+      loading = $('loading');
+
+  var q = new URLSearchParams(location.search);
+  var state = {
+    d:   ALL[q.get('d')] ? q.get('d') : 'iphone15',
+    r:   q.get('r') === '1' && ALL[q.get('d')] && ALL[q.get('d')].kind === 'tablet',
+    p:   safePage(q.get('p')) || 'activity.html',
+    fit: true
   };
+  var CHROME_H = 38;
 
-  let currentMode = 'phone';
-  let currentSrc  = './activity.html';
+  var PAGES = [
+    { file: 'activity.html',        name: 'Activity Level' },
+    { file: 'index.html',           name: 'Home / Sector Select' },
+    { file: 'wbgt.html',            name: 'WBGT Calculator' },
+    { file: 'heat-index.html',      name: 'Heat Index' },
+    { file: 'temp-humidity.html',   name: 'Temp + Humidity' },
+    { file: 'clothing.html',        name: 'Clothing Factors' },
+    { file: 'acclimatization.html', name: 'Acclimatization' },
+    { file: 'methodology.html',     name: 'Methodology' }
+  ];
+  var PAGE_FILES = PAGES.map(function (p) { return p.file; });
 
-  // ── Scaling ────────────────────────────────────────────────────────────────
-
-  function applyScale(id, scale) {
-    const clip  = document.getElementById('clip-' + id);
-    const frame = document.getElementById('frame-' + id);
-    const nat   = SIZES[id];
-    const w     = Math.round(nat.w * scale);
-    const h     = Math.round(nat.h * scale);
-    clip.style.width  = w + 'px';
-    clip.style.height = h + 'px';
-    frame.style.transform = `scale(${scale})`;
+  function safePage(p) {
+    if (!p) return '';
+    return PAGE_FILES.indexOf(p) > -1 ? p : '';
   }
 
-  function recalcScales() {
-    const stage   = document.getElementById('stage');
-    const pad     = 64;                              // stage padding × 2
-    const stageW  = stage.clientWidth  - pad;
-    const stageH  = stage.clientHeight - pad;
-    const devices = MODES[currentMode];
-    const gaps    = Math.max(0, devices.length - 1) * 32; // gap between devices
-
-    if (devices.length === 1) {
-      const id    = devices[0];
-      const nat   = SIZES[id];
-      const scale = Math.min(stageW / nat.w, stageH / nat.h, 1.0);
-      applyScale(id, scale);
-    } else {
-      // In compare mode each device gets equal width share
-      const perW  = (stageW - gaps) / devices.length;
-      devices.forEach(id => {
-        const nat   = SIZES[id];
-        const scale = Math.min(perW / nat.w, stageH / nat.h);
-        applyScale(id, scale);
-      });
-    }
+  function saveAddress() {
+    var s = new URLSearchParams();
+    s.set('d', state.d);
+    if (state.r) s.set('r', '1');
+    if (state.p !== 'activity.html') s.set('p', state.p);
+    history.replaceState(null, '', location.pathname + '?' + s.toString());
   }
 
-  window.addEventListener('resize', recalcScales);
+  function fillModels() {
+    var dv = ALL[state.d], sel = $('model');
+    sel.innerHTML = DEVICES[dv.kind].map(function (d) {
+      return '<option value="' + d.id + '">' + d.name + ' – ' + d.w + ' × ' + d.h + '</option>';
+    }).join('');
+    sel.value = dv.id;
+    Array.prototype.forEach.call($('kind').children, function (b) {
+      b.setAttribute('aria-pressed', b.dataset.kind === dv.kind ? 'true' : 'false');
+    });
+  }
 
-  // ── Mode switching ─────────────────────────────────────────────────────────
+  function layout() {
+    var dv = ALL[state.d];
+    if (dv.kind === 'phone') state.r = false;
+    var w = state.r ? dv.h : dv.w;
+    var h = state.r ? dv.w : dv.h;
 
-  function setMode(btn) {
-    const mode = btn.dataset.mode;
-    if (mode === currentMode) return;
-    currentMode = mode;
-
-    // update button states
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    // show/hide device wraps
-    const active = MODES[mode];
-    ['phone', 'ipad-v', 'ipad-h'].forEach(id => {
-      const wrap = document.getElementById('wrap-' + id);
-      wrap.hidden = !active.includes(id);
+    $('orient').hidden = dv.kind !== 'tablet';
+    Array.prototype.forEach.call($('orient').children, function (b) {
+      b.setAttribute('aria-pressed', (b.dataset.r === '1') === state.r ? 'true' : 'false');
     });
 
-    // kick off any iframes that were hidden and haven't loaded
-    active.forEach(id => {
-      const iframe = document.getElementById('iframe-' + id);
-      if (!iframe.dataset.loaded) {
-        showLoading(id);
-        iframe.src = currentSrc;
+    var phone = dv.kind === 'phone', bez = phone ? 14 : 20;
+    device.className = 'device ' + dv.kind + (state.r ? ' side' : '');
+    device.style.setProperty('--bez', bez + 'px');
+    device.style.setProperty('--rad', (phone ? 48 : 30) + 'px');
+    device.style.setProperty('--srad', (phone ? 36 : 14) + 'px');
+    screen.style.width  = w + 'px';
+    screen.style.height = (h + CHROME_H) + 'px';
+
+    var W = w + 2 * bez, H = h + CHROME_H + 2 * bez;
+    var sc = state.fit ? Math.min(1, (stage.clientWidth - 8) / W, (stage.clientHeight - 8) / H) : 1;
+    scaler.style.width  = W + 'px';
+    scaler.style.height = H + 'px';
+    scaler.style.transform = sc < 1 ? 'scale(' + sc + ')' : '';
+    stage.style.overflow   = state.fit ? 'hidden' : 'auto';
+    stage.style.alignItems = state.fit ? 'center' : 'flex-start';
+
+    $('info').innerHTML = '<b>' + dv.name + '</b>, ' + (state.r ? 'turned sideways' : 'held upright') +
+      ': ' + w + ' × ' + h + ' pixels' +
+      (sc < 1 ? ' <span class="k">(shown at ' + Math.round(sc * 100) + '%)</span>' : '');
+    $('layout').innerHTML = w <= 600
+      ? '<span class="pill ph">Phone layout</span>'
+      : '<span class="pill dt">Wide layout</span>';
+
+    $('fit').setAttribute('aria-pressed', state.fit ? 'true' : 'false');
+    $('fit').textContent = state.fit ? 'Fit to window' : 'Full size';
+  }
+
+  function go(page) {
+    state.p = page;
+    loading.classList.remove('gone');
+    frame.src = './' + page;
+    $('url').textContent = 'read-the-heat.app/' + page;
+    $('newtab').href = './' + page;
+    $('page').value = page;
+    saveAddress();
+  }
+
+  frame.addEventListener('load', function () {
+    loading.classList.add('gone');
+    try {
+      var loc = frame.contentWindow.location;
+      var file = loc.pathname.replace(/^.*\//, '');
+      if (PAGE_FILES.indexOf(file) > -1 && file !== state.p) {
+        state.p = file; $('page').value = file;
+        $('url').textContent = 'read-the-heat.app/' + file;
+        $('newtab').href = './' + file;
+        saveAddress();
       }
-    });
+    } catch (e) {}
+  });
 
-    recalcScales();
-  }
+  $('kind').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || ALL[state.d].kind === b.dataset.kind) return;
+    state.d = DEVICES[b.dataset.kind][0].id;
+    state.r = false;
+    fillModels(); layout(); saveAddress();
+  });
+  $('model').addEventListener('change', function () { state.d = this.value; layout(); saveAddress(); });
+  $('orient').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    state.r = b.dataset.r === '1'; layout(); saveAddress();
+  });
+  $('page').addEventListener('change', function () { go(this.value); });
+  $('reload').addEventListener('click', function () {
+    loading.classList.remove('gone');
+    frame.src = './' + state.p + '?r=' + Date.now();
+  });
+  $('fit').addEventListener('click', function () { state.fit = !state.fit; layout(); });
+  window.addEventListener('resize', layout);
 
-  // ── Page navigation ────────────────────────────────────────────────────────
-
-  function loadPage(btn) {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentSrc = './' + btn.dataset.src;
-
-    MODES[currentMode].forEach(id => {
-      showLoading(id);
-      document.getElementById('iframe-' + id).dataset.loaded = '';
-      document.getElementById('iframe-' + id).src = currentSrc;
-    });
-  }
-
-  function reloadAll() {
-    const bust = '?r=' + Date.now();
-    MODES[currentMode].forEach(id => {
-      showLoading(id);
-      document.getElementById('iframe-' + id).dataset.loaded = '';
-      document.getElementById('iframe-' + id).src = currentSrc.split('?')[0] + bust;
-    });
-  }
-
-  // ── Loading state ──────────────────────────────────────────────────────────
-
-  function showLoading(id) {
-    document.getElementById('loading-' + id).classList.remove('hidden');
-  }
-
-  function onLoad(id) {
-    document.getElementById('iframe-' + id).dataset.loaded = '1';
-    setTimeout(() => {
-      document.getElementById('loading-' + id).classList.add('hidden');
-    }, 250);
-  }
-
-  // ── Init ───────────────────────────────────────────────────────────────────
-
-  // Initial scale after fonts settle
-  window.addEventListener('load', recalcScales);
-  setTimeout(recalcScales, 100);
+  // Init
+  fillModels(); layout();
+  if (window.matchMedia('(min-width: 761px)').matches) go(state.p);
+})();
 </script>
-
 </body>
 </html>
