@@ -1689,8 +1689,11 @@ body.chart-active { overflow: hidden; }
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const main = document.querySelector('main');
-    if (main) main.style.paddingTop = fixedTop.offsetHeight + 'px';
-    document.documentElement.style.setProperty('--fixed-top-h', fixedTop.offsetHeight + 'px');
+    if (main) {
+      const h = fixedTop.offsetHeight + 'px';
+      document.documentElement.style.setProperty('--fixed-top-h', h);
+      main.style.setProperty('padding-top', h, 'important');
+    }
     if (_chartActive) sizeChartPane();
     else if (_unacclimChartActive) sizeUnacclimChartPane();
     else if (_sessionMode === 'acclim') sizeResultWrap();
