@@ -40,8 +40,12 @@
     overflow: hidden;
   }
 
-  /* ── SITE HEADER: override fixed positioning so it sits in flex flow ── */
+  /* ── SITE HEADER: compact banner (matches wbgt / heat-index / temp-humidity) ── */
   body.mockup-page #fixed-top { position: static; box-shadow: none; cursor: default; }
+  header { height: 76px; overflow: hidden; }
+  .header-attribution { display: none; }
+  .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
+  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
   /* Reduce the header's own pointer on the strip */
   .wrc-banner-strip { cursor: default; }
 
@@ -355,15 +359,13 @@
 <div id="fixed-top">
   <div class="hazard-bar"></div>
   <header>
-    <div style="width:48px;margin:0 11px;flex-shrink:0;"></div><!-- left spacer -->
-    <div class="header-inner" style="pointer-events:auto;">
-      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+    <div class="header-inner">
+      <img class="header-brand" src="images/read-the-heat-logo-wide.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
       <div class="header-attribution">
         <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
         <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
       </div>
     </div>
-    <div style="width:48px;margin:0 11px;flex-shrink:0;"></div><!-- right spacer -->
   </header>
   <div class="wrc-banner-strip">
     <div class="preview-strip">
