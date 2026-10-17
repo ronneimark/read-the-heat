@@ -630,8 +630,8 @@ body.chart-active { overflow: hidden; }
 }
 #sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
 #sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
-@keyframes schedOpen  { from { clip-path: inset(100% 0 0 0 round 12px); } to { clip-path: inset(0% 0 0 0 round 12px); } }
-@keyframes schedClose { from { clip-path: inset(0% 0 0 0 round 12px); }  to { clip-path: inset(100% 0 0 0 round 12px); } }
+@keyframes schedOpen  { from { clip-path: inset(0 0 100% 0 round 12px); } to { clip-path: inset(0 0 0% 0 round 12px); } }
+@keyframes schedClose { from { clip-path: inset(0 0 0% 0 round 12px); }  to { clip-path: inset(0 0 100% 0 round 12px); } }
 #sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
 @keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
 
