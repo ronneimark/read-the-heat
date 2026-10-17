@@ -571,7 +571,7 @@ function buildBreadcrumbs() {
     resetBtn.className = 'wrc-crumb-reset';
     resetBtn.title = 'Clear all selections';
     resetBtn.setAttribute('aria-label', 'Reset all selections');
-    resetBtn.innerHTML = '&#10005;';
+    resetBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1.5 5.5a4 4 0 1 0 .9-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><polyline points="1.5,2 1.5,5.5 5,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     resetBtn.addEventListener('click', function() {
       try { sessionStorage.removeItem('wrc'); } catch(e) {}
       window.location.href = 'index.html';
@@ -620,6 +620,20 @@ function buildBreadcrumbs() {
   dotsEl.innerHTML = stepDone.map((done, i) =>
     `<a class="wrc-sdot${done ? ' wrc-sdot-done' : ''}" href="${stepUrls[i]}" aria-label="Step ${i+1}">${i+1}</a>`
   ).join('');
+
+  // Mobile reset button — circular arrow, right edge of the dots row
+  if (anySelected) {
+    const mReset = document.createElement('button');
+    mReset.className = 'wrc-sdot-reset';
+    mReset.title = 'Reset all selections';
+    mReset.setAttribute('aria-label', 'Reset all selections');
+    mReset.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2 6.5a4.5 4.5 0 1 0 1-2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><polyline points="2,2.5 2,6.5 6,6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    mReset.addEventListener('click', function() {
+      try { sessionStorage.removeItem('wrc'); } catch(e) {}
+      window.location.href = 'index.html';
+    });
+    dotsEl.appendChild(mReset);
+  }
 
   // ── Second strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
   // Suppressed on result pages — the measurement is already the page content there

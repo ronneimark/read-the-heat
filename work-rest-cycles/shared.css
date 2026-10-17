@@ -1725,10 +1725,27 @@
     display: none;
     gap: 8px;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex: 1;
-    padding: 4px 0;
+    padding: 4px 12px;
   }
+  .wrc-sdot-reset {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.30);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.12s, color 0.12s;
+  }
+  .wrc-sdot-reset:hover { background: rgba(255,255,255,0.24); color: #fff; }
   /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
   .wrc-sdot {
     width: 26px;
