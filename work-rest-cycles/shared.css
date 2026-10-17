@@ -1648,16 +1648,21 @@
       flex: none !important;
     }
 
-    /* Sector grid: release clip, single column */
+    /* Sector grid: release clip, 2 columns on mobile */
     .ls1-sector-grid {
       overflow: visible !important;
       height: auto !important;
       flex: none !important;
-      grid-template-columns: 1fr !important;
+      grid-template-columns: repeat(2, 1fr) !important;
       grid-template-rows: none !important;
       grid-auto-rows: auto !important;
     }
-    .ls1-sector-btn { min-height: 90px; font-size: 14px; }
+    .ls1-sector-btn { min-height: 110px; font-size: 14px; }
+    /* Step 1 heading: left-aligned, sized to fit the phone screen */
+    .ls1-header .ls-heading {
+      text-align: left !important;
+      font-size: clamp(15px, 4.5vw, 20px) !important;
+    }
 
     /* Activity review grid: two columns, scrollable panels */
     .ls2-review-grid {
