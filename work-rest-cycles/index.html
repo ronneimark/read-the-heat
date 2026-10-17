@@ -871,18 +871,28 @@
     }
 
     /* ── Step 3: position vertically ── */
-    pop.style.bottom = vpad + 'px';
-
-    if (pop.scrollHeight <= availH) {
-      /* Content fits at this width — no scroll needed */
-      pop.style.top       = '';
-      pop.style.maxHeight = '';
-      pop.style.overflowY = 'visible';
-    } else {
-      /* Even at max width it's taller than the viewport — pin top and scroll */
-      pop.style.top       = vpad + 'px';
-      pop.style.maxHeight = availH + 'px';
+    if (vpW <= 768) {
+      /* Mobile: pin top just below the blue strip so modal starts there */
+      const stripBottom = vpW <= 600 ? 126 : 238;   /* hazard+header+strip */
+      const bpad = 8;                                /* gap from bottom */
+      pop.style.top       = stripBottom + 'px';
+      pop.style.bottom    = bpad + 'px';
+      pop.style.maxHeight = (vpH - stripBottom - bpad) + 'px';
       pop.style.overflowY = 'auto';
+    } else {
+      pop.style.bottom = vpad + 'px';
+
+      if (pop.scrollHeight <= availH) {
+        /* Content fits at this width — no scroll needed */
+        pop.style.top       = '';
+        pop.style.maxHeight = '';
+        pop.style.overflowY = 'visible';
+      } else {
+        /* Even at max width it's taller than the viewport — pin top and scroll */
+        pop.style.top       = vpad + 'px';
+        pop.style.maxHeight = availH + 'px';
+        pop.style.overflowY = 'auto';
+      }
     }
   }
 
