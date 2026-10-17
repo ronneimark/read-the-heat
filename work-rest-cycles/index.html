@@ -297,15 +297,7 @@
 .intro-anchor {
   grid-column: 2;
 }
-/* on narrow screens, stack heading above centered button */
-@media (max-width: 560px) {
-  .ls1-header {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-  .ls-heading { text-align: center; grid-column: 1; }
-  .intro-anchor { grid-column: 1; }
-}
+/* narrow screens: handled by the mobile block below; this rule is superseded */
 
 /* ── anchor wrapper ── */
 .intro-anchor { position: relative; }
@@ -750,6 +742,49 @@
   min-height: 120px;
   background: var(--surface, #f5f6f8);
   margin-top: 4px;
+}
+
+/* ── Mobile: industry cards 2-across, heading left, "How to use" button sticky ── */
+@media (max-width: 768px) {
+  /* 2 columns — declared here (outside :root nesting) to reliably override */
+  .ls1-sector-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: auto !important;
+    overflow: visible !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  /* Heading: full-width left-aligned, shrinks to fit */
+  .ls1-header {
+    grid-template-columns: 1fr !important;
+    justify-items: start !important;
+    gap: 0 !important;
+  }
+  .ls1-header .ls-heading {
+    text-align: left !important;
+    justify-self: start !important;
+    grid-column: 1 !important;
+    font-size: clamp(14px, 4.2vw, 20px) !important;
+    padding-right: 90px !important; /* keep text from running behind fixed button */
+  }
+
+  /* "How to use this site" button: fixed just below the blue strip */
+  .intro-anchor {
+    position: fixed !important;
+    right: 10px !important;
+    z-index: 500 !important;
+    /* default top for 601-768px viewport (header=191px + hazard=10px + strip≈34px) */
+    top: 238px !important;
+  }
+}
+
+/* Recalculate top when header collapses to 80px (≤600px) */
+@media (max-width: 600px) {
+  .intro-anchor {
+    top: 126px !important; /* hazard(10) + header(80) + strip(~36) */
+  }
 }
 </style>
 
