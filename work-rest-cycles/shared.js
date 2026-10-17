@@ -648,8 +648,9 @@ function buildBreadcrumbs() {
   }
 
   // ── Context strip: progressive recap of selections (mobile only) ──
-  // Step 3 → activity; Step 4 → + acclimatization; Step 5 + results → + clothing
+  // Step 2+ → activity; Step 3+ → + acclimatization; Step 4+ → + clothing
   const pathname = window.location.pathname;
+  const onStep2up = /\/(activity|acclimatization|clothing|measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
   const onStep3up = /\/(acclimatization|clothing|measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
   const onStep4up = /\/(clothing|measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
   const onStep5up = /\/(measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
@@ -659,11 +660,11 @@ function buildBreadcrumbs() {
 
   if (mainStrip && window.innerWidth <= 768) {
     const ctxItems = [];
-    if (onStep3up && s.activityLabel) ctxItems.push(s.activityLabel);
-    if (onStep4up && s.workerStatus) {
+    if (onStep2up && s.activityLabel) ctxItems.push(s.activityLabel);
+    if (onStep3up && s.workerStatus) {
       ctxItems.push(s.workerStatus === 'acclimatized' ? 'Acclimatized' : 'Unacclimatized');
     }
-    if (onStep5up && s.clothingType) {
+    if (onStep4up && s.clothingType) {
       ctxItems.push(s.clothingType === 'standard' ? 'Standard Clothing' : 'Impermeable PPE');
     }
 
