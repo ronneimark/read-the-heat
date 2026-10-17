@@ -143,24 +143,9 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   height: 100%;
 }
 
-/* Conservative-estimate notice — amber strip above result (dry bulb limitation).
-   NOTE: Dry-bulb temperature alone does not capture humidity or radiant heat;
-   WBGT is the gold standard that accounts for both. */
-.dbt-conservative-notice {
-  background: #FFF8E1;
-  border-left: 4px solid #F9A825;
-  border-radius: 0 6px 6px 0;
-  padding: 10px 14px;
-  font-size: 12px;
-  line-height: 1.55;
-  color: #4E342E;
-  flex-shrink: 0;
-  margin: 0 0 8px;
-}
-.dbt-conservative-notice strong { color: #3E2723; }
-
-/* Radiant heat warning strip — semi-transparent, renders over colored result background.
-   NOTE: This warning exists because temp+humidity does NOT account for radiant heat. */
+/* Limitation strip — semi-transparent, renders over colored result background.
+   Two states injected via JS: thermometer-only (100% RH assumed) vs humidity entered.
+   Neither heat index nor temp+humidity captures radiant heat; WBGT is the gold standard. */
 .radiant-warn-strip {
   padding: 8px 12px;
   background: rgba(0,0,0,0.15);
@@ -1079,19 +1064,20 @@ body.trh-unacclim-chart-active { overflow: hidden; }
          </div>`
       : '';
 
-    const dbtNoticeHTML = WRC.val('dbtConservative', false)
-      ? `<div class="dbt-conservative-notice" role="note">
-          <strong>⚠ Conservative estimate — thermometer only:</strong>
-          This work-rest cycle was calculated using your air temperature with <strong>100% relative humidity assumed</strong>.
-          Actual conditions may be less severe if humidity is lower, but this schedule will never underestimate the risk.
-          For a more precise result, re-enter with a measured humidity reading.
+    const limitationStripHTML = WRC.val('dbtConservative', false)
+      ? `<div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>Dry-bulb thermometer only — two limitations apply:</strong>
+          (1) <strong>Humidity not measured</strong> — 100% RH assumed; re-enter with a humidity reading to move from a thermometer-only estimate to a full heat index result.
+          (2) <strong>Radiant heat not captured</strong> — no heat index method accounts for equipment heat, ovens, or solar load. WBGT is the only method that captures all three factors.
         </div>`
-      : '';
+      : `<div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>One limitation remains:</strong>
+          Temperature + humidity accounts for what a thermometer alone misses. The remaining gap: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
+        </div>`;
 
     document.getElementById(containerId).innerHTML = `
       <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
            style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
-        ${dbtNoticeHTML}
         <div class="result-main-inner">
           <div class="result-clock">${buildClockSvg(rowIdx >= 0 ? cell : {w:null,r:null})}</div>
           <div class="result-text">
@@ -1102,9 +1088,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
             ${trhDerivation}
           </div>
         </div>
-        <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
-        </div>
+        ${limitationStripHTML}
         ${(function(){
           const u = buildShareUrl();
           if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;

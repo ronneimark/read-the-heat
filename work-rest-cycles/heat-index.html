@@ -198,17 +198,19 @@ main { padding: 0; max-width: none; }
 /* Radiant heat warning strip — amber on warm white background.
    NOTE: This warning exists because heat index does NOT account for radiant heat
    (direct sun, hot surfaces). WBGT is the gold standard that captures this. */
+/* Limitation strip — semi-transparent, renders over colored result background */
 .radiant-warn-strip {
-  padding: 10px 12px;
-  background: #FFF8E1;
-  border-left: 4px solid #F59E0B;
-  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.15);
+  border-left: 3px solid rgba(255,255,255,0.5);
+  border-radius: 0 6px 6px 0;
   font-size: 11px;
   line-height: 1.5;
-  color: #78350F;
+  color: inherit;
+  opacity: 0.9;
   flex-shrink: 0;
 }
-.radiant-warn-strip strong { display: block; margin-bottom: 2px; }
+.radiant-warn-strip strong { display: inline; }
 
 /* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
 .hi-trh-switch-chip { display: none; }
@@ -1251,7 +1253,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
           </div>
         </div>
         <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
+          <strong><span aria-hidden="true">⚠ </span>One limitation remains:</strong> Temperature + humidity accounts for what a thermometer alone misses. The remaining gap: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
         </div>
         ${(function(){
           const u = buildShareUrl();
