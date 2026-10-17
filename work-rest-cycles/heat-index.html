@@ -1250,6 +1250,9 @@ body.hi-unacclim-chart-active { overflow: hidden; }
             ${trhDerivation}
           </div>
         </div>
+        <div class="radiant-warn-strip" role="note">
+          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
+        </div>
         ${(function(){
           const u = buildShareUrl();
           if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;
@@ -1287,9 +1290,6 @@ body.hi-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-sub">${workerSub}</div>
         </div>
         ${(function(){ const s=WRC.get(); return s.clothingAdjustC > 0 ? `<div class="radiant-warn-strip" role="note" style="background:#fff3e0;border-color:#e65100;color:#7f2900"><strong><span aria-hidden="true">🦺 </span>Impermeable PPE selected:</strong> The +${s.clothingAdjustC}°C / +${s.clothingAdjustF}°F clothing correction cannot be applied to Heat Index. For impermeable PPE, use <a href="wbgt.html" style="color:#c74600">WBGT</a> where the correction is applied automatically.</div>` : ''; })()}
-        <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
-        </div>
         ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
       </div>`;
     if (workerLabel === 'Unacclimatized' && cell) _schedCell = cell;
