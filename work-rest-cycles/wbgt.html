@@ -358,10 +358,12 @@ body.chart-active { overflow: hidden; }
 @media (max-width: 768px) {
   #unacclim-tab-result {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
     padding: 0;
+    overflow-y: auto;
   }
-  #unacclim-tab-result .result-sidebar { display: none; }
-  .unacclim-left-col { gap: 0; }
+  #unacclim-tab-result .unacclim-left-col { grid-column: 1; grid-row: 1; gap: 0; }
+  #unacclim-tab-result .result-sidebar    { grid-column: 1; grid-row: 2; }
   #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
 }
 #unacclim-tab-chart {
