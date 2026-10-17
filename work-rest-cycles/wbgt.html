@@ -130,14 +130,8 @@ main { padding: 0; max-width: none; }
     align-items: flex-start !important;
   }
 
-  /* Collapse unacclimatized result to single column on mobile */
-  #unacclim-tab-result {
-    grid-template-columns: 1fr;
-    padding: 0;
-  }
-  #unacclim-tab-result .result-sidebar { display: none; }
-  .unacclim-left-col { gap: 0; }
-  #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
+  /* Note: #unacclim-tab-result mobile overrides are in a separate @media block
+     placed AFTER the desktop rules, to ensure correct cascade order. */
 
   /* Override shared.css "padding: 16px !important" shorthand which
      blocks the JS-set paddingTop. Use the CSS var set by updateLayout(). */
@@ -358,6 +352,17 @@ body.chart-active { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+/* ── Unacclimatized result mobile overrides ──
+   MUST come after the desktop rules above to win the cascade. */
+@media (max-width: 768px) {
+  #unacclim-tab-result {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  #unacclim-tab-result .result-sidebar { display: none; }
+  .unacclim-left-col { gap: 0; }
+  #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
 }
 #unacclim-tab-chart {
   position: fixed;
