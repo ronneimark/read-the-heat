@@ -45,7 +45,7 @@
   var css = [
     '.wrc-lang-switch { display: flex; align-items: center; gap: 5px; flex-shrink: 0;',
     '  font-family: inherit; font-size: 13px; }',
-    '.wrc-banner-strip-inner > .wrc-lang-switch { margin-left: auto; }',
+    '.wrc-banner-strip-inner > .wrc-lang-switch { margin-left: 8px; flex-shrink: 0; }',
     '.wrc-lang-switch .wrc-globe { font-size: 15px; line-height: 1; }',
     '.wrc-lang-switch select { font: inherit; font-weight: 600; color: #001E62;',
     '  background: #fff; border: 1px solid #c5cfdd; border-radius: 4px;',

@@ -1810,10 +1810,10 @@
     align-items: center;
     justify-content: flex-start;
     flex: 1;
-    padding: 4px 12px;
+    padding: 4px 8px;
+    min-width: 0;
   }
   .wrc-sdot-reset {
-    margin-left: auto;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
@@ -1845,8 +1845,8 @@
     flex-shrink: 0;
   }
   .wrc-sdot-results:hover { background: #ffe033; }
-  /* Reset button sits after Results — no left auto needed when both present */
-  .wrc-sdot-results + .wrc-sdot-reset { margin-left: 6px; }
+  /* Reset button sits immediately after Results — tight together */
+  .wrc-sdot-results + .wrc-sdot-reset { margin-left: 4px; }
   /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
   .wrc-sdot {
     width: 26px;
