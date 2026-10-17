@@ -246,6 +246,9 @@ main { padding: 0; max-width: none; }
 }
 .share-email-btn:hover { background: #fff; }
 
+/* ── Mobile-only sticky schedule wrapper — hidden on desktop ── */
+.mobile-sched-sticky { display: none; }
+
 /* ── Mobile: simplified result view ──
    Hide tab bars and chart panes; show only the result/schedule card.
    A hint at the bottom refers users to desktop for charts and full tables. */
@@ -601,9 +604,6 @@ body.chart-active { overflow: hidden; }
 .urec-sched-foot {
   font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; flex-shrink:0;
 }
-
-/* ── Mobile-only sticky schedule wrapper — hidden on desktop ── */
-.mobile-sched-sticky { display: none; }
 
 /* ── Daily Exposure Schedule modal ── */
 .sched-modal-btn {
