@@ -202,13 +202,6 @@ main { padding: 0; max-width: none; }
   color: #fff;
   margin-top: 12px;
 }
-/* When monitoring card is a direct child of urec-left (unacclimatized tab),
-   it sits in a flex column — make it full-width, gap handles spacing */
-.urec-left > .result-monitoring {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 0;
-}
 .result-monitoring-label {
   font-size: 10px;
   font-weight: 700;
@@ -270,12 +263,6 @@ main { padding: 0; max-width: none; }
     height: auto !important;
     overflow: visible !important;
   }
-  #unacclim-tab-0-wrap .urec-left {
-    flex: none !important;
-    border-right: none !important;
-    max-width: 100% !important;
-    padding: 12px 14px 20px !important;
-  }
   .urec-rec-block {
     flex-direction: column;
     text-align: center;
@@ -284,6 +271,15 @@ main { padding: 0; max-width: none; }
   #acclim-tab-result-wrap {
     align-items: flex-start !important;
   }
+
+  /* Collapse unacclimatized result to single column on mobile */
+  #unacclim-tab-result {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  #unacclim-tab-result .result-sidebar { display: none; }
+  .unacclim-left-col { gap: 0; }
+  #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
 
   /* Override shared.css "padding: 16px !important" shorthand which
      blocks the JS-set paddingTop. Use the CSS var set by updateLayout(). */
@@ -469,6 +465,41 @@ body.chart-active { overflow: hidden; }
   left: 0; right: 0; bottom: 0;
   display: flex;
   overflow: hidden;
+}
+/* Desktop two-column grid for unacclimatized result — matches heat-index layout */
+#unacclim-tab-result {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+/* Left column wrapper holds notification block + monitoring card */
+.unacclim-left-col {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#unacclim-tab-result .result-main {
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 28px);
+  text-align: left;
+}
+/* Monitoring card inside left col — keep its own styling but full width */
+.unacclim-left-col > .result-monitoring { margin-top: 0; width: 100%; box-sizing: border-box; }
+#unacclim-tab-result .result-sidebar {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 #unacclim-tab-chart {
   position: fixed;
@@ -1455,29 +1486,31 @@ body.chart-active { overflow: hidden; }
 
     // Inject into the two-panel wrapper directly
     document.getElementById('unacclim-tab-0-wrap').innerHTML = `
-      <div class="urec-left urec-left-full">
-        <div class="urec-rec-block${cls==='c-stop'?' result-danger':''}"
-             style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
-          <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
-          <div class="urec-rec-text">
-            <div class="urec-rec-label">RAL Work-Rest Recommendation</div>
-            <div class="urec-rec-headline">${headline}</div>
-            <div class="urec-rec-sub">${subtext}</div>
+      <div id="unacclim-tab-result">
+        <div class="unacclim-left-col">
+          <div class="result-main${cls==='c-stop'?' result-danger':''}"
+               style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
+            <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
+            <div class="urec-rec-text">
+              <div class="urec-rec-label">RAL Work-Rest Recommendation</div>
+              <div class="urec-rec-headline">${headline}</div>
+              <div class="urec-rec-sub">${subtext}</div>
+            </div>
+            ${(function(){
+              const u = buildShareUrl();
+              if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
+              const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
+              return `<div class="mobile-result-hint">
+                <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
+                <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
+              </div>`;
+            })()}
           </div>
-          ${(function(){
-            const u = buildShareUrl();
-            if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
-            const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
-            return `<div class="mobile-result-hint">
-              <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
-              <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
-            </div>`;
-          })()}
-        </div>
-        ${unacclimMonitoringHtml}
-        <div class="mobile-sched-sticky">
-          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
-          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+          ${unacclimMonitoringHtml}
+          <div class="mobile-sched-sticky">
+            <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+            <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+          </div>
         </div>
         <div class="result-sidebar">
           <div class="result-input-card">
@@ -1496,8 +1529,8 @@ body.chart-active { overflow: hidden; }
             <div class="result-input-sub">NIOSH RAL</div>
           </div>
           <button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+          <div class="urec-source" style="text-align:left">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
         </div>
-        <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>`;
   }
 
