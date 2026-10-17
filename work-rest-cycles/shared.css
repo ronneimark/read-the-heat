@@ -1664,11 +1664,17 @@
       font-size: clamp(15px, 4.5vw, 20px) !important;
     }
 
-    /* Activity topbar: stack sector banner above hint + button */
+    /* Activity topbar: sticky below fixed-top, stacked vertically */
     .ls2-topbar {
       flex-direction: column;
       align-items: flex-start;
       gap: 6px;
+      position: sticky;
+      top: 0; /* overridden by JS to fixedTop.offsetHeight */
+      z-index: 990;
+      background: var(--surface, #fff);
+      border-bottom: 1px solid var(--border, #e0e0e0);
+      padding-bottom: 10px;
     }
     .ls2-topbar-hint { flex: none; }
 
