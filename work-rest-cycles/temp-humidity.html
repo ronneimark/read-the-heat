@@ -128,104 +128,24 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 .acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
 
 /* ── Result tab — viewport-filling 2-column layout ── */
+/* ── Temp-Humidity specific (layout base: shared.css .result-wrap / .result-grid) ── */
+
+/* Wrap: fill viewport height below fixed header on desktop */
 #trh-tab-result-wrap,
 #trh-utab-result-wrap {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  box-sizing: border-box;
   padding: 12px 16px;
-  /* Fill whatever space remains below fixed-top */
   height: calc(100vh - var(--fixed-top-h, 200px));
   overflow: hidden;
 }
+/* Grid: fill the full wrap height on desktop */
 #trh-tab-result,
 #trh-utab-result {
-  width: 100%;
-  max-width: 1060px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: 1fr;
-  gap: 14px;
-  min-height: 0;
   height: 100%;
 }
 
-/* Left column */
-.result-main {
-  border-radius: 14px;
-  padding: 24px 28px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  text-align: left;
-  grid-column: 1;
-  grid-row: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-.result-main-inner { display: flex; align-items: center; gap: 28px; }
-.result-clock  { flex-shrink: 0; }
-.result-text   { flex: 1; min-width: 0; }
-.result-label  {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 6px;
-}
-.result-headline {
-  font-size: clamp(22px, 3.5vw, 42px);
-  font-weight: 900;
-  line-height: 1.05;
-  margin-bottom: 8px;
-}
-.result-subtext { font-size: 14px; line-height: 1.5; }
-.result-source  { margin-top: 14px; font-size: 10px; font-style: italic; }
-.result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
-
-/* Right column: sidebar */
-.result-sidebar {
-  grid-column: 2;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 0;
-  overflow-y: auto;
-}
-.result-input-card {
-  background: var(--surface, #F8FAFB);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 14px;
-  text-align: left;
-  flex-shrink: 0;
-}
-.result-input-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--subtext, #484F58);
-  margin-bottom: 3px;
-}
-.result-input-value {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--navy, #1A2A3A);
-  line-height: 1.1;
-}
-.result-input-sub {
-  font-size: 11px;
-  color: var(--subtext, #484F58);
-  margin-top: 2px;
-  line-height: 1.3;
-}
-
-/* Radiant heat note — lives in left column, adapts to colored backgrounds */
+/* Conservative-estimate notice — amber strip above result (dry bulb limitation).
+   NOTE: Dry-bulb temperature alone does not capture humidity or radiant heat;
+   WBGT is the gold standard that accounts for both. */
 .dbt-conservative-notice {
   background: #FFF8E1;
   border-left: 4px solid #F9A825;
@@ -239,6 +159,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 }
 .dbt-conservative-notice strong { color: #3E2723; }
 
+/* Radiant heat warning strip — semi-transparent, renders over colored result background.
+   NOTE: This warning exists because temp+humidity does NOT account for radiant heat. */
 .radiant-warn-strip {
   padding: 8px 12px;
   background: rgba(0,0,0,0.15);
@@ -251,67 +173,6 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   flex-shrink: 0;
 }
 .radiant-warn-strip strong { display: inline; }
-
-/* Monitoring guidance card */
-.result-monitoring {
-  background: #D50032;
-  border: 1px solid #b8002b;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.55;
-  flex-shrink: 0;
-  color: #fff;
-}
-.result-monitoring-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 5px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-}
-
-/* Responsive: stack to single column */
-@media (max-width: 768px) {
-  #trh-tab-result,
-  #trh-utab-result {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    overflow-y: auto;
-  }
-  .result-main    { grid-column: 1; grid-row: 1; padding: 20px 16px; }
-  .result-sidebar { grid-column: 1; grid-row: 2; overflow-y: visible; }
-  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
-}
-
-/* ── Mobile desktop-referral hint inside colored result block ── */
-.mobile-result-hint {
-  display: none;
-  margin-top: 18px;
-  padding: 12px 14px;
-  background: rgba(0,0,0,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 10px;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: inherit;
-}
-.mobile-result-hint p { margin: 0; }
-.share-email-btn {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  width: 100%; padding: 9px 12px; box-sizing: border-box;
-  background: rgba(255,255,255,0.9); color: #1A2A3A !important;
-  border: none; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer;
-  font-family: inherit; transition: background 0.12s; white-space: nowrap; text-decoration: none;
-}
-.share-email-btn:hover { background: #fff; }
 
 /* Mobile sticky schedule button — hidden globally; media query below overrides on mobile */
 .mobile-sched-sticky { display: none; }
@@ -722,8 +583,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   <!-- ── Acclimatized tab panels ── -->
   <div id="trh-acclim-tabs" style="display:none">
-    <div id="trh-tab-result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
-      <div id="trh-tab-result"></div>
+    <div id="trh-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
+      <div id="trh-tab-result" class="result-grid"></div>
     </div>
     <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0">
       <div class="chart-unit-strip">
@@ -741,8 +602,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   <!-- ── Unacclimatized tab panels ── -->
   <div id="trh-unacclim-tabs" style="display:none">
-    <div id="trh-utab-result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
-      <div id="trh-utab-result"></div>
+    <div id="trh-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
+      <div id="trh-utab-result" class="result-grid"></div>
     </div>
     <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0">
       <div class="chart-unit-strip">

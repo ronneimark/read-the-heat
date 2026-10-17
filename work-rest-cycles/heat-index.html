@@ -193,104 +193,11 @@ main { padding: 0; max-width: none; }
 .acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
 
 /* ── Result tab — 2-column viewport-fit layout ── */
-#hi-tab-result-wrap,
-#hi-utab-result-wrap {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 16px;
-  min-height: 0;
-}
-#hi-tab-result,
-#hi-utab-result {
-  width: 100%;
-  max-width: 1060px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: 1fr;
-  gap: 14px;
-  min-height: 0;
-}
+/* ── Heat-index specific (layout base: shared.css .result-wrap / .result-grid) ── */
 
-/* Left column: colored result block */
-.result-main {
-  border-radius: 14px;
-  padding: 28px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0;
-  text-align: left;
-  grid-column: 1;
-  grid-row: 1;
-  min-height: 0;
-}
-.result-main-inner {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-.result-clock  { flex-shrink: 0; }
-.result-text   { flex: 1; min-width: 0; }
-.result-label  {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 6px;
-}
-.result-headline {
-  font-size: clamp(22px, 3.5vw, 42px);
-  font-weight: 900;
-  line-height: 1.05;
-  margin-bottom: 8px;
-}
-.result-subtext { font-size: 14px; line-height: 1.5; }
-.result-source  { margin-top: 14px; font-size: 10px; font-style: italic; }
-.result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
-
-/* Right column: sidebar */
-.result-sidebar {
-  grid-column: 2;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 0;
-  overflow-y: auto;
-}
-.result-input-card {
-  background: var(--surface, #F8FAFB);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 14px;
-  text-align: left;
-  flex-shrink: 0;
-}
-.result-input-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--subtext, #484F58);
-  margin-bottom: 3px;
-}
-.result-input-value {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--navy, #1A2A3A);
-  line-height: 1.1;
-}
-.result-input-sub {
-  font-size: 11px;
-  color: var(--subtext, #484F58);
-  margin-top: 2px;
-  line-height: 1.3;
-}
-
-/* Radiant heat note */
+/* Radiant heat warning strip — amber on warm white background.
+   NOTE: This warning exists because heat index does NOT account for radiant heat
+   (direct sun, hot surfaces). WBGT is the gold standard that captures this. */
 .radiant-warn-strip {
   padding: 10px 12px;
   background: #FFF8E1;
@@ -302,81 +209,6 @@ main { padding: 0; max-width: none; }
   flex-shrink: 0;
 }
 .radiant-warn-strip strong { display: block; margin-bottom: 2px; }
-
-/* Monitoring guidance card */
-.result-monitoring {
-  background: #D50032;
-  border: 1px solid #b8002b;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.55;
-  flex-shrink: 0;
-  color: #fff;
-}
-.result-monitoring-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 5px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-}
-
-/* Responsive: stack to single column on narrow screens */
-@media (max-width: 768px) {
-  #hi-tab-result,
-  #hi-utab-result {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    overflow-y: auto;
-  }
-  .result-main    { grid-column: 1; grid-row: 1; padding: 20px 16px; }
-  .result-sidebar { grid-column: 1; grid-row: 2; overflow-y: visible; }
-  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
-}
-
-/* Mobile: simplified result view */
-/* ── Mobile desktop-referral hint inside result-main ── */
-.mobile-result-hint {
-  display: none; /* shown only on mobile via media query below */
-  margin-top: 18px;
-  padding: 12px 14px;
-  background: rgba(0,0,0,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 10px;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: inherit;
-}
-.mobile-result-hint p { margin: 0; }
-.share-email-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 9px 12px;
-  box-sizing: border-box;
-  background: rgba(255,255,255,0.9);
-  color: var(--navy, #1A2A3A) !important;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  font-family: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.12s;
-  white-space: nowrap;
-}
-.share-email-btn:hover { background: #fff; }
 
 /* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
 .hi-trh-switch-chip { display: none; }
@@ -838,8 +670,8 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 
   <!-- ── Acclimatized tab panels ── -->
   <div id="hi-acclim-tabs" style="display:none">
-    <div id="hi-tab-result-wrap" role="tabpanel" aria-labelledby="hi-tab-btn-result" tabindex="0">
-      <div id="hi-tab-result"></div>
+    <div id="hi-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-tab-btn-result" tabindex="0">
+      <div id="hi-tab-result" class="result-grid"></div>
     </div>
     <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0">
       <div class="chart-unit-strip">
@@ -856,8 +688,8 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 
   <!-- ── Unacclimatized tab panels ── -->
   <div id="hi-unacclim-tabs" style="display:none">
-    <div id="hi-utab-result-wrap" role="tabpanel" aria-labelledby="hi-utab-btn-result" tabindex="0">
-      <div id="hi-utab-result"></div>
+    <div id="hi-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-utab-btn-result" tabindex="0">
+      <div id="hi-utab-result" class="result-grid"></div>
     </div>
     <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0">
       <div class="chart-unit-strip">

@@ -81,127 +81,9 @@ main { padding: 0; max-width: none; }
   color: var(--navy, #1A2A3A);
 }
 
-/* ── Result tab — flush below tab bar, centered ── */
-#acclim-tab-result-wrap {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 16px;
-}
-#acclim-tab-result {
-  width: 100%;
-  max-width: 1060px;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: 1fr;
-  gap: 14px;
-  min-height: 0;
-}
-.result-sidebar {
-  grid-column: 2;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-@media (max-width: 768px) {
-  #acclim-tab-result {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    overflow-y: auto;
-  }
-  .result-sidebar {
-    grid-column: 1;
-    grid-row: 2;
-  }
-}
-.result-input-card {
-  background: var(--surface, #F8FAFB);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-}
-.result-input-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--subtext, #6B7785);
-  margin-bottom: 5px;
-}
-.result-input-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--navy, #1A2A3A);
-  line-height: 1.1;
-}
-.result-input-sub {
-  font-size: 12px;
-  color: var(--subtext, #6B7785);
-  margin-top: 3px;
-  line-height: 1.3;
-}
+/* ── WBGT-specific result overrides (layout base: shared.css .result-wrap / .result-grid) ── */
 
-.result-main {
-  border-radius: 14px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  grid-column: 1;
-  grid-row: 1;
-  min-height: 0;
-}
-.result-main-inner {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-.result-clock {
-  flex-shrink: 0;
-}
-.result-text { flex: 1; min-width: 0; }
-.result-label {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  margin-bottom: 8px;
-}
-.result-headline {
-  font-size: clamp(26px, 4vw, 46px);
-  font-weight: 900;
-  line-height: 1.05;
-  margin-bottom: 10px;
-}
-.result-subtext {
-  font-size: 15px;
-  line-height: 1.55;
-  opacity: 0.8;
-  max-width: 440px;
-}
-.result-source {
-  margin-top: 20px;
-  font-size: 11px;
-  opacity: 0.6;
-  font-style: italic;
-}
-
-/* Danger result */
-.result-main.result-danger {
-  background: var(--stop-bg, #AE1515);
-  color: var(--stop-text, #fff);
-}
-
-@media (max-width: 768px) {
-  .result-inputs:not(.result-inputs-below) { grid-template-columns: 1fr 1fr; }
-  .result-main { grid-column: 1; grid-row: 1; padding: 20px 16px; }
-  .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
-  .result-subtext { max-width: 100%; }
-}
-
+/* Worker-type comparison grid (acclimatized vs non) */
 .acclim-worker-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -210,57 +92,10 @@ main { padding: 0; max-width: none; }
 }
 @media (max-width: 768px) {
   .acclim-worker-grid { grid-template-columns: 1fr; }
+  .result-inputs:not(.result-inputs-below) { grid-template-columns: 1fr 1fr; }
 }
-
-/* Monitoring guidance card */
-.result-monitoring {
-  background: #D50032;
-  border: 1px solid #b8002b;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.55;
-  flex-shrink: 0;
-  color: #fff;
-  margin-top: 12px;
-}
-.result-monitoring-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 5px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-}
-
-/* ── Mobile desktop-referral hint inside colored result block ── */
-.mobile-result-hint {
-  display: none;
-  margin-top: 18px;
-  padding: 12px 14px;
-  background: rgba(0,0,0,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 10px;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: inherit;
-}
-.mobile-result-hint p { margin: 0; }
-.share-email-btn {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  width: 100%; padding: 9px 12px; box-sizing: border-box;
-  background: rgba(255,255,255,0.9); color: #1A2A3A !important;
-  border: none; border-radius: 8px; font-size: 13px; font-weight: 800;
-  font-family: inherit; text-decoration: none; cursor: pointer;
-  transition: background 0.12s; white-space: nowrap;
-}
-.share-email-btn:hover { background: #fff; }
+/* Monitoring card sits below the clock/text block on this page */
+.result-monitoring { margin-top: 12px; }
 
 /* ── Mobile-only sticky schedule wrapper — hidden on desktop ── */
 .mobile-sched-sticky { display: none; }
@@ -810,7 +645,7 @@ body.chart-active { overflow: hidden; }
 
   <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
   <div id="wbgt-acclim-tabs" style="display:none">
-    <div id="acclim-tab-result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result"></div></div>
+    <div id="acclim-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result" class="result-grid"></div></div>
     <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
   </div>
 
