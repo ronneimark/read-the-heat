@@ -1746,18 +1746,26 @@
       background: var(--card-accent, #001E62) !important;
       color: #fff !important;
     }
-    .method-card-full .card-left img,
-    .method-card-full .card-left > div:not(h3) {
+    /* Photo wrapper span (JS-injected): is the grid photo cell */
+    .method-card-photo-wrap {
       grid-area: photo !important;
+      position: relative !important;
+      display: block !important;
+      width: 90px !important;
+      height: 90px !important;
+      margin: 8px !important;
+      align-self: center !important;
+      flex-shrink: 0 !important;
+    }
+    .method-card-photo-wrap img {
       width: 90px !important;
       height: 90px !important;
       object-fit: cover !important;
-      align-self: center !important;
-      margin: 8px !important;
-      cursor: zoom-in !important;
       border-radius: 4px !important;
+      margin: 0 !important;
+      display: block !important;
     }
-    /* thermometer-only emoji placeholder */
+    /* thermometer-only emoji placeholder (no img, no wrap) */
     .method-card-full .card-left > div {
       grid-area: photo !important;
       width: 90px !important;

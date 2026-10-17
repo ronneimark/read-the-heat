@@ -746,8 +746,13 @@ body { background: #F6F3EC !important; }
 
     // Wire up all method card photos
     document.querySelectorAll('.method-card-photo').forEach(img => {
-      const wrap = img.parentElement;
-      if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+      // Wrap img in a positioned span so the hint anchors correctly even
+      // when the parent uses display:contents (mobile grid layout)
+      const imgWrap = document.createElement('span');
+      imgWrap.className = 'method-card-photo-wrap';
+      img.parentNode.insertBefore(imgWrap, img);
+      imgWrap.appendChild(img);
+      const wrap = imgWrap;
       img.style.cursor = 'zoom-in';
 
       // "Click / Tap to Enlarge" hint
