@@ -1633,7 +1633,7 @@
   }
 
   /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     /* Body scrolls instead of clipping */
     body { overflow: auto !important; }
     html { height: auto; }
@@ -1659,9 +1659,9 @@
     }
     .ls1-sector-btn { min-height: 90px; font-size: 14px; }
 
-    /* Activity review grid: single column, scrollable panels */
+    /* Activity review grid: two columns, scrollable panels */
     .ls2-review-grid {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: repeat(2, 1fr) !important;
       overflow: visible !important;
       height: auto !important;
       flex: none !important;
