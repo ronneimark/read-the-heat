@@ -113,6 +113,35 @@ main { padding: 0; max-width: none; }
   margin-top: 14px;
   margin-bottom: 0;
 }
+@media (max-width: 600px) {
+  .result-inputs.result-inputs-below {
+    margin-left: -16px;
+    margin-right: -16px;
+    gap: 0;
+  }
+  .result-inputs.result-inputs-below .result-input-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  .result-inputs.result-inputs-below .result-input-card:last-child {
+    border-bottom: none;
+  }
+  .urec-badges.urec-badges-below {
+    margin-left: -14px;
+    margin-right: -14px;
+  }
+  .urec-badges.urec-badges-below .urec-badge {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  .urec-badges.urec-badges-below .urec-badge:last-child {
+    border-bottom: none;
+  }
+}
 .result-input-card {
   background: var(--surface, #F8FAFB);
   border: 1px solid var(--border);
