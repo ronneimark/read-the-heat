@@ -756,7 +756,7 @@
     flex: none !important;
   }
 
-  /* Heading: full-width left-aligned, shrinks to fit */
+  /* Heading: full-width left-aligned, fluid size that always fits */
   .ls1-header {
     grid-template-columns: 1fr !important;
     justify-items: start !important;
@@ -766,17 +766,25 @@
     text-align: left !important;
     justify-self: start !important;
     grid-column: 1 !important;
-    font-size: clamp(14px, 4.2vw, 20px) !important;
-    padding-right: 90px !important; /* keep text from running behind fixed button */
+    /* shrinks from 18px at 320px up to 20px at 480px+; never overflows */
+    font-size: clamp(13px, 3.6vw, 20px) !important;
+    line-height: 1.25 !important;
+    /* right gap keeps text clear of the fixed button */
+    padding-right: 88px !important;
+    word-break: break-word !important;
   }
 
-  /* "How to use this site" button: fixed just below the blue strip */
+  /* "How to use this site" button: fixed, white-backed so content scrolls under */
   .intro-anchor {
     position: fixed !important;
-    right: 10px !important;
+    right: 0 !important;
     z-index: 500 !important;
-    /* default top for 601-768px viewport (header=191px + hazard=10px + strip≈34px) */
+    /* default top for 601–768 px (header=191 + hazard=10 + strip≈37) */
     top: 238px !important;
+    background: #F6F3EC !important;   /* matches page warm-white */
+    padding: 6px 10px 6px 10px !important;
+    box-shadow: -4px 0 10px rgba(0,0,0,0.08) !important;
+    border-radius: 8px 0 0 8px !important;
   }
 }
 
