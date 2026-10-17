@@ -127,17 +127,17 @@
   main {
     flex: 1;
     min-height: 0;
-    display: flex;
-    gap: 18px;
+    position: relative;
     padding: 14px 18px 18px;
   }
 
   /* ── STAGE ───────────────────────────────────────────────────────────── */
   .stage {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
+    height: 100%;
     min-height: 0;
-    position: relative;
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -251,11 +251,15 @@
 
   /* ── ASIDE ───────────────────────────────────────────────────────────── */
   aside {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    bottom: 18px;
     width: 260px;
-    flex: none;
     font-size: 14px;
     color: var(--ink);
     overflow: auto;
+    z-index: 10;
   }
   aside .card {
     background: var(--surface);
@@ -295,7 +299,7 @@
     .bar, main { display: none; }
     .onphone { display: block; }
   }
-  @media (max-width: 1100px) { aside { display: none; } }
+  @media (max-width: 1100px) { aside { display: none !important; } }
 </style>
 </head>
 <body>
@@ -355,6 +359,7 @@
 </div>
 
 <main>
+  <!-- Stage fills full area; device centers within it -->
   <div class="stage" id="stage">
     <div class="scaler" id="scaler">
       <div class="device phone" id="device">
@@ -370,6 +375,7 @@
     </div>
   </div>
 
+  <!-- Aside: absolutely positioned to the far right of main -->
   <aside>
     <div class="card">
       <h2>What you're seeing</h2>
