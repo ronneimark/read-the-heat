@@ -378,6 +378,11 @@ main { padding: 0; max-width: none; }
 /* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
 .hi-trh-switch-chip { display: none; }
 
+/* Mobile sticky schedule button — hidden globally; media query below overrides on mobile */
+.mobile-sched-sticky { display: none; }
+/* Desktop sidebar schedule button — full-width in sidebar */
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
+
 /* ── Mobile: strip hidden in header; appears inline in content when active ── */
 @media (max-width: 768px) {
   /* Strip banished from fixed header */
@@ -605,10 +610,6 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 .hi-notes-text  { font-size: 13px; line-height: 1.55; }
 
 /* ── Acclimatization schedule modal ── */
-/* Mobile sticky button wrapper — hidden by default, shown inside media query */
-.mobile-sched-sticky { display: none; }
-/* Desktop sidebar button — hidden on mobile inside media query */
-.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
 .sched-modal-btn {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--navy,#1A2A3A); color: #fff;

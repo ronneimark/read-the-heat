@@ -310,6 +310,11 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 }
 .share-email-btn:hover { background: #fff; }
 
+/* Mobile sticky schedule button — hidden globally; media query below overrides on mobile */
+.mobile-sched-sticky { display: none; }
+/* Desktop sidebar schedule button — full-width in sidebar */
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
+
 /* Mobile: simplified result view */
 @media (max-width: 768px) {
   /* Override shared.css "padding: 16px !important" shorthand */
@@ -498,10 +503,6 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .reftable-activity-strip .toggle-label { font-size: 12px; font-weight: 600; color: var(--subtext, #484F58); }
 
 /* ── Acclimatization schedule modal ── */
-/* Mobile sticky button wrapper — hidden by default, shown inside media query */
-.mobile-sched-sticky { display: none; }
-/* Desktop sidebar button — hidden on mobile inside media query */
-.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
 .sched-modal-btn {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--navy,#1A2A3A); color: #fff;
