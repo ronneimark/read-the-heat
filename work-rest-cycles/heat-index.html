@@ -1019,27 +1019,33 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     buildHIUnacclimFormulaTab();
   }
 
-  // ── Mobile: move T+RH strip in/out of <main> ─────────────────────────────────
-  function mobileTrhToggle(toTrh) {
+  // ── Mobile: place T+RH strip inline right after the tapped card ─────────────
+  function mobileTrhToggle(toTrh, btn) {
     if (window.innerWidth > 768) {
       // On desktop just call setHiInputMode normally (strip is always visible)
       setHiInputMode(toTrh ? 'trh' : 'hi');
       return;
     }
     const strip    = document.getElementById('hi-trh-strip');
-    const main     = document.querySelector('main');
     const fixedTop = document.getElementById('fixed-top');
     if (toTrh) {
-      // Move strip into main as an inline section
-      if (strip.parentElement !== main) main.insertBefore(strip, main.firstChild);
+      // Find the card that contains the tapped chip and insert strip right after it
+      const card = btn ? btn.closest('.result-input-card') : null;
+      if (card && card.parentElement) {
+        card.parentElement.insertBefore(strip, card.nextSibling);
+      } else {
+        // Fallback: prepend to the sidebar if we can't find the card
+        const sidebar = document.querySelector('.result-sidebar');
+        if (sidebar) sidebar.insertBefore(strip, sidebar.firstChild);
+      }
       strip.classList.add('mobile-trh-inline');
-      // Show a small title row inside the strip on mobile
+      // Add a small header label if not already present
       let mHeader = strip.querySelector('.mobile-trh-header');
       if (!mHeader) {
         mHeader = document.createElement('div');
         mHeader.className = 'mobile-trh-header';
-        mHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:2px';
-        mHeader.innerHTML = `<span style="font-size:12px;font-weight:700;color:var(--navy,#1A2A3A)">Enter Temp + RH</span>`;
+        mHeader.style.cssText = 'font-size:12px;font-weight:700;color:var(--navy,#1A2A3A);margin-bottom:2px';
+        mHeader.textContent = 'Enter Temp + RH';
         strip.insertBefore(mHeader, strip.firstChild);
       }
       // Force inputs row visible
@@ -1299,8 +1305,8 @@ body.hi-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-value">${valDisplay}</div>
           <div class="result-input-sub">Range: ${rowLabel}</div>
           ${inTrhMode
-            ? `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(false)" aria-label="Switch to direct heat index entry">↔ Enter Heat Index directly</button>`
-            : `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(true)" aria-label="Switch to temperature and humidity entry">↔ Temp + RH</button>`
+            ? `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(false,this)" aria-label="Switch to direct heat index entry">↔ Enter Heat Index directly</button>`
+            : `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(true,this)" aria-label="Switch to temperature and humidity entry">↔ Temp + RH</button>`
           }
         </div>
         <div class="result-input-card">
