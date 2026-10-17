@@ -1837,14 +1837,14 @@
     width: 26px;
     height: 26px;
     text-decoration: none;
-    background: rgba(255,255,255,0.15);
-    border: 1.5px solid rgba(255,255,255,0.35);
+    background: #FFD700;
+    border: 1.5px solid #e6c000;
     border-radius: 50%;
     font-size: 16px;
     line-height: 1;
     flex-shrink: 0;
   }
-  .wrc-sdot-results:hover { background: rgba(255,255,255,0.28); }
+  .wrc-sdot-results:hover { background: #ffe033; }
   /* Reset button sits after Results — no left auto needed when both present */
   .wrc-sdot-results + .wrc-sdot-reset { margin-left: 6px; }
   /* #mobile-step-indicator visibility and breadcrumb hiding handled by JS (avoids nested @media issues) */
