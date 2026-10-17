@@ -338,18 +338,44 @@ main { padding: 0; max-width: none; }
 /* ── Mobile desktop-referral hint inside result-main ── */
 .mobile-result-hint {
   display: none; /* shown only on mobile via media query below */
-  margin-top: 16px;
-  padding: 10px 12px;
-  background: rgba(255,255,255,0.18);
-  border-radius: 8px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
   flex-direction: column;
-  gap: 8px;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1.45;
   color: inherit;
 }
-.mobile-result-hint p { margin: 0; opacity: 0.92; }
+.mobile-result-hint p { margin: 0; }
+.share-url-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.share-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  font-size: 10px;
+  font-family: monospace;
+  background: rgba(255,255,255,0.85);
+  color: var(--navy, #1A2A3A);
+  border: none;
+  border-radius: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+  -webkit-user-select: all;
+  user-select: all;
+}
+.share-url-input:focus { outline: 2px solid rgba(255,255,255,0.7); }
 .share-link-btn {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -357,12 +383,13 @@ main { padding: 0; max-width: none; }
   background: rgba(255,255,255,0.88);
   color: var(--navy, #1A2A3A) !important;
   border: none;
-  border-radius: 999px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.12s;
+  white-space: nowrap;
 }
 .share-link-btn:hover { background: #fff; }
 
@@ -1331,10 +1358,19 @@ body.hi-unacclim-chart-active { overflow: hidden; }
             ${trhDerivation}
           </div>
         </div>
-        <div class="mobile-result-hint">
-          <p>📊 Charts, notes &amp; formula check are available on a larger screen.</p>
-          <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy shareable link</button>
-        </div>
+        ${(function(){
+          const u = buildShareUrl();
+          if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;
+          const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your heat index work-rest cycle results:\n\n' + u);
+          return `<div class="mobile-result-hint">
+            <p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p>
+            <div class="share-url-row">
+              <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
+              <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
+              <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
+            </div>
+          </div>`;
+        })()}
       </div>
       <div class="result-sidebar">
         ${trhCards}

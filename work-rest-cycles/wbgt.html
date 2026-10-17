@@ -185,6 +185,38 @@ main { padding: 0; max-width: none; }
   .result-subtext { max-width: 100%; }
 }
 
+/* ── Mobile desktop-referral hint inside colored result block ── */
+.mobile-result-hint {
+  display: none;
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: inherit;
+}
+.mobile-result-hint p { margin: 0; }
+.share-url-row { display: flex; align-items: stretch; gap: 6px; }
+.share-url-input {
+  flex: 1; min-width: 0; padding: 6px 8px; font-size: 10px; font-family: monospace;
+  background: rgba(255,255,255,0.9); color: #1A2A3A; border: none; border-radius: 6px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: text;
+  -webkit-user-select: all; user-select: all;
+}
+.share-url-input:focus { outline: 2px solid rgba(255,255,255,0.7); }
+.share-link-btn {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 11px; background: rgba(255,255,255,0.9); color: #1A2A3A !important;
+  border: none; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;
+  font-family: inherit; transition: background 0.12s; white-space: nowrap; text-decoration: none;
+}
+.share-link-btn:hover { background: #fff; }
+
 /* ── Mobile: simplified result view ──
    Hide tab bars and chart panes; show only the result/schedule card.
    A hint at the bottom refers users to desktop for charts and full tables. */
@@ -272,6 +304,9 @@ main { padding: 0; max-width: none; }
     border-top: 1px solid var(--border, #D8DFE8);
     margin-top: 4px;
   }
+
+  /* Mobile result hint inside colored block */
+  .mobile-result-hint { display: flex; }
 }
 
 /* ── Chart tab ── */
@@ -1048,6 +1083,19 @@ body.chart-active { overflow: hidden; }
             <div class="result-subtext">${subtext}</div>
             <div class="result-source">NIOSH Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (2016), Table B-2</div>
           </div>
+          ${(function(){
+            const u = buildShareUrl();
+            if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
+            const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
+            return `<div class="mobile-result-hint">
+              <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
+              <div class="share-url-row">
+                <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
+                <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
+                <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
+              </div>
+            </div>`;
+          })()}
         </div>
       </div>`;
 
@@ -1349,6 +1397,19 @@ body.chart-active { overflow: hidden; }
             <div class="urec-rec-headline">${headline}</div>
             <div class="urec-rec-sub">${subtext}</div>
           </div>
+          ${(function(){
+            const u = buildShareUrl();
+            if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
+            const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
+            return `<div class="mobile-result-hint">
+              <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
+              <div class="share-url-row">
+                <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
+                <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
+                <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
+              </div>
+            </div>`;
+          })()}
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>`;
@@ -1565,6 +1626,67 @@ body.chart-active { overflow: hidden; }
     });
   }
 
+  // ── Shareable URL ──
+  function buildShareUrl() {
+    const s = WRC.get();
+    const rawVal = s.measValue;
+    if (rawVal == null || s.instrument !== 'wbgt') return null;
+    const p = new URLSearchParams();
+    p.set('wbgt', rawVal);
+    p.set('unit', s.measUnit || 'F');
+    p.set('act', s.activity || 'moderate');
+    const ws = s.workerStatus || 'acclimatized';
+    if (ws !== 'acclimatized') p.set('status', ws);
+    if (s.clothingAdjustF) p.set('adj', s.clothingAdjustF);
+    return location.origin + location.pathname + '?' + p.toString();
+  }
+
+  function copyShareLink(btn) {
+    const url = buildShareUrl();
+    if (!url) {
+      if (btn) { btn.textContent = '⚠ No data'; setTimeout(() => { btn.textContent = '🔗 Copy'; }, 2000); }
+      return;
+    }
+    const restore = () => { if (btn) { btn.innerHTML = '🔗 Copy'; btn.style.opacity = ''; } };
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+      setTimeout(restore, 2400);
+    }).catch(() => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+        setTimeout(restore, 2400);
+      } catch(e) { if (btn) { btn.innerHTML = '⚠ Failed'; setTimeout(restore, 2000); } }
+    });
+  }
+
+  function hydrateFromUrl() {
+    const p = new URLSearchParams(location.search);
+    if (!p.has('wbgt')) return false;
+    const val = parseFloat(p.get('wbgt'));
+    if (isNaN(val)) return false;
+    const unit   = p.get('unit')   || 'F';
+    const act    = p.get('act')    || 'moderate';
+    const status = p.get('status') || 'acclimatized';
+    const adjF   = p.has('adj') ? (parseFloat(p.get('adj')) || 0) : 0;
+    const adjC   = adjF ? Math.round(adjF * 5/9 * 10) / 10 : 0;
+    WRC.set({
+      instrument: 'wbgt',
+      measValue: val,
+      measUnit: unit,
+      activity: act,
+      activityLabel: act.charAt(0).toUpperCase() + act.slice(1) + ' Work',
+      workerStatus: status,
+      workerStatusTable: status,
+      clothingAdjustF: adjF,
+      clothingAdjustC: adjC
+    });
+    return true;
+  }
+
   let _sessionMode = ''; // 'acclim' | 'unacclim' | ''
 
   function updateLayout() {
@@ -1579,6 +1701,7 @@ body.chart-active { overflow: hidden; }
   }
 
   async function init() {
+    hydrateFromUrl();
     await initData();
     const s = WRC.get();
     workerStatus = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));

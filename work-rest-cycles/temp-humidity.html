@@ -283,6 +283,38 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
+/* ── Mobile desktop-referral hint inside colored result block ── */
+.mobile-result-hint {
+  display: none;
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: inherit;
+}
+.mobile-result-hint p { margin: 0; }
+.share-url-row { display: flex; align-items: stretch; gap: 6px; }
+.share-url-input {
+  flex: 1; min-width: 0; padding: 6px 8px; font-size: 10px; font-family: monospace;
+  background: rgba(255,255,255,0.9); color: #1A2A3A; border: none; border-radius: 6px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: text;
+  -webkit-user-select: all; user-select: all;
+}
+.share-url-input:focus { outline: 2px solid rgba(255,255,255,0.7); }
+.share-link-btn {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 11px; background: rgba(255,255,255,0.9); color: #1A2A3A !important;
+  border: none; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;
+  font-family: inherit; transition: background 0.12s; white-space: nowrap; text-decoration: none;
+}
+.share-link-btn:hover { background: #fff; }
+
 /* Mobile: simplified result view */
 @media (max-width: 768px) {
   /* Override shared.css "padding: 16px !important" shorthand */
@@ -315,6 +347,9 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     border-top: 1px solid var(--border, #D8DFE8);
     margin-top: 4px;
   }
+
+  /* Show hint inside colored block */
+  .mobile-result-hint { display: flex; }
 }
 
 /* ── Chart tabs ── */
@@ -1134,6 +1169,19 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         <div class="radiant-warn-strip" role="note">
           <strong><span aria-hidden="true">⚠ </span>Radiant heat limitation:</strong> Heat Index does not account for radiant heat from equipment, machinery, ovens, or solar load. In work areas with high levels of radiant heat, Heat Index may significantly underestimate heat stress. Use WBGT when radiant heat sources are present.
         </div>
+        ${(function(){
+          const u = buildShareUrl();
+          if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;
+          const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your heat index work-rest cycle results:\n\n' + u);
+          return `<div class="mobile-result-hint">
+            <p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p>
+            <div class="share-url-row">
+              <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
+              <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
+              <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
+            </div>
+          </div>`;
+        })()}
       </div>
       <div class="result-sidebar">
         ${trhCards}
@@ -1518,6 +1566,76 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     updateLayout();
   }
 
+  // ── Shareable URL ──────────────────────────────────────────────────────────────
+  function buildShareUrl() {
+    if (_hiTempValF == null || _hiRhVal == null) return null;
+    const p = new URLSearchParams();
+    p.set('temp', _hiTempValF);
+    p.set('rh',   _hiRhVal);
+    p.set('unit', _hiUnit);
+    p.set('act',  _hiActivity);
+    if (workerStatus && workerStatus !== 'acclimatized') p.set('status', workerStatus);
+    return location.origin + location.pathname + '?' + p.toString();
+  }
+
+  function copyShareLink(btn) {
+    const url = buildShareUrl();
+    if (!url) {
+      if (btn) { btn.textContent = '⚠ No data'; setTimeout(() => { btn.textContent = '🔗 Copy'; }, 2000); }
+      return;
+    }
+    const restore = () => { if (btn) { btn.innerHTML = '🔗 Copy'; btn.style.opacity = ''; } };
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+      setTimeout(restore, 2400);
+    }).catch(() => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+        setTimeout(restore, 2400);
+      } catch(e) { if (btn) { btn.innerHTML = '⚠ Failed'; setTimeout(restore, 2000); } }
+    });
+  }
+
+  function hydrateFromUrl() {
+    const p = new URLSearchParams(location.search);
+    if (!p.has('temp') || !p.has('rh')) return false;
+    const tF = parseFloat(p.get('temp'));
+    const rh = parseFloat(p.get('rh'));
+    if (isNaN(tF) || isNaN(rh)) return false;
+    const unit   = p.get('unit')   || 'F';
+    const act    = p.get('act')    || 'moderate';
+    const status = p.get('status') || 'acclimatized';
+    _hiUnit       = unit;
+    _hiActivity   = act;
+    workerStatus  = status;
+    _hiTempValF   = tF;
+    _hiRhVal      = rh;
+    if (typeof calcRothfuszHI === 'function') {
+      _hiCalcHI   = calcRothfuszHI(tF, rh);
+      _hiStoredVal  = _hiCalcHI;
+      _hiStoredUnit = 'F';
+    }
+    const tempEl = document.getElementById('trh-temp');
+    const rhEl   = document.getElementById('trh-rh');
+    if (tempEl) tempEl.value = unit === 'C' ? Math.round((tF - 32) * 5/9 * 10) / 10 : tF;
+    if (rhEl)   rhEl.value   = rh;
+    WRC.set({
+      activity: act,
+      activityLabel: act.charAt(0).toUpperCase() + act.slice(1) + ' Work',
+      workerStatus: status,
+      workerStatusTable: status,
+      measUnit: unit,
+      measTemp: tF,
+      measRH: rh,
+      derivedHI: _hiCalcHI || null
+    });
+    return true;
+  }
+
   // ── Layout ────────────────────────────────────────────────────────────────────
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
@@ -1532,6 +1650,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   // ── Init ──────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    hydrateFromUrl();
     const s = WRC.get();
     const status   = s.workerStatusTable || s.workerStatus || 'acclimatized';
     const act      = s.activity || 'moderate';
