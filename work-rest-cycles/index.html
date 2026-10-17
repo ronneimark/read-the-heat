@@ -51,6 +51,7 @@
         <!-- tabbed popover -->
         <div class="intro-popover" id="intro-popover" hidden role="dialog" aria-label="How to use this tool">
           <div class="intro-popover-arrow"></div>
+          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close">&times;</button>
 
           <!-- intro paragraph above tabs -->
           <div class="intro-preamble">
@@ -223,6 +224,32 @@
 </div><!-- /launcher -->
 
 <style>
+/* ── modal close button (mobile only) ── */
+.intro-popover-close {
+  display: none; /* hidden on desktop; shown via mobile @media above */
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.08);
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.intro-popover-close:hover { background: rgba(0,0,0,0.15); }
+@media (prefers-color-scheme: dark) {
+  .intro-popover-close { background: rgba(255,255,255,0.12); color: #dde2ee; }
+  .intro-popover-close:hover { background: rgba(255,255,255,0.22); }
+}
+
 /* ── health factors note ── */
 .intro-health-note {
   display: block;
@@ -756,35 +783,50 @@
     flex: none !important;
   }
 
-  /* Heading: full-width left-aligned, fluid size that always fits */
+  /* Heading: full-width, left-aligned, sits below the fixed "How to use" bar */
   .ls1-header {
     grid-template-columns: 1fr !important;
     justify-items: start !important;
     gap: 0 !important;
+    /* push heading below the fixed button bar (~44px tall) */
+    padding-top: 50px !important;
   }
   .ls1-header .ls-heading {
     text-align: left !important;
     justify-self: start !important;
     grid-column: 1 !important;
-    /* shrinks from 18px at 320px up to 20px at 480px+; never overflows */
     font-size: clamp(13px, 3.6vw, 20px) !important;
     line-height: 1.25 !important;
-    /* right gap keeps text clear of the fixed button */
-    padding-right: 88px !important;
+    padding-right: 0 !important;   /* button is above, not beside */
     word-break: break-word !important;
   }
 
-  /* "How to use this site" button: fixed, white-backed so content scrolls under */
+  /* "How to use this site" bar: full-width, centered button */
   .intro-anchor {
     position: fixed !important;
+    left: 0 !important;
     right: 0 !important;
+    width: 100% !important;
     z-index: 500 !important;
     /* default top for 601–768 px (header=191 + hazard=10 + strip≈37) */
     top: 238px !important;
-    background: #F6F3EC !important;   /* matches page warm-white */
-    padding: 6px 10px 6px 10px !important;
-    box-shadow: -4px 0 10px rgba(0,0,0,0.08) !important;
-    border-radius: 8px 0 0 8px !important;
+    background: #F6F3EC !important;
+    padding: 6px 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10) !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* modal: collapse dead space between panels and footer notes */
+  .intro-tab-panels {
+    flex: none !important;
+    min-height: 0 !important;
+  }
+  /* close button — visible on mobile only */
+  .intro-popover-close {
+    display: flex !important;
   }
 }
 
@@ -897,6 +939,8 @@
   }
 
   function lockPanelHeight() {
+    // On mobile the panels container is flex:none so no locking needed.
+    if (window.innerWidth <= 768) return;
     // Measure each tab panel at its natural height, fix the panels container
     // to the tallest so tab switches never shrink the modal.
     const panelsWrap = document.querySelector('.intro-tab-panels');
