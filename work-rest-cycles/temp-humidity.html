@@ -367,6 +367,29 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   .mobile-sched-sticky .sched-modal-btn { width: 100%; justify-content: center; border-radius: 10px; margin-top: 0; }
   /* Hide desktop sidebar button on mobile */
   .desktop-sched-btn { display: none !important; }
+
+  .mobile-sched-inline {
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .mobile-sched-inline .sched-inline-title {
+    font-size: 15px; font-weight: 800; color: var(--navy, #1A2A3A); margin-bottom: 2px;
+  }
+  .mobile-sched-inline .sched-inline-sub {
+    font-size: 11px; color: var(--subtext, #6B7785); margin-bottom: 10px; line-height: 1.4;
+  }
+  .mobile-sched-inline .sched-inline-foot {
+    background: var(--warn-bg, #FFF3E0); color: var(--warn-text, #7B2500);
+    border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 11px;
+    border-left: 3px solid var(--warn-text, #7B2500); margin-top: 10px;
+  }
+  .mobile-sched-inline .sched-inline-fn {
+    font-size: 10px; color: var(--subtext); font-style: italic; margin-top: 5px;
+  }
 }
 
 /* ── Chart tabs ── */
@@ -860,6 +883,31 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   function openSchedModal(btn) {
     if (!_schedCell) return;
     const isNew = workerStatus !== 'unacclimatized-returning';
+    const sched = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const sub   = (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  Times shown per 60-min period';
+    const gridHtml = '<div class="urec-sched-grid">' + _buildSchedRows(sched, _schedCell) + '</div>';
+
+    if (window.innerWidth <= 768) {
+      // ── Mobile: toggle inline panel below the sticky button ──
+      const inline = document.getElementById('mobile-sched-inline');
+      if (!inline) return;
+      if (!inline.hidden) {
+        inline.hidden = true;
+        if (btn) { btn.innerHTML = '📅 View Acclimatization Schedule'; btn.setAttribute('aria-expanded','false'); }
+        return;
+      }
+      inline.innerHTML = `
+        <div class="sched-inline-title">📅 Acclimatization Schedule</div>
+        <div class="sched-inline-sub">${sub}</div>
+        ${gridHtml}
+        <div class="sched-inline-foot">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+        <div class="sched-inline-fn">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>`;
+      inline.hidden = false;
+      if (btn) { btn.innerHTML = '✕ Close Schedule'; btn.setAttribute('aria-expanded','true'); }
+      return;
+    }
+
+    // ── Desktop: position modal above the button ──
     const tabsEl = document.querySelector('.sched-type-tabs');
     if (workerStatus === 'unacclimatized-new' || workerStatus === 'unacclimatized-returning') {
       tabsEl.style.display = 'none';
@@ -867,8 +915,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       tabsEl.style.display = '';
       document.querySelectorAll('.sched-type-tab').forEach((b,i) => b.classList.toggle('active', i === (isNew ? 0 : 1)));
     }
-    document.getElementById('sched-dialog-grid').innerHTML =
-      '<div class="urec-sched-grid">' + _buildSchedRows(isNew ? SCHED_NEW : SCHED_RETURNING, _schedCell) + '</div>';
+    document.getElementById('sched-dialog-grid').innerHTML = gridHtml;
     const dlg = document.getElementById('sched-dialog');
     if (btn) {
       const rect = btn.getBoundingClientRect();
