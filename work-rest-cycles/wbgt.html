@@ -228,21 +228,15 @@ main { padding: 0; max-width: none; }
   color: inherit;
 }
 .mobile-result-hint p { margin: 0; }
-.share-url-row { display: flex; align-items: stretch; gap: 6px; }
-.share-url-input {
-  flex: 1; min-width: 0; padding: 6px 8px; font-size: 10px; font-family: monospace;
-  background: rgba(255,255,255,0.9); color: #1A2A3A; border: none; border-radius: 6px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: text;
-  -webkit-user-select: all; user-select: all;
+.share-email-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; padding: 9px 12px; box-sizing: border-box;
+  background: rgba(255,255,255,0.9); color: #1A2A3A !important;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 800;
+  font-family: inherit; text-decoration: none; cursor: pointer;
+  transition: background 0.12s; white-space: nowrap;
 }
-.share-url-input:focus { outline: 2px solid rgba(255,255,255,0.7); }
-.share-link-btn {
-  flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
-  padding: 6px 11px; background: rgba(255,255,255,0.9); color: #1A2A3A !important;
-  border: none; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;
-  font-family: inherit; transition: background 0.12s; white-space: nowrap; text-decoration: none;
-}
-.share-link-btn:hover { background: #fff; }
+.share-email-btn:hover { background: #fff; }
 
 /* ── Mobile: simplified result view ──
    Hide tab bars and chart panes; show only the result/schedule card.
@@ -1142,11 +1136,7 @@ body.chart-active { overflow: hidden; }
             const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
             return `<div class="mobile-result-hint">
               <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
-              <div class="share-url-row">
-                <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
-                <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
-                <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
-              </div>
+              <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
             </div>`;
           })()}
           ${monitoringHtml}
@@ -1470,11 +1460,7 @@ body.chart-active { overflow: hidden; }
             const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
             return `<div class="mobile-result-hint">
               <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
-              <div class="share-url-row">
-                <input class="share-url-input" type="text" readonly value="${u.replace(/"/g,'&quot;')}" onclick="this.select()" aria-label="Shareable link">
-                <a class="share-link-btn" href="${mailHref.replace(/"/g,'&quot;')}" aria-label="Email this link">📧</a>
-                <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy</button>
-              </div>
+              <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
             </div>`;
           })()}
           ${unacclimMonitoringHtml}
