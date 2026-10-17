@@ -661,11 +661,8 @@ function updateLayout() {
   if (!fixedTop) return;
   const defPanel = document.getElementById('def-panels-container');
 
-  // Sum all fixed elements stacked at the top
-  let fixedH = fixedTop.offsetHeight;
-  const strip2 = document.getElementById('wrc-result-strip');
-  if (strip2 && strip2.style.display !== 'none') fixedH += strip2.offsetHeight;
-  // intro-anchor bar (index.html) adds its own height via its page override; skip here
+  // #wrc-result-strip is inside #fixed-top so its height is already included
+  const fixedH = fixedTop.offsetHeight;
 
   if (defPanel) {
     defPanel.style.top = fixedH + 'px';
