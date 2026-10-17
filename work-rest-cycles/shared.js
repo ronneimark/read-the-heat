@@ -636,12 +636,10 @@ function buildBreadcrumbs() {
   }
 
   // ── Second strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
-  // Suppressed on result pages — the measurement is already the page content there
-  const isResultPage = /\/(wbgt|temp-humidity|heat-index)\.html/.test(window.location.pathname);
   const mainStrip = document.querySelector('.wrc-banner-strip');
   let strip2 = document.getElementById('wrc-result-strip');
 
-  if (stepDone[4] && mainStrip && window.innerWidth <= 768 && !isResultPage) {
+  if (stepDone[4] && mainStrip && window.innerWidth <= 768) {
     if (!strip2) {
       strip2 = document.createElement('div');
       strip2.id = 'wrc-result-strip';
