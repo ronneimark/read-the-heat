@@ -314,9 +314,11 @@ body { background: #F6F3EC !important; }
     animation: none !important;
   }
 
-  /* Scroll-connected: absolute positioning scrolls with the page instead of floating fixed */
+  /* Scroll-connected: absolute positioning scrolls with the page instead of floating fixed.
+     z-index below #fixed-top (1000) so the modal slides under the sticky header on scroll. */
   #meas-modal-overlay {
     position: absolute;
+    z-index: 900;
   }
 
   /* Condense modal padding so more vertical space is available */
