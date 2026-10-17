@@ -801,21 +801,29 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
   function _buildSchedRows(sched, cell) {
     const accent = '#E05C2C';
+    const isContinuous = cell && cell.w === null;
     let html = '';
     sched.forEach(d => {
       const isFull  = d.pct === 100;
-      const f       = d.pct / 100;
-      const workMin = cell ? Math.round(cell.w * f) : 0;
-      const restMin = cell ? Math.round(cell.r * f) : 0;
-      const outside = cell ? (60 - workMin - restMin) : 0;
       let timesHtml = '';
-      if (d.pct < 100) {
-        timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
-          (restMin > 0 ? `<span class="urec-time-rest">${restMin} min rest in heat</span>` : '') +
-          `<span class="urec-time-out">${outside} min outside heat</span>`;
+      if (isContinuous) {
+        // Continuous work — show percentage guidance only
+        timesHtml = d.pct < 100
+          ? `<span class="urec-time-work">Limit heat exposure to ${d.pct}% of shift</span>`
+          : `<span class="urec-time-work">Full shift — normal work practice</span>`;
       } else {
-        timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
-          `<span class="urec-time-rest">${restMin} min rest in heat</span>`;
+        const f       = d.pct / 100;
+        const workMin = cell ? Math.round(cell.w * f) : 0;
+        const restMin = cell ? Math.round(cell.r * f) : 0;
+        const outside = cell ? (60 - workMin - restMin) : 0;
+        if (d.pct < 100) {
+          timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+            (restMin > 0 ? `<span class="urec-time-rest">${restMin} min rest in heat</span>` : '') +
+            `<span class="urec-time-out">${outside} min outside heat</span>`;
+        } else {
+          timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+            `<span class="urec-time-rest">${restMin} min rest in heat</span>`;
+        }
       }
       html += `<div class="urec-day-row${isFull?' urec-day-full':''}">
         <div class="urec-day-label">${d.day}</div>
@@ -1193,9 +1201,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
           <div class="result-input-sub">${workerSub}</div>
         </div>
         ${(function(){ const s=WRC.get(); return s.clothingAdjustC > 0 ? `<div class="radiant-warn-strip" role="note" style="background:#fff3e0;border-color:#e65100;color:#7f2900"><strong><span aria-hidden="true">🦺 </span>Impermeable PPE selected:</strong> The +${s.clothingAdjustC}°C / +${s.clothingAdjustF}°F clothing correction cannot be applied to Heat Index. For impermeable PPE, use <a href="wbgt.html" style="color:#c74600">WBGT</a> where the correction is applied automatically.</div>` : ''; })()}
-        ${(workerLabel === 'Unacclimatized' && cell && cell.w !== null) ? `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
+        ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
       </div>`;
-    if (workerLabel === 'Unacclimatized' && cell && cell.w !== null) _schedCell = cell;
+    if (workerLabel === 'Unacclimatized' && cell) _schedCell = cell;
     return { rowIdx, colIdx };
   }
 

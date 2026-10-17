@@ -1443,10 +1443,8 @@ body.chart-active { overflow: hidden; }
     window._wrcUnacclimRowIdx = rowIdx;
     window._wrcUnacclimColIdx = colIdx;
 
-    const isContinuous = wr && wr.w === 60;
-
-    // Store schedule data for modal
-    window._schedData = isContinuous ? null : {
+    // Store schedule data for modal (always — applies to continuous work too)
+    window._schedData = {
       dayRowsHtml,
       sub: (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  Times shown per 60-min period'
     };
@@ -1454,11 +1452,10 @@ body.chart-active { overflow: hidden; }
     // Inject into the two-panel wrapper directly
     document.getElementById('unacclim-tab-0-wrap').innerHTML = `
       <div class="urec-left urec-left-full">
-        ${isContinuous ? '' : `
         <div class="mobile-sched-sticky">
           <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
           <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
-        </div>`}
+        </div>
         <div class="urec-rec-block${cls==='c-stop'?' result-danger':''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
           <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
