@@ -185,20 +185,26 @@ main { padding: 0; max-width: none; }
   .result-subtext { max-width: 100%; }
 }
 
-/* ── Mobile: release fixed-position panes to normal scroll flow ──
-   On mobile the header (#fixed-top) grows with context + result strips
-   and multi-row tab bar. Converting to flow layout keeps content
-   visible regardless of header height; main's paddingTop handles offset. */
+/* ── Mobile: simplified result view ──
+   Hide tab bars and chart panes; show only the result/schedule card.
+   A hint at the bottom refers users to desktop for charts and full tables. */
 @media (max-width: 768px) {
-  body.chart-active { overflow: auto !important; }
+  /* Hide tab bars — no switching on mobile */
+  #acclim-tab-bar-wrap,
+  #unacclim-tab-bar-wrap { display: none !important; }
 
-  /* Result pane (tab 0) — full-width scrollable card */
+  /* Force all non-result panes hidden */
+  #acclim-tab-chart,
+  #unacclim-tab-chart,
+  #unacclim-tab-schedule,
+  #unacclim-tab-notes { display: none !important; }
+
+  /* Release result panes from fixed positioning */
   #unacclim-tab-0-wrap {
     position: static !important;
     display: block !important;
     height: auto !important;
     overflow: visible !important;
-    min-height: 0 !important;
   }
   #unacclim-tab-0-wrap .urec-left {
     flex: none !important;
@@ -206,24 +212,20 @@ main { padding: 0; max-width: none; }
     max-width: 100% !important;
     padding: 12px 14px 20px !important;
   }
-
-  /* Chart panes — scrollable */
-  #acclim-tab-chart,
-  #unacclim-tab-chart {
-    position: static !important;
-    height: auto !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-  }
-  .acclim-chart-grid {
-    height: auto !important;
-    min-height: 360px;
-  }
-
-  /* Acclim result pane (tab) — already flow, just ensure min height */
   #acclim-tab-result-wrap {
-    min-height: 60vh;
     align-items: flex-start !important;
+  }
+
+  /* Desktop-referral hint */
+  .mobile-full-hint {
+    display: block !important;
+    text-align: center;
+    padding: 14px 20px 28px;
+    font-size: 13px;
+    color: var(--subtext, #6B7C93);
+    font-style: italic;
+    border-top: 1px solid var(--border, #D8DFE8);
+    margin-top: 4px;
   }
 }
 
@@ -603,6 +605,10 @@ body.chart-active { overflow: hidden; }
 </div><!-- /fixed-top -->
 
 <main>
+
+  <div class="mobile-full-hint" style="display:none">
+    🖥️ Open on a desktop or tablet to see full charts and detailed tables.
+  </div>
 
   <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
   <div id="wbgt-acclim-tabs" style="display:none">

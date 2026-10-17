@@ -334,28 +334,34 @@ main { padding: 0; max-width: none; }
   .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
-/* Mobile: release fixed panes to flow layout */
+/* Mobile: simplified result view */
 @media (max-width: 768px) {
-  body.hi-chart-active,
-  body.hi-unacclim-chart-active { overflow: auto !important; }
+  /* Hide tab bars — no switching on mobile */
+  #hi-acclim-tab-bar-wrap,
+  #hi-unacclim-tab-bar-wrap { display: none !important; }
 
+  /* Force non-result panes hidden */
+  #hi-tab-chart, #hi-tab-notes, #hi-tab-formula,
+  #hi-utab-chart, #hi-utab-notes, #hi-utab-formula,
+  #hi-formula-footnote { display: none !important; }
+
+  /* Release result panes from fixed/viewport-height sizing */
   #hi-tab-result-wrap,
   #hi-utab-result-wrap {
     height: auto !important;
-    min-height: 60vh;
     overflow: visible !important;
   }
 
-  #hi-tab-chart,
-  #hi-utab-chart {
-    position: static !important;
-    height: auto !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-  }
-  .hi-chart-grid {
-    height: auto !important;
-    min-height: 360px;
+  /* Desktop-referral hint */
+  .mobile-full-hint {
+    display: block !important;
+    text-align: center;
+    padding: 14px 20px 28px;
+    font-size: 13px;
+    color: var(--subtext, #6B7C93);
+    font-style: italic;
+    border-top: 1px solid var(--border, #D8DFE8);
+    margin-top: 4px;
   }
 }
 
@@ -676,6 +682,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
 </div><!-- /fixed-top -->
 
 <main>
+
+  <div class="mobile-full-hint" style="display:none">
+    🖥️ Open on a desktop or tablet to see full charts and detailed tables.
+  </div>
 
   <!-- ── Acclimatized tab panels ── -->
   <div id="hi-acclim-tabs" style="display:none">

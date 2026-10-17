@@ -283,28 +283,34 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   .result-main-inner { flex-direction: column; text-align: center; gap: 16px; }
 }
 
-/* Mobile: release fixed panes to flow layout */
+/* Mobile: simplified result view */
 @media (max-width: 768px) {
-  body.trh-chart-active,
-  body.trh-unacclim-chart-active { overflow: auto !important; }
+  /* Hide tab bars — no switching on mobile */
+  #trh-acclim-tab-bar-wrap,
+  #trh-unacclim-tab-bar-wrap { display: none !important; }
 
+  /* Force non-result panes hidden */
+  #trh-tab-chart, #trh-tab-notes, #trh-tab-formula, #trh-tab-reftable,
+  #trh-utab-chart, #trh-utab-notes, #trh-utab-formula, #trh-utab-reftable,
+  #trh-formula-footnote { display: none !important; }
+
+  /* Release result panes from fixed/viewport-height sizing */
   #trh-tab-result-wrap,
   #trh-utab-result-wrap {
     height: auto !important;
-    min-height: 60vh;
     overflow: visible !important;
   }
 
-  #trh-tab-chart,
-  #trh-utab-chart {
-    position: static !important;
-    height: auto !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-  }
-  .trh-chart-grid {
-    height: auto !important;
-    min-height: 360px;
+  /* Desktop-referral hint */
+  .mobile-full-hint {
+    display: block !important;
+    text-align: center;
+    padding: 14px 20px 28px;
+    font-size: 13px;
+    color: var(--subtext, #6B7C93);
+    font-style: italic;
+    border-top: 1px solid var(--border, #D8DFE8);
+    margin-top: 4px;
   }
 }
 
@@ -628,6 +634,10 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 </div><!-- /fixed-top -->
 
 <main>
+
+  <div class="mobile-full-hint" style="display:none">
+    🖥️ Open on a desktop or tablet to see full charts and detailed tables.
+  </div>
 
   <!-- ── Acclimatized tab panels ── -->
   <div id="trh-acclim-tabs" style="display:none">
