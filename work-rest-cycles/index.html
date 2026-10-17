@@ -795,7 +795,7 @@
     text-align: left !important;
     justify-self: start !important;
     grid-column: 1 !important;
-    font-size: clamp(13px, 3.6vw, 20px) !important;
+    font-size: clamp(11px, 3.1vw, 16px) !important;
     line-height: 1.25 !important;
     padding-right: 0 !important;   /* button is above, not beside */
     word-break: break-word !important;
@@ -842,13 +842,13 @@
     background: #f3f4f7 !important;
   }
 
-  /* close button: fixed at bottom-right of the modal */
+  /* close button: fixed just below the blue strip, right side */
   .intro-popover-close {
     display: flex !important;
     position: fixed !important;
-    bottom: 16px !important;
-    right: 16px !important;
-    top: auto !important;
+    top: 244px !important;   /* 601–768px: anchor top(238) + half bar padding */
+    right: 12px !important;
+    bottom: auto !important;
     left: auto !important;
   }
 }
@@ -861,10 +861,13 @@
   :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
 }
 
-/* Recalculate top when header collapses to 80px (≤600px) */
+/* Recalculate tops when header collapses to 80px (≤600px) */
 @media (max-width: 600px) {
   .intro-anchor {
     top: 126px !important; /* hazard(10) + header(80) + strip(~36) */
+  }
+  .intro-popover-close {
+    top: 132px !important;
   }
 }
 
