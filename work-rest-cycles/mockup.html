@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="shared.css">
 <!--
   Device preview for Read the Heat & Take a Beat.
   Modelled on the Counter the Cough device-preview.html layout:
@@ -18,7 +19,6 @@
   :root {
     --navy:   #001E62;
     --red:    #D50032;
-    --amber:  #E07B00;
     --ink:    #1c1c24;
     --muted:  #6b6970;
     --line:   #d5d2cc;
@@ -36,34 +36,33 @@
     flex-direction: column;
   }
 
-  /* ── HEADER ─────────────────────────────────────────────────────────── */
-  header {
-    background: var(--navy);
-    color: #fff;
-    padding: 10px 18px;
+  /* ── SITE HEADER: override fixed positioning so it sits in flex flow ── */
+  #fixed-top { position: static; box-shadow: none; cursor: default; }
+  /* Reduce the header's own pointer on the strip */
+  .wrc-banner-strip { cursor: default; }
+
+  /* Preview subtitle + back link live in the navy banner strip */
+  .preview-strip {
     display: flex;
     align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    gap: 12px;
+    padding: 5px 18px;
   }
-  header h1 {
-    margin: 0;
-    font: 600 20px/1.1 'Oswald', sans-serif;
-    letter-spacing: .3px;
+  .preview-strip .preview-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.70);
+    flex: 1;
   }
-  header h1 span { color: var(--amber); }
-  header .sub { color: #b8bdd4; font-size: 14px; }
-  header a.home {
-    margin-left: auto;
+  .preview-strip a.back {
+    font-size: 13px;
     color: #fff;
     text-decoration: none;
-    border: 1px solid #ffffff55;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 14px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 5px;
+    padding: 3px 9px;
     white-space: nowrap;
   }
-  header a.home:hover { background: #ffffff1a; }
+  .preview-strip a.back:hover { background: rgba(255,255,255,0.12); }
 
   /* ── CONTROLS BAR ────────────────────────────────────────────────────── */
   .bar {
@@ -301,11 +300,26 @@
 </head>
 <body>
 
-<header>
-  <h1>Read the Heat <span>&amp; Take a Beat</span></h1>
-  <div class="sub">The live tool, as it looks and works on a phone or tablet</div>
-  <a class="home" href="./activity.html">&larr; Back to the tool</a>
-</header>
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <div style="width:48px;margin:0 11px;flex-shrink:0;"></div><!-- left spacer -->
+    <div class="header-inner" style="pointer-events:auto;">
+      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+    <div style="width:48px;margin:0 11px;flex-shrink:0;"></div><!-- right spacer -->
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="preview-strip">
+      <span class="preview-label">Phone &amp; Tablet Preview &mdash; the live tool, as it looks and works on a phone or tablet</span>
+      <a class="back" href="./activity.html">&larr; Back to the tool</a>
+    </div>
+  </div>
+</div>
 
 <div class="bar" role="toolbar" aria-label="Preview settings">
   <div class="grp"><label>Device</label>
