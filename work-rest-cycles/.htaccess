@@ -15,13 +15,11 @@
 <IfModule mod_expires.c>
   ExpiresActive On
 
-  # HTML — short cache so updates propagate quickly
-  ExpiresByType text/html                     "access plus 1 hour"
-
-  # CSS & JS — 1 week (filenames don't include cache-busting hashes yet)
-  ExpiresByType text/css                      "access plus 1 week"
-  ExpiresByType application/javascript        "access plus 1 week"
-  ExpiresByType text/javascript               "access plus 1 week"
+  # HTML, CSS & JS — always revalidate so deploys propagate immediately
+  ExpiresByType text/html                     "access plus 0 seconds"
+  ExpiresByType text/css                      "access plus 0 seconds"
+  ExpiresByType application/javascript        "access plus 0 seconds"
+  ExpiresByType text/javascript               "access plus 0 seconds"
 
   # Images — 1 month (content rarely changes; extend to 1 year once stable)
   ExpiresByType image/jpeg                    "access plus 1 month"
@@ -45,11 +43,8 @@
   <FilesMatch "\.(jpg|jpeg|png|webp|gif|svg|ico|woff|woff2)$">
     Header set Cache-Control "public, max-age=2592000, immutable"
   </FilesMatch>
-  <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "public, max-age=604800"
-  </FilesMatch>
-  <FilesMatch "\.html$">
-    Header set Cache-Control "public, max-age=3600"
+  <FilesMatch "\.(css|js|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
 
