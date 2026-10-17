@@ -1720,35 +1720,69 @@
       grid-template-rows: none !important;
       grid-auto-rows: auto !important;
     }
+    /* Mobile measurement cards: grid layout so title spans full width,
+       photo and buttons sit side by side beneath it */
     .method-card-full {
       min-height: 0 !important;
-      flex-direction: column !important;
+      display: grid !important;
+      grid-template-areas:
+        "title   title"
+        "photo   buttons" !important;
+      grid-template-columns: auto 1fr !important;
+      grid-template-rows: auto 1fr !important;
+      align-items: stretch !important;
     }
-    /* Title bar: spans full card width with accent colour background */
+    /* display:contents lets h3 and img participate directly in the card grid */
+    .method-card-full .card-left {
+      display: contents !important;
+    }
     .method-card-full .card-left h3 {
-      flex: 0 0 auto !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
+      grid-area: title !important;
       text-align: center !important;
-      font-size: 18px !important;
+      font-size: 17px !important;
       line-height: 1.25 !important;
-      padding: 10px 16px !important;
+      padding: 9px 16px !important;
       margin: 0 !important;
       background: var(--card-accent, #001E62) !important;
       color: #fff !important;
     }
-    /* Image + buttons sit in a row beneath the title */
-    .method-card-full .card-left {
-      flex: none !important;
-      width: 100% !important;
-      flex-direction: column !important;
+    .method-card-full .card-left img,
+    .method-card-full .card-left > div:not(h3) {
+      grid-area: photo !important;
+      width: 90px !important;
+      height: 90px !important;
+      object-fit: cover !important;
+      align-self: center !important;
+      margin: 8px !important;
+      cursor: zoom-in !important;
+      border-radius: 4px !important;
+    }
+    /* thermometer-only emoji placeholder */
+    .method-card-full .card-left > div {
+      grid-area: photo !important;
+      width: 90px !important;
+      height: 90px !important;
+      font-size: 56px !important;
+      margin: 8px !important;
+      align-self: center !important;
+      justify-self: center !important;
     }
     .method-card-full .card-right {
-      width: 100% !important;
-      flex-direction: row !important;
+      grid-area: buttons !important;
+      display: flex !important;
+      flex-direction: column !important;
       justify-content: center !important;
-      gap: 12px !important;
-      padding: 10px 12px !important;
+      gap: 8px !important;
+      padding: 8px 10px 8px 4px !important;
+    }
+    .method-card-full .card-right .card-btn {
+      padding: 7px 10px !important;
+      font-size: 13px !important;
+      box-shadow: 0 3px 0 var(--btn-shadow, #001040), 0 4px 8px rgba(0,10,60,0.3) !important;
+    }
+    .method-card-full .card-right .card-btn:active {
+      transform: translateY(3px) !important;
+      box-shadow: 0 0px 0 var(--btn-shadow, #001040) !important;
     }
 
     /* Continue button row: stack on mobile */
