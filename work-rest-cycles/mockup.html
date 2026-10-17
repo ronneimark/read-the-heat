@@ -302,6 +302,52 @@
     .onphone { display: block; }
   }
   @media (max-width: 1100px) { aside { display: none !important; } }
+
+  /* ── Install banner ── */
+  #install-banner {
+    display: flex; align-items: center; gap: 10px;
+    background: #001E62; color: #fff;
+    padding: 10px 16px; flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    font: 400 14px/1.3 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  }
+  .install-banner-text { flex: 1; min-width: 0; }
+  .install-banner-btn {
+    background: #D50032; color: #fff; border: none;
+    border-radius: 8px; padding: 10px 16px;
+    font: 600 14px 'Source Sans 3', sans-serif; cursor: pointer;
+    white-space: nowrap; min-height: 44px;
+  }
+  .install-banner-btn:hover { background: #b8002b; }
+  .install-banner-dismiss {
+    background: none; border: none; color: rgba(255,255,255,.7);
+    font-size: 20px; cursor: pointer; padding: 6px 8px; line-height: 1;
+    min-height: 44px; min-width: 44px;
+  }
+  .install-banner-dismiss:hover { color: #fff; }
+
+  /* ── iOS install modal ── */
+  #ios-install-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    z-index: 9000; display: flex; align-items: flex-end;
+  }
+  #ios-install-modal {
+    background: #fff; border-radius: 18px 18px 0 0;
+    padding: 24px 22px 32px; width: 100%; max-width: 540px;
+    margin: 0 auto; position: relative;
+    font: 400 15px/1.5 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+    color: #1c1c24;
+  }
+  #ios-install-modal h2 { margin: 0 0 10px; font-size: 18px; color: #001E62; }
+  #ios-install-modal p { margin: 0 0 10px; }
+  #ios-install-modal ol { padding-left: 18px; margin: 0 0 12px; }
+  #ios-install-modal ol li { margin-bottom: 8px; }
+  #ios-install-modal .ios-modal-note { font-size: 13px; color: #6b6970; }
+  #ios-modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; font-size: 22px; cursor: pointer;
+    color: #6b6970; line-height: 1; padding: 4px 6px;
+  }
 </style>
 </head>
 <body class="mockup-page">
@@ -324,6 +370,28 @@
       <span class="preview-label">Phone &amp; Tablet Preview &mdash; the live tool, as it looks and works on a phone or tablet</span>
       <a class="back" href="./activity.html">&larr; Back to the tool</a>
     </div>
+  </div>
+
+  <!-- Install banner (shown on mobile only, before the preview toolbar) -->
+  <div id="install-banner" style="display:none;" role="region" aria-label="Install this site">
+    <span class="install-banner-text">Install on your phone for quick, one-tap access</span>
+    <button type="button" id="install-banner-btn" class="install-banner-btn">Add to Home Screen</button>
+    <button type="button" id="install-banner-dismiss" class="install-banner-dismiss" aria-label="Dismiss">&#x2715;</button>
+  </div>
+</div>
+
+<!-- iOS install instructions modal -->
+<div id="ios-install-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="ios-modal-title">
+  <div id="ios-install-modal">
+    <button type="button" id="ios-modal-close" aria-label="Close">&#x2715;</button>
+    <h2 id="ios-modal-title">Add to Home Screen</h2>
+    <p>Install <strong>Read the Heat</strong> for one-tap access, no app store needed.</p>
+    <ol>
+      <li><strong>Safari:</strong> tap the <strong>Share</strong> button <span aria-hidden="true">&#x2197;</span>, then <em>Add to Home Screen</em>, then <em>Add</em>.</li>
+      <li><strong>Chrome:</strong> tap the <strong>Share</strong> icon beside the address bar, then <em>Add to Home Screen</em>.</li>
+      <li><strong>Firefox:</strong> open the <strong>menu</strong>, tap <em>Share</em>, then <em>Add to Home Screen</em>.</li>
+    </ol>
+    <p class="ios-modal-note">The icon will appear on your home screen under <strong>Read the Heat</strong>.</p>
   </div>
 </div>
 
@@ -566,6 +634,69 @@
   fillModels(); layout();
   if (window.matchMedia('(min-width: 761px)').matches) go(state.p);
 })();
+</script>
+
+<script>
+/* ── PWA: Install banner + service worker (mockup.html) ── */
+(function () {
+  var DISMISSED_KEY = 'rth_install_banner_dismissed';
+  var IS_MOBILE = window.matchMedia('(max-width: 860px), (pointer: coarse) and (max-width: 1366px)').matches;
+  var IS_STANDALONE = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  var IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  var banner = document.getElementById('install-banner');
+  var bannerBtn = document.getElementById('install-banner-btn');
+  var dismissBtn = document.getElementById('install-banner-dismiss');
+  var overlay = document.getElementById('ios-install-modal-overlay');
+  var modalClose = document.getElementById('ios-modal-close');
+
+  var dismissed = false;
+  try { dismissed = !!localStorage.getItem(DISMISSED_KEY); } catch(e){}
+
+  var deferredPrompt = null;
+
+  function showBanner() { if (banner) banner.style.display = 'flex'; }
+  function hideBanner()  { if (banner) banner.style.display = 'none';  }
+
+  if (!IS_MOBILE || IS_STANDALONE || dismissed) return;
+
+  if (IS_IOS) {
+    showBanner();
+    if (bannerBtn) bannerBtn.addEventListener('click', function () {
+      if (overlay) overlay.style.display = 'flex';
+    });
+  } else {
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      showBanner();
+      if (bannerBtn) bannerBtn.addEventListener('click', function () {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () {
+          deferredPrompt = null;
+          hideBanner();
+        });
+      });
+    });
+  }
+
+  if (dismissBtn) dismissBtn.addEventListener('click', function () {
+    hideBanner();
+    try { localStorage.setItem(DISMISSED_KEY, '1'); } catch(e){}
+  });
+  if (modalClose) modalClose.addEventListener('click', function () {
+    if (overlay) overlay.style.display = 'none';
+  });
+  if (overlay) overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) overlay.style.display = 'none';
+  });
+})();
+
+/* ── Service worker registration (phones only, not inside iframe) ── */
+if ('serviceWorker' in navigator && window.matchMedia('(max-width: 860px)').matches && window.self === window.top) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+}
 </script>
 </body>
 </html>
