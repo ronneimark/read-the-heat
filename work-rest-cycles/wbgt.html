@@ -185,6 +185,30 @@ main { padding: 0; max-width: none; }
   .result-subtext { max-width: 100%; }
 }
 
+/* Monitoring guidance card */
+.result-monitoring {
+  background: #c62828;
+  border: 1px solid #b71c1c;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+  flex-shrink: 0;
+  color: #fff;
+  margin-top: 12px;
+}
+.result-monitoring-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
 /* ── Mobile desktop-referral hint inside colored result block ── */
 .mobile-result-hint {
   display: none;
@@ -1001,6 +1025,30 @@ body.chart-active { overflow: hidden; }
     </svg>`;
   }
 
+  // ── Monitoring & guidance notes (one per WBGT row) ──
+  const WBGT_ACCLIM_RANGE_NOTES = [
+    { range:'Below 25.0°C / Below 77°F',  text:'Normal work practices. Standard hydration (1 cup / 8 oz water every 20 min). Training on heat illness recognition. No mandatory rest breaks required at any activity level.' },
+    { range:'25.0–25.9°C / 77–79°F',       text:'Very Heavy work exceeds REL₆₀. Monitor Very Heavy workers closely. All others: standard hydration and buddy system recommended.' },
+    { range:'26.0–27.4°C / 79–81°F',       text:'Heavy and Very Heavy work require mandatory rest breaks. Enforce rest in cool or shaded areas. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'27.5–28.3°C / 82–83°F',       text:'Moderate work now exceeds REL. Mandatory rest breaks for Moderate, Heavy, and Very Heavy activity. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'28.4–29.4°C / 83–85°F',       text:'Very Heavy work exceeds 15-min REL. Active monitoring required. Cool rest area mandatory. Hydration: 1 cup every 15–20 min.' },
+    { range:'29.5–30.8°C / 85–87°F',       text:'Light work now requires rest breaks. All activity levels restricted. Engineering controls recommended. Hydration: 1 cup every 15 min.' },
+    { range:'30.9–31.7°C / 88–89°F',       text:'Hazardous conditions. Engineering controls required. Physiological monitoring. Cool rest area (air-conditioned if possible). Hydration: 1 cup every 15 min.' },
+    { range:'31.8–32.8°C / 89–91°F',       text:'Very high risk. Engineering controls must be in place. Consider suspending Heavy and Very Heavy work. Medical monitoring on-site. Hydration: 1 cup every 15 min.' },
+    { range:'≥ 32.9°C / ≥ 91°F',           text:'Imminent danger. Engineering controls mandatory. Emergency response plan activated. Consider suspending all work until conditions improve.' }
+  ];
+  const WBGT_UNACCLIM_RANGE_NOTES = [
+    { range:'Below 21.0°C / Below 70°F',  text:'Normal work practices. Standard hydration, buddy system, and training on heat illness recognition. Heightened supervisor attention for unacclimatized workers.' },
+    { range:'21.0–22.2°C / 70–72°F',       text:'Very Heavy work approaches RAL. Monitor Very Heavy workers closely. Implement buddy system. Hydration: 1 cup every 20 min.' },
+    { range:'22.3–23.9°C / 72–75°F',       text:'Heavy and Very Heavy exceed RAL. Mandatory rest breaks and cool rest area. Hydration: 1 cup every 20 min. Limit new workers to lighter tasks initially.' },
+    { range:'24.0–25.7°C / 75–78°F',       text:'Moderate work restricted. Mandatory breaks for Moderate through Very Heavy. Buddy system required. Hydration: 1 cup every 20 min. Enforce acclimatization ramp schedule.' },
+    { range:'25.8–26.4°C / 78–80°F',       text:'Very Heavy exceeds 15-min RAL. Active monitoring. Cool rest area required. Hydration: 1 cup every 15–20 min. Strictly enforce daily exposure ramp.' },
+    { range:'26.5–28.2°C / 80–83°F',       text:'Light work now restricted. All activities require rest breaks. Engineering controls recommended. Hydration: 1 cup every 15 min. Consider removing unacclimatized workers.' },
+    { range:'28.3–29.3°C / 83–85°F',       text:'Hazardous for unacclimatized workers. Engineering controls required. Active monitoring with vital sign checks. Consider removing unacclimatized workers from this environment.' },
+    { range:'29.4–30.7°C / 85–87°F',       text:'RAL exceeded for all activities. Unacclimatized workers should not be exposed. Medical personnel on standby. Emergency response plan activated.' },
+    { range:'≥ 30.8°C / ≥ 87°F',           text:'Imminent danger for unacclimatized workers. All unacclimatized workers must cease work. Engineering controls mandatory before any worker re-entry.' }
+  ];
+
   // ── Build result tab content ──
   function buildResultTab(s) {
     const rawVal   = s.measValue;
@@ -1044,6 +1092,18 @@ body.chart-active { overflow: hidden; }
       headline = wr.w + ' min work<br>' + wr.r + ' min rest';
       subtext  = 'For every 60-minute period, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[activity].toLowerCase() + '. Provide water and shade at the rest station.';
     }
+
+    const monitoringRange = rowIdx >= 0 && WBGT_ACCLIM_RANGE_NOTES[rowIdx]
+      ? (unit === 'C'
+          ? (WBGT_ACCLIM_RANGE_NOTES[rowIdx].range.match(/^([^/]+)/) || [])[1].trim()
+          : (WBGT_ACCLIM_RANGE_NOTES[rowIdx].range.match(/\/\s*(.+)$/) || [])[1] || WBGT_ACCLIM_RANGE_NOTES[rowIdx].range)
+      : '';
+    const monitoringHtml = rowIdx >= 0 && WBGT_ACCLIM_RANGE_NOTES[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${monitoringRange}</div>
+           ${WBGT_ACCLIM_RANGE_NOTES[rowIdx].text}
+         </div>`
+      : '';
 
     const rawDisplay = rawVal != null ? rawVal + unitLabel : '—';
     const valDisplay = val   != null ? val   + unitLabel : '—';
@@ -1093,6 +1153,7 @@ body.chart-active { overflow: hidden; }
               </div>
             </div>`;
           })()}
+          ${monitoringHtml}
         </div>
       </div>`;
 
@@ -1284,6 +1345,18 @@ body.chart-active { overflow: hidden; }
       ? `<div class="result-input-sub" style="color:#bf360c;font-weight:700">+${adjust}${unitLabel} clothing correction applied → effective ${valDisplay}</div>`
       : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
 
+    const unacclimMonitoringRange = rowIdx >= 0 && WBGT_UNACCLIM_RANGE_NOTES[rowIdx]
+      ? (unit === 'C'
+          ? (WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range.match(/^([^/]+)/) || [])[1].trim()
+          : (WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range.match(/\/\s*(.+)$/) || [])[1] || WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range)
+      : '';
+    const unacclimMonitoringHtml = rowIdx >= 0 && WBGT_UNACCLIM_RANGE_NOTES[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${unacclimMonitoringRange}</div>
+           ${WBGT_UNACCLIM_RANGE_NOTES[rowIdx].text}
+         </div>`
+      : '';
+
     // Build clock SVG sized for the narrower half-viewport layout
     function buildSmallClock(wr) {
       const sz = 100, cx = 50, cy = 50, r = 38;
@@ -1407,6 +1480,7 @@ body.chart-active { overflow: hidden; }
               </div>
             </div>`;
           })()}
+          ${unacclimMonitoringHtml}
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
       </div>`;
