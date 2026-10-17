@@ -635,15 +635,55 @@ function buildBreadcrumbs() {
     dotsEl.appendChild(mReset);
   }
 
-  // ── Second strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
+  // ── Context strip: progressive recap of selections (mobile only) ──
+  // Step 3 → activity; Step 4 → + acclimatization; Step 5 + results → + clothing
+  const pathname = window.location.pathname;
+  const onStep3up = /\/(acclimatization|clothing|measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
+  const onStep4up = /\/(clothing|measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
+  const onStep5up = /\/(measurement|wbgt|temp-humidity|heat-index)\.html/.test(pathname);
+
   const mainStrip = document.querySelector('.wrc-banner-strip');
+  let ctxStrip = document.getElementById('wrc-context-strip');
+
+  if (mainStrip && window.innerWidth <= 768) {
+    const ctxItems = [];
+    if (onStep3up && s.activityLabel) ctxItems.push(s.activityLabel);
+    if (onStep4up && s.workerStatus) {
+      ctxItems.push(s.workerStatus === 'acclimatized' ? 'Acclimatized' : 'Unacclimatized');
+    }
+    if (onStep5up && s.clothingType) {
+      ctxItems.push(s.clothingType === 'standard' ? 'Standard Clothing' : 'Impermeable PPE');
+    }
+
+    if (ctxItems.length) {
+      if (!ctxStrip) {
+        ctxStrip = document.createElement('div');
+        ctxStrip.id = 'wrc-context-strip';
+        mainStrip.after(ctxStrip);
+      }
+      ctxStrip.innerHTML = ctxItems.map(function(item) {
+        return '<span class="wrc-ctx-item">' + item + '</span>';
+      }).join('<span class="wrc-ctx-sep"> · </span>');
+      ctxStrip.style.display = '';
+    } else if (ctxStrip) {
+      ctxStrip.style.display = 'none';
+    }
+  } else if (ctxStrip) {
+    ctxStrip.style.display = 'none';
+  }
+
+  // ── Third strip: yellow pill with instrument + value when step 5 complete (mobile only) ──
   let strip2 = document.getElementById('wrc-result-strip');
 
   if (stepDone[4] && mainStrip && window.innerWidth <= 768) {
+    // Anchor below context strip if visible, else below main strip
+    const anchor = (ctxStrip && ctxStrip.style.display !== 'none') ? ctxStrip : mainStrip;
     if (!strip2) {
       strip2 = document.createElement('div');
       strip2.id = 'wrc-result-strip';
-      mainStrip.after(strip2);
+      anchor.after(strip2);
+    } else if (strip2.previousElementSibling !== anchor) {
+      anchor.after(strip2);
     }
     const inst = s.instrument;
     const measUnit = s.measUnit || 'F';

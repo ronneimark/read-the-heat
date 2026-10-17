@@ -1783,6 +1783,29 @@
     border-color: rgba(255,255,255,0.40);
   }
 
+  /* ── Context strip: progressive recap (JS-injected, mobile only) ── */
+  #wrc-context-strip {
+    background: #001E62;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 12px;
+    flex-wrap: wrap;
+    gap: 2px 0;
+  }
+  .wrc-ctx-item {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .wrc-ctx-sep {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    padding: 0 4px;
+  }
+
   /* ── Second strip: result pill after step 5 (JS-injected, mobile only) ── */
   #wrc-result-strip {
     background: #001E62;
