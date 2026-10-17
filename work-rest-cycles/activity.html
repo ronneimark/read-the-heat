@@ -4,6 +4,9 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#001E62">
   <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Read the Heat">
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
 <meta charset="UTF-8">
@@ -202,5 +205,6 @@
 
   document.addEventListener('DOMContentLoaded', init);
 </script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
 </body>
 </html>
