@@ -860,6 +860,14 @@
   :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
 }
 
+/* ── Mobile: popover as full-width bottom drawer ── */
+@media (max-width: 768px) {
+  /* Arrow points to button position on desktop — hide on mobile full-width drawer */
+  .intro-popover-arrow { display: none !important; }
+  /* Flat top edge (JS also sets borderRadius: 0 but this covers CSS animation frames) */
+  .intro-popover { border-radius: 0 !important; box-shadow: 0 -2px 12px rgba(0,0,0,.18) !important; }
+}
+
 /* ── Critical mobile overrides — declared here (plain CSS, no :root nesting)
    to ensure they apply regardless of browser CSS-nesting support ── */
 @media (max-width: 768px) {
@@ -937,16 +945,21 @@
 
     /* ── Step 3: position vertically ── */
     if (vpW <= 768) {
-      /* Mobile: pin top just below ALL fixed headers (measured live) */
+      /* Mobile: full-width drawer from right below the fixed bars to viewport bottom */
       const fixedTopEl = document.getElementById('fixed-top');
       const anchor = document.getElementById('intro-anchor');
       const fixedH = (fixedTopEl ? fixedTopEl.offsetHeight : 0)
                    + (anchor ? anchor.offsetHeight : 0);
-      const bpad = 8;                                /* gap from bottom */
-      pop.style.top       = fixedH + 'px';
-      pop.style.bottom    = bpad + 'px';
-      pop.style.maxHeight = (vpH - fixedH - bpad) + 'px';
-      pop.style.overflowY = 'auto';
+      pop.style.left        = '0';
+      pop.style.right       = '0';
+      pop.style.width       = '100%';
+      pop.style.maxWidth    = '100%';
+      pop.style.transform   = 'none';
+      pop.style.borderRadius = '0';
+      pop.style.top         = fixedH + 'px';
+      pop.style.bottom      = '0';
+      pop.style.maxHeight   = (vpH - fixedH) + 'px';
+      pop.style.overflowY   = 'auto';
     } else {
       pop.style.bottom = vpad + 'px';
 
