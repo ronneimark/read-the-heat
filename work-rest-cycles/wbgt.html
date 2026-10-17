@@ -216,6 +216,47 @@ main { padding: 0; max-width: none; }
     align-items: flex-start !important;
   }
 
+  /* Sticky schedule button wrapper on mobile */
+  .mobile-sched-sticky {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: var(--fixed-top-h, 80px);
+    z-index: 50;
+    background: var(--warm-white, #F6F3EC);
+    padding: 10px 14px;
+    margin: -12px -14px 12px;
+    border-bottom: 1px solid var(--border, #D8DFE8);
+  }
+  .mobile-sched-sticky .sched-modal-btn {
+    width: 100%;
+    justify-content: center;
+    border-radius: 10px;
+  }
+  /* Inline schedule panel (shown below sticky button on mobile) */
+  .mobile-sched-inline {
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .mobile-sched-inline .sched-inline-title {
+    font-size: 15px; font-weight: 800; color: var(--navy, #1A2A3A); margin-bottom: 2px;
+  }
+  .mobile-sched-inline .sched-inline-sub {
+    font-size: 11px; color: var(--subtext, #6B7785); margin-bottom: 10px; line-height: 1.4;
+  }
+  .mobile-sched-inline .sched-inline-foot {
+    background: var(--warn-bg, #FFF3E0); color: var(--warn-text, #7B2500);
+    border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 11px;
+    border-left: 3px solid var(--warn-text, #7B2500); margin-top: 10px;
+  }
+  .mobile-sched-inline .sched-inline-fn {
+    font-size: 10px; color: var(--subtext); font-style: italic; margin-top: 5px;
+  }
+
   /* Desktop-referral hint */
   .mobile-full-hint {
     display: block !important;
@@ -479,6 +520,9 @@ body.chart-active { overflow: hidden; }
 .urec-sched-foot {
   font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; flex-shrink:0;
 }
+
+/* ── Mobile-only sticky schedule wrapper — hidden on desktop ── */
+.mobile-sched-sticky { display: none; }
 
 /* ── Daily Exposure Schedule modal ── */
 .sched-modal-btn {
@@ -1271,6 +1315,11 @@ body.chart-active { overflow: hidden; }
     // Inject into the two-panel wrapper directly
     document.getElementById('unacclim-tab-0-wrap').innerHTML = `
       <div class="urec-left urec-left-full">
+        ${isContinuous ? '' : `
+        <div class="mobile-sched-sticky">
+          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+        </div>`}
         <div class="urec-badges">
           <div class="urec-badge">
             <div class="urec-badge-label">🌡️ WBGT</div>
@@ -1298,7 +1347,6 @@ body.chart-active { overflow: hidden; }
           </div>
         </div>
         <div class="urec-source">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
-        ${isContinuous ? '' : `<button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>`}
       </div>`;
   }
 
@@ -1329,22 +1377,38 @@ body.chart-active { overflow: hidden; }
   function openSchedModal(btn) {
     const d = window._schedData;
     if (!d) return;
+
+    if (window.innerWidth <= 768) {
+      // ── Mobile: toggle inline panel below the sticky button ──
+      const inline = document.getElementById('mobile-sched-inline');
+      if (!inline) return;
+      if (!inline.hidden) {
+        inline.hidden = true;
+        if (btn) { btn.innerHTML = '📅 View Daily Exposure Schedule'; btn.setAttribute('aria-expanded','false'); }
+        return;
+      }
+      inline.innerHTML = `
+        <div class="sched-inline-title">📅 Daily Exposure Schedule</div>
+        <div class="sched-inline-sub">${d.sub}</div>
+        <div class="urec-sched-grid">${d.dayRowsHtml}</div>
+        <div class="sched-inline-foot">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+        <div class="sched-inline-fn">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>`;
+      inline.hidden = false;
+      if (btn) { btn.innerHTML = '✕ Close Schedule'; btn.setAttribute('aria-expanded','true'); }
+      return;
+    }
+
+    // ── Desktop: position modal above the button ──
     document.getElementById('sched-dialog-sub').textContent  = d.sub;
     document.getElementById('sched-dialog-grid').innerHTML   = '<div class="urec-sched-grid">' + d.dayRowsHtml + '</div>';
     const dlg = document.getElementById('sched-dialog');
-    if (window.innerWidth > 768 && btn) {
-      // Desktop: position above the button
+    if (btn) {
       const rect = btn.getBoundingClientRect();
       const gap = 8;
       const bottomFromViewport = window.innerHeight - rect.top + gap;
       dlg.style.bottom = bottomFromViewport + 'px';
       dlg.style.left = '50%';
       dlg.style.transform = 'translateX(-50%)';
-    } else {
-      // Mobile: CSS handles bottom-sheet positioning; clear any inline overrides
-      dlg.style.bottom = '';
-      dlg.style.left = '';
-      dlg.style.transform = '';
     }
     dlg.showModal();
   }
@@ -1503,6 +1567,7 @@ body.chart-active { overflow: hidden; }
     const fixedTop = document.getElementById('fixed-top');
     const main = document.querySelector('main');
     if (main) main.style.paddingTop = fixedTop.offsetHeight + 'px';
+    document.documentElement.style.setProperty('--fixed-top-h', fixedTop.offsetHeight + 'px');
     if (_chartActive) sizeChartPane();
     else if (_unacclimChartActive) sizeUnacclimChartPane();
     else if (_sessionMode === 'acclim') sizeResultWrap();
