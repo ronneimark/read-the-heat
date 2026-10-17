@@ -335,6 +335,37 @@ main { padding: 0; max-width: none; }
 }
 
 /* Mobile: simplified result view */
+/* ── Mobile desktop-referral hint inside result-main ── */
+.mobile-result-hint {
+  display: none; /* shown only on mobile via media query below */
+  margin-top: 16px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 8px;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: inherit;
+}
+.mobile-result-hint p { margin: 0; opacity: 0.92; }
+.share-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  background: rgba(255,255,255,0.88);
+  color: var(--navy, #1A2A3A) !important;
+  border: none;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.share-link-btn:hover { background: #fff; }
+
 /* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
 .hi-trh-switch-chip { display: none; }
 
@@ -369,6 +400,9 @@ main { padding: 0; max-width: none; }
   #hi-trh-strip.mobile-trh-inline .trh-field input[type=number] { width: 100%; box-sizing: border-box; }
   #hi-trh-strip.mobile-trh-inline .trh-arrow { display: none; }
   #hi-trh-strip.mobile-trh-inline .trh-hi-result { flex: 1; }
+
+  /* Show the desktop-referral hint on mobile */
+  .mobile-result-hint { display: flex; }
 
   /* Show the inline switch chip on mobile */
   .hi-trh-switch-chip {
@@ -1297,6 +1331,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
             ${trhDerivation}
           </div>
         </div>
+        <div class="mobile-result-hint">
+          <p>📊 Charts, notes &amp; formula check are available on a larger screen.</p>
+          <button class="share-link-btn" onclick="copyShareLink(this)">🔗 Copy shareable link</button>
+        </div>
       </div>
       <div class="result-sidebar">
         ${trhCards}
@@ -1587,8 +1625,133 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     if (_hiUnacclimCurrentTab === 'chart' && workerStatus === 'unacclimatized') sizeHIUnacclimChartPane();
   }
 
+  // ── Shareable URL ─────────────────────────────────────────────────────────────
+  function buildShareUrl() {
+    const p = new URLSearchParams();
+    // Always encode HI in °F for a canonical link
+    const hiF = (_hiStoredUnit === 'C' && _hiStoredVal != null)
+      ? Math.round((_hiStoredVal * 9/5 + 32) * 10) / 10
+      : _hiStoredVal;
+    if (_hiInputMode === 'trh' && _hiTempValF != null && _hiRhVal != null) {
+      p.set('mode', 'trh');
+      p.set('temp', _hiTempValF);
+      p.set('rh',   _hiRhVal);
+    } else if (hiF != null) {
+      p.set('hi', hiF);
+    } else {
+      return null; // no data to share
+    }
+    p.set('unit', _hiUnit);
+    p.set('act',  _hiActivity);
+    if (workerStatus && workerStatus !== 'acclimatized') p.set('status', workerStatus);
+    return location.origin + location.pathname + '?' + p.toString();
+  }
+
+  function copyShareLink(btn) {
+    const url = buildShareUrl();
+    if (!url) {
+      if (btn) { btn.textContent = '⚠ No results yet'; setTimeout(() => { btn.textContent = '🔗 Copy shareable link'; }, 2000); }
+      return;
+    }
+    // Mobile: use native share sheet if available
+    if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+      navigator.share({ title: 'Heat Index Work-Rest Results', url }).catch(() => {});
+      return;
+    }
+    const restore = () => { if (btn) { btn.innerHTML = '🔗 Copy shareable link'; btn.style.opacity = ''; } };
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+      setTimeout(restore, 2400);
+    }).catch(() => {
+      // execCommand fallback
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+        setTimeout(restore, 2400);
+      } catch(e) { if (btn) { btn.innerHTML = '⚠ Copy failed'; setTimeout(restore, 2000); } }
+    });
+  }
+
+  // ── Hydrate from URL params (semi-permanent shareable links) ─────────────────
+  function hydrateFromUrl() {
+    const p = new URLSearchParams(location.search);
+    const hasHi  = p.has('hi');
+    const hasTrh = p.has('temp') && p.has('rh');
+    if (!hasHi && !hasTrh) return false;
+
+    const unit   = p.get('unit')   || 'F';
+    const act    = p.get('act')    || 'moderate';
+    const status = p.get('status') || 'acclimatized';
+
+    _hiUnit     = unit;
+    _hiActivity = act;
+    workerStatus = status;
+
+    if (hasTrh) {
+      const tF = parseFloat(p.get('temp'));
+      const rh = parseFloat(p.get('rh'));
+      _hiInputMode  = 'trh';
+      _hiTempValF   = isNaN(tF) ? null : tF;
+      _hiRhVal      = isNaN(rh) ? null : rh;
+      if (_hiTempValF != null && _hiRhVal != null) {
+        _hiCalcHI   = calcRothfuszHI(_hiTempValF, _hiRhVal);
+        _hiStoredVal  = _hiCalcHI;
+        _hiStoredUnit = 'F';
+      }
+      // Pre-fill the strip inputs
+      const tempEl = document.getElementById('hi-trh-temp');
+      const rhEl   = document.getElementById('hi-trh-rh');
+      if (tempEl) tempEl.value = unit === 'C' && _hiTempValF != null
+        ? Math.round((_hiTempValF - 32) * 5/9 * 10) / 10
+        : (_hiTempValF ?? '');
+      if (rhEl) rhEl.value = _hiRhVal ?? '';
+      // Show T+RH inputs row in the strip
+      const row = document.getElementById('hi-trh-inputs-row');
+      if (row) row.style.display = 'flex';
+      // Update calc display
+      const calcEl = document.getElementById('hi-trh-calc-display');
+      if (calcEl && _hiCalcHI != null) calcEl.textContent = unit === 'C'
+        ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+        : _hiCalcHI + '°F';
+    } else {
+      const hiF = parseFloat(p.get('hi'));
+      _hiInputMode  = 'hi';
+      _hiStoredVal  = isNaN(hiF) ? null : hiF;
+      _hiStoredUnit = 'F';
+    }
+
+    // Sync mode-toggle button states
+    const mBtnHI  = document.getElementById('trh-btn-hi');
+    const mBtnTrh = document.getElementById('trh-btn-trh');
+    if (mBtnHI)  { mBtnHI.classList.toggle('active', _hiInputMode === 'hi');   mBtnHI.setAttribute('aria-pressed',  String(_hiInputMode === 'hi')); }
+    if (mBtnTrh) { mBtnTrh.classList.toggle('active', _hiInputMode === 'trh'); mBtnTrh.setAttribute('aria-pressed', String(_hiInputMode === 'trh')); }
+
+    // Sync unit toggle buttons
+    if (unit !== 'F') {
+      document.querySelectorAll('[id^="btn-hi-"]').forEach(el => {
+        const isF = !el.id.includes('-c');
+        const active = (unit === 'F') === isF;
+        el.classList.toggle('active', active);
+        el.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    // Also push into WRC so back-bar and other UI reflect correctly
+    const updates = { activity: act, activityLabel: act.charAt(0).toUpperCase() + act.slice(1) + ' Work',
+      workerStatus: status, workerStatusTable: status, measUnit: unit,
+      measValue: _hiStoredVal, measTemp: _hiTempValF, measRH: _hiRhVal };
+    WRC.set(updates);
+    return true;
+  }
+
   // ── Init ──────────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    // Hydrate from URL params first (shareable link) — overrides sessionStorage
+    hydrateFromUrl();
+
     const s = WRC.get();
     const status   = s.workerStatusTable || s.workerStatus || 'acclimatized';
     const act      = s.activity || 'moderate';
