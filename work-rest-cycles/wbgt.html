@@ -1181,7 +1181,6 @@ body.chart-active { overflow: hidden; }
       : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
 
     document.getElementById('acclim-tab-result').innerHTML = `
-      <div id="acclim-tab-result">
         <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
              style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
           <div class="result-clock">${buildClockSvg(wr)}</div>
@@ -1219,8 +1218,7 @@ body.chart-active { overflow: hidden; }
             <div class="result-input-value">Acclimatized</div>
             <div class="result-input-sub">NIOSH REL applies</div>
           </div>
-        </div>
-      </div>`;
+        </div>`;
 
     // Store for chart sizing
     window._wrcRowIdx = rowIdx;
