@@ -1,6 +1,6 @@
 {
   "name": "Work-Rest Cycles",
-  "short_name": "WRC",
+  "short_name": "Work-Rest",
   "description": "Occupational heat stress work-rest cycle calculator",
   "start_url": "./index.html",
   "display": "standalone",
