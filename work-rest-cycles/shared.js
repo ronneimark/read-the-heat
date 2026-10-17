@@ -660,13 +660,9 @@ function buildBreadcrumbs() {
 
   if (mainStrip && window.innerWidth <= 768) {
     const ctxItems = [];
-    if (onStep2up && s.activityLabel) ctxItems.push(s.activityLabel);
-    if (onStep3up && s.workerStatus) {
-      ctxItems.push(s.workerStatus === 'acclimatized' ? 'Acclimatized' : 'Unacclimatized');
-    }
-    if (onStep4up && s.clothingType) {
-      ctxItems.push(s.clothingType === 'standard' ? 'Standard Clothing' : 'Impermeable PPE');
-    }
+    if (s.activityLabel) ctxItems.push(s.activityLabel);
+    if (s.workerStatus) ctxItems.push(s.workerStatus === 'acclimatized' ? 'Acclimatized' : 'Unacclimatized');
+    if (s.clothingType) ctxItems.push(s.clothingType === 'standard' ? 'Standard Clothing' : 'Impermeable PPE');
 
     if (ctxItems.length) {
       if (!ctxStrip) {
