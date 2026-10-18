@@ -240,13 +240,15 @@ body.chart-active { overflow: hidden; }
   padding-bottom: 10px;
   border-bottom: 3px solid rgba(255,255,255,0.15) !important;
 }
-.acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
+.acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
 
 .acc-range {
   font-size: 14px; /* overridden at runtime by fitGridHeaderSize() */
   font-weight: 600;
   color: var(--navy, #1A2A3A);
-  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
   padding-left: 12px;
   background: var(--surface, #F0F4F8);
   white-space: nowrap;
@@ -302,9 +304,9 @@ body.chart-active { overflow: hidden; }
 }
 .wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
 .wr-unit {
-  font-size: clamp(7px, 1.1vh, 13px);
+  font-size: clamp(9px, 1.5vh, 17px);
   font-weight: 500;
-  opacity: 0.6;
+  opacity: 0.8;
   letter-spacing: 0.1px;
   text-transform: none;
   line-height: 1;
@@ -322,7 +324,23 @@ body.chart-active { overflow: hidden; }
 }
 /* Larger nums for user's exact cell */
 .acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
-.acc-user-cell .wr-unit { font-size: clamp(8px, 1.3vh, 15px) !important; }
+.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
+/* ── Chart caption / legend ── */
+.chart-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255,255,255,0.92);
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: clamp(9px, 1vh, 12px);
+  color: var(--subtext, #6B7785);
+  text-align: center;
+  padding: 4px 12px;
+  line-height: 1.4;
+  z-index: 2;
+}
+
 /* ── Unacclimatized 5-tab shell ── */
 .unacclim-tab-btn {
   padding: 10px 16px 9px;
