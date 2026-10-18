@@ -1833,6 +1833,9 @@ main { padding: 0; max-width: none; }
     document.getElementById('hi-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
     document.getElementById('hi-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
     document.getElementById('hi-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
+    // Reveal the result card (display:'' lets CSS apply flex on desktop)
+    const card = document.getElementById('hi-result-card');
+    if (card) card.style.display = '';
 
     // Sync unit before building tabs
     const sessionUnit = s.measUnit || 'F';
