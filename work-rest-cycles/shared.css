@@ -2306,7 +2306,7 @@
   align-items: stretch;
   justify-content: center;
   box-sizing: border-box;
-  padding: 16px 16px 24px;
+  padding: 16px 16px 36px;
 }
 
 /* ── Two-column grid container ── */
@@ -2378,7 +2378,7 @@
 /* ── Middle column — colored result block ── */
 .result-main {
   border-radius: 14px;
-  padding: 20px 28px;
+  padding: 14px 24px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
