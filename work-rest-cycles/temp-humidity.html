@@ -1024,11 +1024,21 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       .replace(/\bT\b/g, '<span class="fv-t">T</span>');
     const infoHtml = hv(`
       <h3>Heat Index Calculation — Formula Check</h3>
-      <p style="margin:0 0 14px;font-size:13px;">
-        <strong>Inputs:</strong> Temperature = ${tDisplay}${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F used in formula</span>` : ''}, RH = ${RH}%<br>
-        <strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}<br>
-        <strong>Result:</strong> Heat Index = <strong>${hiInUnit}</strong>${_hiUnit === 'C' ? ` (${_hiCalcHI}°F internally)` : ''}
-      </p>`);
+      <div style="font-size:15px;margin-bottom:6px;">
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Temperature</div>
+          <span style="font-size:26px;font-weight:800;line-height:1;color:#b91c1c;">${tDisplay}</span>${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F in formula</span>` : ''}
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Relative Humidity</div>
+          <span style="font-size:26px;font-weight:800;line-height:1;color:#15803d;">${RH}%</span>
+        </div>
+        <p style="margin:0 0 8px;font-size:15px;"><strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}</p>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border,#d0d8e0);">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Heat Index</div>
+          <span style="font-size:32px;font-weight:800;line-height:1;">${hiInUnit}</span>${_hiUnit === 'C' ? `<span style="font-size:13px;color:var(--subtext,#888);margin-left:8px;">(${_hiCalcHI}°F internally)</span>` : ''}
+        </div>
+      </div>`);
     const citation = `<p style="font-size:11px;color:var(--subtext);margin-top:8px;">See page footnote for full formula citation.</p>`;
     if (usedSimple) {
       const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
