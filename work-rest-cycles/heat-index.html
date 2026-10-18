@@ -1537,6 +1537,16 @@ main { padding: 0; max-width: none; }
       : '';
 
     document.getElementById(containerId).innerHTML = `
+      <div class="result-notification" role="note" aria-label="Assessment limitations">
+        <div class="result-notification-icon" aria-hidden="true">⚠️</div>
+        <div class="result-notification-title">Assessment Gap</div>
+        <div class="result-notification-body">
+          <div class="result-notification-item">
+            <div class="result-notification-dot"></div>
+            <div><strong>Radiant heat not captured</strong>Equipment heat, ovens, and solar load are not accounted for by any heat index method. <a href="wbgt.html">Use WBGT</a> when radiant sources are present.</div>
+          </div>
+        </div>
+      </div>
       <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
            style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
         <div class="result-main-inner">
@@ -1548,9 +1558,6 @@ main { padding: 0; max-width: none; }
             <div class="result-source">${sourceNote}</div>
             ${trhDerivation}
           </div>
-        </div>
-        <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span></strong>Temperature + humidity accounts for the impact of humidity, which a thermometer alone cannot capture. There remains a gap in assessment of the level of heat stress: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
         </div>
         ${(function(){
           const u = buildShareUrl();

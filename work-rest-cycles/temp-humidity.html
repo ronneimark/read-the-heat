@@ -1200,17 +1200,34 @@ body.trh-result-active .hi-formula-footnote { display: none; }
          </div>`
       : '';
 
-    const limitationStripHTML = WRC.val('dbtConservative', false)
-      ? `<div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>Dry-bulb thermometer only — two limitations apply:</strong>
-          (1) <strong>Humidity not measured</strong> — 100% RH assumed; re-enter with a humidity reading to move from a thermometer-only estimate to a full heat index result.
-          (2) <strong>Radiant heat not captured</strong> — no heat index method accounts for equipment heat, ovens, or solar load. WBGT is the only method that captures all three factors.
+    const limitationCardHTML = WRC.val('dbtConservative', false)
+      ? `<div class="result-notification" role="note" aria-label="Assessment limitations">
+          <div class="result-notification-icon" aria-hidden="true">⚠️</div>
+          <div class="result-notification-title">Assessment Gaps</div>
+          <div class="result-notification-body">
+            <div class="result-notification-item">
+              <div class="result-notification-dot"></div>
+              <div><strong>Humidity not measured</strong>100% RH assumed. Re-enter with a reading for a full heat index result.</div>
+            </div>
+            <div class="result-notification-item">
+              <div class="result-notification-dot"></div>
+              <div><strong>Radiant heat not captured</strong>No heat index method accounts for equipment heat, ovens, or solar load. <a href="wbgt.html">Use WBGT</a> for all three factors.</div>
+            </div>
+          </div>
         </div>`
-      : `<div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span></strong>Temperature + humidity accounts for the impact of humidity, which a thermometer alone cannot capture. There remains a gap in assessment of the level of heat stress: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
+      : `<div class="result-notification" role="note" aria-label="Assessment limitations">
+          <div class="result-notification-icon" aria-hidden="true">⚠️</div>
+          <div class="result-notification-title">Assessment Gap</div>
+          <div class="result-notification-body">
+            <div class="result-notification-item">
+              <div class="result-notification-dot"></div>
+              <div><strong>Radiant heat not captured</strong>Equipment heat, ovens, and solar load are not accounted for by any heat index method. <a href="wbgt.html">Use WBGT</a> when radiant sources are present.</div>
+            </div>
+          </div>
         </div>`;
 
     document.getElementById(containerId).innerHTML = `
+      ${limitationCardHTML}
       <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
            style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
         <div class="result-main-inner">
@@ -1223,7 +1240,6 @@ body.trh-result-active .hi-formula-footnote { display: none; }
             ${trhDerivation}
           </div>
         </div>
-        ${limitationStripHTML}
         ${(function(){
           const u = buildShareUrl();
           if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;
