@@ -2314,7 +2314,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 210px 1fr 270px;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 10px;
   min-height: 0;
 }
@@ -2334,6 +2334,7 @@
   line-height: 1.5;
   color: #4A3000;
   min-height: 0;
+  overflow: hidden;
 }
 .result-notification-icon {
   font-size: 22px;
@@ -2461,6 +2462,8 @@
   font-weight: 600;
   line-height: 1.5;
   color: #fff;
+  overflow: hidden;
+  align-self: end;
 }
 .result-monitoring-label {
   font-size: 11px;
