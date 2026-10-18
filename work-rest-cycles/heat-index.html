@@ -103,6 +103,31 @@ main { padding: 0; max-width: none; }
   line-height: 1.4;
 }
 
+/* T+RH → HI calculation block */
+.result-trh-calc {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 8px;
+}
+.result-trh-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.result-trh-op { opacity: 0.60; font-weight: 400; font-size: 14px; }
+.result-trh-note {
+  font-size: 12px;
+  opacity: 0.80;
+  line-height: 1.55;
+  font-style: italic;
+}
+
 /* Formula check tab */
 .formula-check-pane { padding: 24px 20px 40px; max-width: 900px; margin: 0 auto; }
 .formula-check-pane h3 {
@@ -1509,7 +1534,19 @@ main { padding: 0; max-width: none; }
         : _hiTempValF + '°F';
       rhDisplay = _hiRhVal != null ? _hiRhVal + '%' : '—';
       if (_hiRhVal != null && val != null) {
-        trhDerivation = `<p class="result-derivation">Your air temperature of ${tempDisplay} and relative humidity of ${rhDisplay} yields a calculated Heat Index of ${valDisplay}.</p>`;
+        const T_v = _hiTempValF, RH_v = _hiRhVal;
+        const hiSimpleCheck = 0.5 * (T_v + 61.0 + (T_v - 68.0) * 1.2 + RH_v * 0.094);
+        const usedSteadman = T_v < 80 || hiSimpleCheck < 80;
+        trhDerivation = `<div class="result-trh-calc">
+          <div class="result-trh-inputs">
+            <span class="result-trh-val result-trh-temp">${tempDisplay}</span>
+            <span class="result-trh-op">+</span>
+            <span class="result-trh-val result-trh-rh">${RH_v}%&nbsp;RH</span>
+            <span class="result-trh-op">→</span>
+            <span class="result-trh-val result-trh-hi">${valDisplay}&nbsp;HI</span>
+          </div>
+          <div class="result-trh-note">Heat index is the apparent "feels-like" temperature — humidity slows sweat evaporation, making air feel hotter than the thermometer reads. Calculated using the ${usedSteadman ? 'Steadman (1979) simple approximation' : 'Rothfusz (1990) regression'}.</div>
+        </div>`;
       }
       if (_hiTempValF != null && _hiRhVal != null) {
         trhCards = `<div class="result-input-card">
@@ -1555,7 +1592,6 @@ main { padding: 0; max-width: none; }
             <div class="result-label">Recommended Work-Rest Cycle</div>
             <div class="result-headline">${headline}</div>
             <div class="result-subtext">${subtext}</div>
-            <div class="result-source">${sourceNote}</div>
             ${trhDerivation}
           </div>
         </div>
