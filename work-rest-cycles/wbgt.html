@@ -218,11 +218,35 @@ main { padding: 0; max-width: none; }
   }
   #acclim-tab-result-wrap,
   #unacclim-tab-0-wrap,
-  #unacclim-tab-schedule,
-  #unacclim-tab-notes {
+  #unacclim-tab-schedule {
     flex: 1; min-height: 0; overflow-y: auto;
   }
+  #unacclim-tab-notes {
+    flex: 1; min-height: 0; overflow: hidden;
+  }
   #acclim-tab-chart, #unacclim-tab-chart { flex: 1; min-height: 0; overflow: hidden; }
+  /* ── WBGT Notes 2-column layout ── */
+  .wbgt-notes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 14px 20px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .wbgt-notes-col {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .wbgt-notes-layout .note-box { font-size: 13px; margin: 0; }
+  .wbgt-notes-layout .note-box ul { font-size: 12px; }
+  .wbgt-notes-layout .wbgt-citation {
+    font-size: 11px; color: var(--subtext); line-height: 1.6; margin: 0;
+  }
 }
 @media (max-width: 768px) {
   #wbgt-result-card { position: static; border-radius: 0; box-shadow: none; }
@@ -1688,22 +1712,28 @@ main { padding: 0; max-width: none; }
 
   function buildUnacclimNotesTab() {
     document.getElementById('unacclim-tab-notes').innerHTML = `
-      <div class="note-box warn-note" style="margin-bottom:16px">
-        <strong>During all acclimatization periods:</strong>
-        <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.8;font-size:13px">
-          <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
-          <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
-          <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
-          <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans</li>
-          <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
-        </ul>
-      </div>
-      <div class="note-box" style="margin-top:12px;border-left-color:#005540;background:#E0F5EE;color:#004A37">
-        <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
-      </div>
-      <p style="font-size:12px;color:var(--subtext);margin-top:12px;line-height:1.6">
-        <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
-      </p>`;
+      <div class="wbgt-notes-layout">
+        <div class="wbgt-notes-col">
+          <div class="note-box warn-note">
+            <strong>During all acclimatization periods:</strong>
+            <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.7">
+              <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+              <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+              <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+              <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans</li>
+              <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+            </ul>
+          </div>
+        </div>
+        <div class="wbgt-notes-col">
+          <div class="note-box" style="border-left-color:#005540;background:#E0F5EE;color:#004A37">
+            <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
+          </div>
+          <p class="wbgt-citation">
+            <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+          </p>
+        </div>
+      </div>`;
   }
 
   let _unacclimChartActive = false;

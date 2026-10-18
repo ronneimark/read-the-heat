@@ -253,12 +253,37 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     flex: 1; min-height: 0; display: flex; flex-direction: column;
   }
   #trh-tab-result-wrap, #trh-utab-result-wrap,
-  #trh-tab-notes, #trh-utab-notes,
   #trh-tab-formula, #trh-utab-formula,
   #trh-tab-reftable, #trh-utab-reftable {
     flex: 1; min-height: 0; overflow-y: auto;
   }
+  #trh-tab-notes, #trh-utab-notes {
+    flex: 1; min-height: 0; overflow: hidden; padding: 0; max-width: none; margin: 0;
+  }
   #trh-tab-chart, #trh-utab-chart { flex: 1; min-height: 0; overflow: hidden; }
+  /* ── Notes 2-column layout (desktop only) ── */
+  .hi-notes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 14px 20px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .hi-notes-col-left,
+  .hi-notes-col-right {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .hi-notes-layout .hi-notes-section { margin-bottom: 10px; flex-shrink: 0; }
+  .hi-notes-layout .activity-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0; }
+  .hi-notes-layout .activity-card { padding: 9px 11px; }
+  .hi-notes-layout .activity-card h4 { font-size: 13px; }
+  .hi-notes-layout .activity-card p  { font-size: 12px; }
+  .hi-notes-layout .note-box { font-size: 13px; padding: 10px 14px; }
 }
 @media (max-width: 768px) {
   #trh-result-card { position: static; border-radius: 0; box-shadow: none; }
@@ -1290,9 +1315,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   </div>`;
 
   function _buildNotesContent(rangeNotes, extraTop) {
-    const unit = _hiUnit;
-    let html = ACT_DEFS_HTML + (extraTop || '');
-    html += `<div class="hi-notes-section">
+    const rightHtml = (extraTop || '') + `
+    <div class="hi-notes-section">
       <h3>Hydration Guidance</h3>
       <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
     </div>
@@ -1300,7 +1324,10 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <h3>Radiant Heat Limitation</h3>
       <div class="note-box warn-note" style="margin:0"><strong>Heat Index does not account for radiant heat from equipment, machinery, ovens, furnaces, or other hot surfaces.</strong> Heat index was developed for shade conditions with 5 mph wind. In indoor environments with direct radiant heat sources, very high or low air movement, or PPE/impermeable clothing — heat index <em>significantly underestimates</em> actual heat stress. If your work area has high levels of radiant heat, the work-rest cycles on this page may not adequately protect workers. WBGT is the preferred occupational heat stress measure in these settings.</div>
     </div>`;
-    return html;
+    return `<div class="hi-notes-layout">
+      <div class="hi-notes-col-left">${ACT_DEFS_HTML}</div>
+      <div class="hi-notes-col-right">${rightHtml}</div>
+    </div>`;
   }
 
   function buildTrhNotesTab() {
