@@ -241,6 +241,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   #trh-result-card {
     position: fixed;
     left: 35px; right: 35px; bottom: 35px;
+    transition: left 0.2s, right 0.2s;
     background: var(--bg, #FFFFFF);
     border-radius: 14px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
@@ -283,6 +284,10 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 }
 @media (max-width: 768px) {
   #trh-result-card { position: static; border-radius: 0; box-shadow: none; }
+}
+
+@media (min-width: 769px) {
+  #trh-result-card.notes-wide { left: 12px; right: 12px; }
 }
 
 /* Unit toggle strip inside chart pane */
@@ -1544,6 +1549,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
+    document.getElementById('trh-result-card').classList.toggle('notes-wide', which === 'notes');
     sizeTrhCard();
   }
 
@@ -1569,6 +1575,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
+    document.getElementById('trh-result-card').classList.toggle('notes-wide', which === 'notes');
     sizeTrhCard();
   }
 
