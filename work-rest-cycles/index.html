@@ -1176,8 +1176,9 @@
       pop.hidden = false;
       btn.setAttribute('aria-expanded', 'true');
       requestAnimationFrame(() => {
-        lockPanelHeight();
         positionIntroPopover();
+        lockPanelHeight();
+        positionIntroPopover(); /* re-check after heights are locked */
       });
     }
   }
@@ -1225,7 +1226,7 @@
   });
   window.addEventListener('resize', () => {
     const pop = document.getElementById('intro-popover');
-    if (!pop.hidden) { lockPanelHeight(); positionIntroPopover(); }
+    if (!pop.hidden) { positionIntroPopover(); lockPanelHeight(); positionIntroPopover(); }
   });
 
   const INSTRUMENT_PHOTOS = {
