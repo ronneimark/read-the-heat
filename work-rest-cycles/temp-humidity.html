@@ -1515,8 +1515,23 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <p style="font-size:12px;color:var(--subtext,#6B7785);margin-top:10px;font-style:italic;line-height:1.5">
         Heat index values computed using the Rothfusz regression (NWS Technical Attachment SR/SSD 90-23). Values apply to shaded conditions at approximately 5 mph wind.
         Direct sunlight can add 10–15°F to perceived heat. Dash (—) indicates conditions outside the equation's valid range.
-      </p>
-    </div>`;
+      </p>`;
+
+    if (_hiTempValF != null && _hiRhVal != null) {
+      const _T = _hiTempValF, _RH = _hiRhVal;
+      const _hiSimple = 0.5 * (_T + 61.0 + (_T - 68.0) * 1.2 + _RH * 0.094);
+      if (_T < 80 || _hiSimple < 80) {
+        const _tDisp = unit === 'C' ? (Math.round((_T - 32) * 5/9 * 10) / 10) + '°C' : _T + '°F';
+        const _hiDisp = unit === 'C' ? (Math.round((_hiSimple - 32) * 5/9 * 10) / 10) + '°C' : _hiSimple.toFixed(1) + '°F';
+        html += `<p style="font-size:12px;color:var(--subtext,#6B7785);margin-top:8px;padding:8px 12px;background:var(--surface,#f0f4f8);border-left:3px solid #64b5f6;border-radius:0 4px 4px 0;line-height:1.6">
+          <strong>ℹ Note:</strong> At your current reading (${_tDisp} / ${_RH}% RH), the estimated heat index is ${_hiDisp} — below the NWS 80°F advisory threshold.
+          The <strong>Steadman (1979) simple approximation</strong> applies here. Below 80°F, the full 0–100% RH range shifts heat index by only ~4.7°F,
+          so the color gradient in this chart is less informative for your current conditions.
+        </p>`;
+      }
+    }
+
+    html += `</div>`;
     pane.innerHTML = html;
   }
 
