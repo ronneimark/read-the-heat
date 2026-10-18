@@ -356,7 +356,7 @@ main { padding: 0; max-width: none; }
   overflow: hidden;
   display: none;
   flex-direction: column;
-  padding: 8px;
+  padding: 16px;
   box-sizing: border-box;
 }
 body.hi-chart-active,
@@ -1311,7 +1311,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
           </div>
         </div>
         <div class="radiant-warn-strip" role="note">
-          <strong><span aria-hidden="true">⚠ </span>One limitation remains:</strong> Temperature + humidity accounts for what a thermometer alone misses. The remaining gap: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
+          <strong><span aria-hidden="true">⚠ </span></strong>Temperature + humidity accounts for the impact of humidity, which a thermometer alone cannot capture. There remains a gap in assessment of the level of heat stress: radiant heat from equipment, machinery, ovens, or solar load is not captured by any heat index method. Use WBGT when radiant heat sources are present.
         </div>
         ${(function(){
           const u = buildShareUrl();
