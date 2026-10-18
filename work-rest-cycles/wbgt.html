@@ -284,7 +284,6 @@ main { padding: 0; max-width: none; }
 
 .acc-hdr {
   font-size: 13px; /* overridden at runtime by fitGridHeaderSize() */
-  font-family: 'Times New Roman', Times, serif;
   font-weight: 700;
   background: linear-gradient(180deg, #253A52 0%, #1A2A3A 100%);
   color: #fff;
@@ -300,7 +299,6 @@ main { padding: 0; max-width: none; }
 
 .acc-range {
   font-size: 13px; /* overridden at runtime by fitGridHeaderSize() */
-  font-family: 'Times New Roman', Times, serif;
   font-weight: 600;
   color: var(--navy, #1A2A3A);
   align-items: flex-start;
@@ -673,10 +671,6 @@ main { padding: 0; max-width: none; }
 .acc-hdr {
   text-transform: none !important;
   letter-spacing: 0.01em !important;
-  font-family: 'Times New Roman', Times, serif !important;
-}
-.acc-range {
-  font-family: 'Times New Roman', Times, serif !important;
 }
 .acc-hdr-sub {
   flex-direction: column !important;
@@ -1333,7 +1327,7 @@ main { padding: 0; max-width: none; }
       const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
       if (overflows) hi = mid - 1; else lo = mid;
     }
-    const finalSize = Math.max(70, lo - 50) / 10 + 'px'; // ~2px smaller than max-fit
+    const finalSize = Math.max(70, lo - 70) / 10 + 'px'; // ~4px smaller than max-fit
     cells.forEach(c => c.style.fontSize = finalSize);
   }
 
