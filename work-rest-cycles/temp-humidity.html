@@ -275,9 +275,14 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   grid-template-columns: 22% repeat(4, 1fr);
   grid-template-rows: repeat(7, 1fr);
   min-height: 0;
+  position: relative;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.12),
+    0 8px 28px rgba(0,0,0,0.14),
+    0 24px 56px rgba(0,0,0,0.08);
 }
 .acc-cell {
   display: flex;
@@ -290,12 +295,13 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   line-height: 1.15;
   box-sizing: border-box;
   gap: 1px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.50);
 }
 .acc-cell.acc-last-row { border-bottom: none; }
 .acc-hdr {
   font-size: 14px;
   font-weight: 700;
-  background: var(--navy, #1A2A3A);
+  background: linear-gradient(180deg, #253A52 0%, #1A2A3A 100%);
   color: #fff;
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -303,15 +309,19 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom: 3px solid rgba(255,255,255,0.15) !important;
+  box-shadow: none;
 }
-.acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
+.acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
 .acc-range {
   font-size: 14px;
   font-weight: 600;
   color: var(--navy, #1A2A3A);
-  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
   padding-left: 12px;
-  background: var(--surface, #F0F4F8);
+  background: linear-gradient(to right, #E4EBF3 0%, #F0F4F8 100%);
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.60);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -321,13 +331,15 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .acclim-chart-grid .c-warn,
 .acclim-chart-grid .c-high,
 .acclim-chart-grid .c-stop { font-size: inherit; }
+/* Dark stop cells get a lighter inset shimmer */
+.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); }
 .acc-user-col.acc-hdr {
-  background: #2A4A6A;
+  background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
   border-left: 3px solid rgba(255,255,255,0.35);
   border-right: 3px solid rgba(255,255,255,0.35);
 }
 .acc-user-col:not(.acc-hdr) { background-image: linear-gradient(rgba(26,42,58,0.08), rgba(26,42,58,0.08)); }
-.acc-range.acc-user-row { background: #C8D9EC; font-weight: 800; border-left: 4px solid var(--navy, #1A2A3A); }
+.acc-range.acc-user-row { background: linear-gradient(to right, #B8CCDF, #C8D9EC); font-weight: 800; border-left: 4px solid var(--navy, #1A2A3A); }
 .acc-user-row:not(.acc-range) { background-image: linear-gradient(rgba(26,42,58,0.10), rgba(26,42,58,0.10)); }
 .acc-user-cell {
   outline: 6px solid var(--navy, #1A2A3A);
@@ -336,7 +348,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   z-index: 1;
 }
 .acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
-.acc-user-cell .wr-unit { font-size: clamp(8px, 1.3vh, 15px) !important; }
+.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
 
 /* Work/rest cell content */
 .wr-nums {
@@ -345,11 +357,25 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 }
 .wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
 .wr-unit {
-  font-size: clamp(7px, 1.1vh, 13px); font-weight: 500; opacity: 0.6;
+  font-size: clamp(9px, 1.5vh, 17px); font-weight: 500; opacity: 0.8;
   letter-spacing: 0.1px; text-transform: none; line-height: 1; white-space: nowrap;
 }
 .wr-continuous { font-size: clamp(11px, 2vh, 26px); font-weight: 700; }
 .wr-danger { font-size: clamp(11px, 2vh, 24px); font-weight: 900; letter-spacing: 0.04em; }
+
+/* ── Chart caption / legend ── */
+.chart-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.92);
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: clamp(9px, 1vh, 12px);
+  color: var(--subtext, #6B7785);
+  text-align: center;
+  padding: 4px 12px;
+  line-height: 1.4;
+  z-index: 2;
+}
 
 /* ── Notes tabs ── */
 #trh-tab-notes,
@@ -856,7 +882,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   }
   function hiLabel(cell) {
     if (!cell)           return '<span class="wr-danger">DANGER</span>';
-    if (cell.w === null) return `<span class="wr-continuous">Continuous${cell.star ? '*' : ''}</span>`;
+    if (cell.w === null) return `<span class="wr-continuous">Continuous${cell.star ? '<sup class="wr-fn">*</sup>' : ''}</span>`;
     return `<span class="wr-nums"><span class="wr-w">${cell.w}</span><span class="wr-slash">/</span><span class="wr-r">${cell.r}</span></span><span class="wr-unit">min work / min rest</span>`;
   }
   function hiLabelText(cell) {
@@ -1199,7 +1225,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
 
-    let html = `<div class="acclim-chart-grid" role="grid" aria-label="${gridLabel}">`;
+    let html = `<div class="acclim-chart-grid" role="grid" aria-label="${gridLabel}" tabindex="0">`;
     html += '<div role="row" style="display:contents">';
     html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">Heat Index</div>`;
     for (let ci = 0; ci < 4; ci++) {
@@ -1218,12 +1244,14 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         const isUserCell = isUserRow && isUserCol && rowIdx >= 0;
         const cls = hiClass(cell);
         const lbl     = hiLabel(cell);
-        const ariaLbl = isUserCell ? `${hiLabelText(cell)} — your recommended work-rest cycle` : hiLabelText(cell);
+        const sevLabel = cls === 'c-safe' ? 'Safe' : cls === 'c-caution' ? 'Caution' : cls === 'c-warn' ? 'Warning' : cls === 'c-high' ? 'High risk' : 'DANGER';
+        const ariaLbl = isUserCell ? `${sevLabel} — ${hiLabelText(cell)} — your recommended work-rest cycle` : `${sevLabel} — ${hiLabelText(cell)}`;
         html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
       }
       html += '</div>';
     }
     html += '</div>';
+    html += '<div class="chart-caption">Work-rest cycles per hour. &nbsp;* Continuous work approaches the hourly exposure limit; ensure acclimatization and close monitoring.</div>';
     pane.insertAdjacentHTML('beforeend', html);
   }
 
