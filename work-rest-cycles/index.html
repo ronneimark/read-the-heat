@@ -1084,8 +1084,8 @@
        viewport edge, so no vertical scroll is needed.
        On narrow screens (≤ 767px) skip this and fall straight to scroll. ── */
     if (vpW >= 768) {
-      /* Start from the CSS min-width equivalent */
-      const minW = Math.min(680, vpW * 0.96);
+      /* Start narrow; widen only if content doesn't fit */
+      const minW = Math.min(520, vpW * 0.96);
       const maxW = vpW * 0.96;          /* never bleed off screen */
       const step = 20;                  /* px increments */
 
@@ -1098,7 +1098,7 @@
         pop.style.width = w + 'px';
       }
     } else {
-      pop.style.width = Math.min(680, vpW * 0.96) + 'px';
+      pop.style.width = Math.min(520, vpW * 0.96) + 'px';
     }
 
     /* ── Step 3: position vertically ── */
