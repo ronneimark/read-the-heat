@@ -557,6 +557,18 @@ body.chart-active { overflow: hidden; }
   color: var(--subtext,#6B7785); line-height: 1; flex-shrink: 0; padding: 2px 4px;
 }
 .sched-dialog-close:hover { color: var(--navy,#1A2A3A); }
+/* ── Full Chart tab header sub-labels ── */
+.acc-hdr-sub { white-space: normal !important; line-height: 1.25; }
+.acc-sub {
+  display: block;
+  font-size: 0.62em;
+  font-weight: 500;
+  opacity: 0.72;
+  letter-spacing: 0.2px;
+  margin-top: 2px;
+  text-transform: none;
+  white-space: nowrap;
+}
 /* ── Table header sub-labels (metabolic rate) ── */
 .th-sub {
   display: block;
@@ -1133,13 +1145,14 @@ body.chart-active { overflow: hidden; }
     const unitKey = unit === 'C' ? 'c' : 'f';
     const labels  = WBGT_ROW_LABELS[unitKey];
     const actNames = ['Light Work', 'Moderate Work', 'Heavy Work', 'Very Heavy Work'];
+    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     let html = '<div class="acclim-chart-grid">';
 
     // Header row
     html += `<div class="acc-cell acc-hdr acc-range-hdr">WBGT Range</div>`;
     for (let ci = 0; ci < 4; ci++) {
       const isUser = ci === colIdx;
-      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}">${actNames[ci]}</div>`;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser ? ' acc-user-col' : ''}">${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
     }
 
     // Data rows
@@ -1451,11 +1464,12 @@ body.chart-active { overflow: hidden; }
     const unitKey  = unit === 'C' ? 'c' : 'f';
     const labels   = RAL_ROW_LABELS[unitKey];
     const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     let html = '<div class="acclim-chart-grid">';
     html += `<div class="acc-cell acc-hdr acc-range-hdr">WBGT Range</div>`;
     for (let ci = 0; ci < 4; ci++) {
       const isUser = ci === colIdx;
-      html += `<div class="acc-cell acc-hdr${isUser?' acc-user-col':''}">${actNames[ci]}</div>`;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser?' acc-user-col':''}">${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
     }
     for (let ri = 0; ri < 9; ri++) {
       const isUserRow = ri === rowIdx, isLastRow = ri === 8;

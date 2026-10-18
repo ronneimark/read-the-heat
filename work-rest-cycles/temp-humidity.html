@@ -437,6 +437,13 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   border-left: 3px solid var(--warn-text,#7B2500); margin-top: 12px;
 }
 .sched-foot-note { font-size: 11px; color: var(--subtext); font-style: italic; margin-top: 6px; }
+/* ── Full Chart tab header sub-labels ── */
+.acc-hdr-sub { white-space: normal !important; line-height: 1.25; }
+.acc-sub {
+  display: block; font-size: 0.62em; font-weight: 500;
+  opacity: 0.72; letter-spacing: 0.2px; margin-top: 2px;
+  text-transform: none; white-space: nowrap;
+}
 /* ── Table / chart header sub-labels ── */
 .th-sub {
   display: block; font-size: 10px; font-weight: 500;
@@ -1157,6 +1164,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     if (!pane) return;
     const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
     const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
 
@@ -1165,7 +1173,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">Heat Index</div>`;
     for (let ci = 0; ci < 4; ci++) {
       const isUser = ci === colIdx;
-      html += `<div class="acc-cell acc-hdr${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}</div>`;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
     }
     html += '</div>';
     for (let ri = 0; ri < 6; ri++) {
