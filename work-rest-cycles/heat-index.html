@@ -285,8 +285,8 @@ main { padding: 0; max-width: none; }
   #hi-unacclim-tab-bar-wrap { display: none !important; }
 
   /* Force non-result panes hidden */
-  #hi-tab-chart, #hi-tab-notes, #hi-tab-formula,
-  #hi-utab-chart, #hi-utab-notes, #hi-utab-formula,
+  #hi-tab-chart, #hi-tab-notes, #hi-tab-formula, #hi-tab-hitable,
+  #hi-utab-chart, #hi-utab-notes, #hi-utab-formula, #hi-utab-hitable,
   #hi-formula-footnote { display: none !important; }
 
   /* Release result panes from fixed/viewport-height sizing */
@@ -390,7 +390,9 @@ main { padding: 0; max-width: none; }
   #hi-tab-result-wrap,
   #hi-utab-result-wrap,
   #hi-tab-formula,
-  #hi-utab-formula {
+  #hi-utab-formula,
+  #hi-tab-hitable,
+  #hi-utab-hitable {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
@@ -788,6 +790,12 @@ main { padding: 0; max-width: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
         <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
       </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-hitable" role="tab"
+              aria-selected="false" aria-controls="hi-tab-hitable" tabindex="-1"
+              onclick="switchHITab('hitable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
+      </button>
     </div>
   </div>
 
@@ -818,6 +826,12 @@ main { padding: 0; max-width: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
         <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
       </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-hitable" role="tab"
+              aria-selected="false" aria-controls="hi-utab-hitable" tabindex="-1"
+              onclick="switchHIUnacclimTab('hitable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
+      </button>
     </div>
   </div>
 
@@ -832,6 +846,7 @@ main { padding: 0; max-width: none; }
       <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0"></div>
       <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
       <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
+      <div id="hi-tab-hitable" role="tabpanel" aria-labelledby="hi-tab-btn-hitable" tabindex="0"></div>
     </div><!-- /hi-acclim-tabs -->
 
     <!-- ── Unacclimatized tab panels ── -->
@@ -842,6 +857,7 @@ main { padding: 0; max-width: none; }
       <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0"></div>
       <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
       <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
+      <div id="hi-utab-hitable" role="tabpanel" aria-labelledby="hi-utab-btn-hitable" tabindex="0"></div>
     </div><!-- /hi-unacclim-tabs -->
 
   </div><!-- /hi-tab-content-area -->
@@ -1181,6 +1197,8 @@ main { padding: 0; max-width: none; }
       buildHIUnacclimResultTab(null);
       buildHIFormulaTab();
       buildHIUnacclimFormulaTab();
+      if (_hiCurrentTab         === 'hitable') buildHILookupTable('acclim');
+      if (_hiUnacclimCurrentTab === 'hitable') buildHILookupTable('unacclim');
     }
   }
 
@@ -1273,6 +1291,92 @@ main { padding: 0; max-width: none; }
   }
   function buildHIFormulaTab()        { _buildFormulaTab('hi-tab-formula'); }
   function buildHIUnacclimFormulaTab() { _buildFormulaTab('hi-utab-formula'); }
+
+  // ── NWS Heat Index Lookup Table ───────────────────────────────────────────────
+  const HI_REF_TEMPS_F = [70, 75, 80, 85, 90, 95, 100, 105, 110];
+  const HI_REF_RHS     = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const HI_REF_DATA = [
+    [65,66,67,68,69,70,70,71,71],
+    [69,71,72,73,74,75,76,77,78],
+    [75,77,78,79,81,82,83,85,86],
+    [79,82,84,86,88,90,93,97,102],
+    [83,86,88,91,95,100,106,113,122],
+    [87,91,96,101,107,114,124,136,999],
+    [91,95,100,109,118,129,999,999,999],
+    [95,101,109,118,130,999,999,999,999],
+    [99,107,118,130,999,999,999,999,999]
+  ];
+
+  function buildHILookupTable(which) {
+    const paneId = which === 'acclim' ? 'hi-tab-hitable' : 'hi-utab-hitable';
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+
+    // Find nearest cell to user's current T+RH
+    let hlRow = -1, hlCol = -1;
+    if (_hiTempValF != null && _hiRhVal != null) {
+      let bestT = Infinity;
+      HI_REF_TEMPS_F.forEach((tf, i) => { const d = Math.abs(tf - _hiTempValF); if (d < bestT) { bestT = d; hlRow = i; } });
+      let bestR = Infinity;
+      HI_REF_RHS.forEach((rh, j) => { const d = Math.abs(rh - _hiRhVal); if (d < bestR) { bestR = d; hlCol = j; } });
+    }
+
+    function hiColor(hi) {
+      if (hi >= 999) return { bg:'#37474f', fg:'#fff' };
+      if (hi >= 125) return { bg:'#7b1fa2', fg:'#fff' };
+      if (hi >= 104) return { bg:'#c62828', fg:'#fff' };
+      if (hi >= 91)  return { bg:'#e65100', fg:'#fff' };
+      if (hi >= 80)  return { bg:'#f9a825', fg:'#222' };
+      return { bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)' };
+    }
+
+    const unit = _hiUnit;
+    const rowLabels = HI_REF_TEMPS_F.map(f =>
+      unit === 'C' ? (Math.round((f - 32) * 5/9 * 10) / 10) + '°C' : f + '°F'
+    );
+
+    const legendItems = [
+      { bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)', label:'No concern (< 80°F HI)' },
+      { bg:'#f9a825', fg:'#222', label:'Caution (80–90°F HI)' },
+      { bg:'#e65100', fg:'#fff', label:'Extreme Caution (91–103°F HI)' },
+      { bg:'#c62828', fg:'#fff', label:'Danger (104–124°F HI)' },
+      { bg:'#7b1fa2', fg:'#fff', label:'Extreme Danger (≥ 125°F HI)' },
+      { bg:'#37474f', fg:'#fff', label:'Exceeds table range' },
+    ];
+    let html = `<div style="padding:12px 16px;overflow-y:auto;height:100%;box-sizing:border-box">
+      <div style="display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:12px">`;
+    legendItems.forEach(({ bg, fg, label }) => {
+      html += `<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px">
+        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:${bg};border:1px solid #ccc"></span>
+        <span style="color:var(--text,#222)">${label}</span></span>`;
+    });
+    html += `</div>
+      <div style="overflow-x:auto">
+      <table style="border-collapse:collapse;font-size:13px;min-width:520px">
+        <thead><tr>
+          <th style="text-align:left;padding:7px 10px;width:100px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${unit === 'C' ? 'Air Temp (°C)' : 'Air Temp (°F)'}</th>`;
+    HI_REF_RHS.forEach(rh => {
+      html += `<th style="padding:7px 8px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0);text-align:center">RH ${rh}%</th>`;
+    });
+    html += `</tr></thead><tbody>`;
+    HI_REF_TEMPS_F.forEach((tempF, ri) => {
+      html += `<tr><td style="padding:7px 10px;font-weight:700;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${rowLabels[ri]}</td>`;
+      HI_REF_RHS.forEach((rh, ci) => {
+        const hi = HI_REF_DATA[ri][ci];
+        const { bg, fg } = hiColor(hi);
+        const isHL = (ri === hlRow && ci === hlCol);
+        const hiLabel = hi >= 999 ? '—' : (unit === 'C' ? (Math.round((hi - 32) * 5/9)) + '°C' : hi + '°F');
+        html += `<td style="padding:6px 8px;text-align:center;background:${bg};color:${fg};border:1px solid var(--border,#d0d8e0);${isHL ? 'outline:3px solid #000;font-weight:700;' : ''}">${hiLabel}</td>`;
+      });
+      html += `</tr>`;
+    });
+    html += `</tbody></table></div>
+      <p style="font-size:11px;color:var(--text-muted,#666);margin-top:10px">
+        <em>Source: National Weather Service Heat Index. Values in shade, light wind. Add 10–15°F in direct sunlight.</em>
+      </p>
+    </div>`;
+    pane.innerHTML = html;
+  }
 
   // ── Clock SVG ─────────────────────────────────────────────────────────────────
   function buildClockSvg(cell) {
@@ -1621,11 +1725,12 @@ main { padding: 0; max-width: none; }
   // ── Tab switching ─────────────────────────────────────────────────────────────
   function switchHITab(which) {
     _hiCurrentTab = which;
-    const tabs = ['result','chart','notes','formula'];
+    const tabs = ['result','chart','notes','formula','hitable'];
+    const flexTabs = new Set(['result','chart']);
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'hi-tab-result-wrap' : 'hi-tab-' + t;
       const panel = document.getElementById(panelId);
-      if (panel) panel.style.display = (t === which) ? (t === 'result' ? 'flex' : (t === 'chart' ? 'flex' : 'block')) : 'none';
+      if (panel) panel.style.display = (t === which) ? (flexTabs.has(t) ? 'flex' : 'block') : 'none';
       const btn = document.getElementById('hi-tab-btn-' + t);
       if (btn) {
         btn.classList.toggle('active', t === which);
@@ -1633,16 +1738,18 @@ main { padding: 0; max-width: none; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
+    if (which === 'hitable') buildHILookupTable('acclim');
     sizeHICard();
   }
 
   function switchHIUnacclimTab(which) {
     _hiUnacclimCurrentTab = which;
-    const tabs = ['result','chart','notes','formula'];
+    const tabs = ['result','chart','notes','formula','hitable'];
+    const flexTabs = new Set(['result','chart']);
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'hi-utab-result-wrap' : 'hi-utab-' + t;
       const panel = document.getElementById(panelId);
-      if (panel) panel.style.display = (t === which) ? (t === 'result' ? 'flex' : (t === 'chart' ? 'flex' : 'block')) : 'none';
+      if (panel) panel.style.display = (t === which) ? (flexTabs.has(t) ? 'flex' : 'block') : 'none';
       const btn = document.getElementById('hi-utab-btn-' + t);
       if (btn) {
         btn.classList.toggle('active', t === which);
@@ -1650,6 +1757,7 @@ main { padding: 0; max-width: none; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
+    if (which === 'hitable') buildHILookupTable('unacclim');
     sizeHICard();
   }
 
@@ -1677,8 +1785,10 @@ main { padding: 0; max-width: none; }
       onTrhInput();
     }
     // Rebuild charts if visible
-    if (_hiCurrentTab         === 'chart') buildHIChartTab();
-    if (_hiUnacclimCurrentTab === 'chart') buildHIUnacclimChartTab();
+    if (_hiCurrentTab         === 'chart')   buildHIChartTab();
+    if (_hiUnacclimCurrentTab === 'chart')   buildHIUnacclimChartTab();
+    if (_hiCurrentTab         === 'hitable') buildHILookupTable('acclim');
+    if (_hiUnacclimCurrentTab === 'hitable') buildHILookupTable('unacclim');
     // Rebuild result tabs with new unit
     if (_hiStoredVal != null) {
       buildHIResultTab({ measValue: _hiStoredVal, measUnit: _hiStoredUnit, activity: _hiActivity }, unit);
@@ -1890,7 +2000,7 @@ main { padding: 0; max-width: none; }
 
     // Keyboard nav — acclimatized tablist
     document.getElementById('hi-acclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula'];
+      const tabs = ['result','chart','notes','formula','hitable'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-tab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
@@ -1904,7 +2014,7 @@ main { padding: 0; max-width: none; }
 
     // Keyboard nav — unacclimatized tablist
     document.getElementById('hi-unacclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula'];
+      const tabs = ['result','chart','notes','formula','hitable'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-utab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }

@@ -621,8 +621,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <button class="acclim-tab-btn" id="trh-tab-btn-reftable" role="tab"
               aria-selected="false" aria-controls="trh-tab-reftable" tabindex="-1"
               onclick="switchTrhTab('reftable')">
-        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>Reference Table</span>
-        <span class="acclim-tab-btn-sub">Full T+RH lookup grid</span>
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
       </button>
     </div>
   </div>
@@ -657,8 +657,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <button class="acclim-tab-btn" id="trh-utab-btn-reftable" role="tab"
               aria-selected="false" aria-controls="trh-utab-reftable" tabindex="-1"
               onclick="switchTrhUnacclimTab('reftable')">
-        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>Reference Table</span>
-        <span class="acclim-tab-btn-sub">Full T+RH lookup grid</span>
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
       </button>
     </div>
   </div>
@@ -945,6 +945,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     const rh      = parseFloat(rhEl.value);
     const calcEl  = document.getElementById('trh-calc-display');
     if (isNaN(tempRaw) || isNaN(rh)) {
+      const prevRhNull = _hiRhVal === null;
       _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
       WRC.set({ derivedHI: null, derivedHIUnit: null });
       if (calcEl) calcEl.textContent = '—';
@@ -952,9 +953,12 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       buildTrhUnacclimResultTab();
       buildTrhFormulaTab();
       buildTrhUnacclimFormulaTab();
+      // Rebuild notes if RH state changed (so temp-only banner appears/disappears)
+      if (!prevRhNull) { buildTrhNotesTab(); buildTrhUnacclimNotesTab(); }
       return;
     }
     const tempF = _hiUnit === 'C' ? Math.round((tempRaw * 9/5 + 32) * 10) / 10 : tempRaw;
+    const prevRhNull = _hiRhVal === null;
     _hiTempValF = tempF;
     _hiRhVal    = rh;
     _hiCalcHI   = calcRothfuszHI(tempF, rh);
@@ -975,6 +979,10 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     buildTrhUnacclimResultTab();
     buildTrhFormulaTab();
     buildTrhUnacclimFormulaTab();
+    // Rebuild notes if RH state changed (so temp-only banner appears/disappears)
+    // Also rebuild NWS table so highlight cell updates
+    if (prevRhNull) { buildTrhNotesTab(); buildTrhUnacclimNotesTab(); }
+    buildTrhRefTable(); buildTrhUnacclimRefTable();
   }
 
   // ── Formula Check tab builder ─────────────────────────────────────────────────
@@ -1315,7 +1323,14 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   </div>`;
 
   function _buildNotesContent(rangeNotes, extraTop) {
-    const rightHtml = (extraTop || '') + `
+    const tempOnly = (_hiRhVal === null);
+    const tempOnlyBanner = tempOnly ? `
+    <div class="hi-notes-section">
+      <div class="note-box warn-note" style="margin:0;border-left-color:#7A4F00;background:#FFF8E1;color:#7A3F00">
+        <strong>⚠ Temperature-only mode.</strong> No relative humidity has been entered, so heat index cannot be calculated. The work-rest cycles on this page are based on Heat Index (T + RH). Without humidity, consider using the WBGT tool if a WBGT meter is available, or enter both temperature and relative humidity to use this page as intended.
+      </div>
+    </div>` : '';
+    const rightHtml = tempOnlyBanner + (extraTop || '') + `
     <div class="hi-notes-section">
       <h3>Hydration Guidance</h3>
       <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
@@ -1395,96 +1410,85 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     return '<span style="font-size:10px">' + hi_f + '°F</span>';
   }
 
-  function _buildRefTable(paneId, status) {
+  // ── NWS Heat Index lookup table (T+RH → HI, no activity levels) ─────────────
+  function _buildNWSHITable(paneId) {
     const pane = document.getElementById(paneId);
     if (!pane) return;
-    const act = _hiActivity;
     const unit = _hiUnit;
 
-    // Temperature header label
-    const tempHeaderLabel = unit === 'C' ? 'Temp (°C)' : 'Temp (°F)';
-    // Row labels
-    const rowLabels = REF_TEMPS_F.map(f => {
-      if (unit === 'C') {
-        const c = Math.round((f - 32) * 5/9 * 10) / 10;
-        return c + '°C';
-      }
-      return f + '°F';
-    });
+    // Highlight the cell nearest the user's current reading
+    let hlRow = -1, hlCol = -1;
+    if (_hiTempValF != null && _hiRhVal != null) {
+      let bestT = Infinity;
+      REF_TEMPS_F.forEach((tf, i) => { const d = Math.abs(tf - _hiTempValF); if (d < bestT) { bestT = d; hlRow = i; } });
+      let bestR = Infinity;
+      REF_RHS.forEach((rh, j) => { const d = Math.abs(rh - _hiRhVal); if (d < bestR) { bestR = d; hlCol = j; } });
+    }
 
-    let html = `<div class="reftable-activity-strip">
-      <span class="toggle-label">Activity Level:</span>
-      <div class="toggle" role="group" aria-label="Activity level for reference table">
-        <button class="act-btn${act === 'light'    ? ' active' : ''}" onclick="setRefActivity('light',   '${paneId}')" data-level="light">🟢 Light</button>
-        <button class="act-btn${act === 'moderate' ? ' active' : ''}" onclick="setRefActivity('moderate','${paneId}')" data-level="moderate">🟡 Moderate</button>
-        <button class="act-btn${act === 'heavy'    ? ' active' : ''}" onclick="setRefActivity('heavy',   '${paneId}')" data-level="heavy">🔴 Heavy</button>
-        <button class="act-btn${act === 'vh'       ? ' active' : ''}" onclick="setRefActivity('vh',      '${paneId}')" data-level="vh">⛔ Very Heavy</button>
+    // NWS category color for a given HI (°F)
+    function hiColor(hi) {
+      if (hi >= 999) return { bg:'#37474f', fg:'#fff' };
+      if (hi >= 125) return { bg:'#7b1fa2', fg:'#fff' };
+      if (hi >= 104) return { bg:'#c62828', fg:'#fff' };
+      if (hi >= 91)  return { bg:'#e65100', fg:'#fff' };
+      if (hi >= 80)  return { bg:'#f9a825', fg:'#222' };
+      return { bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)' };
+    }
+
+    const tempHdr = unit === 'C' ? 'Air Temp (°C)' : 'Air Temp (°F)';
+    const rowLabels = REF_TEMPS_F.map(f =>
+      unit === 'C' ? (Math.round((f - 32) * 5/9 * 10) / 10) + '°C' : f + '°F'
+    );
+
+    // Build legend
+    const legend = [
+      { label:'No concern',             bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)', border:'1px solid var(--border,#ccc)' },
+      { label:'Caution (80–90°F)',       bg:'#f9a825', fg:'#222',  border:'none' },
+      { label:'Extreme Caution (91–103°F)', bg:'#e65100', fg:'#fff', border:'none' },
+      { label:'Danger (104–124°F)',      bg:'#c62828', fg:'#fff',  border:'none' },
+      { label:'Extreme Danger (125°F+)',  bg:'#7b1fa2', fg:'#fff',  border:'none' },
+    ].map(l => `<span style="background:${l.bg};color:${l.fg};border:${l.border};padding:3px 10px;border-radius:4px;font-size:12px;font-weight:700;white-space:nowrap">${l.label}</span>`).join('');
+
+    let html = `<div style="padding:14px 20px;overflow-y:auto;height:100%;box-sizing:border-box">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+        ${legend}
+        ${_hiTempValF != null && _hiRhVal != null ? '<span style="font-size:12px;color:var(--subtext);margin-left:4px"><strong>Bold outline</strong> = your current reading</span>' : ''}
       </div>
-      <div class="toggle" role="group" aria-label="Temperature unit" style="margin-left:auto">
-        <button class="${unit === 'F' ? 'active' : ''}" onclick="setTrhUnit('F')">°F</button>
-        <button class="${unit === 'C' ? 'active' : ''}" onclick="setTrhUnit('C')">°C</button>
-      </div>
-    </div>
-    <div class="activity-grid" style="margin-bottom:16px">
-      <div class="activity-card" style="border-top-color:#005540">
-        <h4>🟢 Light Work</h4>
-        <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
-        <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
-      </div>
-      <div class="activity-card" style="border-top-color:#7A4F00">
-        <h4>🟡 Moderate Work</h4>
-        <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
-        <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
-      </div>
-      <div class="activity-card" style="border-top-color:#8B2500">
-        <h4>🔴 Heavy Work</h4>
-        <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
-        <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
-      </div>
-      <div class="activity-card" style="border-top-color:#6D0000">
-        <h4>⛔ Very Heavy Work</h4>
-        <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
-        <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
-      </div>
-    </div>
-    <div class="table-wrap">
-    <table id="reftable-${paneId}" style="min-width:600px">
-      <thead><tr>
-        <th class="left" style="width:100px">${tempHeaderLabel}</th>
-        <th>RH 10%</th><th>RH 20%</th><th>RH 30%</th><th>RH 40%</th>
-        <th>RH 50%</th><th>RH 60%</th><th>RH 70%</th><th>RH 80%</th><th>RH 90%</th>
-      </tr></thead>
-      <tbody>`;
+      <div class="table-wrap">
+      <table style="min-width:580px;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums">
+        <thead><tr>
+          <th style="text-align:left;padding:7px 10px;width:100px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${tempHdr}</th>`;
+    REF_RHS.forEach(rh => { html += `<th style="padding:7px 8px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0);text-align:center">RH ${rh}%</th>`; });
+    html += `</tr></thead><tbody>`;
 
     REF_TEMPS_F.forEach((tempF, ri) => {
-      html += `<tr><td class="label">${rowLabels[ri]}</td>`;
+      html += `<tr><td style="padding:7px 10px;font-weight:700;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${rowLabels[ri]}</td>`;
       REF_RHS.forEach((rh, ci) => {
         const hi = REF_HI[ri][ci];
-        const tier = getTierForHI(hi, status);
-        const rec  = tier[act];
-        html += `<td class="hi-cell ${rec.cls}">${hiDisplayRef(hi)}<br><small>${rec.txt}</small></td>`;
+        const { bg, fg } = hiColor(hi);
+        const isHL = ri === hlRow && ci === hlCol;
+        const disp = hi >= 999 ? '—' : (unit === 'C' ? (Math.round((hi - 32) * 5/9 * 10) / 10) + '°C' : hi + '°F');
+        const outline = isHL ? 'outline:3px solid var(--navy,#1A2A3A);outline-offset:-3px;font-weight:800;' : '';
+        html += `<td style="padding:7px 8px;background:${bg};color:${fg};border:1px solid var(--border,#d0d8e0);text-align:center;${outline}">${disp}</td>`;
       });
       html += `</tr>`;
     });
 
     html += `</tbody></table></div>
-    <div class="note-box" style="margin-top:12px">
-      <strong>How to use:</strong> Find the row for current air temperature and column for relative humidity.
-      <em>CONT*</em> = continuous work is acceptable but active monitoring, buddy system, and ready access to water are required.
-      Heat index values from NWS Rothfusz regression† — see page footnote.
+      <p style="font-size:12px;color:var(--subtext,#6B7785);margin-top:10px;font-style:italic;line-height:1.5">
+        Heat index values computed using the Rothfusz regression (NWS Technical Attachment SR/SSD 90-23). Values apply to shaded conditions at approximately 5 mph wind.
+        Direct sunlight can add 10–15°F to perceived heat. Dash (—) indicates conditions outside the equation's valid range.
+      </p>
     </div>`;
     pane.innerHTML = html;
   }
 
-  function buildTrhRefTable()        { _buildRefTable('trh-tab-reftable', 'acclimatized'); }
-  function buildTrhUnacclimRefTable() { _buildRefTable('trh-utab-reftable', 'unacclimatized'); }
+  function buildTrhRefTable()        { _buildNWSHITable('trh-tab-reftable'); }
+  function buildTrhUnacclimRefTable() { _buildNWSHITable('trh-utab-reftable'); }
 
   function setRefActivity(level, paneId) {
     _hiActivity = level;
-    // Rebuild the current ref table
-    if (paneId === 'trh-tab-reftable')    buildTrhRefTable();
-    if (paneId === 'trh-utab-reftable')   buildTrhUnacclimRefTable();
-    // Also update result tabs so activity card stays in sync
+    // Update result/chart tabs so activity card stays in sync
     buildTrhResultTab();
     buildTrhUnacclimResultTab();
     if (_hiCurrentTab === 'chart')         buildTrhChartTab();

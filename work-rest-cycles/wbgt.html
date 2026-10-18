@@ -109,6 +109,7 @@ main { padding: 0; max-width: none; }
 
   /* Force all non-result panes hidden */
   #acclim-tab-chart,
+  #acclim-tab-notes,
   #unacclim-tab-chart,
   #unacclim-tab-schedule,
   #unacclim-tab-notes { display: none !important; }
@@ -221,6 +222,7 @@ main { padding: 0; max-width: none; }
   #unacclim-tab-schedule {
     flex: 1; min-height: 0; overflow-y: auto;
   }
+  #acclim-tab-notes,
   #unacclim-tab-notes {
     flex: 1; min-height: 0; overflow: hidden;
   }
@@ -768,6 +770,12 @@ main { padding: 0; max-width: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
         <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
       </button>
+      <button class="acclim-tab-btn" id="tab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="acclim-tab-notes" tabindex="-1"
+              onclick="switchAcclimTab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+      </button>
     </div>
   </div>
   <div id="unacclim-tab-bar-wrap" style="display:none">
@@ -803,6 +811,7 @@ main { padding: 0; max-width: none; }
     <div id="wbgt-acclim-tabs" style="display:none">
       <div id="acclim-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result" class="result-grid"></div></div>
       <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
+      <div id="acclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="tab-btn-notes" tabindex="0"></div>
     </div>
     <!-- ══ UNACCLIMATIZED 4-TAB VIEW ══ -->
     <div id="wbgt-unacclim-tabs" style="display:none">
@@ -1337,25 +1346,27 @@ main { padding: 0; max-width: none; }
   }
 
   function switchAcclimTab(which) {
-    const isChart = which === 'chart';
-    document.getElementById('acclim-tab-result-wrap').style.display = isChart ? 'none' : '';
-    document.getElementById('acclim-tab-chart').style.display  = isChart ? 'flex' : 'none';
-    const btnResult = document.getElementById('tab-btn-result');
-    const btnChart  = document.getElementById('tab-btn-chart');
-    btnResult.classList.toggle('active', !isChart);
-    btnResult.setAttribute('aria-selected', String(!isChart));
-    btnResult.tabIndex = isChart ? -1 : 0;
-    btnChart.classList.toggle('active',  isChart);
-    btnChart.setAttribute('aria-selected', String(isChart));
-    btnChart.tabIndex = isChart ? 0 : -1;
-    _chartActive = isChart;
+    const panels = { result: 'acclim-tab-result-wrap', chart: 'acclim-tab-chart', notes: 'acclim-tab-notes' };
+    const displays = { result: '', chart: 'flex', notes: 'block' };
+    Object.entries(panels).forEach(([key, id]) => {
+      document.getElementById(id).style.display = key === which ? (displays[key]) : 'none';
+    });
+    ['result', 'chart', 'notes'].forEach(key => {
+      const btn = document.getElementById('tab-btn-' + key);
+      if (!btn) return;
+      const active = key === which;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', String(active));
+      btn.tabIndex = active ? 0 : -1;
+    });
+    _chartActive = which === 'chart';
     sizeWbgtCard();
   }
 
   // Arrow-key navigation for acclimatized tablist
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('acclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result', 'chart'];
+      const tabs = ['result', 'chart', 'notes'];
       const cur  = tabs.findIndex(t => document.getElementById('tab-btn-' + t).getAttribute('aria-selected') === 'true');
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
@@ -1710,6 +1721,32 @@ main { padding: 0; max-width: none; }
       <p style="font-size:12px;color:var(--subtext);margin-top:14px;font-style:italic">Source: NIOSH (2016) Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (Table B-3)</p>`;
   }
 
+  function buildAcclimNotesTab() {
+    document.getElementById('acclim-tab-notes').innerHTML = `
+      <div class="wbgt-notes-layout">
+        <div class="wbgt-notes-col">
+          <div class="note-box warn-note">
+            <strong>Monitoring during acclimatized heat work:</strong>
+            <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.7">
+              <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+              <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+              <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+              <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans even after acclimatization</li>
+              <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+            </ul>
+          </div>
+        </div>
+        <div class="wbgt-notes-col">
+          <div class="note-box" style="border-left-color:#005540;background:#E0F5EE;color:#004A37">
+            <strong>Environmental monitoring required.</strong> The work-rest cycles above are based on WBGT measurements. WBGT already accounts for air temperature, humidity, wind, and solar radiation — continue monitoring conditions throughout the work period, as WBGT can change rapidly. Per NIOSH (2016), acclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Exposure Limits (REL).
+          </div>
+          <p class="wbgt-citation">
+            <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+          </p>
+        </div>
+      </div>`;
+  }
+
   function buildUnacclimNotesTab() {
     document.getElementById('unacclim-tab-notes').innerHTML = `
       <div class="wbgt-notes-layout">
@@ -1895,6 +1932,7 @@ main { padding: 0; max-width: none; }
 
       buildResultTab(s);
       buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
+      buildAcclimNotesTab();
 
     } else if (hasUnacclimSession) {
       _sessionMode = 'unacclim';
