@@ -413,11 +413,12 @@
     overflow: hidden;
   }
   /* selected pill — red background, white font */
+  /* set pill — green: step has a value and can be revisited */
   .wrc-crumb {
     display: inline-flex;
     align-items: center;
     padding: 6px 16px;
-    background: #D50032;
+    background: #00966C;
     border: 1px solid rgba(255,255,255,0.30);
     border-radius: 20px;
     color: #fff;
@@ -428,27 +429,27 @@
     transition: background 0.12s;
   }
   .wrc-crumb:hover {
-    background: #b8002a;
+    background: #007A58;
     border-color: rgba(255,255,255,0.50);
   }
-  /* current page pill — green */
+  /* current page pill — yellow */
   .wrc-crumb-current,
   .wrc-crumb-pending.wrc-crumb-current {
-    background: #00966C !important;
-    border-color: rgba(255,255,255,0.35) !important;
-    color: #fff !important;
+    background: #FFD600 !important;
+    border-color: rgba(0,0,0,0.15) !important;
+    color: #001E62 !important;
     font-style: normal !important;
   }
   .wrc-crumb-current:hover {
-    background: #007A58 !important;
-    color: #fff !important;
+    background: #FFBA00 !important;
+    color: #001E62 !important;
   }
-  /* pending pill — no selection yet, red bg, italic white */
+  /* pending pill — red: step not yet set */
   .wrc-crumb-pending {
     display: inline-flex;
     align-items: center;
     padding: 6px 16px;
-    background: #D50032;
+    background: #C62828;
     border: 1px dashed rgba(255,255,255,0.60);
     border-radius: 20px;
     color: #fff;
@@ -461,7 +462,7 @@
     transition: background 0.12s, color 0.12s;
   }
   .wrc-crumb-pending:hover {
-    background: #b8002a;
+    background: #B71C1C;
     color: #fff;
   }
   /* value pill — yellow, oversized, bleeds above and below the strip */
