@@ -585,6 +585,27 @@ body { background: #F6F3EC !important; }
   const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Temp & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
   const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
 
+  // ── Last-entered value memory (localStorage) ──────────────────────────────────
+  const _LS_TEMP = 'wrc_last_temp_f';
+  const _LS_RH   = 'wrc_last_rh';
+
+  function _loadLastMeas() {
+    try {
+      const t = parseFloat(localStorage.getItem(_LS_TEMP));
+      const r = parseFloat(localStorage.getItem(_LS_RH));
+      return { tempF: isNaN(t) ? null : t, rh: isNaN(r) ? null : r };
+    } catch { return { tempF: null, rh: null }; }
+  }
+  function _saveLastTemp(val, unit) {
+    try {
+      const f = unit === 'C' ? parseFloat(val) * 9/5 + 32 : parseFloat(val);
+      if (!isNaN(f)) localStorage.setItem(_LS_TEMP, Math.round(f * 10) / 10);
+    } catch {}
+  }
+  function _saveLastRh(rh) {
+    try { if (!isNaN(parseFloat(rh))) localStorage.setItem(_LS_RH, parseFloat(rh)); } catch {}
+  }
+
   function openMeasModal(instrument, triggerEl) {
     measCurrentInstrument = instrument;
     measCurrentUnit = 'F';
@@ -599,7 +620,12 @@ body { background: #F6F3EC !important; }
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith('-f'));
     });
-    const measDefaults = { 'meas-value': '74', 'meas-temp': '74', 'meas-rh': '50' };
+    const _last = _loadLastMeas();
+    const measDefaults = {
+      'meas-value': _last.tempF != null ? _last.tempF : '74',
+      'meas-temp':  _last.tempF != null ? _last.tempF : '74',
+      'meas-rh':    _last.rh    != null ? _last.rh    : '50',
+    };
     ['meas-value','meas-temp','meas-rh'].forEach(id => {
       const el = document.getElementById(id);
       if (el) { el.value = measDefaults[id] ?? '74'; el.classList.remove('error'); }
@@ -676,6 +702,8 @@ body { background: #F6F3EC !important; }
         valid = false;
       }
       if (!valid) return;
+      _saveLastTemp(tempVal, measCurrentUnit);
+      _saveLastRh(rhVal);
       WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal), dbtConservative: false });
     } else if (measCurrentInstrument === 'dbt') {
       const valEl = document.getElementById('meas-value');
@@ -686,6 +714,7 @@ body { background: #F6F3EC !important; }
         return;
       }
       // Conservative ceiling: assume 100% RH and route through T+RH calculator
+      _saveLastTemp(val, measCurrentUnit);
       WRC.set({ measTemp: parseFloat(val), measValue: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
       closeMeasModal();
       window.location.href = 'temp-humidity.html';
@@ -698,6 +727,7 @@ body { background: #F6F3EC !important; }
         document.getElementById('meas-single-error').classList.add('visible');
         return;
       }
+      _saveLastTemp(val, measCurrentUnit);
       WRC.set({ measValue: parseFloat(val), measUnit: measCurrentUnit });
     }
     closeMeasModal();
