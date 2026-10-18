@@ -436,11 +436,71 @@ function closeMethodologyModal() {
   document.body.style.overflow = '';
 }
 
+// ── Feedback modal ──
+function ensureFeedbackModal() {
+  if (document.getElementById('feedback-modal-overlay')) return;
+  var el = document.createElement('div');
+  el.innerHTML = `<div id="feedback-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title" onclick="if(event.target===this)closeFeedbackModal()">
+  <div id="feedback-modal">
+    <div class="modal-sticky-header">
+      <h2 id="feedback-modal-title">Comments &amp; Suggestions</h2>
+      <button class="modal-close-btn" onclick="closeFeedbackModal()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="feedback-modal-body">
+      <p>Have a comment, question, or suggestion? Fill out the form below and it will open in your email client.</p>
+      <div class="fb-field" id="fb-name-field">
+        <label for="fb-name">Name <span style="font-weight:400;color:#888">(optional)</span></label>
+        <input type="text" id="fb-name" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="fb-field" id="fb-msg-field">
+        <label for="fb-msg">Message <span style="color:#D50032">*</span></label>
+        <textarea id="fb-msg" placeholder="Type your comment or suggestion here…"></textarea>
+        <span class="fb-error-msg">Please enter a message before sending.</span>
+      </div>
+      <button class="fb-send-btn" onclick="submitFeedback()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Open in Email Client
+      </button>
+      <p class="fb-note">This will open your default email app with a pre-filled message addressed to the WRC tool team. Your message is not sent automatically.</p>
+    </div>
+  </div>
+</div>`;
+  document.body.appendChild(el.firstElementChild);
+}
+function openFeedbackModal() {
+  ensureFeedbackModal();
+  document.getElementById('feedback-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { var el = document.getElementById('fb-msg'); if (el) el.focus(); }, 50);
+}
+function closeFeedbackModal() {
+  var overlay = document.getElementById('feedback-modal-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function submitFeedback() {
+  var msg = (document.getElementById('fb-msg') || {}).value || '';
+  var name = (document.getElementById('fb-name') || {}).value || '';
+  var msgField = document.getElementById('fb-msg-field');
+  if (!msg.trim()) {
+    if (msgField) msgField.classList.add('error');
+    return;
+  }
+  if (msgField) msgField.classList.remove('error');
+  var subject = encodeURIComponent('WRC Tool Feedback');
+  var body = name.trim()
+    ? encodeURIComponent('From: ' + name.trim() + '\n\n' + msg.trim())
+    : encodeURIComponent(msg.trim());
+  window.location.href = 'mailto:rneima2@uic.edu?subject=' + subject + '&body=' + body;
+  closeFeedbackModal();
+}
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     closeActivityModal();
     closeMethodologyModal();
     closeHealthModal();
+    closeFeedbackModal();
   }
 });
 
