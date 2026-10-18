@@ -555,7 +555,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <button class="sched-type-tab"        onclick="switchSchedType('ret',this)">Returning Worker <small style="font-weight:500;display:block">4-day ramp</small></button>
     </div>
     <div id="sched-dialog-grid"></div>
-    <div class="sched-foot-warn">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+    <div class="sched-foot-warn">⚠ These percentages are % of the RAL (Recommended Alert Limit) — not full acclimatization. Reaching 100% RAL means the body is ready to begin adapting, but full acclimatization typically requires ~14 days of continued heat work. The REL (Recommended Exposure Limit), which is less restrictive, applies only after full acclimatization.</div>
     <div class="sched-foot-note">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
   </div>
 </dialog>
@@ -808,7 +808,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       html += `<div class="urec-day-row${isFull?' urec-day-full':''}">
         <div class="urec-day-label">${d.day}</div>
         <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
-        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%</div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent};min-width:64px">${d.pct}%<span style="font-size:10px;font-weight:400;opacity:0.75"> RAL</span></div>
         <div class="urec-day-times">${timesHtml}</div>
       </div>`;
     });
@@ -819,7 +819,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     if (!_schedCell) return;
     const isNew = workerStatus !== 'unacclimatized-returning';
     const sched = isNew ? SCHED_NEW : SCHED_RETURNING;
-    const sub   = (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  Times shown per 60-min period';
+    const sub   = (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  % = % of RAL  ·  Times per 60-min period';
     const gridHtml = '<div class="urec-sched-grid">' + _buildSchedRows(sched, _schedCell) + '</div>';
 
     if (window.innerWidth <= 768) {
@@ -1457,8 +1457,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <div class="table-wrap">
       <table style="min-width:580px;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums">
         <thead><tr>
-          <th style="text-align:left;padding:7px 10px;width:100px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${tempHdr}</th>`;
-    REF_RHS.forEach(rh => { html += `<th style="padding:7px 8px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0);text-align:center">RH ${rh}%</th>`; });
+          <th style="text-align:left;padding:7px 10px;width:100px;background:var(--navy,#1A2A3A);color:#fff;border:1px solid var(--border,#d0d8e0);font-weight:700;font-size:12px">${tempHdr}</th>`;
+    REF_RHS.forEach(rh => { html += `<th style="padding:7px 8px;background:var(--navy,#1A2A3A);color:#fff;border:1px solid var(--border,#d0d8e0);text-align:center;font-weight:700;font-size:12px">RH ${rh}%</th>`; });
     html += `</tr></thead><tbody>`;
 
     REF_TEMPS_F.forEach((tempF, ri) => {

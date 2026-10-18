@@ -220,7 +220,7 @@ main { padding: 0; max-width: none; }
   #acclim-tab-result-wrap,
   #unacclim-tab-0-wrap,
   #unacclim-tab-schedule {
-    flex: 1; min-height: 0; overflow-y: auto;
+    flex: 1; min-height: 0; overflow-y: auto; position: relative;
   }
   #acclim-tab-notes,
   #unacclim-tab-notes {
@@ -726,7 +726,7 @@ main { padding: 0; max-width: none; }
     </div>
     <div id="sched-dialog-grid"></div>
     <div id="sched-dialog-foot1" style="background:var(--warn-bg,#FFF3E0);color:var(--warn-text,#7B2500);border-radius:6px;padding:6px 10px;font-weight:700;font-size:12px;border-left:3px solid var(--warn-text,#7B2500);margin-top:12px;">
-      ⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.
+      ⚠ These percentages are % of the RAL (Recommended Alert Limit) — not full acclimatization. Reaching 100% RAL means the body is ready to begin adapting, but full acclimatization typically requires ~14 days of continued heat work. The REL (Recommended Exposure Limit), which is less restrictive, applies only after full acclimatization.
     </div>
     <div style="font-size:11px;color:var(--subtext);font-style:italic;margin-top:6px;">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
   </div>
@@ -965,23 +965,23 @@ main { padding: 0; max-width: none; }
 
     <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #E05C2C;">
       <h4 style="font-size:15px; color:var(--navy); margin-bottom:4px; font-weight:700;">New Workers</h4>
-      <p style="font-size:13px; color:var(--subtext); margin-bottom:14px; line-height:1.4">No prior heat exposure — full 5+ day ramp required. Full acclimatization typically takes 7–14 days.</p>
-      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:20%"></div></div><span class="acclim-pct">20%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:40%"></div></div><span class="acclim-pct">40%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:60%"></div></div><span class="acclim-pct">60%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 4</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:80%"></div></div><span class="acclim-pct">80%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 5+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100%</span></div>
-      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">Maximum increase: 20% per day. Continue at 100% through day 14 before considering fully acclimatized.</p>
+      <p style="font-size:13px; color:var(--subtext); margin-bottom:6px; line-height:1.4">No prior heat exposure — full 5+ day ramp required. Percentages below are % of the NIOSH RAL.</p>
+      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:20%"></div></div><span class="acclim-pct">20% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:40%"></div></div><span class="acclim-pct">40% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:60%"></div></div><span class="acclim-pct">60% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 4</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:80%"></div></div><span class="acclim-pct">80% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 5+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100% RAL</span></div>
+      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">Max increase: 20%/day. Continue at 100% RAL through ~14 days before considering fully acclimatized. The REL (for fully acclimatized workers) applies only after that.</p>
     </div>
 
     <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #00966C;">
       <h4 style="font-size:15px; color:var(--navy); margin-bottom:4px; font-weight:700;">Returning Workers</h4>
-      <p style="font-size:13px; color:var(--subtext); margin-bottom:14px; line-height:1.4">Prior heat exposure experience, absent ≥ 1 week — abbreviated 4-day ramp. Acclimatization can be regained in 2–3 days.</p>
-      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:50%"></div></div><span class="acclim-pct">50%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:60%"></div></div><span class="acclim-pct">60%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:80%"></div></div><span class="acclim-pct">80%</span></div>
-      <div class="acclim-row"><span class="acclim-day">Day 4+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100%</span></div>
-      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">After 4 days at 100%, worker may be considered re-acclimatized under close monitoring.</p>
+      <p style="font-size:13px; color:var(--subtext); margin-bottom:6px; line-height:1.4">Prior heat exposure, absent ≥ 1 week — abbreviated 4-day ramp. Percentages below are % of the NIOSH RAL.</p>
+      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:50%"></div></div><span class="acclim-pct">50% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:60%"></div></div><span class="acclim-pct">60% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:80%"></div></div><span class="acclim-pct">80% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 4+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100% RAL</span></div>
+      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">After 4+ days at 100% RAL under close monitoring, worker may be considered re-acclimatized. REL limits apply only after that point.</p>
     </div>
 
   </div>
@@ -1530,7 +1530,7 @@ main { padding: 0; max-width: none; }
       dayRowsHtml += `<div class="urec-day-row${isFull?' urec-day-full':''}">
         <div class="urec-day-label">${d.day}</div>
         <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
-        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%</div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%<span style="font-size:10px;font-weight:400;opacity:0.75"> RAL</span></div>
         <div class="urec-day-times">${timesHtml}</div>
       </div>`;
     });
@@ -1541,7 +1541,7 @@ main { padding: 0; max-width: none; }
     // Store schedule data for modal (always — applies to continuous work too)
     window._schedData = {
       dayRowsHtml,
-      sub: (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  Times shown per 60-min period'
+      sub: (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  % = % of RAL  ·  Times per 60-min period'
     };
 
     // Inject into the two-panel wrapper directly
@@ -1693,8 +1693,8 @@ main { padding: 0; max-width: none; }
     const sched  = isNew ? SCHED_NEW : SCHED_RETURNING;
     const title  = isNew ? 'New Workers — 5-Day Progressive Exposure Schedule' : 'Returning Workers — 4-Day Re-Acclimatization Schedule';
     const sub    = isNew
-      ? 'No prior heat exposure — must complete full ramp. Maximum increase of 20% per day. Full acclimatization typically takes 7–14 days of work.'
-      : 'Prior experience, absent ≥1 week — abbreviated ramp. After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.';
+      ? 'No prior heat exposure — must complete full ramp. Maximum increase: 20%/day. Percentages are % of the NIOSH RAL. Full acclimatization typically requires ~14 days of continued heat work.'
+      : 'Prior experience, absent ≥1 week — abbreviated ramp. Percentages are % of the NIOSH RAL. After 4+ days at 100% RAL, monitor closely before considering the worker re-acclimatized.';
     const accent = isNew ? '#E05C2C' : '#00966C';
     let barsHtml = '';
     sched.forEach(d => {
@@ -1704,7 +1704,7 @@ main { padding: 0; max-width: none; }
         <div style="flex:1;height:22px;background:#E9EDEF;border-radius:4px;overflow:hidden;margin:0 12px">
           <div style="width:${d.pct}%;height:100%;background:${isFull?'#00966C':accent};border-radius:4px"></div>
         </div>
-        <span style="min-width:38px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#00966C':accent};font-size:14px">${d.pct}%</span>
+        <span style="min-width:64px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#00966C':accent};font-size:14px">${d.pct}% <span style="font-size:11px;font-weight:500;opacity:0.8">of RAL</span></span>
       </div>`;
     });
     document.getElementById('unacclim-tab-schedule').innerHTML = `
@@ -1712,11 +1712,11 @@ main { padding: 0; max-width: none; }
       <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.55">${sub}</p>
       ${barsHtml}
       <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:#7B2500;background:#FFF3E0;color:#7B2500;font-weight:700;">
-        ⚠ Completing this schedule means reaching 100% exposure — not full acclimatization. Full acclimatization may take <strong>up to 14 days</strong> of continued work in heat.
+        ⚠ Reaching 100% on this chart means 100% of the RAL (Recommended Alert Limit) — not full acclimatization. Full acclimatization typically requires <strong>~14 days</strong> of continued heat work. The REL (Recommended Exposure Limit), which applies to fully acclimatized workers, should not be used until acclimatization is complete.
       </div>
       <div class="note-box" style="margin-top:12px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E0F5EE'};color:${isNew?'#7A2800':'#004A37'}">
         <strong>Remember:</strong> Apply RAL-based work-rest cycles <em>during all heat exposure periods</em>, regardless of the daily percentage.
-        ${isNew?' Continue monitoring closely throughout the full 14-day acclimatization period.':' After 4 days at 100%, monitor closely before declaring the worker re-acclimatized.'}
+        ${isNew?' Continue close monitoring throughout the full ~14-day acclimatization period before transitioning to REL-based limits.':' After 4+ days at 100% RAL under close monitoring, the worker may be considered re-acclimatized and REL limits may apply.'}
       </div>
       <p style="font-size:12px;color:var(--subtext);margin-top:14px;font-style:italic">Source: NIOSH (2016) Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (Table B-3)</p>`;
   }
