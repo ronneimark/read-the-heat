@@ -1,103 +1,14 @@
-# Deploys the site whenever a change reaches the main branch (or when run by hand from the
-# Actions tab). It asks cPanel to do exactly what the two buttons on cPanel's Git Version
-# Control page do - "Update from Remote" (pull from GitHub) and "Deploy HEAD Commit" (copy
-# the files to the live folder, as set in .cpanel.yml). The deploy path and the folders a
-# deploy skips are set only in .cpanel.yml.
-#
-# Needs these repository secrets (Settings > Secrets and variables > Actions):
-#   CPANEL_HOST       the cPanel address, e.g. server123.greengeeks.net (no https://, no :2083)
-#   CPANEL_USER       the cPanel username (workerpo)
-#   CPANEL_TOKEN      a cPanel API token (cPanel > Security > Manage API Tokens)
-#   CPANEL_REPO_ROOT  the repository's path on the server, as shown under "Repository Path"
-#                     on cPanel's Git Version Control page
-#                     e.g. /home/workerpo/repositories/work-rest-cycles
-
-name: Deploy to cPanel
+name: Deploy to Server
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: deploy
-  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - name: Check the secrets are set
-        env:
-          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-          CPANEL_USER: ${{ secrets.CPANEL_USER }}
-          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
-          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
+      - name: Trigger deploy webhook
         run: |
-          missing=""
-          for v in CPANEL_HOST CPANEL_USER CPANEL_TOKEN CPANEL_REPO_ROOT; do
-            [ -n "${!v}" ] || missing="$missing $v"
-          done
-          if [ -n "$missing" ]; then
-            echo "::error::Missing repository secrets:$missing (Settings > Secrets and variables > Actions)"
-            exit 1
-          fi
-
-      - name: Update from Remote (cPanel pulls the new commit from GitHub)
-        env:
-          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-          CPANEL_USER: ${{ secrets.CPANEL_USER }}
-          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
-          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
-        run: |
-          resp=$(curl -sS --fail-with-body --max-time 120 \
-            -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" \
-            --get "https://${CPANEL_HOST}:2083/execute/VersionControl/update" \
-            --data-urlencode "repository_root=${CPANEL_REPO_ROOT}" \
-            --data-urlencode "branch=main")
-          echo "$resp" | jq '{status, errors, messages, head: .data.last_update.identifier}' || echo "$resp"
-          [ "$(echo "$resp" | jq -r .status)" = "1" ] || { echo "::error::cPanel could not pull from GitHub"; exit 1; }
-
-      - name: Deploy HEAD Commit (cPanel copies the files to the live folder)
-        env:
-          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-          CPANEL_USER: ${{ secrets.CPANEL_USER }}
-          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
-          CPANEL_REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
-        run: |
-          api() { curl -sS --fail-with-body --max-time 120 -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" --get "https://${CPANEL_HOST}:2083/execute/$1" "${@:2}"; }
-          repo() { api VersionControl/retrieve | jq --arg r "${CPANEL_REPO_ROOT%/}" '.data[] | select((.repository_root|rtrimstr("/")) == $r)'; }
-
-          # Can cPanel deploy this repository right now?
-          info=$(repo)
-          echo "$info" | jq '{deployable, branch, head: .last_update.identifier, last_deployment: .last_deployment.timestamps}'
-          if [ "$(echo "$info" | jq -r .deployable)" != "1" ]; then
-            echo "::error::cPanel says this repository can't be deployed right now (usually its copy on the server has local changes, or .cpanel.yml is missing)."
-            exit 1
-          fi
-
-          resp=$(api VersionControlDeployment/create --data-urlencode "repository_root=${CPANEL_REPO_ROOT}")
-          echo "$resp" | jq '{status, errors, deploy_id: .data.deploy_id, log: .data.log_path}'
-          [ "$(echo "$resp" | jq -r .status)" = "1" ] || { echo "::error::cPanel could not start the deploy"; exit 1; }
-          id=$(echo "$resp" | jq -r .data.deploy_id)
-
-          # Wait for cPanel to finish copying (it runs the deploy in the background).
-          for i in $(seq 1 24); do
-            sleep 5
-            d=$(repo | jq '.last_deployment')
-            if [ "$(echo "$d" | jq -r .deploy_id)" = "$id" ]; then
-              if [ "$(echo "$d" | jq -r '.timestamps.succeeded // empty')" != "" ]; then
-                echo "Deployed commit $(echo "$d" | jq -r '.repository_state.identifier // .sha // empty' | cut -c1-7) to the live folder."
-                exit 0
-              fi
-              if [ "$(echo "$d" | jq -r '.timestamps.failed // .timestamps.canceled // empty')" != "" ]; then
-                echo "$d" | jq .
-                echo "::error::cPanel's deploy failed. Its log on the server: $(echo "$d" | jq -r .log_path)"
-                exit 1
-              fi
-            fi
-          done
-          echo "$(repo | jq '.last_deployment')"
-          echo "::error::The deploy didn't finish within 2 minutes. Check cPanel > Git Version Control > Manage > Pull or Deploy."
-          exit 1
+          curl -f -X POST https://workerpo.com/deploy-webhook.php \
+            -H "X-Deploy-Secret: wrc-deploy-2026"
