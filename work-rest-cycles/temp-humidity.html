@@ -1277,7 +1277,6 @@ body.trh-result-active .hi-formula-footnote { display: none; }
             <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
           </div>`;
         })()}
-        ${monitoringHtml}
         ${(workerLabel === 'Unacclimatized' && cell) ? `<div class="mobile-sched-sticky">
           <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>
           <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
@@ -1302,7 +1301,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
         </div>
         ${(function(){ const s=WRC.get(); return s.clothingAdjustC > 0 ? `<div class="radiant-warn-strip" role="note" style="background:#fff3e0;border-color:#e65100;color:#7f2900"><strong><span aria-hidden="true">🦺 </span>Impermeable PPE selected:</strong> The +${s.clothingAdjustC}°C / +${s.clothingAdjustF}°F clothing correction cannot be applied to Heat Index. For impermeable PPE, use <a href="wbgt.html" style="color:#c74600">WBGT</a> where the correction is applied automatically.</div>` : ''; })()}
         ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
-      </div>`;
+      </div>
+      ${monitoringHtml}`;
     if (workerLabel === 'Unacclimatized' && cell) _schedCell = cell;
     return { rowIdx, colIdx };
   }
