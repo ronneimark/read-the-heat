@@ -557,6 +557,30 @@ body.chart-active { overflow: hidden; }
   color: var(--subtext,#6B7785); line-height: 1; flex-shrink: 0; padding: 2px 4px;
 }
 .sched-dialog-close:hover { color: var(--navy,#1A2A3A); }
+/* ── Table header sub-labels (metabolic rate) ── */
+.th-sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  opacity: 0.75;
+  text-transform: none;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+/* ── Activity level definition cards ── */
+#wbgt-activity-defs .activity-card {
+  background: var(--surface, #F8FAFB);
+}
+#wbgt-activity-defs .activity-card h4 {
+  font-size: 13px;
+}
+#wbgt-activity-defs .activity-card p {
+  font-size: 12px;
+}
+#wbgt-activity-defs .activity-card .kcal {
+  font-size: 10.5px;
+}
 </style>
 <script src="./lang-link.js" defer></script>
 </head>
@@ -667,6 +691,30 @@ body.chart-active { overflow: hidden; }
     </div>
   </div>
 
+  <div class="section-label">Work Activity Level Definitions (NIOSH 2016)</div>
+  <div class="activity-grid" id="wbgt-activity-defs">
+    <div class="activity-card" style="border-top-color:#005540">
+      <h4>🟢 Light Work</h4>
+      <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+      <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#7A4F00">
+      <h4>🟡 Moderate Work</h4>
+      <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+      <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#8B2500">
+      <h4>🔴 Heavy Work</h4>
+      <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+      <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#6D0000">
+      <h4>⛔ Very Heavy Work</h4>
+      <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+      <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
+    </div>
+  </div>
+
   <div class="section-label">NIOSH Recommended Exposure Limits (REL) — Acclimatized Workers</div>
 
   <div class="table-wrap">
@@ -674,10 +722,10 @@ body.chart-active { overflow: hidden; }
       <thead>
         <tr>
           <th class="left" style="width:180px">WBGT Range</th>
-          <th>Light Work</th>
-          <th>Moderate Work</th>
-          <th>Heavy Work</th>
-          <th>Very Heavy Work</th>
+          <th>Light Work<br><span class="th-sub">≤ 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">200–350 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">350–500 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">&gt; 500 kcal/hr</span></th>
         </tr>
       </thead>
       <tbody>
@@ -808,10 +856,10 @@ body.chart-active { overflow: hidden; }
       <thead>
         <tr>
           <th class="left" style="width:180px">WBGT Range</th>
-          <th>Light Work</th>
-          <th>Moderate Work</th>
-          <th>Heavy Work</th>
-          <th>Very Heavy Work</th>
+          <th>Light Work<br><span class="th-sub">≤ 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">200–350 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">350–500 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">&gt; 500 kcal/hr</span></th>
         </tr>
       </thead>
       <tbody>

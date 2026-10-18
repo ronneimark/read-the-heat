@@ -437,6 +437,12 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   border-left: 3px solid var(--warn-text,#7B2500); margin-top: 12px;
 }
 .sched-foot-note { font-size: 11px; color: var(--subtext); font-style: italic; margin-top: 6px; }
+/* ── Table / chart header sub-labels ── */
+.th-sub {
+  display: block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.3px; opacity: 0.75; text-transform: none;
+  margin-top: 2px; white-space: nowrap;
+}
 </style>
 <script src="./lang-link.js" defer></script>
 </head>
@@ -1193,9 +1199,35 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   }
 
   // ── Notes tab builders ────────────────────────────────────────────────────────
+  const ACT_DEFS_HTML = `<div class="hi-notes-section">
+    <h3>Work Activity Level Definitions (NIOSH 2016)</h3>
+    <div class="activity-grid" style="margin-bottom:0">
+      <div class="activity-card" style="border-top-color:#005540">
+        <h4>🟢 Light Work</h4>
+        <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+        <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#7A4F00">
+        <h4>🟡 Moderate Work</h4>
+        <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+        <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#8B2500">
+        <h4>🔴 Heavy Work</h4>
+        <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+        <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#6D0000">
+        <h4>⛔ Very Heavy Work</h4>
+        <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+        <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
+      </div>
+    </div>
+  </div>`;
+
   function _buildNotesContent(rangeNotes, extraTop) {
     const unit = _hiUnit;
-    let html = extraTop || '';
+    let html = ACT_DEFS_HTML + (extraTop || '');
     html += `<div class="hi-notes-section">
       <h3>Hydration Guidance</h3>
       <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
@@ -1300,6 +1332,28 @@ body.trh-unacclim-chart-active { overflow: hidden; }
       <div class="toggle" role="group" aria-label="Temperature unit" style="margin-left:auto">
         <button class="${unit === 'F' ? 'active' : ''}" onclick="setTrhUnit('F')">°F</button>
         <button class="${unit === 'C' ? 'active' : ''}" onclick="setTrhUnit('C')">°C</button>
+      </div>
+    </div>
+    <div class="activity-grid" style="margin-bottom:16px">
+      <div class="activity-card" style="border-top-color:#005540">
+        <h4>🟢 Light Work</h4>
+        <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+        <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#7A4F00">
+        <h4>🟡 Moderate Work</h4>
+        <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+        <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#8B2500">
+        <h4>🔴 Heavy Work</h4>
+        <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+        <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#6D0000">
+        <h4>⛔ Very Heavy Work</h4>
+        <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+        <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
       </div>
     </div>
     <div class="table-wrap">
