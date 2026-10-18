@@ -249,6 +249,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   overflow: hidden;
   display: none;
   flex-direction: column;
+  padding: 8px;
+  box-sizing: border-box;
 }
 body.trh-chart-active,
 body.trh-unacclim-chart-active { overflow: hidden; }
@@ -290,7 +292,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-bottom: 1px solid rgba(0,0,0,0.07);
+  border-bottom: 1px solid rgba(0,0,0,0.13);
+  border-right: 1px solid rgba(0,0,0,0.07);
   padding: 4px 6px;
   line-height: 1.15;
   box-sizing: border-box;
@@ -332,7 +335,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 .acclim-chart-grid .c-high,
 .acclim-chart-grid .c-stop { font-size: inherit; }
 /* Dark stop cells get a lighter inset shimmer */
-.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); }
+.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); border-right-color: rgba(255,255,255,0.12); }
 .acc-user-col.acc-hdr {
   background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
   border-left: 3px solid rgba(255,255,255,0.35);
@@ -365,16 +368,17 @@ body.trh-unacclim-chart-active { overflow: hidden; }
 
 /* ── Chart caption / legend ── */
 .chart-caption {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(255,255,255,0.92);
-  border-top: 1px solid rgba(0,0,0,0.08);
-  font-size: clamp(9px, 1vh, 12px);
-  color: var(--subtext, #6B7785);
+  flex: 0 0 auto;
+  background: rgba(240,244,248,0.97);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 6px;
+  font-size: clamp(11px, 1.55vh, 14px);
+  font-weight: 600;
+  color: #2E3A4A;
   text-align: center;
-  padding: 4px 12px;
-  line-height: 1.4;
-  z-index: 2;
+  padding: 6px 14px;
+  line-height: 1.45;
+  margin-top: 6px;
 }
 
 /* ── Notes tabs ── */
@@ -636,15 +640,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     <div id="trh-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
       <div id="trh-tab-result" class="result-grid"></div>
     </div>
-    <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0">
-      <div class="chart-unit-strip">
-        <span class="toggle-label">Temperature Units:</span>
-        <div class="toggle" role="group" aria-label="Temperature unit">
-          <button class="active" id="btn-trh-f" aria-pressed="true" onclick="setTrhUnit('F')">°F</button>
-          <button id="btn-trh-c" aria-pressed="false" onclick="setTrhUnit('C')">°C</button>
-        </div>
-      </div>
-    </div>
+    <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0"></div>
     <div id="trh-tab-notes" role="tabpanel" aria-labelledby="trh-tab-btn-notes" tabindex="0"></div>
     <div id="trh-tab-formula" role="tabpanel" aria-labelledby="trh-tab-btn-formula" tabindex="0"></div>
     <div id="trh-tab-reftable" role="tabpanel" aria-labelledby="trh-tab-btn-reftable" tabindex="0"></div>
@@ -655,15 +651,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     <div id="trh-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
       <div id="trh-utab-result" class="result-grid"></div>
     </div>
-    <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0">
-      <div class="chart-unit-strip">
-        <span class="toggle-label">Temperature Units:</span>
-        <div class="toggle" role="group" aria-label="Temperature unit">
-          <button class="active" id="btn-trh-f2" aria-pressed="true" onclick="setTrhUnit('F')">°F</button>
-          <button id="btn-trh-c2" aria-pressed="false" onclick="setTrhUnit('C')">°C</button>
-        </div>
-      </div>
-    </div>
+    <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0"></div>
     <div id="trh-utab-notes" role="tabpanel" aria-labelledby="trh-utab-btn-notes" tabindex="0"></div>
     <div id="trh-utab-formula" role="tabpanel" aria-labelledby="trh-utab-btn-formula" tabindex="0"></div>
     <div id="trh-utab-reftable" role="tabpanel" aria-labelledby="trh-utab-btn-reftable" tabindex="0"></div>
@@ -1224,6 +1212,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
+    const existingCaption = pane.querySelector('.chart-caption');
+    if (existingCaption) existingCaption.remove();
 
     let html = `<div class="acclim-chart-grid" role="grid" aria-label="${gridLabel}" tabindex="0">`;
     html += '<div role="row" style="display:contents">';
