@@ -1348,7 +1348,7 @@
   }
 
   /* ── LAYOUT ── */
-  main { padding: 24px 32px; max-width: 1280px; }
+  main { padding: 24px 16px; max-width: 1400px; }
   main th { font-size: 15px !important; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
@@ -2313,12 +2313,10 @@
 /* ── Two-column grid container ── */
 .result-grid {
   width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 240px 1fr 300px;
+  grid-template-columns: 210px 1fr 270px;
   grid-template-rows: 1fr auto;
-  gap: 14px;
+  gap: 12px;
   min-height: 0;
 }
 
@@ -2329,7 +2327,7 @@
   background: #FFF8E1;
   border: 2px solid #F9A825;
   border-radius: 12px;
-  padding: 18px 16px;
+  padding: 14px 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
