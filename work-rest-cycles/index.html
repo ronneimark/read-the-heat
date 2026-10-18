@@ -518,10 +518,10 @@
 /* tab bar */
 .intro-tab-bar {
   display: flex;
-  justify-content: center;
-  gap: 6px;
+  justify-content: flex-start;
+  gap: 4px;
   background: #D6DFE9;
-  padding: 8px 8px 0;
+  padding: 6px 8px 0;
   margin-top: 10px;
   flex-shrink: 0;
   border-bottom: 4px solid var(--navy, #1A2A3A);
@@ -531,9 +531,9 @@
 }
 :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38; border-bottom-color: #0d1520; }
 .intro-tab {
-  padding: 8px 10px 7px;
+  padding: 6px 10px 5px;
   min-width: 0;
-  flex: 1;
+  flex: none;
   font-size: 14px;
   font-weight: 700;
   border: none;
