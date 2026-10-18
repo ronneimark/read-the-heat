@@ -13,6 +13,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WBGT Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 body { overflow: auto; }
 /* wbgt.html manages its own layout — strip main's default padding */
@@ -255,6 +258,7 @@ main { padding: 0; max-width: none; }
 }
 
 .acclim-chart-grid {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   display: grid;
   grid-template-columns: 22% repeat(4, 1fr);
   grid-template-rows: repeat(10, 1fr);
@@ -1323,7 +1327,7 @@ main { padding: 0; max-width: none; }
       const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
       if (overflows) hi = mid - 1; else lo = mid;
     }
-    const finalSize = Math.max(70, lo - 10) / 10 + 'px';
+    const finalSize = Math.max(70, lo - 30) / 10 + 'px'; // 2px smaller than max-fit
     cells.forEach(c => c.style.fontSize = finalSize);
   }
 

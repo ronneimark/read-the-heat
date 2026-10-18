@@ -13,6 +13,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Heat Index Work-Rest Cycles</title>
 <link rel="stylesheet" href="shared.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 body { overflow: auto; }
 main { padding: 0; max-width: none; }
@@ -437,6 +440,15 @@ main { padding: 0; max-width: none; }
   .hi-notes-layout .activity-card h4 { font-size: 13px; }
   .hi-notes-layout .activity-card p  { font-size: 12px; }
   .hi-notes-layout .note-box { font-size: 13px; padding: 10px 14px; }
+  /* ── Formula Check 2-column layout (desktop only) ── */
+  .formula-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px 12px 20px;
+    box-sizing: border-box;
+  }
+  .formula-col-left, .formula-col-right { min-width: 0; }
 }
 @media (max-width: 768px) {
   #hi-result-card {
@@ -489,8 +501,11 @@ main { padding: 0; max-width: none; }
 }
 .acc-cell.acc-last-row { border-bottom: none; }
 
+.acclim-chart-grid {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
 .acc-hdr {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   background: linear-gradient(180deg, #253A52 0%, #1A2A3A 100%);
   color: #fff;
@@ -504,7 +519,7 @@ main { padding: 0; max-width: none; }
 }
 .acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
 .acc-range {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--navy, #1A2A3A);
   align-items: flex-start;
@@ -1221,20 +1236,31 @@ main { padding: 0; max-width: none; }
       : '—';
     const hiSimpleVal = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
     const usedSimple = T < 80 || hiSimpleVal < 80;
-    let html = `<div class="formula-check-pane">
+    const infoHtml = `
       <h3>Heat Index Calculation — Formula Check</h3>
       <p style="margin:0 0 14px;font-size:13px;">
         <strong>Inputs:</strong> Temperature = ${tDisplay}${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F used in formula</span>` : ''}, RH = ${RH}%<br>
         <strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}<br>
         <strong>Result:</strong> Heat Index = <strong>${hiInUnit}</strong>${_hiUnit === 'C' ? ` (${_hiCalcHI}°F internally)` : ''}
       </p>`;
+    const citation = `<div class="hi-formula-footnote" style="margin-top:16px;">
+      <strong>† Rothfusz Regression (NOAA, 1990):</strong>
+      HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
+      (<em>T</em> = °F, <em>RH</em> = %). Adjustments: RH &lt; 13% and 80–112°F; RH &gt; 85% and 80–87°F.
+      Below 80°F: Steadman (1979) HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
+      Sources: Rothfusz (1990) NWS SR 90-23; Steadman (1979) <em>J. Applied Meteorology</em> 18(7).
+    </div>`;
     if (usedSimple) {
       const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
-      html += `<h3>Steadman Simple Formula</h3>
+      const formulaHtml = `<h3>Steadman Simple Formula</h3>
       <div class="formula-code">HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]
    = 0.5 × [${T} + 61.0 + (${T} − 68.0) × 1.2 + ${RH} × 0.094]
    = 0.5 × [${innerSum.toFixed(3)}]
-   = ${(innerSum / 2).toFixed(1)}°F</div>`;
+   = ${(innerSum / 2).toFixed(1)}°F</div>${citation}`;
+      pane.innerHTML = `<div class="formula-two-col">
+        <div class="formula-col-left">${infoHtml}${formulaHtml}</div>
+        <div class="formula-col-right"></div>
+      </div>`;
     } else {
       const terms = [
         ['Constant',               1,           -42.379,              -42.379],
@@ -1254,36 +1280,32 @@ main { padding: 0; max-width: none; }
       if (adj1Applied) adj1 = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
       if (adj2Applied) adj2 = ((RH - 85) / 10) * ((87 - T) / 5);
       const finalHI = Math.round((baseHI + adj1 + adj2) * 10) / 10;
-      html += `<h3>Rothfusz Regression Terms</h3>
+      let tableHtml = `<h3>Rothfusz Regression Terms</h3>
       <table class="formula-table">
         <tr><th>Term</th><th>Value computed</th><th>Contribution</th></tr>`;
       terms.forEach(t => {
         const contrib = t[3];
-        html += `<tr><td>${t[0]}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td>${t[0]}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
       });
-      html += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
+      tableHtml += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
       if (adj1Applied) {
         const adj1val = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
-        html += `<tr><td colspan="2">Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td colspan="2">Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
       }
       if (adj2Applied) {
         const adj2val = ((RH - 85) / 10) * ((87 - T) / 5);
-        html += `<tr><td colspan="2">High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td colspan="2">High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
       }
       if (!adj1Applied && !adj2Applied) {
-        html += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
+        tableHtml += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
       }
-      html += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
-      </table>`;
+      tableHtml += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
+      </table>${citation}`;
+      pane.innerHTML = `<div class="formula-two-col">
+        <div class="formula-col-left">${infoHtml}</div>
+        <div class="formula-col-right">${tableHtml}</div>
+      </div>`;
     }
-    html += `<div class="hi-formula-footnote" style="margin-top:16px;">
-      <strong>† Rothfusz Regression (NOAA, 1990):</strong>
-      HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
-      (<em>T</em> = °F, <em>RH</em> = %). Adjustments: RH &lt; 13% and 80–112°F; RH &gt; 85% and 80–87°F.
-      Below 80°F: Steadman (1979) HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
-      Sources: Rothfusz (1990) NWS SR 90-23; Steadman (1979) <em>J. Applied Meteorology</em> 18(7).
-    </div></div>`;
-    pane.innerHTML = html;
   }
   function buildHIFormulaTab()        { _buildFormulaTab('hi-tab-formula'); }
   function buildHIUnacclimFormulaTab() { _buildFormulaTab('hi-utab-formula'); }
