@@ -34,7 +34,7 @@ main { padding: 0; max-width: none; }
 /* ── Acclimatized two-tab shell ── */
 .acclim-tab-bar {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   background: #D6DFE9;
   padding: 8px 8px 0;
@@ -196,17 +196,37 @@ main { padding: 0; max-width: none; }
   .mobile-result-hint { display: flex; }
 }
 
-/* ── Chart tab ── */
-#acclim-tab-chart {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  padding: 0 22px 22px;
-  box-sizing: border-box;
+/* ── Tab panels (shared base) ── */
+#acclim-tab-chart, #unacclim-tab-chart {
+  overflow: hidden; display: none; flex-direction: column; padding: 0; box-sizing: border-box;
 }
-body.chart-active { overflow: hidden; }
+/* ── Desktop result card ── */
+@media (min-width: 769px) {
+  #wbgt-result-card {
+    position: fixed;
+    left: 35px; right: 35px; bottom: 35px;
+    background: var(--bg, #FFFFFF);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
+    display: flex; flex-direction: column; overflow: hidden; z-index: 50;
+  }
+  #wbgt-tab-content-area {
+    flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column;
+  }
+  #wbgt-acclim-tabs, #wbgt-unacclim-tabs {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+  }
+  #acclim-tab-result-wrap,
+  #unacclim-tab-0-wrap,
+  #unacclim-tab-schedule,
+  #unacclim-tab-notes {
+    flex: 1; min-height: 0; overflow-y: auto;
+  }
+  #acclim-tab-chart, #unacclim-tab-chart { flex: 1; min-height: 0; overflow: hidden; }
+}
+@media (max-width: 768px) {
+  #wbgt-result-card { position: static; border-radius: 0; box-shadow: none; }
+}
 
 .acclim-chart-grid {
   display: grid;
@@ -214,13 +234,9 @@ body.chart-active { overflow: hidden; }
   grid-template-rows: repeat(10, 1fr);
   flex: 1;
   min-height: 0;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.10);
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.12),
-    0 8px 28px rgba(0,0,0,0.14),
-    0 24px 56px rgba(0,0,0,0.08);
 }
 .acc-cell {
   display: flex;
@@ -349,7 +365,7 @@ body.chart-active { overflow: hidden; }
   text-align: center;
   padding: 6px 14px;
   line-height: 1.45;
-  margin-top: 6px;
+  margin: 6px 10px 10px;
 }
 
 /* ── Unacclimatized 5-tab shell ── */
@@ -437,15 +453,6 @@ body.chart-active { overflow: hidden; }
   #unacclim-tab-result .unacclim-left-col { grid-column: 1; grid-row: 1; gap: 0; }
   #unacclim-tab-result .result-sidebar    { grid-column: 1; grid-row: 2; }
   #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
-}
-#unacclim-tab-chart {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  padding: 0 22px 22px;
-  box-sizing: border-box;
 }
 .unacclim-tab-pane {
   display: none;
@@ -720,7 +727,9 @@ body.chart-active { overflow: hidden; }
       <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
     </div>
   </div>
-  <!-- Tab bars live inside fixed-top so they stay pinned below the header -->
+</div><!-- /fixed-top -->
+
+<div id="wbgt-result-card" style="display:none">
   <div id="acclim-tab-bar-wrap" style="display:none">
     <div class="acclim-tab-bar" id="acclim-tab-bar" role="tablist" aria-label="Acclimatized worker views">
       <button class="acclim-tab-btn active" id="tab-btn-result" role="tab"
@@ -765,16 +774,23 @@ body.chart-active { overflow: hidden; }
       </button>
     </div>
   </div>
-</div><!-- /fixed-top -->
+  <div id="wbgt-tab-content-area">
+    <!-- ══ ACCLIMATIZED TWO-TAB VIEW ══ -->
+    <div id="wbgt-acclim-tabs" style="display:none">
+      <div id="acclim-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result" class="result-grid"></div></div>
+      <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
+    </div>
+    <!-- ══ UNACCLIMATIZED 4-TAB VIEW ══ -->
+    <div id="wbgt-unacclim-tabs" style="display:none">
+      <div id="unacclim-tab-0-wrap" role="tabpanel" aria-labelledby="utab-btn-0" tabindex="0"><div id="unacclim-tab-result"></div></div>
+      <div id="unacclim-tab-chart" role="tabpanel" aria-labelledby="utab-btn-1" tabindex="0"></div>
+      <div id="unacclim-tab-schedule" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-2" tabindex="0"></div>
+      <div id="unacclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-3" tabindex="0"></div>
+    </div>
+  </div><!-- /wbgt-tab-content-area -->
+</div><!-- /wbgt-result-card -->
 
 <main>
-
-
-  <!-- ══ ACCLIMATIZED TWO-TAB VIEW (shown when workerStatus === 'acclimatized') ══ -->
-  <div id="wbgt-acclim-tabs" style="display:none">
-    <div id="acclim-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result" class="result-grid"></div></div>
-    <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
-  </div>
 
   <!-- ══ ORIGINAL ACCLIMATIZED TABLE (shown as fallback if no session) ══ -->
   <div id="wbgt-acclim-section">
@@ -901,14 +917,6 @@ body.chart-active { overflow: hidden; }
     </table>
   </div>
   </div><!-- /wbgt-acclim-section -->
-
-  <!-- ══ UNACCLIMATIZED 4-TAB VIEW ══ -->
-  <div id="wbgt-unacclim-tabs" style="display:none">
-    <div id="unacclim-tab-0-wrap" role="tabpanel" aria-labelledby="utab-btn-0" tabindex="0"><div id="unacclim-tab-result"></div></div>
-    <div id="unacclim-tab-chart" role="tabpanel" aria-labelledby="utab-btn-1" tabindex="0"></div>
-    <div id="unacclim-tab-schedule" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-2" tabindex="0"></div>
-    <div id="unacclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-3" tabindex="0"></div>
-  </div>
 
   <!-- Unacclimatized Table (NIOSH RAL) -->
   <div id="wbgt-unacclim-section" style="display:none">
@@ -1288,22 +1296,20 @@ body.chart-active { overflow: hidden; }
     cells.forEach(c => c.style.fontSize = finalSize);
   }
 
-  // ── Size the chart pane to fill from below header+tabbar to bottom of viewport ──
+  // ── Size the result card to fill viewport below the header ──
   let _chartActive = false;
-  function sizeChartPane() {
-    const fixedTop  = document.getElementById('fixed-top');
-    const chartPane = document.getElementById('acclim-tab-chart');
-    if (!chartPane) return;
-    chartPane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(chartPane.querySelector('.acclim-chart-grid')));
-  }
-
-  function sizeResultWrap() {
+  function sizeWbgtCard() {
+    if (window.innerWidth <= 768) return;
+    const card     = document.getElementById('wbgt-result-card');
     const fixedTop = document.getElementById('fixed-top');
-    const wrap     = document.getElementById('acclim-tab-result-wrap');
-    if (!wrap) return;
-    const avail = window.innerHeight - fixedTop.offsetHeight;
-    wrap.style.minHeight = Math.max(avail, 320) + 'px';
+    if (!card || !fixedTop) return;
+    card.style.top = (fixedTop.offsetHeight + 35) + 'px';
+    requestAnimationFrame(() => {
+      const g1 = document.getElementById('acclim-tab-chart')?.querySelector('.acclim-chart-grid');
+      const g2 = document.getElementById('unacclim-tab-chart')?.querySelector('.acclim-chart-grid');
+      if (g1) fitGridHeaderSize(g1);
+      if (g2) fitGridHeaderSize(g2);
+    });
   }
 
   function switchAcclimTab(which) {
@@ -1318,10 +1324,8 @@ body.chart-active { overflow: hidden; }
     btnChart.classList.toggle('active',  isChart);
     btnChart.setAttribute('aria-selected', String(isChart));
     btnChart.tabIndex = isChart ? 0 : -1;
-    document.body.classList.toggle('chart-active', isChart);
     _chartActive = isChart;
-    if (isChart) sizeChartPane();
-    else sizeResultWrap();
+    sizeWbgtCard();
   }
 
   // Arrow-key navigation for acclimatized tablist
@@ -1702,21 +1706,6 @@ body.chart-active { overflow: hidden; }
       </p>`;
   }
 
-  function sizeUnacclimChartPane() {
-    const fixedTop = document.getElementById('fixed-top');
-    const pane     = document.getElementById('unacclim-tab-chart');
-    if (!pane) return;
-    pane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
-  }
-
-  function sizeUnacclimResultWrap() {
-    const fixedTop = document.getElementById('fixed-top');
-    const wrap     = document.getElementById('unacclim-tab-0-wrap');
-    if (!wrap || !fixedTop) return;
-    wrap.style.top = fixedTop.offsetHeight + 'px';
-  }
-
   let _unacclimChartActive = false;
   let _unacclimActiveTab   = 0;
 
@@ -1740,11 +1729,9 @@ body.chart-active { overflow: hidden; }
       }
     }
     const isChart = idx === 1;
-    const needsFixed = idx === 0 || idx === 1;
-    document.body.classList.toggle('chart-active', needsFixed);
     _unacclimChartActive = isChart;
     _unacclimActiveTab   = idx;
-    if (isChart) sizeUnacclimChartPane(); else if (idx === 0) sizeUnacclimResultWrap();
+    sizeWbgtCard();
   }
 
   // Arrow-key navigation for unacclimatized tablist
@@ -1850,10 +1837,7 @@ body.chart-active { overflow: hidden; }
       document.documentElement.style.setProperty('--fixed-top-h', h);
       main.style.setProperty('padding-top', h, 'important');
     }
-    if (_chartActive) sizeChartPane();
-    else if (_unacclimChartActive) sizeUnacclimChartPane();
-    else if (_sessionMode === 'acclim') sizeResultWrap();
-    else if (_sessionMode === 'unacclim') sizeUnacclimResultWrap();
+    sizeWbgtCard();
   }
 
   async function init() {
@@ -1875,6 +1859,9 @@ body.chart-active { overflow: hidden; }
       document.getElementById('wbgt-acclim-section').style.display      = 'none';
       document.getElementById('wbgt-unacclim-section').style.display    = 'none';
       document.getElementById('wbgt-unacclim-tabs').style.display       = 'none';
+      const card = document.getElementById('wbgt-result-card');
+      if (card) card.style.display = '';
+      sizeWbgtCard();
 
       buildResultTab(s);
       buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
@@ -1888,6 +1875,9 @@ body.chart-active { overflow: hidden; }
       document.getElementById('wbgt-acclim-tabs').style.display         = 'none';
       document.getElementById('wbgt-acclim-section').style.display      = 'none';
       document.getElementById('wbgt-unacclim-section').style.display    = 'none';
+      const card = document.getElementById('wbgt-result-card');
+      if (card) card.style.display = '';
+      sizeWbgtCard();
 
       buildUnacclimResultTab(s);
       buildUnacclimChartTab(s.measUnit || 'F', window._wrcUnacclimRowIdx, window._wrcUnacclimColIdx);

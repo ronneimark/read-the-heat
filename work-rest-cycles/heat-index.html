@@ -146,8 +146,9 @@ main { padding: 0; max-width: none; }
   margin-left: 6px;
 }
 
-/* Page-level formula footnote */
+/* Page-level formula footnote — hidden by default; shown on Notes/Formula tabs via JS */
 .hi-formula-footnote {
+  display: none;
   border-top: 1px solid var(--border, #D0D8E0);
   padding: 12px 20px 24px;
   max-width: 900px;
@@ -161,7 +162,7 @@ main { padding: 0; max-width: none; }
 /* ── Tab bar ── */
 .acclim-tab-bar {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   background: #D6DFE9;
   padding: 8px 8px 0;
@@ -348,19 +349,68 @@ main { padding: 0; max-width: none; }
   }
 }
 
-/* ── Chart tabs — fixed, full-screen, flex column ── */
+/* ── Tab panels (shared base) ── */
 #hi-tab-chart,
 #hi-utab-chart {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
   overflow: hidden;
   display: none;
   flex-direction: column;
-  padding: 0 22px 22px;
+  padding: 0;
   box-sizing: border-box;
 }
-body.hi-chart-active,
-body.hi-unacclim-chart-active { overflow: hidden; }
+
+/* ── Desktop result card ── */
+@media (min-width: 769px) {
+  #hi-result-card {
+    position: fixed;
+    left: 35px; right: 35px; bottom: 35px;
+    /* top is set dynamically by sizeHICard() */
+    background: var(--bg, #FFFFFF);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 50;
+  }
+  #hi-tab-content-area {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #hi-acclim-tabs,
+  #hi-unacclim-tabs {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #hi-tab-result-wrap,
+  #hi-utab-result-wrap,
+  #hi-tab-notes,
+  #hi-utab-notes,
+  #hi-tab-formula,
+  #hi-utab-formula {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  #hi-tab-chart,
+  #hi-utab-chart {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+@media (max-width: 768px) {
+  #hi-result-card {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
 
 /* Unit toggle strip inside chart pane */
 .chart-unit-strip {
@@ -385,13 +435,9 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   grid-template-rows: repeat(7, 1fr);
   min-height: 0;
   position: relative;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.10);
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.12),
-    0 8px 28px rgba(0,0,0,0.14),
-    0 24px 56px rgba(0,0,0,0.08);
 }
 .acc-cell {
   display: flex;
@@ -490,7 +536,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
   text-align: center;
   padding: 6px 14px;
   line-height: 1.45;
-  margin-top: 6px;
+  margin: 6px 10px 10px;
 }
 
 /* ── Notes tabs ── */
@@ -647,6 +693,38 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     </div>
   </div>
 
+  <!-- T+RH input strip (shared; border-bottom separates header from content) -->
+  <div id="hi-trh-strip">
+    <span class="trh-strip-label">Input Method:</span>
+    <div class="trh-mode-toggle" role="group" aria-label="Heat index input method">
+      <button class="trh-mode-btn active" id="trh-btn-hi" aria-pressed="true"
+              onclick="setHiInputMode('hi')">Heat Index</button>
+      <button class="trh-mode-btn" id="trh-btn-trh" aria-pressed="false"
+              onclick="setHiInputMode('trh')">Temp + RH</button>
+    </div>
+    <div class="trh-inputs-row" id="hi-trh-inputs-row" style="display:none" aria-live="polite">
+      <div class="trh-field">
+        <label for="hi-trh-temp">Temperature (<span id="hi-trh-unit-label">°F</span>)</label>
+        <input type="number" id="hi-trh-temp" min="-50" max="200" step="0.1"
+               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
+      </div>
+      <div class="trh-field">
+        <label for="hi-trh-rh">Relative Humidity (%)</label>
+        <input type="number" id="hi-trh-rh" min="0" max="100" step="1"
+               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
+      </div>
+      <div class="trh-arrow" aria-hidden="true">→</div>
+      <div class="trh-hi-result">
+        <div class="trh-hi-result-label">Calculated Heat Index</div>
+        <div class="trh-hi-result-value" id="hi-trh-calc-display" aria-live="polite">—</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<!-- ── Desktop result card (tab bars + content, 35px from all edges) ── -->
+<div id="hi-result-card" style="display:none">
+
   <!-- Acclimatized tab bar -->
   <div id="hi-acclim-tab-bar-wrap" style="display:none">
     <div class="acclim-tab-bar" id="hi-acclim-tab-bar" role="tablist" aria-label="Heat Index acclimatized worker views">
@@ -707,72 +785,34 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     </div>
   </div>
 
-  <!-- T+RH input strip (shared; border-bottom separates header from content) -->
-  <div id="hi-trh-strip">
-    <span class="trh-strip-label">Input Method:</span>
-    <div class="trh-mode-toggle" role="group" aria-label="Heat index input method">
-      <button class="trh-mode-btn active" id="trh-btn-hi" aria-pressed="true"
-              onclick="setHiInputMode('hi')">Heat Index</button>
-      <button class="trh-mode-btn" id="trh-btn-trh" aria-pressed="false"
-              onclick="setHiInputMode('trh')">Temp + RH</button>
-    </div>
-    <div class="trh-inputs-row" id="hi-trh-inputs-row" style="display:none" aria-live="polite">
-      <div class="trh-field">
-        <label for="hi-trh-temp">Temperature (<span id="hi-trh-unit-label">°F</span>)</label>
-        <input type="number" id="hi-trh-temp" min="-50" max="200" step="0.1"
-               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
+  <!-- Tab content area: fills remaining card height -->
+  <div id="hi-tab-content-area">
+
+    <!-- ── Acclimatized tab panels ── -->
+    <div id="hi-acclim-tabs" style="display:none">
+      <div id="hi-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-tab-btn-result" tabindex="0">
+        <div id="hi-tab-result" class="result-grid"></div>
       </div>
-      <div class="trh-field">
-        <label for="hi-trh-rh">Relative Humidity (%)</label>
-        <input type="number" id="hi-trh-rh" min="0" max="100" step="1"
-               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
+      <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0"></div>
+      <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
+      <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
+    </div><!-- /hi-acclim-tabs -->
+
+    <!-- ── Unacclimatized tab panels ── -->
+    <div id="hi-unacclim-tabs" style="display:none">
+      <div id="hi-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-utab-btn-result" tabindex="0">
+        <div id="hi-utab-result" class="result-grid"></div>
       </div>
-      <div class="trh-arrow" aria-hidden="true">→</div>
-      <div class="trh-hi-result">
-        <div class="trh-hi-result-label">Calculated Heat Index</div>
-        <div class="trh-hi-result-value" id="hi-trh-calc-display" aria-live="polite">—</div>
-      </div>
-    </div>
-  </div>
-</div><!-- /fixed-top -->
+      <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0"></div>
+      <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
+      <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
+    </div><!-- /hi-unacclim-tabs -->
 
-<main>
+  </div><!-- /hi-tab-content-area -->
 
+</div><!-- /hi-result-card -->
 
-  <!-- ── Acclimatized tab panels ── -->
-  <div id="hi-acclim-tabs" style="display:none">
-    <div id="hi-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-tab-btn-result" tabindex="0">
-      <div id="hi-tab-result" class="result-grid"></div>
-    </div>
-    <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0"></div>
-    <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
-    <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
-  </div><!-- /hi-acclim-tabs -->
-
-  <!-- ── Unacclimatized tab panels ── -->
-  <div id="hi-unacclim-tabs" style="display:none">
-    <div id="hi-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-utab-btn-result" tabindex="0">
-      <div id="hi-utab-result" class="result-grid"></div>
-    </div>
-    <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0"></div>
-    <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
-    <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
-  </div><!-- /hi-unacclim-tabs -->
-
-  <!-- Page-level formula footnote (always visible when scrolling) -->
-  <div class="hi-formula-footnote" id="hi-formula-footnote">
-    <strong>† Heat Index from Temperature + RH — Rothfusz Regression (NOAA, 1990):</strong>
-    HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
-    (where <em>T</em> = air temperature in °F, <em>RH</em> = relative humidity in %).
-    Adjustments: when RH &lt; 13% and 80°F &lt; T &lt; 112°F, subtract (13−RH)/4 × √((17−|T−95|)/17);
-    when RH &gt; 85% and 80°F &lt; T &lt; 87°F, add ((RH−85)/10) × ((87−T)/5).
-    When T &lt; 80°F or the simple estimate &lt; 80°F, the Steadman (1979) approximation applies:
-    HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
-    Source: Rothfusz, L.P. (1990). <em>The heat index equation</em>. NWS Technical Attachment SR 90-23.
-    Steadman, R.G. (1979). <em>The assessment of sultriness. Part I: A temperature-humidity index based on human physiology and clothing science.</em> Journal of Applied Meteorology, 18(7), 861–873.
-  </div>
-
-</main>
+<main></main>
 
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
@@ -1186,7 +1226,13 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       html += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
       </table>`;
     }
-    html += `<p style="font-size:11px;color:var(--subtext);margin-top:4px;">See page footnote for full formula citation.</p></div>`;
+    html += `<div class="hi-formula-footnote" style="margin-top:16px;">
+      <strong>† Rothfusz Regression (NOAA, 1990):</strong>
+      HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
+      (<em>T</em> = °F, <em>RH</em> = %). Adjustments: RH &lt; 13% and 80–112°F; RH &gt; 85% and 80–87°F.
+      Below 80°F: Steadman (1979) HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
+      Sources: Rothfusz (1990) NWS SR 90-23; Steadman (1979) <em>J. Applied Meteorology</em> 18(7).
+    </div></div>`;
     pane.innerHTML = html;
   }
   function buildHIFormulaTab()        { _buildFormulaTab('hi-tab-formula'); }
@@ -1532,19 +1578,19 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
   }
 
-  function sizeHIChartPane() {
+  function sizeHICard() {
+    if (window.innerWidth <= 768) return;
+    const card     = document.getElementById('hi-result-card');
     const fixedTop = document.getElementById('fixed-top');
-    const pane     = document.getElementById('hi-tab-chart');
-    if (!pane) return;
-    pane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
-  }
-  function sizeHIUnacclimChartPane() {
-    const fixedTop = document.getElementById('fixed-top');
-    const pane     = document.getElementById('hi-utab-chart');
-    if (!pane) return;
-    pane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
+    if (!card || !fixedTop) return;
+    card.style.top = (fixedTop.offsetHeight + 35) + 'px';
+    // Re-fit chart grid headers after layout settles
+    requestAnimationFrame(() => {
+      const g1 = document.getElementById('hi-tab-chart')?.querySelector('.acclim-chart-grid');
+      const g2 = document.getElementById('hi-utab-chart')?.querySelector('.acclim-chart-grid');
+      if (g1) fitGridHeaderSize(g1);
+      if (g2) fitGridHeaderSize(g2);
+    });
   }
 
   // ── Tab switching ─────────────────────────────────────────────────────────────
@@ -1562,8 +1608,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
-    document.body.classList.toggle('hi-chart-active', which === 'chart');
-    if (which === 'chart') sizeHIChartPane();
+    sizeHICard();
   }
 
   function switchHIUnacclimTab(which) {
@@ -1580,8 +1625,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
-    document.body.classList.toggle('hi-unacclim-chart-active', which === 'chart');
-    if (which === 'chart') sizeHIUnacclimChartPane();
+    sizeHICard();
   }
 
   // ── Unit toggle ───────────────────────────────────────────────────────────────
@@ -1626,12 +1670,10 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     document.getElementById('hi-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
     document.getElementById('hi-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
     document.getElementById('hi-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
-    if (!isAcclim) {
-      document.body.classList.remove('hi-chart-active');
-    } else {
-      document.body.classList.remove('hi-unacclim-chart-active');
-      if (_hiCurrentTab === 'chart') document.body.classList.add('hi-chart-active');
-    }
+    // Show the result card (display:'' lets CSS apply flex on desktop, block on mobile)
+    const card = document.getElementById('hi-result-card');
+    if (card) card.style.display = '';
+    sizeHICard();
   }
 
   // ── Layout ────────────────────────────────────────────────────────────────────
@@ -1647,8 +1689,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       // Also set directly for desktop, where the media-query rule is absent.
       main.style.setProperty('padding-top', h, 'important');
     }
-    if (_hiCurrentTab         === 'chart' && workerStatus === 'acclimatized')   sizeHIChartPane();
-    if (_hiUnacclimCurrentTab === 'chart' && workerStatus === 'unacclimatized') sizeHIUnacclimChartPane();
+    sizeHICard();
   }
 
   // ── Shareable URL ─────────────────────────────────────────────────────────────

@@ -95,7 +95,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 /* ── Tab bar ── */
 .acclim-tab-bar {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   background: #D6DFE9;
   padding: 8px 8px 0;
@@ -127,20 +127,10 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 .acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
 .acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
 
-/* ── Result tab — viewport-filling 2-column layout ── */
-/* ── Temp-Humidity specific (layout base: shared.css .result-wrap / .result-grid) ── */
-
-/* Wrap: fill viewport height below fixed header on desktop */
+/* ── Result tab — padding ── */
 #trh-tab-result-wrap,
 #trh-utab-result-wrap {
   padding: 12px 16px;
-  height: calc(100vh - var(--fixed-top-h, 200px));
-  overflow: hidden;
-}
-/* Grid: fill the full wrap height on desktop */
-#trh-tab-result,
-#trh-utab-result {
-  height: 100%;
 }
 
 /* Limitation strip — semi-transparent, renders over colored result background.
@@ -241,19 +231,38 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   }
 }
 
-/* ── Chart tabs ── */
+/* ── Chart tabs (shared base) ── */
 #trh-tab-chart,
 #trh-utab-chart {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  padding: 0 22px 22px;
-  box-sizing: border-box;
+  overflow: hidden; display: none; flex-direction: column; padding: 0; box-sizing: border-box;
 }
-body.trh-chart-active,
-body.trh-unacclim-chart-active { overflow: hidden; }
+/* ── Desktop result card ── */
+@media (min-width: 769px) {
+  #trh-result-card {
+    position: fixed;
+    left: 35px; right: 35px; bottom: 35px;
+    background: var(--bg, #FFFFFF);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
+    display: flex; flex-direction: column; overflow: hidden; z-index: 50;
+  }
+  #trh-tab-content-area {
+    flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column;
+  }
+  #trh-acclim-tabs, #trh-unacclim-tabs {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+  }
+  #trh-tab-result-wrap, #trh-utab-result-wrap,
+  #trh-tab-notes, #trh-utab-notes,
+  #trh-tab-formula, #trh-utab-formula,
+  #trh-tab-reftable, #trh-utab-reftable {
+    flex: 1; min-height: 0; overflow-y: auto;
+  }
+  #trh-tab-chart, #trh-utab-chart { flex: 1; min-height: 0; overflow: hidden; }
+}
+@media (max-width: 768px) {
+  #trh-result-card { position: static; border-radius: 0; box-shadow: none; }
+}
 
 /* Unit toggle strip inside chart pane */
 .chart-unit-strip {
@@ -278,13 +287,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   grid-template-rows: repeat(7, 1fr);
   min-height: 0;
   position: relative;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.10);
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.12),
-    0 8px 28px rgba(0,0,0,0.14),
-    0 24px 56px rgba(0,0,0,0.08);
 }
 .acc-cell {
   display: flex;
@@ -378,7 +383,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
   text-align: center;
   padding: 6px 14px;
   line-height: 1.45;
-  margin-top: 6px;
+  margin: 6px 10px 10px;
 }
 
 /* ── Notes tabs ── */
@@ -552,6 +557,15 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     </div>
   </div>
 
+  <!-- Hidden inputs carry T+RH values from session state; no visible strip needed -->
+  <div hidden aria-hidden="true">
+    <input type="number" id="trh-temp">
+    <input type="number" id="trh-rh">
+    <span id="trh-unit-label"></span>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="trh-result-card" style="display:none">
   <!-- Acclimatized tab bar -->
   <div id="trh-acclim-tab-bar-wrap" style="display:none">
     <div class="acclim-tab-bar" id="trh-acclim-tab-bar" role="tablist" aria-label="Temperature and humidity acclimatized worker views">
@@ -624,38 +638,32 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     </div>
   </div>
 
-  <!-- Hidden inputs carry T+RH values from session state; no visible strip needed -->
-  <div hidden aria-hidden="true">
-    <input type="number" id="trh-temp">
-    <input type="number" id="trh-rh">
-    <span id="trh-unit-label"></span>
-  </div>
-</div><!-- /fixed-top -->
+  <div id="trh-tab-content-area">
+    <!-- ── Acclimatized tab panels ── -->
+    <div id="trh-acclim-tabs" style="display:none">
+      <div id="trh-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
+        <div id="trh-tab-result" class="result-grid"></div>
+      </div>
+      <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0"></div>
+      <div id="trh-tab-notes" role="tabpanel" aria-labelledby="trh-tab-btn-notes" tabindex="0"></div>
+      <div id="trh-tab-formula" role="tabpanel" aria-labelledby="trh-tab-btn-formula" tabindex="0"></div>
+      <div id="trh-tab-reftable" role="tabpanel" aria-labelledby="trh-tab-btn-reftable" tabindex="0"></div>
+    </div>
+
+    <!-- ── Unacclimatized tab panels ── -->
+    <div id="trh-unacclim-tabs" style="display:none">
+      <div id="trh-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
+        <div id="trh-utab-result" class="result-grid"></div>
+      </div>
+      <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0"></div>
+      <div id="trh-utab-notes" role="tabpanel" aria-labelledby="trh-utab-btn-notes" tabindex="0"></div>
+      <div id="trh-utab-formula" role="tabpanel" aria-labelledby="trh-utab-btn-formula" tabindex="0"></div>
+      <div id="trh-utab-reftable" role="tabpanel" aria-labelledby="trh-utab-btn-reftable" tabindex="0"></div>
+    </div>
+  </div><!-- /trh-tab-content-area -->
+</div><!-- /trh-result-card -->
 
 <main>
-
-
-  <!-- ── Acclimatized tab panels ── -->
-  <div id="trh-acclim-tabs" style="display:none">
-    <div id="trh-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-tab-btn-result" tabindex="0">
-      <div id="trh-tab-result" class="result-grid"></div>
-    </div>
-    <div id="trh-tab-chart" role="tabpanel" aria-labelledby="trh-tab-btn-chart" tabindex="0"></div>
-    <div id="trh-tab-notes" role="tabpanel" aria-labelledby="trh-tab-btn-notes" tabindex="0"></div>
-    <div id="trh-tab-formula" role="tabpanel" aria-labelledby="trh-tab-btn-formula" tabindex="0"></div>
-    <div id="trh-tab-reftable" role="tabpanel" aria-labelledby="trh-tab-btn-reftable" tabindex="0"></div>
-  </div>
-
-  <!-- ── Unacclimatized tab panels ── -->
-  <div id="trh-unacclim-tabs" style="display:none">
-    <div id="trh-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="trh-utab-btn-result" tabindex="0">
-      <div id="trh-utab-result" class="result-grid"></div>
-    </div>
-    <div id="trh-utab-chart" role="tabpanel" aria-labelledby="trh-utab-btn-chart" tabindex="0"></div>
-    <div id="trh-utab-notes" role="tabpanel" aria-labelledby="trh-utab-btn-notes" tabindex="0"></div>
-    <div id="trh-utab-formula" role="tabpanel" aria-labelledby="trh-utab-btn-formula" tabindex="0"></div>
-    <div id="trh-utab-reftable" role="tabpanel" aria-labelledby="trh-utab-btn-reftable" tabindex="0"></div>
-  </div>
 
   <!-- Page-level formula footnote -->
   <div class="hi-formula-footnote" id="trh-formula-footnote">
@@ -1472,19 +1480,18 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
   }
 
-  function sizeTrhChartPane() {
+  function sizeTrhCard() {
+    if (window.innerWidth <= 768) return;
+    const card     = document.getElementById('trh-result-card');
     const fixedTop = document.getElementById('fixed-top');
-    const pane     = document.getElementById('trh-tab-chart');
-    if (!pane) return;
-    pane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
-  }
-  function sizeTrhUnacclimChartPane() {
-    const fixedTop = document.getElementById('fixed-top');
-    const pane     = document.getElementById('trh-utab-chart');
-    if (!pane) return;
-    pane.style.top = fixedTop.offsetHeight + 'px';
-    requestAnimationFrame(() => fitGridHeaderSize(pane.querySelector('.acclim-chart-grid')));
+    if (!card || !fixedTop) return;
+    card.style.top = (fixedTop.offsetHeight + 35) + 'px';
+    requestAnimationFrame(() => {
+      const g1 = document.getElementById('trh-tab-chart')?.querySelector('.acclim-chart-grid');
+      const g2 = document.getElementById('trh-utab-chart')?.querySelector('.acclim-chart-grid');
+      if (g1) fitGridHeaderSize(g1);
+      if (g2) fitGridHeaderSize(g2);
+    });
   }
 
   // ── Tab switching ─────────────────────────────────────────────────────────────
@@ -1510,9 +1517,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
-    document.body.classList.toggle('trh-chart-active', which === 'chart');
-    document.body.classList.toggle('trh-result-active', which === 'result');
-    if (which === 'chart') sizeTrhChartPane();
+    sizeTrhCard();
   }
 
   function switchTrhUnacclimTab(which) {
@@ -1537,9 +1542,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         btn.tabIndex = (t === which) ? 0 : -1;
       }
     });
-    document.body.classList.toggle('trh-unacclim-chart-active', which === 'chart');
-    document.body.classList.toggle('trh-result-active', which === 'result');
-    if (which === 'chart') sizeTrhUnacclimChartPane();
+    sizeTrhCard();
   }
 
   // ── Unit toggle ───────────────────────────────────────────────────────────────
@@ -1587,12 +1590,6 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     document.getElementById('trh-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
     document.getElementById('trh-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
     document.getElementById('trh-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
-    if (!isAcclim) {
-      document.body.classList.remove('trh-chart-active');
-    } else {
-      document.body.classList.remove('trh-unacclim-chart-active');
-      if (_hiCurrentTab === 'chart') document.body.classList.add('trh-chart-active');
-    }
     updateLayout();
   }
 
@@ -1674,8 +1671,7 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     if (main) main.style.paddingTop = h + 'px';
     // Keep CSS variable in sync so result tab height calc stays accurate
     document.documentElement.style.setProperty('--fixed-top-h', h + 'px');
-    if (_hiCurrentTab         === 'chart' && workerStatus === 'acclimatized')   sizeTrhChartPane();
-    if (_hiUnacclimCurrentTab === 'chart' && workerStatus === 'unacclimatized') sizeTrhUnacclimChartPane();
+    sizeTrhCard();
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────────
@@ -1696,6 +1692,9 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     document.getElementById('trh-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
     document.getElementById('trh-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
     document.getElementById('trh-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
+    const card = document.getElementById('trh-result-card');
+    if (card) card.style.display = '';
+    sizeTrhCard();
 
     // Sync unit before building
     const sessionUnit = s.measUnit || 'F';
