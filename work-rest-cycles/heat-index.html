@@ -445,10 +445,15 @@ main { padding: 0; max-width: none; }
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    padding: 16px 12px 20px;
+    padding: 16px 24px 20px;
     box-sizing: border-box;
+    max-width: 860px;
+    margin: 0 auto;
   }
   .formula-col-left, .formula-col-right { min-width: 0; }
+  /* Formula variable highlights */
+  .fv-t  { color: #b91c1c; font-weight: 800; }
+  .fv-rh { color: #15803d; font-weight: 800; }
 }
 @media (max-width: 768px) {
   #hi-result-card {
@@ -1236,13 +1241,17 @@ main { padding: 0; max-width: none; }
       : '—';
     const hiSimpleVal = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
     const usedSimple = T < 80 || hiSimpleVal < 80;
-    const infoHtml = `
+    // Highlight standalone T (red) and RH (green) variable names in formula text
+    const hv = s => s
+      .replace(/\bRH\b/g, '<span class="fv-rh">RH</span>')
+      .replace(/\bT\b/g, '<span class="fv-t">T</span>');
+    const infoHtml = hv(`
       <h3>Heat Index Calculation — Formula Check</h3>
       <p style="margin:0 0 14px;font-size:13px;">
         <strong>Inputs:</strong> Temperature = ${tDisplay}${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F used in formula</span>` : ''}, RH = ${RH}%<br>
         <strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}<br>
         <strong>Result:</strong> Heat Index = <strong>${hiInUnit}</strong>${_hiUnit === 'C' ? ` (${_hiCalcHI}°F internally)` : ''}
-      </p>`;
+      </p>`);
     const citation = `<div class="hi-formula-footnote" style="margin-top:16px;">
       <strong>† Rothfusz Regression (NOAA, 1990):</strong>
       HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
@@ -1253,7 +1262,7 @@ main { padding: 0; max-width: none; }
     if (usedSimple) {
       const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
       const formulaHtml = `<h3>Steadman Simple Formula</h3>
-      <div class="formula-code">HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]
+      <div class="formula-code">${hv('HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]')}
    = 0.5 × [${T} + 61.0 + (${T} − 68.0) × 1.2 + ${RH} × 0.094]
    = 0.5 × [${innerSum.toFixed(3)}]
    = ${(innerSum / 2).toFixed(1)}°F</div>${citation}`;
@@ -1285,16 +1294,16 @@ main { padding: 0; max-width: none; }
         <tr><th>Term</th><th>Value computed</th><th>Contribution</th></tr>`;
       terms.forEach(t => {
         const contrib = t[3];
-        tableHtml += `<tr><td>${t[0]}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td>${hv(t[0])}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
       });
       tableHtml += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
       if (adj1Applied) {
         const adj1val = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
-        tableHtml += `<tr><td colspan="2">Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td colspan="2">${hv(`Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)`)}</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
       }
       if (adj2Applied) {
         const adj2val = ((RH - 85) / 10) * ((87 - T) / 5);
-        tableHtml += `<tr><td colspan="2">High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
+        tableHtml += `<tr><td colspan="2">${hv(`High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)`)}</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
       }
       if (!adj1Applied && !adj2Applied) {
         tableHtml += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
@@ -1312,17 +1321,17 @@ main { padding: 0; max-width: none; }
 
   // ── NWS Heat Index Lookup Table ───────────────────────────────────────────────
   const HI_REF_TEMPS_F = [70, 75, 80, 85, 90, 95, 100, 105, 110];
-  const HI_REF_RHS     = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const HI_REF_RHS     = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
   const HI_REF_DATA = [
-    [65,66,67,68,69,70,70,71,71],
-    [69,71,72,73,74,75,76,77,78],
-    [75,77,78,79,81,82,83,85,86],
-    [79,82,84,86,88,90,93,97,102],
-    [83,86,88,91,95,100,106,113,122],
-    [87,91,96,101,107,114,124,136,999],
-    [91,95,100,109,118,129,999,999,999],
-    [95,101,109,118,130,999,999,999,999],
-    [99,107,118,130,999,999,999,999,999]
+    [65,66,67,68,69,70,70,71,71, 71],
+    [69,71,72,73,74,75,76,77,78, 77],
+    [75,77,78,79,81,82,83,85,86, 89],
+    [79,82,84,86,88,90,93,97,102,108],
+    [83,86,88,91,95,100,106,113,122,132],
+    [87,91,96,101,107,114,124,136,999,999],
+    [91,95,100,109,118,129,999,999,999,999],
+    [95,101,109,118,130,999,999,999,999,999],
+    [99,107,118,130,999,999,999,999,999,999]
   ];
 
   function buildHILookupTable(which) {
@@ -1384,7 +1393,7 @@ main { padding: 0; max-width: none; }
         const { bg, fg } = hiColor(hi);
         const isHL = (ri === hlRow && ci === hlCol);
         const hiLabel = hi >= 999 ? '—' : (unit === 'C' ? (Math.round((hi - 32) * 5/9)) + '°C' : hi + '°F');
-        html += `<td style="padding:6px 8px;text-align:center;background:${bg};color:${fg};border:1px solid var(--border,#d0d8e0);${isHL ? 'outline:3px solid #000;font-weight:700;' : ''}">${hiLabel}</td>`;
+        html += `<td style="padding:6px 8px;text-align:center;background:${bg};color:${fg};border:1px solid var(--border,#d0d8e0);${isHL ? 'outline:3px solid #fff;box-shadow:0 0 0 5px rgba(0,0,0,0.85);font-weight:900;position:relative;z-index:2;' : ''}">${hiLabel}</td>`;
       });
       html += `</tr>`;
     });
