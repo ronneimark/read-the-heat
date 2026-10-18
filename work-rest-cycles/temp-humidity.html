@@ -859,6 +859,11 @@ body.trh-unacclim-chart-active { overflow: hidden; }
     if (cell.w === null) return `<span class="wr-continuous">Continuous${cell.star ? '*' : ''}</span>`;
     return `<span class="wr-nums"><span class="wr-w">${cell.w}</span><span class="wr-slash">/</span><span class="wr-r">${cell.r}</span></span><span class="wr-unit">min work / min rest</span>`;
   }
+  function hiLabelText(cell) {
+    if (!cell)           return 'DANGER';
+    if (cell.w === null) return cell.star ? 'Continuous*' : 'Continuous';
+    return `${cell.w} min work / ${cell.r} min rest`;
+  }
 
   // ── Rothfusz Heat Index regression (NOAA, 1990) ───────────────────────────────
   function calcRothfuszHI(tempF, rh) {
@@ -1212,8 +1217,8 @@ body.trh-unacclim-chart-active { overflow: hidden; }
         const isUserCol  = ci === colIdx;
         const isUserCell = isUserRow && isUserCol && rowIdx >= 0;
         const cls = hiClass(cell);
-        const lbl = hiLabel(cell);
-        const ariaLbl = isUserCell ? `${lbl} — your recommended work-rest cycle` : lbl;
+        const lbl     = hiLabel(cell);
+        const ariaLbl = isUserCell ? `${hiLabelText(cell)} — your recommended work-rest cycle` : hiLabelText(cell);
         html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
       }
       html += '</div>';
