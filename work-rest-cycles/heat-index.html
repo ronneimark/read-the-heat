@@ -1354,7 +1354,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     const pane = document.getElementById(paneId);
     if (!pane) return;
     const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
-    const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
     const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     // Find the chart-unit-strip that's already in the pane, replace only the grid
     const existingGrid = pane.querySelector('.acclim-chart-grid');

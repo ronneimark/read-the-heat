@@ -1153,7 +1153,7 @@ body.chart-active { overflow: hidden; }
   function buildChartTab(unit, rowIdx, colIdx) {
     const unitKey = unit === 'C' ? 'c' : 'f';
     const labels  = WBGT_ROW_LABELS[unitKey];
-    const actNames = ['Light Work', 'Moderate Work', 'Heavy Work', 'Very Heavy Work'];
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
     const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     let html = '<div class="acclim-chart-grid">';
 
@@ -1472,7 +1472,7 @@ body.chart-active { overflow: hidden; }
   function buildUnacclimChartTab(unit, rowIdx, colIdx) {
     const unitKey  = unit === 'C' ? 'c' : 'f';
     const labels   = RAL_ROW_LABELS[unitKey];
-    const actNames = ['Light Work','Moderate Work','Heavy Work','Very Heavy Work'];
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
     const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
     let html = '<div class="acclim-chart-grid">';
     html += `<div class="acc-cell acc-hdr acc-range-hdr">WBGT Range</div>`;
