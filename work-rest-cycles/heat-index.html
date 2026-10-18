@@ -1539,13 +1539,13 @@ main { padding: 0; max-width: none; }
         const usedSteadman = T_v < 80 || hiSimpleCheck < 80;
         trhDerivation = `<div class="result-trh-calc">
           <div class="result-trh-inputs">
-            <span class="result-trh-val result-trh-temp">${tempDisplay}</span>
+            <span class="result-trh-val">${tempDisplay}</span>
             <span class="result-trh-op">+</span>
-            <span class="result-trh-val result-trh-rh">${RH_v}%&nbsp;RH</span>
-            <span class="result-trh-op">→</span>
-            <span class="result-trh-val result-trh-hi">${valDisplay}&nbsp;HI</span>
+            <span class="result-trh-val">${RH_v}% RH</span>
+            <span class="result-trh-op">=</span>
+            <span class="result-trh-val">${valDisplay} Heat Index</span>
           </div>
-          <div class="result-trh-note">Heat index is the apparent "feels-like" temperature — humidity slows sweat evaporation, making air feel hotter than the thermometer reads. Calculated using the ${usedSteadman ? 'Steadman (1979) simple approximation' : 'Rothfusz (1990) regression'}.</div>
+          <div class="result-trh-note">The heat index combines air temperature and relative humidity to estimate how hot conditions actually feel to the body. Humidity limits evaporative cooling (sweating), making conditions feel hotter than the thermometer reads. Calculated here using the ${usedSteadman ? 'Steadman (1979) simple approximation' : 'Rothfusz (1990) regression'}.</div>
         </div>`;
       }
       if (_hiTempValF != null && _hiRhVal != null) {
