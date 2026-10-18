@@ -2378,17 +2378,16 @@
 /* ── Middle column — colored result block ── */
 .result-main {
   border-radius: 14px;
-  padding: 32px 36px;
+  padding: 20px 28px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 22px;
+  justify-content: flex-start;
+  gap: 14px;
   text-align: left;
   grid-column: 2;
   grid-row: 1;
-  min-height: 0;
 }
-.result-main-inner { display: flex; align-items: center; gap: 28px; }
+.result-main-inner { display: flex; align-items: center; gap: 20px; }
 .result-clock  { flex-shrink: 0; }
 .result-text   { flex: 1; min-width: 0; }
 .result-label {
@@ -2396,15 +2395,15 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .result-headline {
   font-size: clamp(28px, 4vw, 52px);
   font-weight: 900;
   line-height: 1.05;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
-.result-subtext { font-size: 18px; line-height: 1.65; }
+.result-subtext { font-size: 18px; line-height: 1.55; }
 .result-source  { margin-top: 16px; font-size: 12px; font-style: italic; opacity: 0.8; }
 .result-main.result-danger { background: var(--stop-bg, #AE1515); color: var(--stop-text, #fff); }
 
