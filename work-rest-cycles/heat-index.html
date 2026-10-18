@@ -364,7 +364,6 @@ main { padding: 0; max-width: none; }
   #hi-result-card {
     position: fixed;
     left: 35px; right: 35px; bottom: 35px;
-    transition: left 0.2s, right 0.2s;
     /* top is set dynamically by sizeHICard() */
     background: var(--bg, #FFFFFF);
     border-radius: 14px;
@@ -414,8 +413,8 @@ main { padding: 0; max-width: none; }
   .hi-notes-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 14px 20px;
+    gap: 12px;
+    padding: 12px 10px;
     box-sizing: border-box;
   }
   .hi-notes-col-left,
@@ -445,9 +444,6 @@ main { padding: 0; max-width: none; }
     border-radius: 0;
     box-shadow: none;
   }
-}
-@media (min-width: 769px) {
-  #hi-result-card.notes-wide { left: 12px; right: 12px; }
 }
 
 /* Unit toggle strip inside chart pane */
@@ -1739,7 +1735,6 @@ main { padding: 0; max-width: none; }
       }
     });
     if (which === 'hitable') buildHILookupTable('acclim');
-    document.getElementById('hi-result-card').classList.toggle('notes-wide', which === 'notes');
     sizeHICard();
   }
 
@@ -1759,7 +1754,6 @@ main { padding: 0; max-width: none; }
       }
     });
     if (which === 'hitable') buildHILookupTable('unacclim');
-    document.getElementById('hi-result-card').classList.toggle('notes-wide', which === 'notes');
     sizeHICard();
   }
 
