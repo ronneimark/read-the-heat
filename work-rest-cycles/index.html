@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- auto-deploy test -->
 <html lang="en">
 <head>
   <link rel="manifest" href="./manifest.json">
@@ -245,57 +246,7 @@
     </div>
 
     <div class="ls1-footer">
-      <!-- QR code: hidden on phones (they are already on mobile); visible on desktop -->
-      <div class="qr-install-block" id="qr-install-block" aria-label="Scan to open on your phone">
-        <canvas id="qr-canvas" class="qr-install-img" width="80" height="80" aria-label="QR code — scan with your phone to open and install"></canvas>
-        <div class="qr-install-text">
-          <strong>On your phone?</strong><br>
-          Scan to open &amp; install the<br><em>Heat-Beat</em> app
-        </div>
-      </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-      <script>
-      (function () {
-        var BASE_URL = 'https://workerpowerforhealth.com/work-rest-cycles/app';
-        function buildQR() {
-          var lang = (typeof current === 'function') ? current() : 'en';
-          var url = lang && lang !== 'en' ? BASE_URL + '?lang=' + encodeURIComponent(lang) : BASE_URL;
-          var canvas = document.getElementById('qr-canvas');
-          if (!canvas || typeof QRCode === 'undefined') return;
-          /* QRCode writes to a container div; we render into a temp div then copy to canvas */
-          var tmp = document.createElement('div');
-          tmp.style.display = 'none';
-          document.body.appendChild(tmp);
-          try {
-            new QRCode(tmp, {
-              text: url,
-              width: 80,
-              height: 80,
-              colorDark: '#001E62',
-              colorLight: '#ffffff',
-              correctLevel: QRCode.CorrectLevel.M
-            });
-            /* QRCode appends a canvas child; copy it */
-            var src = tmp.querySelector('canvas');
-            if (src) {
-              canvas.width = src.width;
-              canvas.height = src.height;
-              canvas.getContext('2d').drawImage(src, 0, 0);
-              canvas.setAttribute('aria-label',
-                lang && lang !== 'en'
-                  ? 'QR code — scan with your phone to open app in your language'
-                  : 'QR code — scan with your phone to open and install');
-            }
-          } catch (e) {}
-          document.body.removeChild(tmp);
-        }
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', buildQR);
-        } else {
-          buildQR();
-        }
-      })();
-      </script>
+      <a class="mockup-link" href="./mockup.html">&#128247; Preview on phone &amp; tablet</a>
     </div>
   </div><!-- /ls1 -->
 </div><!-- /launcher -->
@@ -1004,27 +955,14 @@
   .header-attribution { display: none !important; }
 }
 
-/* ── QR install block (desktop only) ── */
-.qr-install-block {
-  display: none; /* hidden on phones — they already have the install banner */
+/* ── Mockup page link ── */
+.mockup-link {
+  font: 600 13px/1 'Source Sans 3','Segoe UI',Arial,sans-serif;
+  color: #001E62; text-decoration: none;
+  border: 1px solid #c5cfdd; border-radius: 6px;
+  padding: 6px 10px; white-space: nowrap;
 }
-@media (min-width: 761px) {
-  .qr-install-block {
-    display: flex; align-items: center; gap: 12px;
-    background: #f4f2ef; border: 1px solid #d5d2cc; border-radius: 10px;
-    padding: 10px 14px; max-width: 300px;
-  }
-  .qr-install-img, #qr-canvas {
-    flex-shrink: 0; border-radius: 4px;
-    border: 2px solid #001E62;
-  }
-  .qr-install-text {
-    font: 400 13px/1.4 'Source Sans 3','Segoe UI',Arial,sans-serif;
-    color: #1c1c24;
-  }
-  .qr-install-text strong { color: #001E62; font-size: 14px; }
-  .qr-install-text em { color: #D50032; font-style: normal; font-weight: 600; }
-}
+.mockup-link:hover { background: #f0f4fa; }
 
 /* ── Install banner ── */
 #install-banner {
