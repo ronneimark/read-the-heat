@@ -212,31 +212,33 @@ body.chart-active { overflow: hidden; }
   grid-template-rows: repeat(10, 1fr);
   height: 100%;
   width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.07);
 }
 .acc-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
   padding: 4px 6px;
   line-height: 1.15;
   box-sizing: border-box;
 }
-.acc-cell:nth-child(5n) { border-right: none; } /* last col */
-/* last row cells: remove bottom border */
 .acc-cell.acc-last-row { border-bottom: none; }
 
 .acc-hdr {
   font-size: 14px; /* overridden at runtime by fitGridHeaderSize() */
-  font-weight: 800;
-  background: var(--surface, #F0F4F8);
-  color: var(--navy, #1A2A3A);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid rgba(255,255,255,0.15) !important;
 }
 .acc-range-hdr { justify-content: flex-start; padding-left: 14px; }
 
@@ -246,40 +248,81 @@ body.chart-active { overflow: hidden; }
   color: var(--navy, #1A2A3A);
   justify-content: flex-start;
   padding-left: 12px;
-  background: var(--surface, #F8FAFB);
+  background: var(--surface, #F0F4F8);
   white-space: nowrap;
   overflow: hidden;
 }
+/* Row banding on range label column */
+.acc-range:nth-child(10n+6),
+.acc-range:nth-child(10n+16) { background: #E8EDF2; }
 
-/* value cells: inherit c-* colors, override font size */
+/* value cells: color only — font size lives on .wr-nums */
 .acclim-chart-grid .c-safe,
 .acclim-chart-grid .c-caution,
 .acclim-chart-grid .c-warn,
 .acclim-chart-grid .c-high,
-.acclim-chart-grid .c-stop {
-  font-size: clamp(13px, 2.5vh, 32px);
-  font-weight: 900;
-}
+.acclim-chart-grid .c-stop { font-size: inherit; }
 
-/* Highlight user's column */
+/* User's column: navy header + subtle tint on data cells */
 .acc-user-col.acc-hdr {
-  background: var(--navy, #1A2A3A);
+  background: #2A4A6A;
   color: #fff;
+  border-left: 3px solid rgba(255,255,255,0.35);
+  border-right: 3px solid rgba(255,255,255,0.35);
 }
+.acc-user-col:not(.acc-hdr) {
+  background-color: rgba(26, 42, 58, 0.06);
+}
+/* User's row: stronger tint on range label */
 .acc-range.acc-user-row {
-  background: #E3EDF7;
+  background: #C8D9EC;
   font-weight: 800;
   border-left: 4px solid var(--navy, #1A2A3A);
 }
+/* User's row data cells */
+.acc-user-row:not(.acc-range) { background-color: rgba(26, 42, 58, 0.09); }
 /* User's exact cell: ring highlight */
 .acc-user-cell {
-  outline: 7px solid var(--navy, #1A2A3A);
-  outline-offset: -7px;
+  outline: 6px solid var(--navy, #1A2A3A);
+  outline-offset: -6px;
   position: relative;
   z-index: 1;
   font-size: clamp(16px, 3.5vh, 44px) !important;
 }
 
+/* ── Work/rest cell content ── */
+.acc-cell { flex-direction: column; gap: 1px; }
+.wr-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-size: clamp(13px, 2.5vh, 32px);
+  font-weight: 700;
+  line-height: 1;
+}
+.wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
+.wr-unit {
+  font-size: clamp(7px, 1.1vh, 13px);
+  font-weight: 500;
+  opacity: 0.6;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+.wr-continuous {
+  font-size: clamp(11px, 2vh, 26px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wr-danger {
+  font-size: clamp(11px, 2vh, 24px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+/* Larger nums for user's exact cell */
+.acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
+.acc-user-cell .wr-unit { font-size: clamp(8px, 1.3vh, 15px) !important; }
 /* ── Unacclimatized 5-tab shell ── */
 .unacclim-tab-btn {
   padding: 10px 16px 9px;
@@ -971,9 +1014,9 @@ body.chart-active { overflow: hidden; }
   }
 
   function wrLabel(wr) {
-    if (!wr)       return 'DANGER!';
-    if (wr.w===60) return 'Continuous';
-    return wr.w + ' / ' + wr.r;
+    if (!wr)       return '<span class="wr-danger">DANGER</span>';
+    if (wr.w===60) return '<span class="wr-continuous">Continuous</span>';
+    return `<span class="wr-nums"><span class="wr-w">${wr.w}</span><span class="wr-slash">/</span><span class="wr-r">${wr.r}</span></span><span class="wr-unit">min work / min rest</span>`;
   }
 
   // ── Clock SVG ──
