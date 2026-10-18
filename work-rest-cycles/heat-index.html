@@ -1504,7 +1504,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    let lo = 70, hi = 420;
+    let lo = 70, hi = 340;
     while (lo < hi) {
       const mid = Math.floor((lo + hi + 1) / 2);
       const fs  = (mid / 10) + 'px';
@@ -1512,7 +1512,7 @@ body.hi-unacclim-chart-active { overflow: hidden; }
       if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
       else lo = mid;
     }
-    cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 20) / 10) + 'px');
+    cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
   }
 
   function sizeHIChartPane() {
