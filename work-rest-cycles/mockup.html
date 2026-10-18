@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="./lang-link.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Read the Heat — Device Preview</title>
@@ -10,7 +11,7 @@
 <meta name="description" content="See Read the Heat &amp; Take a Beat as it looks and works on a phone or tablet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="shared.css">
 <!--
   Device preview for Read the Heat & Take a Beat.
@@ -284,6 +285,18 @@
   aside .k { color: var(--muted); }
   .note { font-size: 13px; color: var(--muted); }
 
+  /* ── QR "Take it with you" card ── */
+  .qr-card { text-align: center; }
+  .qr-box { width: 168px; height: 168px; margin: 4px auto 2px; }
+  .qr-box svg { display: block; width: 100%; height: 100%; }
+  .qr-url {
+    font: 600 12px 'IBM Plex Mono', 'Courier New', monospace;
+    color: var(--muted); margin-bottom: 8px !important;
+  }
+  .qr-card p { text-align: left; }
+  .qr-lang { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+  .qr-lang select { padding: 3px 6px; }
+
   .pill {
     display: inline-block;
     border-radius: 99px;
@@ -368,7 +381,7 @@
     </div>
   </header>
   <div class="wrc-banner-strip">
-    <div class="preview-strip">
+    <div class="preview-strip wrc-banner-strip-inner">
       <span class="preview-label">Phone &amp; Tablet Preview &mdash; the live tool, as it looks and works on a phone or tablet</span>
       <a class="back" href="./activity.html">&larr; Back to the tool</a>
     </div>
@@ -449,6 +462,13 @@
 
   <!-- Aside: absolutely positioned to the far right of main -->
   <aside>
+    <div class="card qr-card">
+      <h2>Take it with you</h2>
+      <div class="qr-box" id="qrbox" role="img" aria-label="QR code that opens Read the Heat on a phone"></div>
+      <p class="qr-url" id="qrurl"></p>
+      <p id="qrtext">Scan with your phone's camera to open Read the Heat, then tap <b>Add to Home Screen</b> for one-tap access, like an app.</p>
+      <label class="qr-lang">Opens in <select id="qrlang"></select></label>
+    </div>
     <div class="card">
       <h2>What you're seeing</h2>
       <p id="info"></p>
@@ -700,5 +720,109 @@ if ('serviceWorker' in navigator && window.matchMedia('(max-width: 860px)').matc
   window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.js"></script>
+<script>
+/* ── QR code: "Take it with you" card ── */
+(function () {
+  'use strict';
+  var LANGS = [
+    ['en',    'English'],
+    ['es',    'Español'],
+    ['tl',    'Tagalog'],
+    ['pl',    'Polski'],
+    ['uk',    'Українська'],
+    ['fr',    'Français'],
+    ['ur',    'اردو'],
+    ['ar',    'العربية'],
+    ['ru',    'Русский'],
+    ['ko',    '한국어'],
+    ['vi',    'Tiếng Việt'],
+    ['de',    'Deutsch'],
+    ['zh-CN', '中文（普通话）'],
+    ['yue',   '粵語（廣東話）']
+  ];
+  var BASE = 'https://workerpowerforhealth.com/work-rest-cycles/';
+  /* CTA in the language the QR opens into */
+  var QR_TEXT = {
+    en:    'Scan with your phone’s camera to open Read the Heat, then tap <b>Add to Home Screen</b> for one-tap access, like an app.',
+    es:    'Escanea con la cámara de tu teléfono para abrir Read the Heat y toca <b>Agregar a la pantalla de inicio</b> para abrirlo con un solo toque, como una aplicación.',
+    tl:    'I-scan ang iyong camera sa telepono para buksan ang Read the Heat, pagkatapos ay i-tap ang <b>Idagdag sa Home Screen</b> para sa mabilis na access, tulad ng isang app.',
+    pl:    'Zeskanuj aparatem telefonu, aby otworzyć Read the Heat, a potem stuknij <b>Dodaj do ekranu głównego</b>, aby mieć dostęp jednym dotknięciem, jak do aplikacji.',
+    uk:    'Відскануйте камерою телефона, щоб відкрити Read the Heat, а потім торкніться <b>Додати на головний екран</b> — і сайт відкриватиметься одним дотиком, як застосунок.',
+    fr:    'Scannez avec l’appareil photo de votre téléphone pour ouvrir Read the Heat, puis appuyez sur <b>Ajouter à l’écran d’accueil</b> pour un accès en un clic, comme une application.',
+    ur:    'اپنے فون کے کیمرے سے اسکین کریں تاکہ Read the Heat کھل سکے، پھر <b>Add to Home Screen</b> پر ٹیپ کریں — ایپ کی طرح ایک ٹچ تک رسائی کے لیے۔',
+    ar:    'امسح الرمز بكاميرا هاتفك لفتح Read the Heat، ثم انقر على <b>أضف إلى الشاشة الرئيسية</b> للوصول بنقرة واحدة، مثل التطبيق.',
+    ru:    'Отсканируйте камерой телефона, чтобы открыть Read the Heat, затем нажмите <b>Добавить на главный экран</b> — и сайт откроется одним касанием, как приложение.',
+    ko:    '전화기 카메라로 스캔하여 Read the Heat를 열고, <b>홈 화면에 추가</b>를 탭하면 앱처럼 한 번의 터치로 접근할 수 있습니다.',
+    vi:    'Quét bằng camera điện thoại để mở Read the Heat, sau đó nhấn <b>Thêm vào màn hình chính</b> để truy cập bằng một chạm, giống như ứng dụng.',
+    de:    'Scanne mit der Kamera deines Telefons, um Read the Heat zu öffnen, und tippe dann auf <b>Zum Home-Bildschirm hinzufügen</b> für Einzel-Tipp-Zugriff wie eine App.',
+    'zh-CN': '用手机摄像头扫描以打开 Read the Heat，然后点击<b>添加到主屏幕</b>，像应用程序一样一键访问。',
+    yue:   '用手機鏡頭掃描以開啟 Read the Heat，然後點擊<b>加入主畫面</b>，就像應用程式一樣一鍵存取。'
+  };
+
+  var sel  = document.getElementById('qrlang');
+  var box  = document.getElementById('qrbox');
+  var urlP = document.getElementById('qrurl');
+  var txtP = document.getElementById('qrtext');
+  if (!sel || !box) return;
+
+  /* Populate language dropdown */
+  LANGS.forEach(function (l) {
+    var o = document.createElement('option');
+    o.value = l[0]; o.textContent = l[1];
+    o.lang = l[0] === 'yue' ? 'zh-HK' : l[0];
+    sel.appendChild(o);
+  });
+
+  /* Detect visitor's language: googtrans cookie first, then navigator.language */
+  function detectLang() {
+    var cookie = document.cookie.match(/(?:^|;\s*)googtrans=([^;]*)/);
+    if (cookie) {
+      var code = decodeURIComponent(cookie[1]).split('/').pop().toLowerCase();
+      if (code === 'zh-hk') return 'yue';
+      for (var i = 0; i < LANGS.length; i++) {
+        if (LANGS[i][0].toLowerCase() === code) return LANGS[i][0];
+      }
+    }
+    var nav = (navigator.language || 'en').toLowerCase();
+    if (nav === 'zh-hk' || nav === 'yue') return 'yue';
+    for (var j = 0; j < LANGS.length; j++) {
+      if (LANGS[j][0].toLowerCase() === nav) return LANGS[j][0];
+    }
+    var prefix = nav.split('-')[0];
+    for (var k = 0; k < LANGS.length; k++) {
+      if (LANGS[k][0].toLowerCase() === prefix) return LANGS[k][0];
+    }
+    return 'en';
+  }
+
+  function qrUrl(lang) {
+    return lang === 'en' ? BASE : BASE + '?lang=' + lang;
+  }
+
+  function drawQr(lang) {
+    var url = qrUrl(lang);
+    try {
+      var q = qrcode(0, 'M'); q.addData(url); q.make();
+      var n = q.getModuleCount(), b = 2, d = '';
+      for (var r = 0; r < n; r++) {
+        for (var c = 0; c < n; c++) {
+          if (q.isDark(r, c)) d += 'M' + (c + b) + ' ' + (r + b) + 'h1v1h-1z';
+        }
+      }
+      box.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + (n + 2 * b) + ' ' + (n + 2 * b) + '" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="' + d + '" fill="#001E62"/></svg>';
+      if (urlP) urlP.textContent = url.replace('https://', '');
+      if (txtP) { txtP.innerHTML = QR_TEXT[lang] || QR_TEXT.en; txtP.setAttribute('lang', lang); }
+    } catch (e) {
+      var card = box.closest('.qr-card'); if (card) card.hidden = true;
+    }
+  }
+
+  sel.value = detectLang();
+  drawQr(sel.value);
+  sel.addEventListener('change', function () { drawQr(sel.value); });
+})();
+</script>
+<script src="./lang-switch.js" defer></script>
 </body>
 </html>
