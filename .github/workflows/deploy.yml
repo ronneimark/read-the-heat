@@ -15,7 +15,7 @@ jobs:
           result=$(curl -sf -X POST \
             -H "Authorization: cpanel workerpo:${CPANEL_TOKEN}" \
             "https://workerpowerforhealth.com:2083/execute/VersionControlDeployment/create" \
-            --data-urlencode "repository=/home/workerpo/repositories/work-rest-cycles")
+            --data-urlencode "repository_root=/home/workerpo/repositories/work-rest-cycles")
           echo "$result"
           echo "$result" | python3 -c "
           import sys, json
