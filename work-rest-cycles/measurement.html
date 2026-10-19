@@ -825,14 +825,13 @@ body { background: #F6F3EC !important; }
     if (err) err.classList.remove('submit-error'); // allow live warnings to re-evaluate freely
   }
 
-  // Returns {nwbHigh, gtLowNwb, gtLowDb} — each true if that constraint is violated.
-  // Only checks constraints where both values are present numbers.
+  // Returns {nwbHigh} — true if NWB exceeds DB (outdoor only; wind can lower GT below DB/NWB so no GT constraints).
   function _wbgtConstraintErrors(nwb, gt, db) {
     const outdoor = wbgtSetting === 'outdoor';
     return {
       nwbHigh:  outdoor && !isNaN(nwb) && !isNaN(db) && nwb > db,
-      gtLowNwb: !isNaN(gt) && !isNaN(nwb) && gt < nwb,
-      gtLowDb:  outdoor && !isNaN(gt) && !isNaN(db) && gt < db,
+      gtLowNwb: false,
+      gtLowDb:  false,
     };
   }
 
