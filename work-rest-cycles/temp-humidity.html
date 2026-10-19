@@ -1430,7 +1430,7 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
     if (!pane) return;
     const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
     const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
-    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
     const existingCaption = pane.querySelector('.chart-caption');
@@ -1482,22 +1482,22 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
     <div class="activity-grid" style="margin-bottom:0">
       <div class="activity-card" style="border-top-color:#005540">
         <h4>🟢 Light Work</h4>
-        <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+        <p class="kcal">&lt; 200 kcal/hr &nbsp;·&nbsp; &lt; 233 W</p>
         <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
       </div>
       <div class="activity-card" style="border-top-color:#7A4F00">
         <h4>🟡 Moderate Work</h4>
-        <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+        <p class="kcal">201–300 kcal/hr &nbsp;·&nbsp; 234–349 W</p>
         <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
       </div>
       <div class="activity-card" style="border-top-color:#8B2500">
         <h4>🔴 Heavy Work</h4>
-        <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+        <p class="kcal">301–400 kcal/hr &nbsp;·&nbsp; 350–465 W</p>
         <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
       </div>
       <div class="activity-card" style="border-top-color:#6D0000">
         <h4>⛔ Very Heavy Work</h4>
-        <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+        <p class="kcal">401–500 kcal/hr &nbsp;·&nbsp; 466–580 W</p>
         <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
       </div>
     </div>
@@ -1736,11 +1736,14 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
   // Source: NIOSH Criteria Document (2016), DHHS Pub. No. 2016-106
   // Values in °C; °F equivalents shown in parentheses
   const _nioshWbgtData = [
-    // [work%, light-REL, mod-REL, heavy-REL, light-RAL, mod-RAL, heavy-RAL]
-    ['100% (continuous)',  30.0, 26.7, 25.0,  28.0, 25.0, 22.2],
-    ['75% work / 25% rest', 30.6, 28.0, 25.9, 29.4, 26.7, 23.9],
-    ['50% work / 50% rest', 31.4, 29.4, 27.9, 31.1, 28.9, 26.7],
-    ['25% work / 75% rest', 32.2, 31.1, 30.0, 32.2, 31.1, 28.9],
+    // [work%, light-REL, mod-REL, heavy-REL, vh-REL, light-RAL, mod-RAL, heavy-RAL, vh-RAL]
+    // Continuous REL from NIOSH (2016) Table 5-1; all values via TWA formula
+    // REL = 56.7 − 11.5×log₁₀(M_twa); RAL = 59.9 − 14.1×log₁₀(M_twa)
+    // M_work: Light 210 W, Moderate 313 W, Heavy 468 W, VH 571 W; M_rest = 58 W
+    ['100% (continuous)',    30.0, 28.0, 26.0, 25.0,  27.2, 24.7, 22.3, 21.0],
+    ['75% work / 25% rest', 31.0, 29.1, 27.2, 26.3,  28.4, 26.1, 23.8, 22.6],
+    ['50% work / 50% rest', 32.2, 30.6, 28.9, 28.0,  29.9, 27.9, 25.8, 24.7],
+    ['25% work / 75% rest', 33.9, 32.7, 31.4, 30.6,  32.0, 30.5, 28.8, 27.9],
   ];
 
   function _buildEwbgtPane(paneId, acclimType) {
@@ -1753,12 +1756,12 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
     let ewbgt = null;
     if (_hiTempValF != null && _hiRhVal != null) ewbgt = calcEwbgt(_hiTempValF, _hiRhVal);
 
-    // Activity → NIOSH column index (0=Light, 1=Moderate, 2=Heavy)
-    const actToNioshCol = { light: 0, moderate: 1, heavy: 2, vh: 2 };
+    // Activity → NIOSH column index (0=Light, 1=Moderate, 2=Heavy, 3=VH)
+    const actToNioshCol = { light: 0, moderate: 1, heavy: 2, vh: 3 };
     const nioshColIdx   = actToNioshCol[_hiActivity] ?? 1;
 
-    // NIOSH data column: REL (acclim) at indices 1–3; RAL at 4–6
-    const colBase      = acclimType === 'acclim' ? 1 : 4;
+    // NIOSH data column: REL (acclim) at indices 1–4; RAL at 5–8
+    const colBase      = acclimType === 'acclim' ? 1 : 5;
     const limitColIdx  = colBase + nioshColIdx;
 
     // Find recommended work-rest row:
@@ -1841,8 +1844,8 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
 
     // NIOSH modal table rows
     const nioshTableRows = _nioshWbgtData.map((row, ri) => {
-      const [label, lREL, mREL, hREL, lRAL, mRAL, hRAL] = row;
-      const vals     = acclimType === 'acclim' ? [lREL, mREL, hREL] : [lRAL, mRAL, hRAL];
+      const [label, lREL, mREL, hREL, vhREL, lRAL, mRAL, hRAL, vhRAL] = row;
+      const vals     = acclimType === 'acclim' ? [lREL, mREL, hREL, vhREL] : [lRAL, mRAL, hRAL, vhRAL];
       const isRecRow = ri === recRow;
       const cells = vals.map((v, ci) => {
         const vF = Math.round((v * 9/5 + 32) * 10) / 10;
@@ -1948,9 +1951,10 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
       <thead>
         <tr>
           <th>Work-Rest Regimen</th>
-          <th class="${nioshColIdx === 0 ? 'ewbgt-tbl-act-hd' : ''}">Light<br><span class="th-sub">≤200 W</span></th>
-          <th class="${nioshColIdx === 1 ? 'ewbgt-tbl-act-hd' : ''}">Moderate<br><span class="th-sub">200–350 W</span></th>
-          <th class="${nioshColIdx === 2 ? 'ewbgt-tbl-act-hd' : ''}">Heavy<br><span class="th-sub">350–500 W</span></th>
+          <th class="${nioshColIdx === 0 ? 'ewbgt-tbl-act-hd' : ''}">Light<br><span class="th-sub">&lt;233 W</span></th>
+          <th class="${nioshColIdx === 1 ? 'ewbgt-tbl-act-hd' : ''}">Moderate<br><span class="th-sub">234–349 W</span></th>
+          <th class="${nioshColIdx === 2 ? 'ewbgt-tbl-act-hd' : ''}">Heavy<br><span class="th-sub">350–465 W</span></th>
+          <th class="${nioshColIdx === 3 ? 'ewbgt-tbl-act-hd' : ''}">Very Heavy<br><span class="th-sub">466–580 W</span></th>
         </tr>
       </thead>
       <tbody>${nioshTableRows}</tbody>
