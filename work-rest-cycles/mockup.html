@@ -608,9 +608,13 @@
     $('fit').textContent = state.fit ? 'Fit to window' : 'Full size';
   }
 
+  var loadTimer;
+
   function go(page) {
     state.p = page;
     loading.classList.remove('gone');
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () { loading.classList.add('gone'); }, 7000);
     frame.src = './' + page;
     $('url').textContent = 'read-the-heat.app/' + page;
     $('newtab').href = './' + page;
@@ -619,6 +623,7 @@
   }
 
   frame.addEventListener('load', function () {
+    clearTimeout(loadTimer);
     loading.classList.add('gone');
     try {
       var loc = frame.contentWindow.location;
@@ -647,6 +652,8 @@
   $('page').addEventListener('change', function () { go(this.value); });
   $('reload').addEventListener('click', function () {
     loading.classList.remove('gone');
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () { loading.classList.add('gone'); }, 7000);
     frame.src = './' + state.p + '?r=' + Date.now();
   });
   $('fit').addEventListener('click', function () { state.fit = !state.fit; layout(); });
