@@ -1,6 +1,9 @@
 ---
+# cPanel "Deploy HEAD Commit" copies this repository into the live site folder.
+# DEPLOYPATH is the site's folder on the server (keep the slash at the end).
+# The --exclude lines are folders or files the live site writes to itself
+# and that a deploy should never overwrite.
 deployment:
   tasks:
     - export DEPLOYPATH=/home/workerpo/public_html/work-rest-cycles/
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R work-rest-cycles/. $DEPLOYPATH
+    - /bin/rsync -av --chmod=D755,F644 --exclude='.git' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='.github' --exclude='error_log' work-rest-cycles/ $DEPLOYPATH
