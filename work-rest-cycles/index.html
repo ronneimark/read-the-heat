@@ -874,10 +874,6 @@
     background: #f3f4f7 !important;
   }
 
-  /* Step cues and cursor restored on mobile — arrows point up to header breadcrumbs */
-  .step-cue { display: block !important; }
-  .intro-step { cursor: pointer !important; }
-
   /* Equal-width tabs: each tab gets 1/3 of the bar; subtitle not needed at this size */
   .intro-tab {
     flex: 1 1 0 !important;
@@ -1375,6 +1371,7 @@
   }
 
   function highlightStep(e, n) {
+    if (window.innerWidth <= 768) return;
     const pop = document.getElementById('intro-popover');
 
     // If same step clicked while masked — clear mask and return
