@@ -15,10 +15,10 @@ function navigate(url, updates) {
 
 // ── Activity metadata ──
 const activityMeta = {
-  light:    { label: 'Light Work',      kcal: '~150–200 kcal/hr (116–233 W)', color: '#00966C' },
-  moderate: { label: 'Moderate Work',   kcal: '~200–350 kcal/hr (233–407 W)', color: '#F57F17' },
-  heavy:    { label: 'Heavy Work',      kcal: '~350–500 kcal/hr (407–581 W)', color: '#E65100' },
-  vh:       { label: 'Very Heavy Work', kcal: '>500 kcal/hr (>581 W)',         color: '#880E4F' },
+  light:    { label: 'Light Work',      kcal: '< 200 kcal/hr (< 233 W)',       color: '#00966C' },
+  moderate: { label: 'Moderate Work',   kcal: '201–300 kcal/hr (234–349 W)',   color: '#F57F17' },
+  heavy:    { label: 'Heavy Work',      kcal: '301–400 kcal/hr (350–465 W)',   color: '#E65100' },
+  vh:       { label: 'Very Heavy Work', kcal: '401–500 kcal/hr (466–580 W)',   color: '#880E4F' },
 };
 
 const activityEmoji = {
@@ -49,6 +49,7 @@ let trhRows = [];
 let hiRowsAcclim = [];
 let hiRowsUnacclim = [];
 let sectorData = {};
+let activityList = []; // flat per-activity objects (new format)
 
 async function initData() {
   const base = 'data/';
@@ -63,7 +64,18 @@ async function initData() {
     trhRows = trh;
     hiRowsAcclim = hi.acclim;
     hiRowsUnacclim = hi.unacclim;
-    sectorData = sectors;
+    // sectors.json is now a flat array of per-activity objects.
+    // Build backward-compatible sectorData lookup for existing rendering code.
+    activityList = sectors;
+    sectorData = {};
+    for (const act of activityList) {
+      for (const s of act.sector) {
+        if (!sectorData[s]) sectorData[s] = { light: [], moderate: [], heavy: [], vh: [] };
+        if (sectorData[s][act.niosh_level]) {
+          sectorData[s][act.niosh_level].push(act.description);
+        }
+      }
+    }
   } catch(e) {
     console.warn('Data load failed:', e);
   }
@@ -358,6 +370,13 @@ function ensureHealthModal() {
 
     <h3>Obesity (BMI ≥ 30)</h3>
     <p>Excess adipose tissue increases metabolic heat production during work and acts as insulation, slowing heat loss. Workers with obesity may generate significantly more heat at the same workload as leaner co-workers and have a reduced capacity to dissipate it through sweating relative to body mass.</p>
+
+    <h3>Body Weight &amp; Metabolic Heat Production</h3>
+    <p>NIOSH activity categories (Light, Moderate, Heavy, Very Heavy) are defined in absolute kilocalories per hour — not relative to body size. The underlying conversion is straightforward:</p>
+    <p style="margin:8px 0 8px 16px;font-family:monospace;font-size:14px">kcal/hr = METs × body weight (kg)</p>
+    <p>The activity level assignments in this tool assume a reference worker of approximately <strong>70 kg (154 lb)</strong>. A heavier worker performing the same physical task generates proportionally more absolute metabolic heat and may effectively be operating in the next-higher NIOSH category — even though the task itself hasn't changed. For example, a 90 kg worker doing a task rated at 3.5 METs produces 315 kcal/hr (Heavy), while a 70 kg worker doing the same task produces 245 kcal/hr (Moderate).</p>
+    <p>This is distinct from the insulation and sweating effects associated with obesity (above). It applies across the full weight spectrum: any worker meaningfully heavier than 70 kg is generating more absolute heat than the reference assumption behind these categories. <strong>When the worker's body weight is substantially above 70 kg, selecting the next-higher activity level is the more protective choice.</strong></p>
+    <p style="font-size:12px;color:var(--subtext);margin-top:4px">MET values and reference weight: Ainsworth et al. (2024). <em>2024 Adult Compendium of Physical Activities</em>. Activity level assignments: NIOSH (2016), Table 5-1.</p>
 
     <h3>Diabetes</h3>
     <p>Autonomic neuropathy — a common complication — can impair the sweating response, reducing evaporative cooling efficiency. Cardiovascular complications further limit circulatory heat transport. Blood glucose instability during heat stress can compound the physiological burden.</p>
