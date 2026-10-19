@@ -83,10 +83,9 @@ Redirect 301 /work-rest-cycles/app https://workerpowerforhealth.com/work-rest-cy
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 
   # mockup.html embeds other pages on the same origin in an iframe.
-  # Remove X-Frame-Options for those pages so the preview loads correctly;
-  # SAMEORIGIN is still set above and then unset only for these files.
+  # Use "always" to override any server-level X-Frame-Options on these pages.
   <FilesMatch "^(index|activity|wbgt|heat-index|temp-humidity|clothing|acclimatization|methodology)\.html$">
-    Header unset X-Frame-Options
-    Header set Content-Security-Policy "frame-ancestors 'self'"
+    Header always unset X-Frame-Options
+    Header always set Content-Security-Policy "frame-ancestors 'self'"
   </FilesMatch>
 </IfModule>
