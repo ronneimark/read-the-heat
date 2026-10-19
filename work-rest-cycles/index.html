@@ -845,7 +845,7 @@
      updateLayout() overrides this with the exact measured value */
   .intro-anchor {
     position: fixed !important;
-    top: 96px !important;
+    top: 96px; /* fallback only — no !important so JS inline style can override */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
