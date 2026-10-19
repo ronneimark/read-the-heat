@@ -874,6 +874,14 @@
     background: #f3f4f7 !important;
   }
 
+  /* Equal-width tabs: each tab gets 1/3 of the bar; subtitle not needed at this size */
+  .intro-tab {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+  .intro-tab-sub { display: none !important; }
+  .intro-tab-title { font-size: 13px !important; }
+
   /* close button: fixed just below the blue strip, right side */
   /* top is set dynamically by updateLayout() via JS */
   .intro-popover-close {
