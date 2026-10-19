@@ -171,6 +171,90 @@ body { background: #F6F3EC !important; }
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
+/* ── WBGT mode toggle (Direct / From components) ── */
+#meas-wbgt-mode-row { margin-bottom: 10px; margin-top: 2px; }
+.wbgt-mode-toggle {
+  display: flex;
+  border: 2px solid var(--navy);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.wbgt-mode-toggle button {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-mode-toggle button.active { background: var(--navy); color: #fff; }
+.wbgt-mode-toggle button + button { border-left: 2px solid var(--navy); }
+/* ── Indoor/outdoor setting toggle ── */
+.wbgt-setting-toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.wbgt-setting-toggle button {
+  flex: 1;
+  padding: 5px 4px;
+  background: transparent;
+  color: var(--subtext);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-setting-toggle button.active { background: #1A7A4A; color: #fff; }
+.wbgt-setting-toggle button + button { border-left: 2px solid var(--border); }
+/* ── Small italic helper text under field label ── */
+.meas-field-sub {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  font-style: italic;
+  color: #888;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 1px;
+}
+/* ── Compress component fields: slightly smaller inputs ── */
+#meas-wbgt-fields .meas-field-group { margin-bottom: 5px; }
+#meas-wbgt-fields .meas-input { height: 34px; font-size: 16px; }
+#meas-wbgt-fields .meas-toggle button { height: 34px; font-size: 11px; padding: 0 7px; }
+/* ── Calculated WBGT result display ── */
+.wbgt-calc-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 7px;
+  padding: 7px 12px;
+  margin-top: 4px;
+}
+.wbgt-calc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+  flex: 1;
+  white-space: nowrap;
+}
+.wbgt-calc-value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 /* ── Card two-column layout ── */
 .method-card-full {
   flex-direction: row !important;
@@ -540,6 +624,14 @@ body { background: #F6F3EC !important; }
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
 
+    <!-- WBGT mode toggle: only shown when WBGT instrument selected -->
+    <div id="meas-wbgt-mode-row" hidden>
+      <div class="wbgt-mode-toggle" role="group" aria-label="WBGT entry mode">
+        <button id="wbgt-mode-direct" class="active" onclick="setWbgtMode('direct')" type="button">Direct WBGT reading</button>
+        <button id="wbgt-mode-calc" onclick="setWbgtMode('calc')" type="button">Calculate from components</button>
+      </div>
+    </div>
+
     <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
     <div id="meas-single-fields">
       <div class="meas-field-group">
@@ -552,6 +644,62 @@ body { background: #F6F3EC !important; }
           </div>
         </div>
         <div class="meas-error-msg" id="meas-single-error">Please enter a value.</div>
+      </div>
+    </div>
+
+    <!-- WBGT component fields (NWB + GT + optional DB) -->
+    <div id="meas-wbgt-fields" hidden>
+      <!-- Indoor / Outdoor toggle -->
+      <div class="meas-field-group" style="margin-bottom:8px;">
+        <label class="meas-field-label" style="margin-bottom:4px;">Environment</label>
+        <div class="wbgt-setting-toggle" role="group" aria-label="Indoor or outdoor">
+          <button id="wbgt-env-indoor" class="active" onclick="setWbgtSetting('indoor')" type="button">🏢 Indoors</button>
+          <button id="wbgt-env-outdoor" onclick="setWbgtSetting('outdoor')" type="button">☀️ Outdoors</button>
+        </div>
+      </div>
+      <!-- NWB -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-nwb">
+          NWB
+          <span class="meas-field-sub">natural wet bulb temperature</span>
+        </label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="updateWbgtCalc()">
+          <div class="meas-toggle">
+            <button id="meas-wbgt-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-wbgt-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-nwb-error">Please enter a value.</div>
+      </div>
+      <!-- GT -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-gt">
+          GT
+          <span class="meas-field-sub">globe temperature</span>
+        </label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-gt-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-gt-error">Please enter a value.</div>
+      </div>
+      <!-- DB (outdoor only) -->
+      <div class="meas-field-group" id="meas-wbgt-db-row">
+        <label class="meas-field-label" for="meas-wbgt-db">
+          DB
+          <span class="meas-field-sub">dry bulb (air) temperature</span>
+        </label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-db-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-db-error">Please enter a value.</div>
+      </div>
+      <!-- Calculated result -->
+      <div class="wbgt-calc-display" id="wbgt-calc-display">
+        <span class="wbgt-calc-label">Calculated WBGT</span>
+        <span class="wbgt-calc-value" id="wbgt-calc-value">—</span>
       </div>
     </div>
 
@@ -587,6 +735,8 @@ body { background: #F6F3EC !important; }
 <script>
   let measCurrentInstrument = null;
   let measCurrentUnit = 'F';
+  let wbgtMode    = 'direct';   // 'direct' | 'calc'
+  let wbgtSetting = 'indoor';   // 'indoor' | 'outdoor'
   const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
   const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Temp & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
   const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
@@ -612,20 +762,82 @@ body { background: #F6F3EC !important; }
     try { if (!isNaN(parseFloat(rh))) localStorage.setItem(_LS_RH, parseFloat(rh)); } catch {}
   }
 
+  function setWbgtMode(mode) {
+    wbgtMode = mode;
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', mode === 'direct');
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', mode === 'calc');
+    document.getElementById('meas-single-fields').hidden = (mode !== 'direct');
+    document.getElementById('meas-wbgt-fields').hidden   = (mode !== 'calc');
+    // Clear errors on mode switch
+    document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
+    ['meas-value','meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('error');
+    });
+    if (mode === 'calc') updateWbgtCalc();
+  }
+
+  function setWbgtSetting(setting) {
+    wbgtSetting = setting;
+    document.getElementById('wbgt-env-indoor').classList.toggle('active',  setting === 'indoor');
+    document.getElementById('wbgt-env-outdoor').classList.toggle('active', setting === 'outdoor');
+    document.getElementById('meas-wbgt-db-row').hidden = (setting === 'indoor');
+    updateWbgtCalc();
+  }
+
+  function updateWbgtCalc() {
+    const nwb = parseFloat(document.getElementById('meas-wbgt-nwb').value);
+    const gt  = parseFloat(document.getElementById('meas-wbgt-gt').value);
+    const db  = parseFloat(document.getElementById('meas-wbgt-db').value);
+    let wbgt;
+    if (wbgtSetting === 'indoor') {
+      wbgt = (!isNaN(nwb) && !isNaN(gt)) ? 0.7 * nwb + 0.3 * gt : null;
+    } else {
+      wbgt = (!isNaN(nwb) && !isNaN(gt) && !isNaN(db)) ? 0.7 * nwb + 0.2 * gt + 0.1 * db : null;
+    }
+    const display = document.getElementById('wbgt-calc-value');
+    const unit = measCurrentUnit === 'C' ? '°C' : '°F';
+    display.textContent = (wbgt !== null) ? Math.round(wbgt * 10) / 10 + ' ' + unit : '—';
+  }
+
   function openMeasModal(instrument, triggerEl) {
     measCurrentInstrument = instrument;
     measCurrentUnit = 'F';
+    wbgtMode    = 'direct';
+    wbgtSetting = 'indoor';
     WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
     buildBreadcrumbs();   // show instrument pill immediately on card tap
     document.getElementById('meas-modal-title').textContent = measTitles[instrument];
-    const isTrh = instrument === 'trh';
+    const isTrh  = instrument === 'trh';
+    const isWbgt = instrument === 'wbgt';
+    // Show/hide mode toggle row for WBGT only
+    document.getElementById('meas-wbgt-mode-row').hidden = !isWbgt;
+    // Reset WBGT mode buttons
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', true);
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', false);
+    // Reset env toggle
+    document.getElementById('wbgt-env-indoor').classList.add('active');
+    document.getElementById('wbgt-env-outdoor').classList.remove('active');
+    document.getElementById('meas-wbgt-db-row').hidden = true; // start as indoor
     document.getElementById('meas-single-fields').hidden = isTrh;
-    document.getElementById('meas-trh-fields').hidden = !isTrh;
+    document.getElementById('meas-trh-fields').hidden    = !isTrh;
+    document.getElementById('meas-wbgt-fields').hidden   = true; // always start in direct mode
     if (!isTrh) document.getElementById('meas-single-label').textContent = measSingleLabels[instrument];
-    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith('-f'));
     });
+    // Reset component field unit suffixes
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '°F';
+    });
+    // Clear component inputs
+    ['meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('error'); }
+    });
+    document.getElementById('wbgt-calc-value').textContent = '—';
     const _last = _loadLastMeas();
     const measDefaults = {
       'meas-value': _last.tempF != null ? _last.tempF : '74',
@@ -684,13 +896,58 @@ body { background: #F6F3EC !important; }
 
   function setMeasUnit(unit) {
     measCurrentUnit = unit;
-    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith(unit === 'F' ? '-f' : '-c'));
     });
+    // Update suffix labels on component fields
+    const suffix = unit === 'C' ? '°C' : '°F';
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = suffix;
+    });
+    // Recalculate with new unit label
+    if (wbgtMode === 'calc') updateWbgtCalc();
   }
 
   function submitMeasModal() {
+    // ── WBGT from components ────────────────────────────────────────────────
+    if (measCurrentInstrument === 'wbgt' && wbgtMode === 'calc') {
+      let valid = true;
+      const nwbEl = document.getElementById('meas-wbgt-nwb');
+      const gtEl  = document.getElementById('meas-wbgt-gt');
+      const dbEl  = document.getElementById('meas-wbgt-db');
+      const nwb   = parseFloat(nwbEl.value);
+      const gt    = parseFloat(gtEl.value);
+      if (isNaN(nwb)) {
+        nwbEl.classList.add('error');
+        document.getElementById('meas-wbgt-nwb-error').classList.add('visible');
+        valid = false;
+      }
+      if (isNaN(gt)) {
+        gtEl.classList.add('error');
+        document.getElementById('meas-wbgt-gt-error').classList.add('visible');
+        valid = false;
+      }
+      if (wbgtSetting === 'outdoor') {
+        const db = parseFloat(dbEl.value);
+        if (isNaN(db)) {
+          dbEl.classList.add('error');
+          document.getElementById('meas-wbgt-db-error').classList.add('visible');
+          valid = false;
+        }
+      }
+      if (!valid) return;
+      const db  = parseFloat(dbEl.value);
+      const wbgt = wbgtSetting === 'indoor'
+        ? 0.7 * nwb + 0.3 * gt
+        : 0.7 * nwb + 0.2 * gt + 0.1 * db;
+      WRC.set({ measValue: Math.round(wbgt * 10) / 10, measUnit: measCurrentUnit });
+      closeMeasModal();
+      window.location.href = measDestUrls['wbgt'];
+      return;
+    }
+
     let valid = true;
     if (measCurrentInstrument === 'trh') {
       const tempEl = document.getElementById('meas-temp');
