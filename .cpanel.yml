@@ -6,4 +6,5 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/workerpo/public_html/work-rest-cycles/
+    - git pull origin main
     - /bin/rsync -av --chmod=D755,F644 --exclude='.git' --exclude='.cpanel.yml' --exclude='.gitignore' --exclude='.github' --exclude='error_log' work-rest-cycles/ $DEPLOYPATH

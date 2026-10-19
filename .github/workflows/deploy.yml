@@ -8,26 +8,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Pull latest commits on cPanel
-        env:
-          CPANEL_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
-        run: |
-          result=$(curl -sf -X POST \
-            -H "Authorization: cpanel workerpo:${CPANEL_TOKEN}" \
-            "https://workerpowerforhealth.com:2083/execute/VersionControl/retrieve" \
-            --data-urlencode "repository_root=/home/workerpo/repositories/work-rest-cycles")
-          echo "$result"
-          echo "$result" | python3 -c "
-          import sys, json
-          d = json.load(sys.stdin)
-          if d.get('status') == 1:
-              print('Pull succeeded.')
-              sys.exit(0)
-          else:
-              print('Pull failed:', d.get('errors', d))
-              sys.exit(1)
-          "
-
       - name: Deploy HEAD to public_html
         env:
           CPANEL_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
