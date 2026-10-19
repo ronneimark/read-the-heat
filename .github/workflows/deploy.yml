@@ -8,7 +8,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger deploy webhook
+      - name: Trigger cPanel git deploy
+        env:
+          CPANEL_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
         run: |
-          curl -f -X POST https://workerpowerforhealth.com/deploy-webhook.php \
-            -H "X-Deploy-Secret: wrc-deploy-2026"
+          result=$(curl -sf -X POST \
+            -H "Authorization: cpanel workerpo:${CPANEL_TOKEN}" \
+            "https://workerpowerforhealth.com:2083/execute/VersionControlDeployment/create" \
+            --data-urlencode "repository=/home/workerpo/repositories/work-rest-cycles")
+          echo "$result"
+          echo "$result" | python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          if d.get('status') == 1:
+              print('Deploy triggered successfully.')
+              sys.exit(0)
+          else:
+              print('Deploy failed:', d.get('errors', d))
+              sys.exit(1)
+          "
