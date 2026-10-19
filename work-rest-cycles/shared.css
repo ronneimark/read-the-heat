@@ -99,21 +99,14 @@
   }
   .split-pill-half {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    padding: 6px 11px;
+    padding: 8px 12px;
     border: 2px solid transparent;
     cursor: pointer;
     font-family: var(--font);
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
     line-height: 1;
     transition: background 0.1s ease, box-shadow 0.1s ease, translate 0.1s ease;
-    min-width: 48px;
   }
   .split-pill-half svg { width: 18px; height: 18px; display: block; flex-shrink: 0; }
   .split-pill-half:focus-visible { outline: 3px solid #fff; outline-offset: 2px; z-index: 1; position: relative; }
@@ -167,7 +160,7 @@
     .home-btn svg { width: 20px; height: 20px; }
     header { grid-template-columns: auto 1fr auto !important; }
     .split-pill { margin: 0 5px; }
-    .split-pill-half { padding: 5px 9px; min-width: 38px; font-size: 8px; }
+    .split-pill-half { padding: 6px 10px; }
     .split-pill-half svg { width: 15px; height: 15px; }
   }
 
