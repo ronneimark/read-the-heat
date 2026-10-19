@@ -1,3 +1,6 @@
+// ── Post-modal-close callback (used to reopen intro popover on mobile) ──
+let _afterModalClose = null;
+
 // ── WRC State Manager ──
 const WRC = {
   get() { try { return JSON.parse(sessionStorage.getItem('wrc') || '{}'); } catch(e) { return {}; } },
@@ -428,12 +431,14 @@ function closeHealthModal() {
   const overlay = document.getElementById('health-modal-overlay');
   if (overlay) overlay.classList.remove('open');
   document.body.style.overflow = '';
+  if (_afterModalClose) { const cb = _afterModalClose; _afterModalClose = null; cb(); }
 }
 
 function closeMethodologyModal() {
   const overlay = document.getElementById('methodology-modal-overlay');
   if (overlay) overlay.classList.remove('open');
   document.body.style.overflow = '';
+  if (_afterModalClose) { const cb = _afterModalClose; _afterModalClose = null; cb(); }
 }
 
 // ── Feedback modal ──
@@ -477,6 +482,7 @@ function closeFeedbackModal() {
   var overlay = document.getElementById('feedback-modal-overlay');
   if (overlay) overlay.classList.remove('open');
   document.body.style.overflow = '';
+  if (_afterModalClose) { const cb = _afterModalClose; _afterModalClose = null; cb(); }
 }
 function submitFeedback() {
   var msg = (document.getElementById('fb-msg') || {}).value || '';

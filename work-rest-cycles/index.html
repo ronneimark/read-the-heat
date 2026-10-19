@@ -77,7 +77,7 @@
         <!-- tabbed popover -->
         <div class="intro-popover" id="intro-popover" hidden role="dialog" aria-label="How to use this tool">
           <div class="intro-popover-arrow"></div>
-          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close">&times;</button>
+          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close" title="Close">&times;</button>
 
           <!-- intro paragraph above tabs -->
           <div class="intro-preamble">
@@ -91,15 +91,15 @@
 
           <!-- tab bar -->
           <div class="intro-tab-bar" role="tablist">
-            <button class="intro-tab active" id="itab-btn-1" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)">
+            <button class="intro-tab active" id="itab-btn-1" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)" title="Step-by-step guide to using this tool">
               <span class="intro-tab-title">How to use</span>
               <span class="intro-tab-sub">Step-by-step guide</span>
             </button>
-            <button class="intro-tab"        id="itab-btn-2" role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)">
+            <button class="intro-tab"        id="itab-btn-2" role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)" title="Instruments and methods for measuring heat">
               <span class="intro-tab-title">Measuring heat</span>
               <span class="intro-tab-sub">Instruments &amp; methods</span>
             </button>
-            <button class="intro-tab"        id="itab-btn-3" role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)">
+            <button class="intro-tab"        id="itab-btn-3" role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)" title="Who uses this tool and how">
               <span class="intro-tab-title">Use Cases</span>
               <span class="intro-tab-sub">Who uses this tool</span>
             </button>
@@ -111,7 +111,7 @@
             <div class="intro-tab-panel active" id="itab-1" role="tabpanel" aria-labelledby="itab-btn-1">
               <ol class="intro-steps">
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 1 on the page"
                     onclick="highlightStep(event,1)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,1)}">
                   <div class="step-badge">1</div>
@@ -122,7 +122,7 @@
                   </div>
                 </li>
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 2 on the page"
                     onclick="highlightStep(event,2)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,2)}">
                   <div class="step-badge">2</div>
@@ -133,7 +133,7 @@
                   </div>
                 </li>
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 3 on the page"
                     onclick="highlightStep(event,3)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,3)}">
                   <div class="step-badge">3</div>
@@ -144,7 +144,7 @@
                   </div>
                 </li>
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 4 on the page"
                     onclick="highlightStep(event,4)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,4)}">
                   <div class="step-badge">4</div>
@@ -155,7 +155,7 @@
                   </div>
                 </li>
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 5 on the page"
                     onclick="highlightStep(event,5)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,5)}">
                   <div class="step-badge">5</div>
@@ -166,7 +166,7 @@
                   </div>
                 </li>
 
-                <li class="intro-step" role="button" tabindex="0"
+                <li class="intro-step" role="button" tabindex="0" title="Highlight the results section on the page"
                     onclick="highlightStep(event,6)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}">
                   <div class="step-badge" aria-hidden="true">→</div>
@@ -211,7 +211,7 @@
           </div><!-- /tab-panels -->
 
           <!-- health factors note — pinned below all tabs -->
-          <button class="intro-health-note" onclick="highlightHealthBtn(event)" aria-label="Show health factors button location">
+          <button class="intro-health-note" onclick="highlightHealthBtn(event)" aria-label="Individual Health Risk Factors" title="Open Individual Health Risk Factors">
             <span class="intro-health-note-label">NOTE: Individual Health Factors</span>
             play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
             Health factors commonly impacting heat stress can be viewed on this site.
@@ -219,8 +219,14 @@
           </button>
 
           <!-- methodology note — secondary, pinned below health note -->
-          <button class="intro-health-note intro-method-note" onclick="highlightMethodBtn(event)" aria-label="Show methodology button location">
-            The <strong>ⓘ</strong> button opens the <strong>Sources &amp; Methodology</strong> page — background on the NIOSH standards and calculations behind this tool. The <strong>💬</strong> button opens a <strong>Comments &amp; Suggestions</strong> form where you can send feedback or recommendations.
+          <button class="intro-health-note intro-method-note" onclick="highlightMethodBtn(event)" aria-label="Sources and Methodology" title="Open Sources &amp; Methodology">
+            The <strong>ⓘ</strong> button opens the <strong>Sources &amp; Methodology</strong> page — background on the NIOSH standards and calculations behind this tool.
+            <span class="intro-health-note-link">↗ click to see</span>
+          </button>
+
+          <!-- feedback note — tertiary, pinned below methodology note -->
+          <button class="intro-health-note intro-method-note" onclick="highlightFeedbackBtn(event)" aria-label="Comments and Suggestions" title="Open Comments &amp; Suggestions">
+            The <strong>💬</strong> button opens a <strong>Comments &amp; Suggestions</strong> form where you can send feedback or recommendations.
             <span class="intro-health-note-link">↗ click to see</span>
           </button>
 
@@ -1065,7 +1071,7 @@
 <!-- ── Instrument photo zoom overlay (must be before the inline script so the IIFE can find these elements) ── -->
 <div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
   <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
-  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo" title="Close enlarged photo">&times;</button>
 </div>
 
 <script src="shared.js?v=2"></script>
@@ -1552,7 +1558,12 @@
   }
 
   function highlightHealthBtn(e) {
-    if (window.innerWidth <= 768) return;
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openHealthModal();
+      return;
+    }
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.health-btn');
@@ -1661,7 +1672,12 @@
   }
 
   function highlightMethodBtn(e) {
-    if (window.innerWidth <= 768) return;
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openMethodologyModal();
+      return;
+    }
     restorePopoverFullHeight();
     const NS = 'http://www.w3.org/2000/svg';
     const target = document.querySelector('.split-pill') || document.querySelector('.split-pill-left');
@@ -1762,6 +1778,58 @@
       restorePopoverFullHeight();
       document.removeEventListener('keydown', onKey2);
     });
+  }
+
+  function highlightFeedbackBtn(e) {
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openFeedbackModal();
+      return;
+    }
+    // Desktop: arrow to the 💬 (right half of split pill)
+    restorePopoverFullHeight();
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.split-pill-right');
+    if (!target) return;
+    document.getElementById('wrc-step-overlay')?.remove();
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, { position:'fixed', top:'0', left:'0', width:'100vw', height:'100vh', pointerEvents:'none', zIndex:'9999', overflow:'visible' });
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter'); filt.id = 'wrc-fb-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+    const marker = document.createElementNS(NS, 'marker'); marker.id = 'wrc-fb-ah';
+    marker.setAttribute('markerWidth','10'); marker.setAttribute('markerHeight','7');
+    marker.setAttribute('refX','10'); marker.setAttribute('refY','3.5'); marker.setAttribute('orient','auto');
+    const mpoly = document.createElementNS(NS, 'polygon'); mpoly.setAttribute('points','0 0, 10 3.5, 0 7'); mpoly.setAttribute('fill','#00966C');
+    marker.appendChild(mpoly); defs.appendChild(marker); svg.appendChild(defs);
+    const cx = tR.left + tR.width/2, cy = tR.top + tR.height/2;
+    const x1 = e ? e.clientX : cx - 60, y1 = e ? e.clientY : cy;
+    const dx = cx-x1, dy = cy-y1, dist = Math.sqrt(dx*dx+dy*dy);
+    const ringR = Math.max(tR.width,tR.height)/2+10;
+    const ratio = Math.max(0,(dist-ringR-6))/dist;
+    const arrow = document.createElementNS(NS,'path');
+    arrow.setAttribute('d',`M ${x1} ${y1} L ${x1+dx*ratio} ${y1+dy*ratio}`);
+    arrow.setAttribute('fill','none'); arrow.setAttribute('stroke','#00966C');
+    arrow.setAttribute('stroke-width','3.5'); arrow.setAttribute('stroke-linecap','round');
+    arrow.setAttribute('marker-end','url(#wrc-fb-ah)'); arrow.setAttribute('filter','url(#wrc-fb-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+    const len = arrow.getTotalLength(); arrow.style.strokeDasharray = len; arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+    const tint = document.createElementNS(NS,'circle'); tint.setAttribute('cx',cx); tint.setAttribute('cy',cy); tint.setAttribute('r',ringR); tint.setAttribute('fill','rgba(0,150,108,0.15)'); svg.appendChild(tint);
+    const ring = document.createElementNS(NS,'circle'); ring.setAttribute('cx',cx); ring.setAttribute('cy',cy); ring.setAttribute('r',ringR); ring.setAttribute('fill','none'); ring.setAttribute('stroke','#00966C'); ring.setAttribute('stroke-width','5'); ring.setAttribute('filter','url(#wrc-fb-shadow)'); ring.setAttribute('stroke-linecap','round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`; ring.style.transform = 'rotate(-90deg)';
+    const circ = 2*Math.PI*ringR; ring.style.strokeDasharray = circ; ring.style.strokeDashoffset = circ; ring.style.transition = 'stroke-dashoffset .5s ease'; svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+    const pop3 = document.getElementById('intro-popover');
+    svg.style.pointerEvents = 'all'; svg.style.cursor = 'pointer';
+    svg.addEventListener('click', ev => { ev.stopPropagation(); svg.remove(); clearPopoverMask(pop3); restorePopoverFullHeight(); });
+    document.addEventListener('keydown', function onKey3() { svg.remove(); clearPopoverMask(pop3); restorePopoverFullHeight(); document.removeEventListener('keydown', onKey3); });
   }
 
   function ls1SelectSector(key) {
