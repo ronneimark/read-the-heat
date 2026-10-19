@@ -725,6 +725,15 @@ main { padding: 0; max-width: none; }
   letter-spacing: 0.3px; opacity: 0.75; text-transform: none;
   margin-top: 2px; white-space: nowrap;
 }
+/* ── Mobile: pad inner scroll containers so sticky bar doesn't clip content ── */
+@media (max-width: 768px) {
+  #hi-tab-result-wrap, #hi-utab-result-wrap,
+  #hi-tab-formula, #hi-utab-formula,
+  #hi-tab-hitable, #hi-utab-hitable,
+  #hi-tab-notes, #hi-utab-notes {
+    padding-bottom: 62px !important;
+  }
+}
 </style>
 <script src="./lang-link.js" defer></script>
 </head>

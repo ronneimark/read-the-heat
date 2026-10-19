@@ -569,6 +569,15 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   letter-spacing: 0.3px; opacity: 0.75; text-transform: none;
   margin-top: 2px; white-space: nowrap;
 }
+/* ── Mobile: pad inner scroll containers so sticky bar doesn't clip content ── */
+@media (max-width: 768px) {
+  #trh-tab-result-wrap, #trh-utab-result-wrap,
+  #trh-tab-formula, #trh-utab-formula,
+  #trh-tab-reftable, #trh-utab-reftable,
+  #trh-tab-notes, #trh-utab-notes {
+    padding-bottom: 62px !important;
+  }
+}
 </style>
 <script src="./lang-link.js" defer></script>
 </head>

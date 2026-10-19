@@ -1863,6 +1863,21 @@
     .mmb-health svg { stroke: #FFD600; fill: #FFD600; }
     .mmb-method svg { stroke: #aaccff; }
     .mmb-feedback svg { stroke: #80cbc4; }
+
+    /* ── Ensure inner scroll containers clear the fixed bottom bar ── */
+    /* Targets flex panels that are the real scroll containers on calculator pages */
+    .tab-panel,
+    .tab-content,
+    [class*="tab-panel"],
+    [class*="tab-body"],
+    .trh-panel,
+    .urec-panel,
+    .calc-panel,
+    .result-panel,
+    .scroll-panel {
+      padding-bottom: 62px !important;
+    }
+
     html { height: auto; }
 
     /* Main launcher wrapper: release fixed height */

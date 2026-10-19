@@ -712,6 +712,14 @@ main { padding: 0; max-width: none; }
 #wbgt-activity-defs .activity-card .kcal {
   font-size: 10.5px;
 }
+/* ── Mobile: pad inner scroll containers so sticky bar doesn't clip content ── */
+@media (max-width: 768px) {
+  #acclim-tab-result-wrap,
+  #unacclim-tab-0-wrap,
+  #unacclim-tab-schedule {
+    padding-bottom: 62px !important;
+  }
+}
 </style>
 <script src="./lang-link.js" defer></script>
 </head>
