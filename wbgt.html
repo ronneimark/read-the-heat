@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WBGT Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+body { overflow: auto; }
+/* wbgt.html manages its own layout — strip main's default padding */
+main { padding: 0; max-width: none; }
+/* Compact desktop header — matches map.php banner height */
+@media (min-width: 601px) {
+  header { height: 76px; overflow: hidden; }
+  .header-attribution { display: none; }
+  .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
+  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
+}
+
+/* ── Navy divider below tab bar ── */
+#acclim-tab-bar-wrap,
+#unacclim-tab-bar-wrap {
+  border-bottom: 4px solid var(--navy, #1A2A3A);
+}
+
+/* ── Acclimatized two-tab shell ── */
+.acclim-tab-bar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 6px;
+  background: #D6DFE9;
+  padding: 8px 8px 0;
+  flex-shrink: 0;
+}
+
+.acclim-tab-btn {
+  padding: 14px 36px 12px;
+  min-width: 200px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+.acclim-tab-btn-title {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.acclim-tab-btn-sub {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.75;
+  letter-spacing: 0.02em;
+}
+.acclim-tab-btn.active {
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  box-shadow: none;
+}
+.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
+.acclim-tab-btn:not(.active):hover {
+  background: rgba(255,255,255,0.7);
+  color: var(--navy, #1A2A3A);
+}
+
+/* ── WBGT-specific result overrides (layout base: shared.css .result-wrap / .result-grid) ── */
+
+/* Worker-type comparison grid (acclimatized vs non) */
+.acclim-worker-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .acclim-worker-grid { grid-template-columns: 1fr; }
+  .result-inputs:not(.result-inputs-below) { grid-template-columns: 1fr 1fr; }
+}
+/* Monitoring card spacing handled by result-main gap */
+
+/* ── Mobile-only sticky schedule wrapper — hidden on desktop ── */
+.mobile-sched-sticky { display: none; }
+
+/* ── Mobile: simplified result view ──
+   Hide tab bars and chart panes; show only the result/schedule card.
+   A hint at the bottom refers users to desktop for charts and full tables. */
+@media (max-width: 768px) {
+  /* Hide tab bars — no switching on mobile */
+  #acclim-tab-bar-wrap,
+  #unacclim-tab-bar-wrap { display: none !important; }
+
+  /* Force all non-result panes hidden */
+  #acclim-tab-chart,
+  #acclim-tab-notes,
+  #unacclim-tab-chart,
+  #unacclim-tab-schedule,
+  #unacclim-tab-notes { display: none !important; }
+
+  /* Release result panes from fixed positioning */
+  #unacclim-tab-0-wrap {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .urec-rec-block {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  #acclim-tab-result-wrap {
+    align-items: flex-start !important;
+  }
+
+  /* Note: #unacclim-tab-result mobile overrides are in a separate @media block
+     placed AFTER the desktop rules, to ensure correct cascade order. */
+
+  /* Override shared.css "padding: 16px !important" shorthand which
+     blocks the JS-set paddingTop. Use the CSS var set by updateLayout(). */
+  main { padding-top: var(--fixed-top-h, 100px) !important; }
+
+  /* Sticky schedule button wrapper on mobile */
+  .mobile-sched-sticky {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: var(--fixed-top-h, 80px);
+    z-index: 50;
+    background: var(--warm-white, #F6F3EC);
+    padding: 10px 14px;
+    margin: 0 -14px 0;
+    border-top: 1px solid var(--border, #D8DFE8);
+    border-bottom: 1px solid var(--border, #D8DFE8);
+  }
+  .mobile-sched-sticky .sched-modal-btn {
+    width: 100%;
+    justify-content: center;
+    border-radius: 10px;
+  }
+  /* Hide desktop sidebar button on mobile — mobile-sched-sticky handles it */
+  .desktop-sched-btn { display: none !important; }
+  /* Inline schedule panel (shown below sticky button on mobile) */
+  .mobile-sched-inline {
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .mobile-sched-inline .sched-inline-title {
+    font-size: 15px; font-weight: 800; color: var(--navy, #1A2A3A); margin-bottom: 2px;
+  }
+  .mobile-sched-inline .sched-inline-sub {
+    font-size: 11px; color: var(--subtext, #6B7785); margin-bottom: 10px; line-height: 1.4;
+  }
+  .mobile-sched-inline .sched-inline-foot {
+    background: var(--warn-bg, #FFF3E0); color: var(--warn-text, #7B2500);
+    border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 11px;
+    border-left: 3px solid var(--warn-text, #7B2500); margin-top: 10px;
+  }
+  .mobile-sched-inline .sched-inline-fn {
+    font-size: 10px; color: var(--subtext); font-style: italic; margin-top: 5px;
+  }
+
+  /* Desktop-referral hint */
+  .mobile-full-hint {
+    display: block !important;
+    text-align: center;
+    padding: 14px 20px 28px;
+    font-size: 13px;
+    color: var(--subtext, #6B7C93);
+    font-style: italic;
+    border-top: 1px solid var(--border, #D8DFE8);
+    margin-top: 4px;
+  }
+
+  /* Mobile result hint inside colored block */
+  .mobile-result-hint { display: flex; }
+}
+
+/* ── Tab panels (shared base) ── */
+#acclim-tab-chart, #unacclim-tab-chart {
+  overflow: hidden; display: none; flex-direction: column; padding: 0; box-sizing: border-box;
+}
+/* ── Desktop result card ── */
+@media (min-width: 769px) {
+  #wbgt-result-card {
+    position: fixed;
+    left: 35px; right: 35px; bottom: 35px;
+    background: var(--bg, #FFFFFF);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
+    display: flex; flex-direction: column; overflow: hidden; z-index: 50;
+  }
+  #wbgt-tab-content-area {
+    flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column;
+  }
+  #wbgt-acclim-tabs, #wbgt-unacclim-tabs {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+  }
+  #acclim-tab-result-wrap,
+  #unacclim-tab-0-wrap,
+  #unacclim-tab-schedule {
+    flex: 1; min-height: 0; overflow-y: auto; position: relative;
+  }
+  #acclim-tab-notes,
+  #unacclim-tab-notes {
+    flex: 1; min-height: 0; overflow: hidden;
+  }
+  #acclim-tab-chart, #unacclim-tab-chart { flex: 1; min-height: 0; overflow: hidden; }
+  /* ── WBGT Notes 2-column layout ── */
+  .wbgt-notes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 14px 20px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .wbgt-notes-col {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .wbgt-notes-layout .note-box { font-size: 13px; margin: 0; }
+  .wbgt-notes-layout .note-box ul { font-size: 12px; }
+  .wbgt-notes-layout .wbgt-citation {
+    font-size: 11px; color: var(--subtext); line-height: 1.6; margin: 0;
+  }
+}
+@media (max-width: 768px) {
+  /* Card is position:static on mobile — it flows from top:0 under the fixed
+     header. Use the CSS var set by updateLayout() to clear it. */
+  #wbgt-result-card {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: var(--fixed-top-h, 100px);
+  }
+}
+
+.acclim-chart-grid {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  display: grid;
+  grid-template-columns: 22% repeat(4, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  flex: 1;
+  min-height: 0;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.10);
+}
+.acc-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.13);
+  border-right: 1px solid rgba(0,0,0,0.07);
+  padding: 4px 6px;
+  line-height: 1.15;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.50);
+}
+.acc-cell.acc-last-row { border-bottom: none; }
+
+.acc-hdr {
+  font-size: 13px; /* overridden at runtime by fitGridHeaderSize() */
+  font-weight: 700;
+  background: linear-gradient(180deg, #253A52 0%, #1A2A3A 100%);
+  color: #fff;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid rgba(255,255,255,0.15) !important;
+  box-shadow: none;
+}
+.acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
+
+.acc-range {
+  font-size: 13px; /* overridden at runtime by fitGridHeaderSize() */
+  font-weight: 600;
+  color: var(--navy, #1A2A3A);
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  padding-left: 12px;
+  background: linear-gradient(to right, #E4EBF3 0%, #F0F4F8 100%);
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.60);
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* Row banding on range label column */
+.acc-range:nth-child(10n+6),
+.acc-range:nth-child(10n+16) { background: linear-gradient(to right, #D8E3EE 0%, #E8EDF2 100%); }
+
+/* value cells: color only — font size lives on .wr-nums */
+.acclim-chart-grid .c-safe,
+.acclim-chart-grid .c-caution,
+.acclim-chart-grid .c-warn,
+.acclim-chart-grid .c-high,
+.acclim-chart-grid .c-stop { font-size: inherit; }
+/* Dark stop cells get a lighter inset shimmer */
+.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); border-right-color: rgba(255,255,255,0.12); }
+
+/* User's column: navy header + subtle tint on data cells */
+.acc-user-col.acc-hdr {
+  background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
+  color: #fff;
+  border-left: 3px solid rgba(255,255,255,0.35);
+  border-right: 3px solid rgba(255,255,255,0.35);
+}
+.acc-user-col:not(.acc-hdr) {
+  background-image: linear-gradient(rgba(26,42,58,0.08), rgba(26,42,58,0.08));
+}
+/* User's row: stronger tint on range label */
+.acc-range.acc-user-row {
+  background: #C8D9EC;
+  font-weight: 800;
+  border-left: 4px solid var(--navy, #1A2A3A);
+}
+/* User's row data cells */
+.acc-user-row:not(.acc-range) { background-image: linear-gradient(rgba(26,42,58,0.10), rgba(26,42,58,0.10)); }
+/* User's exact cell: ring highlight */
+.acc-user-cell {
+  outline: 6px solid var(--navy, #1A2A3A);
+  outline-offset: -6px;
+  position: relative;
+  z-index: 1;
+  font-size: clamp(16px, 3.5vh, 44px) !important;
+}
+
+/* ── Work/rest cell content ── */
+.acc-cell { flex-direction: column; gap: 1px; }
+.wr-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-size: clamp(13px, 2.5vh, 32px);
+  font-weight: 700;
+  line-height: 1;
+}
+.wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
+.wr-unit {
+  font-size: clamp(9px, 1.5vh, 17px);
+  font-weight: 500;
+  opacity: 0.8;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+.wr-continuous {
+  font-size: clamp(11px, 2vh, 26px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wr-danger {
+  font-size: clamp(11px, 2vh, 24px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+/* Larger nums for user's exact cell */
+.acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
+.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
+/* ── Chart caption / legend ── */
+.chart-caption {
+  flex: 0 0 auto;
+  background: rgba(240,244,248,0.97);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 6px;
+  font-size: clamp(11px, 1.55vh, 14px);
+  font-weight: 600;
+  color: #2E3A4A;
+  text-align: center;
+  padding: 6px 14px;
+  line-height: 1.45;
+  margin: 6px 10px 10px;
+}
+
+/* ── Unacclimatized 5-tab shell ── */
+.unacclim-tab-btn {
+  padding: 10px 16px 9px;
+  min-width: 120px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+.unacclim-tab-btn.active {
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+  box-shadow: none;
+}
+.unacclim-tab-btn:not(.active):hover {
+  background: rgba(255,255,255,0.7);
+  color: var(--navy, #1A2A3A);
+}
+.unacclim-tab-btn .acclim-tab-btn-sub { opacity: 0.75; }
+.unacclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
+
+/* ── Rec tab: full-viewport two-panel layout ── */
+#unacclim-tab-0-wrap {
+  display: flex;
+  overflow: hidden;
+}
+/* Desktop two-column grid for unacclimatized result — matches heat-index layout */
+#unacclim-tab-result {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+/* Left column wrapper holds notification block + monitoring card */
+.unacclim-left-col {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#unacclim-tab-result .result-main {
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 28px);
+  text-align: left;
+}
+/* Monitoring card inside left col — keep its own styling but full width */
+.unacclim-left-col > .result-monitoring { margin-top: 0; width: 100%; box-sizing: border-box; }
+#unacclim-tab-result .result-sidebar {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* ── Unacclimatized result mobile overrides ──
+   MUST come after the desktop rules above to win the cascade. */
+@media (max-width: 768px) {
+  #unacclim-tab-result {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 0;
+    overflow-y: auto;
+  }
+  #unacclim-tab-result .unacclim-left-col { grid-column: 1; grid-row: 1; gap: 0; }
+  #unacclim-tab-result .result-sidebar    { grid-column: 1; grid-row: 2; }
+  #unacclim-tab-result .result-main { border-radius: 0; padding: 16px 14px; flex-direction: column; text-align: center; gap: 16px; }
+}
+.unacclim-tab-pane {
+  display: none;
+  padding: 24px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Left panel — recommendation */
+.urec-left {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 clamp(12px,2.5vw,32px) clamp(12px,2vw,28px);
+  overflow: hidden;
+  border-right: 2px solid var(--navy, #1A2A3A);
+  box-sizing: border-box;
+  gap: clamp(8px,1.2vh,16px);
+}
+.urec-left.urec-left-full {
+  flex: 1 1 100%;
+  border-right: none;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.urec-badges {
+  display: flex; gap: clamp(6px,1vw,14px); width: 100%; justify-content: center;
+}
+.urec-badges.urec-badges-below {
+  flex-direction: column;
+  margin-top: 14px;
+}
+.urec-badges.urec-badges-below .urec-badge {
+  flex: none;
+  width: 100%;
+}
+.urec-badge {
+  flex: 1; background: var(--surface,#F8FAFB);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: clamp(8px,1vh,14px) clamp(8px,1vw,14px);
+  min-width: 0;
+}
+.urec-badge-label {
+  font-size: clamp(9px,0.9vw,12px); font-weight:700; text-transform:uppercase;
+  letter-spacing:0.07em; color:var(--subtext,#6B7785); margin-bottom:3px;
+}
+.urec-badge-value {
+  font-size: clamp(14px,1.4vw,20px); font-weight:800; color:var(--navy,#1A2A3A); line-height:1.1;
+}
+.urec-badge-sub {
+  font-size: clamp(10px,0.85vw,13px); color:var(--subtext,#6B7785); margin-top:2px; line-height:1.3;
+}
+.urec-rec-block {
+  display: flex; align-items: center; gap: clamp(12px,2vw,28px);
+  border-radius: 14px; padding: clamp(14px,2vh,28px) clamp(14px,2vw,24px);
+  width: 100%;
+}
+.urec-rec-clock { flex-shrink:0; }
+.urec-rec-text  { flex:1; min-width:0; }
+.urec-rec-label {
+  font-size: clamp(9px,0.85vw,12px); font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; opacity:0.7; margin-bottom:5px;
+}
+.urec-rec-headline {
+  font-size: clamp(18px,2.5vw,36px); font-weight:900; line-height:1.05; margin-bottom:6px;
+}
+.urec-rec-sub {
+  font-size: clamp(11px,1vw,15px); line-height:1.5; opacity:0.85;
+}
+.urec-source {
+  font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; text-align:center;
+}
+
+/* Right panel — daily schedule */
+.urec-right {
+  flex: 0 0 50%;
+  display: flex; flex-direction: column;
+  padding: 0 clamp(14px,2.5vw,30px) clamp(12px,2vw,24px);
+  overflow: hidden;
+  background: var(--surface,#F8FAFB);
+  box-sizing: border-box;
+  gap: clamp(6px,1vh,12px);
+}
+.urec-sched-hdr { flex-shrink:0; }
+.urec-sched-title {
+  font-size: clamp(13px,1.4vw,18px); font-weight:800; color:var(--navy,#1A2A3A); line-height:1.2;
+}
+.urec-sched-sub {
+  font-size: clamp(10px,0.9vw,13px); color:var(--subtext); margin-top:2px; line-height:1.3;
+}
+.urec-sched-grid {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: stretch;
+}
+.urec-day-row {
+  display: flex; align-items: center; flex: 1;
+  gap: clamp(6px,1vw,14px);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 0; min-height: 0;
+}
+.urec-day-row:last-child { border-bottom: none; }
+.urec-day-row.urec-day-full {
+  background: #E3EDF7;
+  border-left: 4px solid var(--navy,#1A2A3A);
+  padding-left: clamp(6px,1vw,12px);
+  border-radius: 4px;
+  margin: 2px 0;
+}
+.urec-day-label {
+  font-size: clamp(12px,1.2vw,17px); font-weight:800;
+  color:var(--navy,#1A2A3A); min-width: 52px; flex-shrink:0;
+}
+.urec-bar-wrap {
+  flex: 1; height: clamp(10px,1.2vh,16px); background:#D8E0E8;
+  border-radius:4px; overflow:hidden; min-width:0;
+}
+.urec-bar { height:100%; border-radius:4px; }
+.urec-day-pct {
+  font-size: clamp(11px,1.1vw,14px); font-weight:700; min-width:32px; text-align:right; flex-shrink:0;
+}
+.urec-day-times {
+  font-size: clamp(10px,0.95vw,13px); line-height:1.25; min-width:0; flex-shrink:0;
+  text-align: right; width: clamp(140px,18vw,230px);
+}
+.urec-time-work  { color: #005540; font-weight:700; display:block; }
+.urec-time-rest  { color: #7A1515; font-weight:600; display:block; }
+.urec-time-out   { color: var(--subtext); display:block; }
+.urec-day-full .urec-time-work { color: #0D3B10; }
+.urec-sched-foot {
+  font-size: clamp(9px,0.8vw,11px); color:var(--subtext); font-style:italic; flex-shrink:0;
+}
+
+/* ── Daily Exposure Schedule modal ── */
+.sched-modal-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy,#1A2A3A); color: #fff;
+  border: none; border-radius: 999px;
+  padding: 11px 22px; font-size: clamp(13px,1.1vw,15px); font-weight: 700;
+  cursor: pointer; margin-top: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: background .15s, box-shadow .15s;
+}
+.sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
+#sched-dialog {
+  border: none; border-radius: 12px; padding: 0;
+  position: fixed; margin: 0;
+  max-width: min(560px, 94vw); width: 94vw;
+  max-height: 75vh; overflow-y: auto;
+  box-shadow: 0 -4px 36px rgba(0,0,0,.3);
+  background: var(--warm-white,#F6F3EC);
+}
+#sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
+#sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
+@keyframes schedOpen  { from { clip-path: inset(0 0 100% 0 round 12px); } to { clip-path: inset(0 0 0% 0 round 12px); } }
+@keyframes schedClose { from { clip-path: inset(0 0 0% 0 round 12px); }  to { clip-path: inset(0 0 100% 0 round 12px); } }
+#sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
+@keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
+
+/* Mobile: bottom sheet slides up from screen edge */
+@media (max-width: 768px) {
+  #sched-dialog {
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    transform: none !important;
+    width: 100% !important; max-width: 100% !important;
+    border-radius: 18px 18px 0 0 !important;
+    max-height: 82vh;
+  }
+  #sched-dialog[open]         { animation: schedOpenSheet  .32s cubic-bezier(.22,.68,0,1.1) both; }
+  #sched-dialog.sched-closing { animation: schedCloseSheet .24s cubic-bezier(.55,0,1,.45)   both; }
+  @keyframes schedOpenSheet  { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes schedCloseSheet { from { transform: translateY(0);    } to { transform: translateY(100%); } }
+}
+.sched-dialog-inner { padding: 28px 28px 24px; }
+.sched-dialog-hdr {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 18px; gap: 12px;
+}
+.sched-dialog-title { font-size: 18px; font-weight: 800; color: var(--navy,#1A2A3A); line-height: 1.2; }
+.sched-dialog-sub   { font-size: 12px; color: var(--subtext,#6B7785); margin-top: 3px; }
+.sched-dialog-close {
+  background: none; border: none; cursor: pointer; font-size: 22px;
+  color: var(--subtext,#6B7785); line-height: 1; flex-shrink: 0; padding: 2px 4px;
+}
+.sched-dialog-close:hover { color: var(--navy,#1A2A3A); }
+/* ── Full Chart tab: activity column headers ── */
+.acc-hdr {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+.acc-hdr-sub {
+  flex-direction: column !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  line-height: 1.3;
+}
+.acc-sub {
+  display: block;
+  font-size: 0.68em;
+  font-weight: 500;
+  opacity: 0.68;
+  letter-spacing: 0.15px;
+  margin-top: 3px;
+  text-transform: none;
+  white-space: nowrap;
+}
+/* ── Table header sub-labels (metabolic rate) ── */
+.th-sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  opacity: 0.75;
+  text-transform: none;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+/* ── Activity level definition cards ── */
+#wbgt-activity-defs .activity-card {
+  background: var(--surface, #F8FAFB);
+}
+#wbgt-activity-defs .activity-card h4 {
+  font-size: 13px;
+}
+#wbgt-activity-defs .activity-card p {
+  font-size: 12px;
+}
+#wbgt-activity-defs .activity-card .kcal {
+  font-size: 10.5px;
+}
+/* ── Mobile: pad inner scroll containers so sticky bar doesn't clip content ── */
+@media (max-width: 768px) {
+  #acclim-tab-result-wrap,
+  #unacclim-tab-0-wrap,
+  #unacclim-tab-schedule {
+    padding-bottom: 94px !important;
+  }
+}
+</style>
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<dialog id="sched-dialog" aria-labelledby="sched-dialog-title">
+  <div class="sched-dialog-inner">
+    <div class="sched-dialog-hdr">
+      <div>
+        <div class="sched-dialog-title" id="sched-dialog-title">📅 Daily Exposure Schedule</div>
+        <div class="sched-dialog-sub" id="sched-dialog-sub"></div>
+      </div>
+      <button class="sched-dialog-close" onclick="closeSchedModal()" aria-label="Close">✕</button>
+    </div>
+    <div id="sched-dialog-grid"></div>
+    <div id="sched-dialog-foot1" style="background:var(--warn-bg,#FFF3E0);color:var(--warn-text,#7B2500);border-radius:6px;padding:6px 10px;font-weight:700;font-size:12px;border-left:3px solid var(--warn-text,#7B2500);margin-top:12px;">
+      ⚠ These percentages are % of the RAL (Recommended Alert Limit) — not full acclimatization. Reaching 100% RAL means the body is ready to begin adapting, but full acclimatization typically requires ~14 days of continued heat work. The REL (Recommended Exposure Limit), which is less restrictive, applies only after full acclimatization.
+    </div>
+    <div style="font-size:11px;color:var(--subtext);font-style:italic;margin-top:6px;">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
+  </div>
+</dialog>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <picture>
+        <source media="(max-width: 768px)" srcset="images/read-the-heat-logo-transparent.png">
+        <img class="header-brand" src="images/read-the-heat-logo-wide.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      </picture>
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+      <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="wbgt-result-card" style="display:none">
+  <div id="acclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="acclim-tab-bar" role="tablist" aria-label="Acclimatized worker views">
+      <button class="acclim-tab-btn active" id="tab-btn-result" role="tab"
+              aria-selected="true" aria-controls="acclim-tab-result-wrap" tabindex="0"
+              onclick="switchAcclimTab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
+        <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
+      </button>
+      <button class="acclim-tab-btn" id="tab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="acclim-tab-chart" tabindex="-1"
+              onclick="switchAcclimTab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
+      </button>
+      <button class="acclim-tab-btn" id="tab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="acclim-tab-notes" tabindex="-1"
+              onclick="switchAcclimTab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+      </button>
+    </div>
+  </div>
+  <div id="unacclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="unacclim-tab-bar" role="tablist" aria-label="Unacclimatized worker views" style="flex-wrap:wrap;">
+      <button class="unacclim-tab-btn active" id="utab-btn-0" role="tab"
+              aria-selected="true" aria-controls="unacclim-tab-0-wrap" tabindex="0"
+              onclick="switchUnacclimTab(0)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Schedule</span>
+        <span class="acclim-tab-btn-sub">RAL &amp; daily exposure</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-1" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-chart" tabindex="-1"
+              onclick="switchUnacclimTab(1)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full RAL Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; levels</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-2" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-schedule" tabindex="-1"
+              onclick="switchUnacclimTab(2)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📅 </span>Acclim. Schedule</span>
+        <span class="acclim-tab-btn-sub">% of shift by day</span>
+      </button>
+      <button class="unacclim-tab-btn" id="utab-btn-3" role="tab"
+              aria-selected="false" aria-controls="unacclim-tab-notes" tabindex="-1"
+              onclick="switchUnacclimTab(3)">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Monitoring &amp; guidance</span>
+      </button>
+    </div>
+  </div>
+  <div id="wbgt-tab-content-area">
+    <!-- ══ ACCLIMATIZED TWO-TAB VIEW ══ -->
+    <div id="wbgt-acclim-tabs" style="display:none">
+      <div id="acclim-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="tab-btn-result" tabindex="0"><div id="acclim-tab-result" class="result-grid"></div></div>
+      <div id="acclim-tab-chart" role="tabpanel" aria-labelledby="tab-btn-chart" tabindex="0"></div>
+      <div id="acclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="tab-btn-notes" tabindex="0"></div>
+    </div>
+    <!-- ══ UNACCLIMATIZED 4-TAB VIEW ══ -->
+    <div id="wbgt-unacclim-tabs" style="display:none">
+      <div id="unacclim-tab-0-wrap" role="tabpanel" aria-labelledby="utab-btn-0" tabindex="0"><div id="unacclim-tab-result"></div></div>
+      <div id="unacclim-tab-chart" role="tabpanel" aria-labelledby="utab-btn-1" tabindex="0"></div>
+      <div id="unacclim-tab-schedule" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-2" tabindex="0"></div>
+      <div id="unacclim-tab-notes" class="unacclim-tab-pane" role="tabpanel" aria-labelledby="utab-btn-3" tabindex="0"></div>
+    </div>
+  </div><!-- /wbgt-tab-content-area -->
+</div><!-- /wbgt-result-card -->
+
+<main>
+
+  <!-- ══ ORIGINAL ACCLIMATIZED TABLE (shown as fallback if no session) ══ -->
+  <div id="wbgt-acclim-section">
+
+  <div class="toggle-row" id="wbgt-unit-toggle">
+    <span class="toggle-label">Temperature Units:</span>
+    <div class="toggle">
+      <button class="active" id="btn-f" onclick="setUnit('F')">°F</button>
+      <button id="btn-c" onclick="setUnit('C')">°C</button>
+    </div>
+  </div>
+
+  <div class="section-label">Work Activity Level Definitions (NIOSH 2016)</div>
+  <div class="activity-grid" id="wbgt-activity-defs">
+    <div class="activity-card" style="border-top-color:#005540">
+      <h4>🟢 Light Work</h4>
+      <p class="kcal">&lt; 200 kcal/hr &nbsp;·&nbsp; &lt; 233 W</p>
+      <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#7A4F00">
+      <h4>🟡 Moderate Work</h4>
+      <p class="kcal">201–300 kcal/hr &nbsp;·&nbsp; 234–349 W</p>
+      <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#8B2500">
+      <h4>🔴 Heavy Work</h4>
+      <p class="kcal">301–400 kcal/hr &nbsp;·&nbsp; 350–465 W</p>
+      <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
+    </div>
+    <div class="activity-card" style="border-top-color:#6D0000">
+      <h4>⛔ Very Heavy Work</h4>
+      <p class="kcal">401–500 kcal/hr &nbsp;·&nbsp; 466–580 W</p>
+      <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
+    </div>
+  </div>
+
+  <div class="section-label">NIOSH Recommended Exposure Limits (REL) — Acclimatized Workers</div>
+
+  <div class="table-wrap">
+    <table id="wbgt-acclim">
+      <thead>
+        <tr>
+          <th class="left" style="width:180px">WBGT Range</th>
+          <th>Light Work<br><span class="th-sub">&lt; 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">201–300 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">301–400 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">401–500 kcal/hr</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label" id="wr-r1">Below 25.0°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">All activity levels are below their REL. Standard hydration and monitoring. Very Heavy REL<sub>60</sub> = 25°C (NIOSH 2016, Table 5-1).</td></tr>
+        <tr>
+          <td class="label" id="wr-r2">25.0–25.9°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-caution">45 / 15</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>60</sub> (25°C, Table 5-1). Light, Moderate, and Heavy remain within continuous-work REL.</td></tr>
+        <tr>
+          <td class="label" id="wr-r3">26.0–27.9°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-caution">45 / 15</td>
+          <td class="c-warn">30 / 30</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>60</sub> (26°C, Table 5-1). Very Heavy has exceeded REL<sub>45</sub> (26.3°C). Light and Moderate remain continuous (Moderate REL<sub>60</sub> = 28°C, Table 5-1).</td></tr>
+        <tr>
+          <td class="label" id="wr-r4">28.0–28.8°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-caution">45 / 15</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Moderate has exceeded REL<sub>60</sub> (28°C, Table 5-1). Heavy has exceeded REL<sub>45</sub> (27.2°C). Very Heavy has exceeded REL<sub>30</sub> (28.0°C). Light remains continuous (REL<sub>60</sub> = 30°C, Table 5-1).</td></tr>
+        <tr>
+          <td class="label" id="wr-r5">28.9–29.9°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-high">15 / 45</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>30</sub> (28.9°C). Moderate has exceeded REL<sub>45</sub> (29.1°C) — shown conservatively as 30/30. Light remains continuous (REL<sub>60</sub> = 30°C, Table 5-1).</td></tr>
+        <tr>
+          <td class="label" id="wr-r6">30.0–30.5°C</td>
+          <td class="c-caution">45 / 15</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-high">15 / 45</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Light has exceeded REL<sub>60</sub> (30°C, Table 5-1). Moderate REL<sub>30</sub> (30.6°C) and Very Heavy REL<sub>15</sub> (30.6°C) are approached at the upper end of this range.</td></tr>
+        <tr>
+          <td class="label" id="wr-r7">30.6–31.3°C</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-stop">DANGER!†</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>15</sub> (30.6°C) — DANGER. Moderate has exceeded REL<sub>30</sub> (30.6°C). Light has exceeded REL<sub>45</sub> (31.0°C) — shown conservatively as 30/30.</td></tr>
+        <tr>
+          <td class="label" id="wr-r8">31.4–32.6°C</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-stop">DANGER!†</td>
+          <td class="c-stop">DANGER!†</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>15</sub> (31.4°C) — DANGER. Light REL<sub>30</sub> = 32.2°C — at and above 32.2°C Light should transition to 15/45.</td></tr>
+        <tr>
+          <td class="label" id="wr-r9">≥ 32.7°C</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-stop">DANGER!†</td>
+          <td class="c-stop">DANGER!†</td>
+          <td class="c-stop">DANGER!†</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Moderate has exceeded REL<sub>15</sub> (32.7°C) — DANGER. Light REL<sub>15</sub> = 33.9°C — at ≥33.9°C all activity levels exceed all REL thresholds. †DANGER!: above REL<sub>15</sub>; work-practice controls alone are insufficient — engineering controls and physiological monitoring required.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div><!-- /wbgt-acclim-section -->
+
+  <!-- Unacclimatized Table (NIOSH RAL) -->
+  <div id="wbgt-unacclim-section" style="display:none">
+  <div class="section-label">NIOSH Recommended Alert Limits (RAL) — Unacclimatized Workers</div>
+
+<div class="acclim-visual">
+
+  <p class="desc" style="font-size:14px; margin-bottom:16px">
+    NIOSH (2016) recommends a <strong>progressive daily exposure schedule</strong> — gradually increasing the proportion of the workday spent in heat until full acclimatization is achieved. Work-rest cycles appropriate to the activity level and conditions should still be applied during all heat exposure periods.
+  </p>
+
+  <div class="acclim-worker-grid">
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #E05C2C;">
+      <h4 style="font-size:15px; color:var(--navy); margin-bottom:4px; font-weight:700;">New Workers</h4>
+      <p style="font-size:13px; color:var(--subtext); margin-bottom:6px; line-height:1.4">No prior heat exposure — full 5+ day ramp required. Percentages below are % of the NIOSH RAL.</p>
+      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:20%"></div></div><span class="acclim-pct">20% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:40%"></div></div><span class="acclim-pct">40% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:60%"></div></div><span class="acclim-pct">60% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 4</span><div class="acclim-track"><div class="acclim-bar acclim-partial" style="width:80%"></div></div><span class="acclim-pct">80% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 5+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100% RAL</span></div>
+      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">Max increase: 20%/day. Continue at 100% RAL through ~14 days before considering fully acclimatized. The REL (for fully acclimatized workers) applies only after that.</p>
+    </div>
+
+    <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px 18px; border-top:3px solid #00966C;">
+      <h4 style="font-size:15px; color:var(--navy); margin-bottom:4px; font-weight:700;">Returning Workers</h4>
+      <p style="font-size:13px; color:var(--subtext); margin-bottom:6px; line-height:1.4">Prior heat exposure, absent ≥ 1 week — abbreviated 4-day ramp. Percentages below are % of the NIOSH RAL.</p>
+      <div class="acclim-row"><span class="acclim-day">Day 1</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:50%"></div></div><span class="acclim-pct">50% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 2</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:60%"></div></div><span class="acclim-pct">60% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 3</span><div class="acclim-track"><div class="acclim-bar acclim-return" style="width:80%"></div></div><span class="acclim-pct">80% RAL</span></div>
+      <div class="acclim-row"><span class="acclim-day">Day 4+</span><div class="acclim-track"><div class="acclim-bar acclim-full" style="width:100%"></div></div><span class="acclim-pct">100% RAL</span></div>
+      <p style="font-size:12px; color:var(--subtext); margin-top:10px; line-height:1.5">After 4+ days at 100% RAL under close monitoring, worker may be considered re-acclimatized. REL limits apply only after that point.</p>
+    </div>
+
+  </div>
+
+  <div class="section-label" style="margin-top:20px; margin-bottom:8px">Work-Rest Cycles — Days 5–14 for New Workers / Days 5+ for Returning Workers (NIOSH RAL)</div>
+  <p style="font-size:13px; color:var(--subtext); margin-bottom:12px; line-height:1.5">Once the progressive exposure schedule is complete and workers are at full shift exposure, apply the following Recommended Alert Limit (RAL)-based work-rest cycles for the remainder of the 14-day acclimatization period.</p>
+  <div class="table-wrap" style="margin-bottom:16px">
+    <table>
+      <thead>
+        <tr>
+          <th class="left" style="width:180px">WBGT Range</th>
+          <th>Light Work<br><span class="th-sub">&lt; 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">201–300 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">301–400 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">401–500 kcal/hr</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="label" id="wr-u-r1">Below 21.0°C (69.7°F)</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td></tr>
+        <tr><td class="sublabel" colspan="5">Below this threshold all activity levels are within RAL.</td></tr>
+        <tr><td class="label" id="wr-u-r2">21.0–22.2°C (69.8–72.0°F)</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td><td class="c-caution">45 / 15 min</td></tr>
+        <tr><td class="label" id="wr-u-r3">22.3–23.9°C (72.1–75.0°F)</td><td class="c-safe">Continuous</td><td class="c-safe">Continuous</td><td class="c-caution">45 / 15 min</td><td class="c-warn">30 / 30 min</td></tr>
+        <tr><td class="label" id="wr-u-r4">24.0–25.7°C (75.2–78.3°F)</td><td class="c-safe">Continuous</td><td class="c-caution">45 / 15 min</td><td class="c-warn">30 / 30 min</td><td class="c-high">15 / 45 min</td></tr>
+        <tr><td class="label" id="wr-u-r5">25.8–26.4°C (78.4–79.5°F)</td><td class="c-safe">Continuous</td><td class="c-warn">30 / 30 min</td><td class="c-warn">30 / 30 min</td><td class="c-high">15 / 45 min</td></tr>
+        <tr><td class="label" id="wr-u-r6">26.5–28.2°C (79.7–82.8°F)</td><td class="c-caution">45 / 15 min</td><td class="c-warn">30 / 30 min</td><td class="c-high">15 / 45 min</td><td class="c-high">15 / 45 min</td></tr>
+        <tr><td class="label" id="wr-u-r7">28.3–29.3°C (82.9–84.7°F)</td><td class="c-warn">30 / 30 min</td><td class="c-high">15 / 45 min</td><td class="c-high">15 / 45 min</td><td class="c-high">15 / 45 min</td></tr>
+        <tr><td class="label" id="wr-u-r8">29.4–30.7°C (84.9–87.3°F)</td><td class="c-warn">30 / 30 min</td><td class="c-high">15 / 45 min</td><td class="c-high">15 / 45 min</td><td class="c-stop">DANGER!†</td></tr>
+        <tr><td class="label" id="wr-u-r9">≥ 30.8°C (≥ 87.4°F)</td><td class="c-high">15 / 45 min</td><td class="c-high">15 / 45 min†</td><td class="c-stop">DANGER!†</td><td class="c-stop">DANGER!†</td></tr>
+        <tr><td class="sublabel" colspan="5">† DANGER!: above RAL<sub>15</sub>; engineering controls and physiological monitoring required.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note-box warn-note" style="margin-top:4px">
+    <strong>During all acclimatization periods:</strong>
+    <ul style="margin:8px 0 0 0; padding-left:18px; line-height:1.8; font-size:13px">
+      <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+      <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+      <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+      <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans</li>
+      <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+    </ul>
+  </div>
+
+  <div class="note-box" style="margin-top:12px; border-left-color:#005540; background:#E0F5EE; color:#004A37;">
+    <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
+  </div>
+
+  <p style="font-size:12px; color:var(--subtext); margin-top:12px; line-height:1.6">
+    <em>Source: National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+  </p>
+
+</div>
+
+  </div><!-- /wbgt-unacclim-section -->
+
+</main>
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  let workerStatus = 'acclimatized';
+  let currentUnit = 'F';
+
+  // ── WBGT lookup data ──
+  const WBGT_BOUNDS_C = [25.0, 26.0, 28.0, 28.9, 30.0, 30.6, 31.4, 32.7];
+  const WBGT_ROW_LABELS = {
+    c: ['Below 25.0°C','25.0–25.9°C','26.0–27.9°C','28.0–28.8°C','28.9–29.9°C','30.0–30.5°C','30.6–31.3°C','31.4–32.6°C','≥ 32.7°C'],
+    f: ['Below 77.0°F','77.0–78.6°F','78.8–82.2°F','82.4–83.8°F','84.0–85.8°F','86.0–86.9°F','87.1–88.3°F','88.5–90.7°F','≥ 90.9°F']
+  };
+  // [row 0-8][col: 0=light 1=moderate 2=heavy 3=vh], null=DANGER
+  const WR_ACCLIM = [
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:60,r:0}],
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:45,r:15}],
+    [{w:60,r:0},{w:60,r:0},{w:45,r:15},{w:30,r:30}],
+    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:15,r:45}],
+    [{w:60,r:0},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
+    [{w:45,r:15},{w:30,r:30},{w:15,r:45},null],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},null],
+    [{w:30,r:30},{w:15,r:45},null,null],
+    [{w:15,r:45},null,null,null]
+  ];
+  const ACT_COL   = {light:0, moderate:1, heavy:2, vh:3};
+  const ACT_LABEL = {light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy'};
+  const ACT_FULL  = {light:'Light Work', moderate:'Moderate Work', heavy:'Heavy Work', vh:'Very Heavy Work'};
+  const ACT_EMOJI = {light:'🟢', moderate:'🟡', heavy:'🟠', vh:'🔴'};
+
+  function getWBGTRow(val, unit) {
+    const c = unit === 'C' ? parseFloat(val) : (parseFloat(val) - 32) * 5 / 9;
+    for (let i = 0; i < WBGT_BOUNDS_C.length; i++) {
+      if (c < WBGT_BOUNDS_C[i]) return i;
+    }
+    return 8;
+  }
+
+  function wrClass(wr) {
+    if (!wr)       return 'c-stop';
+    if (wr.w===60) return 'c-safe';
+    if (wr.w===45) return 'c-caution';
+    if (wr.w===30) return 'c-warn';
+    if (wr.w===15) return 'c-high';
+    return 'c-safe';
+  }
+
+  function wrLabel(wr) {
+    if (!wr)       return '<span class="wr-danger">DANGER</span>';
+    if (wr.w===60) return '<span class="wr-continuous">Continuous</span>';
+    return `<span class="wr-nums"><span class="wr-w">${wr.w}</span><span class="wr-slash">/</span><span class="wr-r">${wr.r}</span></span><span class="wr-unit">min work / min rest</span>`;
+  }
+
+  function wrLabelText(wr) {
+    if (!wr)       return 'DANGER';
+    if (wr.w===60) return 'Continuous';
+    return `${wr.w} min work / ${wr.r} min rest`;
+  }
+
+  // ── Clock SVG ──
+  function buildClockSvg(wr) {
+    const sz = 148;
+    const cx = sz/2, cy = sz/2, r = 58;
+    const circ = 2 * Math.PI * r;
+
+    if (!wr) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="10"/>
+        <text x="${cx}" y="${cy-6}" text-anchor="middle" dominant-baseline="middle" font-size="36" fill="#AE1515">⚠</text>
+        <text x="${cx}" y="${cy+22}" text-anchor="middle" font-size="13" font-weight="800" fill="#AE1515">DANGER</text>
+      </svg>`;
+    }
+
+    if (wr.w === 60) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#005540">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#00966C">min / hr</text>
+      </svg>`;
+    }
+
+    const strokeColors = {45:'#E65100', 30:'#B71C1C', 15:'#8B0000'};
+    const bgColors     = {45:'#FFF3E0', 30:'#FFEBEE', 15:'#FFCDD2'};
+    const sc = strokeColors[wr.w] || '#1565C0';
+    const bc = bgColors[wr.w] || '#E3F0FF';
+    const workDash = (wr.w / 60) * circ;
+    const restDash = circ - workDash;
+
+    return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="12"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="12"
+        stroke-dasharray="${workDash.toFixed(2)} ${restDash.toFixed(2)}"
+        transform="rotate(-90 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy-9}" text-anchor="middle" dominant-baseline="middle" font-size="34" font-weight="900" fill="${sc}">${wr.w}</text>
+      <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="12" font-weight="700" fill="${sc}">min work</text>
+    </svg>`;
+  }
+
+  // ── Monitoring & guidance notes (one per WBGT row) ──
+  const WBGT_ACCLIM_RANGE_NOTES = [
+    { range:'Below 25.0°C / Below 77.0°F',  text:'Normal work practices. Standard hydration (1 cup / 8 oz water every 20 min). Training on heat illness recognition. No mandatory rest breaks required at any activity level.' },
+    { range:'25.0–25.9°C / 77.0–78.6°F',   text:'Very Heavy work exceeds REL₆₀ (25°C, Table 5-1). Monitor Very Heavy workers closely. All others: standard hydration and buddy system recommended.' },
+    { range:'26.0–27.9°C / 78.8–82.2°F',   text:'Heavy work exceeds REL₆₀ (26°C, Table 5-1). Heavy and Very Heavy require mandatory rest breaks. Enforce rest in cool or shaded areas. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'28.0–28.8°C / 82.4–83.8°F',   text:'Moderate work now exceeds REL₆₀ (28°C, Table 5-1). Mandatory rest breaks for Moderate, Heavy, and Very Heavy activity. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'28.9–29.9°C / 84.0–85.8°F',   text:'Heavy work exceeds REL₃₀. Very Heavy work exceeds REL₃₀ (28°C). Active monitoring required. Cool rest area mandatory. Hydration: 1 cup every 15–20 min.' },
+    { range:'30.0–30.5°C / 86.0–86.9°F',   text:'Light work now exceeds REL₆₀ (30°C, Table 5-1). All activity levels restricted. Engineering controls recommended. Hydration: 1 cup every 15 min.' },
+    { range:'30.6–31.3°C / 87.1–88.3°F',   text:'Very Heavy exceeds REL₁₅ — DANGER. Hazardous conditions for all. Engineering controls required. Physiological monitoring. Cool rest area (air-conditioned if possible). Hydration: 1 cup every 15 min.' },
+    { range:'31.4–32.6°C / 88.5–90.7°F',   text:'Heavy exceeds REL₁₅ — DANGER. Very high risk. Engineering controls must be in place. Consider suspending Heavy and Very Heavy work. Medical monitoring on-site. Hydration: 1 cup every 15 min.' },
+    { range:'≥ 32.7°C / ≥ 90.9°F',         text:'Moderate exceeds REL₁₅ — DANGER. Imminent danger. Engineering controls mandatory. Emergency response plan activated. Consider suspending all work until conditions improve.' }
+  ];
+  const WBGT_UNACCLIM_RANGE_NOTES = [
+    { range:'Below 21.0°C / Below 70°F',  text:'Normal work practices. Standard hydration, buddy system, and training on heat illness recognition. Heightened supervisor attention for unacclimatized workers.' },
+    { range:'21.0–22.2°C / 70–72°F',       text:'Very Heavy work approaches RAL. Monitor Very Heavy workers closely. Implement buddy system. Hydration: 1 cup every 20 min.' },
+    { range:'22.3–23.9°C / 72–75°F',       text:'Heavy and Very Heavy exceed RAL. Mandatory rest breaks and cool rest area. Hydration: 1 cup every 20 min. Limit new workers to lighter tasks initially.' },
+    { range:'24.0–25.7°C / 75–78°F',       text:'Moderate work restricted. Mandatory breaks for Moderate through Very Heavy. Buddy system required. Hydration: 1 cup every 20 min. Enforce acclimatization ramp schedule.' },
+    { range:'25.8–26.4°C / 78–80°F',       text:'Very Heavy exceeds 15-min RAL. Active monitoring. Cool rest area required. Hydration: 1 cup every 15–20 min. Strictly enforce daily exposure ramp.' },
+    { range:'26.5–28.2°C / 80–83°F',       text:'Light work now restricted. All activities require rest breaks. Engineering controls recommended. Hydration: 1 cup every 15 min. Consider removing unacclimatized workers.' },
+    { range:'28.3–29.3°C / 83–85°F',       text:'Hazardous for unacclimatized workers. Engineering controls required. Active monitoring with vital sign checks. Consider removing unacclimatized workers from this environment.' },
+    { range:'29.4–30.7°C / 85–87°F',       text:'RAL exceeded for all activities. Unacclimatized workers should not be exposed. Medical personnel on standby. Emergency response plan activated.' },
+    { range:'≥ 30.8°C / ≥ 87°F',           text:'Imminent danger for unacclimatized workers. All unacclimatized workers must cease work. Engineering controls mandatory before any worker re-entry.' }
+  ];
+
+  // ── Build result tab content ──
+  function buildResultTab(s) {
+    const rawVal   = s.measValue;
+    const unit     = s.measUnit || 'F';
+    const activity = s.activity || 'moderate';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+    const adjustC  = s.clothingAdjustC || 0;
+    const adjustF  = s.clothingAdjustF || 0;
+    const adjust   = unit === 'C' ? adjustC : adjustF;
+    const val      = rawVal != null ? rawVal + adjust : rawVal;
+    const rowIdx   = getWBGTRow(val, unit);
+    const colIdx   = activity in ACT_COL ? ACT_COL[activity] : 1;
+    const wr       = WR_ACCLIM[rowIdx][colIdx];
+    const cls      = wrClass(wr);
+    const rowLabel = WBGT_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
+
+    // Result card colors from CSS variables (inline for the main result block)
+    const bgMap  = {
+      'c-safe':    'var(--safe-bg)',
+      'c-caution': 'var(--caution-bg)',
+      'c-warn':    'var(--warn-bg)',
+      'c-high':    'var(--high-bg)',
+      'c-stop':    'var(--stop-bg)'
+    };
+    const fgMap  = {
+      'c-safe':    'var(--safe-text)',
+      'c-caution': 'var(--caution-text)',
+      'c-warn':    'var(--warn-text)',
+      'c-high':    'var(--high-text)',
+      'c-stop':    'var(--stop-text)'
+    };
+
+    let headline, subtext;
+    if (!wr) {
+      headline = 'DANGER';
+      subtext  = 'Conditions exceed the NIOSH 15-minute REL for ' + ACT_FULL[activity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
+    } else if (wr.w === 60) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory work-rest break is required at this WBGT level for ' + ACT_FULL[activity] + '. Stay hydrated — drink water before you feel thirsty.';
+    } else {
+      headline = wr.w + ' min work<br>' + wr.r + ' min rest';
+      subtext  = 'For every 60-minute period, take <strong>' + wr.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[activity].toLowerCase() + '. Provide water and shade at the rest station.';
+    }
+
+    const monitoringRange = rowIdx >= 0 && WBGT_ACCLIM_RANGE_NOTES[rowIdx]
+      ? (unit === 'C'
+          ? (WBGT_ACCLIM_RANGE_NOTES[rowIdx].range.match(/^([^/]+)/) || [])[1].trim()
+          : (WBGT_ACCLIM_RANGE_NOTES[rowIdx].range.match(/\/\s*(.+)$/) || [])[1] || WBGT_ACCLIM_RANGE_NOTES[rowIdx].range)
+      : '';
+    const monitoringHtml = rowIdx >= 0 && WBGT_ACCLIM_RANGE_NOTES[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${monitoringRange}</div>
+           ${WBGT_ACCLIM_RANGE_NOTES[rowIdx].text}
+         </div>`
+      : '';
+
+    const rawDisplay = rawVal != null ? rawVal + unitLabel : '—';
+    const valDisplay = val   != null ? val   + unitLabel : '—';
+    const clothingNote = adjust > 0
+      ? `<div class="result-input-sub" style="color:#bf360c;font-weight:700">+${adjust}${unitLabel} clothing correction applied → effective ${valDisplay}</div>`
+      : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
+
+    document.getElementById('acclim-tab-result').innerHTML = `
+        <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
+             style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+          <div class="result-main-inner">
+            <div class="result-clock">${buildClockSvg(wr)}</div>
+            <div class="result-text">
+              <div class="result-label">Recommended Work-Rest Cycle</div>
+              <div class="result-headline">${headline}</div>
+              <div class="result-subtext">${subtext}</div>
+              <div class="result-source">NIOSH Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (2016), Table B-2</div>
+            </div>
+          </div>
+          ${(function(){
+            const u = buildShareUrl();
+            if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
+            const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
+            return `<div class="mobile-result-hint">
+              <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
+              <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
+            </div>`;
+          })()}
+          ${monitoringHtml}
+        </div>
+
+        <div class="result-sidebar">
+          <div class="result-input-card">
+            <div class="result-input-label">🌡️ WBGT Reading</div>
+            <div class="result-input-value">${rawDisplay}</div>
+            ${clothingNote}
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">${ACT_EMOJI[activity] || '⚡'} Work Intensity</div>
+            <div class="result-input-value">${ACT_LABEL[activity] || 'Moderate'}</div>
+            <div class="result-input-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">✅ Worker Status</div>
+            <div class="result-input-value">Acclimatized</div>
+            <div class="result-input-sub">NIOSH REL applies</div>
+          </div>
+        </div>`;
+
+    // Store for chart sizing
+    window._wrcRowIdx = rowIdx;
+    window._wrcColIdx = colIdx;
+    window._wrcUnit   = unit;
+  }
+
+  // ── Build full chart tab content ──
+  function buildChartTab(unit, rowIdx, colIdx) {
+    const unitKey = unit === 'C' ? 'c' : 'f';
+    const labels  = WBGT_ROW_LABELS[unitKey];
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
+    let html = '<div class="acclim-chart-grid" role="grid" aria-label="Work-rest cycles by WBGT and work intensity — acclimatized workers" tabindex="0">';
+
+    html += '<div role="row" style="display:contents">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">WBGT Range</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
+    }
+    html += '</div>';
+
+    for (let ri = 0; ri < 9; ri++) {
+      const isUserRow = ri === rowIdx;
+      const isLastRow = ri === 8;
+      html += '<div role="row" style="display:contents">';
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}" role="rowheader" scope="row"${isUserRow ? ' aria-label="' + labels[ri].replace(/"/g,'&quot;') + ' — your WBGT range"' : ''}>${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const wr = WR_ACCLIM[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol;
+        const cls = wrClass(wr);
+        const lbl = wrLabel(wr);
+        const sevLabel = cls === 'c-safe' ? 'Safe' : cls === 'c-caution' ? 'Caution' : cls === 'c-warn' ? 'Warning' : cls === 'c-high' ? 'High risk' : 'DANGER';
+        const ariaLbl = isUserCell ? `${sevLabel} — ${wrLabelText(wr)} — your recommended work-rest cycle` : `${sevLabel} — ${wrLabelText(wr)}`;
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+    html += '<div class="chart-caption">Work-rest cycles shown per hour of heat exposure.</div>';
+    document.getElementById('acclim-tab-chart').innerHTML = html;
+  }
+
+  // ── Fit header + leftmost-column cells to the largest font that doesn't overflow ──
+  function fitGridHeaderSize(gridEl) {
+    if (!gridEl) return;
+    const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
+    if (!cells.length) return;
+    // Binary search in tenths of a px between 7 px and 42 px.
+    // white-space:nowrap is set in CSS, so only width overflow matters.
+    let lo = 70, hi = 340;
+    while (lo < hi) {
+      const mid = Math.floor((lo + hi + 1) / 2);
+      const fs  = (mid / 10) + 'px';
+      cells.forEach(c => c.style.fontSize = fs);
+      const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
+      if (overflows) hi = mid - 1; else lo = mid;
+    }
+    const finalSize = Math.max(70, lo - 70) / 10 + 'px'; // ~4px smaller than max-fit
+    cells.forEach(c => c.style.fontSize = finalSize);
+  }
+
+  // ── Size the result card to fill viewport below the header ──
+  let _chartActive = false;
+  function sizeWbgtCard() {
+    if (window.innerWidth <= 768) return;
+    const card     = document.getElementById('wbgt-result-card');
+    const fixedTop = document.getElementById('fixed-top');
+    if (!card || !fixedTop) return;
+    card.style.top = (fixedTop.offsetHeight + 35) + 'px';
+    requestAnimationFrame(() => {
+      const g1 = document.getElementById('acclim-tab-chart')?.querySelector('.acclim-chart-grid');
+      const g2 = document.getElementById('unacclim-tab-chart')?.querySelector('.acclim-chart-grid');
+      if (g1) fitGridHeaderSize(g1);
+      if (g2) fitGridHeaderSize(g2);
+    });
+  }
+
+  function switchAcclimTab(which) {
+    const panels = { result: 'acclim-tab-result-wrap', chart: 'acclim-tab-chart', notes: 'acclim-tab-notes' };
+    const displays = { result: '', chart: 'flex', notes: 'block' };
+    Object.entries(panels).forEach(([key, id]) => {
+      document.getElementById(id).style.display = key === which ? (displays[key]) : 'none';
+    });
+    ['result', 'chart', 'notes'].forEach(key => {
+      const btn = document.getElementById('tab-btn-' + key);
+      if (!btn) return;
+      const active = key === which;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', String(active));
+      btn.tabIndex = active ? 0 : -1;
+    });
+    _chartActive = which === 'chart';
+    sizeWbgtCard();
+  }
+
+  // Arrow-key navigation for acclimatized tablist
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('acclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result', 'chart', 'notes'];
+      const cur  = tabs.findIndex(t => document.getElementById('tab-btn-' + t).getAttribute('aria-selected') === 'true');
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        switchAcclimTab(tabs[(cur + 1) % tabs.length]);
+        document.getElementById('tab-btn-' + tabs[(cur + 1) % tabs.length]).focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        switchAcclimTab(tabs[(cur - 1 + tabs.length) % tabs.length]);
+        document.getElementById('tab-btn-' + tabs[(cur - 1 + tabs.length) % tabs.length]).focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault(); switchAcclimTab(tabs[0]); document.getElementById('tab-btn-' + tabs[0]).focus();
+      } else if (e.key === 'End') {
+        e.preventDefault(); switchAcclimTab(tabs[tabs.length-1]); document.getElementById('tab-btn-' + tabs[tabs.length-1]).focus();
+      }
+    });
+  });
+
+  // ── RAL lookup data (unacclimatized) ──
+  const RAL_BOUNDS_C = [21.0, 22.3, 24.0, 25.8, 26.5, 28.3, 29.4, 30.8];
+  const RAL_ROW_LABELS = {
+    c: ['Below 21.0°C','21.0–22.2°C','22.3–23.9°C','24.0–25.7°C','25.8–26.4°C','26.5–28.2°C','28.3–29.3°C','29.4–30.7°C','≥ 30.8°C'],
+    f: ['Below 69.8°F','69.8–72.0°F','72.1–75.0°F','75.2–78.3°F','78.4–79.5°F','79.7–82.8°F','82.9–84.7°F','84.9–87.3°F','≥ 87.4°F']
+  };
+  // null = DANGER, {dagger:true} = footnoted 15/45
+  const WR_UNACCLIM = [
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:60,r:0}],
+    [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:45,r:15}],
+    [{w:60,r:0},{w:60,r:0},{w:45,r:15},{w:30,r:30}],
+    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:15,r:45}],
+    [{w:60,r:0},{w:30,r:30},{w:30,r:30},{w:15,r:45}],
+    [{w:45,r:15},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},{w:15,r:45}],
+    [{w:30,r:30},{w:15,r:45},{w:15,r:45},null],
+    [{w:15,r:45},{w:15,r:45,dagger:true},null,null]
+  ];
+  const SCHED_NEW       = [{day:'Day 1',pct:20},{day:'Day 2',pct:40},{day:'Day 3',pct:60},{day:'Day 4',pct:80},{day:'Day 5+',pct:100}];
+  const SCHED_RETURNING = [{day:'Day 1',pct:50},{day:'Day 2',pct:60},{day:'Day 3',pct:80},{day:'Day 4+',pct:100}];
+
+  function getRALRow(val, unit) {
+    const c = unit === 'C' ? parseFloat(val) : (parseFloat(val) - 32) * 5 / 9;
+    for (let i = 0; i < RAL_BOUNDS_C.length; i++) { if (c < RAL_BOUNDS_C[i]) return i; }
+    return 8;
+  }
+
+  function ralWrLabel(wr) {
+    if (!wr)         return '<span class="wr-danger">DANGER</span><sup class="wr-fn">†</sup>';
+    if (wr.w === 60) return '<span class="wr-continuous">Continuous</span>';
+    return `<span class="wr-nums"><span class="wr-w">${wr.w}</span><span class="wr-slash">/</span><span class="wr-r">${wr.r}</span></span><span class="wr-unit">min work / min rest</span>${wr.dagger ? '<sup class="wr-fn">†</sup>' : ''}`;
+  }
+
+  function buildUnacclimResultTab(s) {
+    const rawVal    = s.measValue;
+    const unit      = s.measUnit || 'F';
+    const activity  = s.activity || 'moderate';
+    const isNew     = s.workerStatus === 'unacclimatized-new';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+    const adjustC   = s.clothingAdjustC || 0;
+    const adjustF   = s.clothingAdjustF || 0;
+    const adjust    = unit === 'C' ? adjustC : adjustF;
+    const val       = rawVal != null ? rawVal + adjust : rawVal;
+    const rowIdx    = getRALRow(val, unit);
+    const colIdx    = activity in ACT_COL ? ACT_COL[activity] : 1;
+    const wr        = WR_UNACCLIM[rowIdx][colIdx];
+    const cls       = wrClass(wr);
+    const rowLabel  = RAL_ROW_LABELS[unit === 'C' ? 'c' : 'f'][rowIdx];
+    const sched     = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const statusLabel = isNew ? 'New Worker' : 'Returning Worker';
+    const accent    = isNew ? '#E05C2C' : '#00966C';
+
+    const bgMap = {'c-safe':'var(--safe-bg)','c-caution':'var(--caution-bg)','c-warn':'var(--warn-bg)','c-high':'var(--high-bg)','c-stop':'var(--stop-bg)'};
+    const fgMap = {'c-safe':'var(--safe-text)','c-caution':'var(--caution-text)','c-warn':'var(--warn-text)','c-high':'var(--high-text)','c-stop':'var(--stop-text)'};
+
+    let headline, subtext;
+    if (!wr) {
+      headline = 'DANGER';
+      subtext  = 'Conditions exceed the NIOSH RAL 15-min limit for ' + ACT_FULL[activity] + '. Do not expose unacclimatized workers — engineering controls required.';
+    } else if (wr.w === 60) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory rest break at this WBGT for ' + ACT_FULL[activity] + '. Still follow the daily exposure ramp during the first days of work in heat. Hydrate — drink before you feel thirsty.';
+    } else {
+      headline = wr.w + ' min work<br>' + wr.r + ' min rest';
+      subtext  = 'Per hour of heat exposure: ' + wr.r + ' min rest in cool shade. Apply during the daily exposure portion shown at right.';
+    }
+
+    const rawDisplay = rawVal != null ? rawVal + unitLabel : '—';
+    const valDisplay = val    != null ? val   + unitLabel : '—';
+    const clothingNote = adjust > 0
+      ? `<div class="result-input-sub" style="color:#bf360c;font-weight:700">+${adjust}${unitLabel} clothing correction applied → effective ${valDisplay}</div>`
+      : `<div class="result-input-sub">Range: ${rowLabel}</div>`;
+
+    const unacclimMonitoringRange = rowIdx >= 0 && WBGT_UNACCLIM_RANGE_NOTES[rowIdx]
+      ? (unit === 'C'
+          ? (WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range.match(/^([^/]+)/) || [])[1].trim()
+          : (WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range.match(/\/\s*(.+)$/) || [])[1] || WBGT_UNACCLIM_RANGE_NOTES[rowIdx].range)
+      : '';
+    const unacclimMonitoringHtml = rowIdx >= 0 && WBGT_UNACCLIM_RANGE_NOTES[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${unacclimMonitoringRange}</div>
+           ${WBGT_UNACCLIM_RANGE_NOTES[rowIdx].text}
+         </div>`
+      : '';
+
+    // Build clock SVG sized for the narrower half-viewport layout
+    function buildSmallClock(wr) {
+      const sz = 100, cx = 50, cy = 50, r = 38;
+      const circ = 2 * Math.PI * r;
+      if (!wr) {
+        return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="8"/>
+          <text x="${cx}" y="${cy+5}" text-anchor="middle" dominant-baseline="middle" font-size="28" fill="#AE1515">⚠</text>
+        </svg>`;
+      }
+      if (wr.w === 60) {
+        return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="9"/>
+          <text x="${cx}" y="${cy-5}" text-anchor="middle" dominant-baseline="middle" font-size="26" font-weight="900" fill="#005540">60</text>
+          <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="10" font-weight="700" fill="#00966C">min/hr</text>
+        </svg>`;
+      }
+      const sc = {45:'#E65100',30:'#B71C1C',15:'#8B0000'}[wr.w]||'#1565C0';
+      const bc = {45:'#FFF3E0',30:'#FFEBEE',15:'#FFCDD2'}[wr.w]||'#E3F0FF';
+      const workDash = (wr.w/60)*circ, restDash = circ - workDash;
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="9"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="9"
+          stroke-dasharray="${workDash.toFixed(2)} ${restDash.toFixed(2)}"
+          transform="rotate(-90 ${cx} ${cy})"/>
+        <text x="${cx}" y="${cy-4}" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="900" fill="${sc}">${wr.w}</text>
+        <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="9" font-weight="700" fill="${sc}">min work</text>
+      </svg>`;
+    }
+
+    // Compute actual per-60-min times for each schedule day
+    function dayTimes(pct) {
+      if (!wr) return null;
+      const f = pct / 100;
+      const workHeat = Math.round(wr.w * f);
+      const restHeat = wr.w === 60 ? 0 : Math.round(wr.r * f);
+      const outside  = 60 - workHeat - restHeat;
+      return {workHeat, restHeat, outside};
+    }
+
+    let dayRowsHtml = '';
+    sched.forEach(d => {
+      const isFull = d.pct === 100;
+      const t = dayTimes(d.pct);
+      let timesHtml = '';
+      if (!t) {
+        timesHtml = '<span class="urec-time-work" style="color:#AE1515">Do not expose</span>';
+      } else if (d.pct < 100) {
+        timesHtml = `<span class="urec-time-work">${t.workHeat} min work in heat</span>` +
+          (t.restHeat > 0 ? `<span class="urec-time-rest">${t.restHeat} min rest in heat</span>` : '') +
+          `<span class="urec-time-out">${t.outside} min outside heat</span>`;
+      } else {
+        // Full day
+        timesHtml = wr.w === 60
+          ? `<span class="urec-time-work">${t.workHeat} min work (full shift)</span>`
+          : `<span class="urec-time-work">${t.workHeat} min work in heat</span>` +
+            `<span class="urec-time-rest">${t.restHeat} min rest in heat</span>`;
+      }
+      dayRowsHtml += `<div class="urec-day-row${isFull?' urec-day-full':''}">
+        <div class="urec-day-label">${d.day}</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%<span style="font-size:10px;font-weight:400;opacity:0.75"> RAL</span></div>
+        <div class="urec-day-times">${timesHtml}</div>
+      </div>`;
+    });
+
+    window._wrcUnacclimRowIdx = rowIdx;
+    window._wrcUnacclimColIdx = colIdx;
+
+    // Store schedule data for modal (always — applies to continuous work too)
+    window._schedData = {
+      dayRowsHtml,
+      sub: (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  % = % of RAL  ·  Times per 60-min period'
+    };
+
+    // Inject into the two-panel wrapper directly
+    document.getElementById('unacclim-tab-0-wrap').innerHTML = `
+      <div id="unacclim-tab-result">
+        <div class="unacclim-left-col">
+          <div class="result-main${cls==='c-stop'?' result-danger':''}"
+               style="background:${bgMap[cls]||'var(--safe-bg)'};color:${fgMap[cls]||'var(--safe-text)'}">
+            <div class="urec-rec-clock">${buildSmallClock(wr)}</div>
+            <div class="urec-rec-text">
+              <div class="urec-rec-label">RAL Work-Rest Recommendation</div>
+              <div class="urec-rec-headline">${headline}</div>
+              <div class="urec-rec-sub">${subtext}</div>
+            </div>
+            ${(function(){
+              const u = buildShareUrl();
+              if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p></div>`;
+              const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your WBGT work-rest cycle results:\n\n' + u);
+              return `<div class="mobile-result-hint">
+                <p>📊 <strong>Charts and detailed tables</strong> are available on a larger screen.</p>
+                <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
+              </div>`;
+            })()}
+          </div>
+          ${unacclimMonitoringHtml}
+          <div class="mobile-sched-sticky">
+            <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+            <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+          </div>
+        </div>
+        <div class="result-sidebar">
+          <div class="result-input-card">
+            <div class="result-input-label">🌡️ WBGT Reading</div>
+            <div class="result-input-value">${rawDisplay}</div>
+            ${clothingNote}
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">${ACT_EMOJI[activity]||'⚡'} Work Intensity</div>
+            <div class="result-input-value">${ACT_LABEL[activity]||'Moderate'}</div>
+            <div class="result-input-sub">${ACT_FULL[activity]}</div>
+          </div>
+          <div class="result-input-card">
+            <div class="result-input-label">⏳ Worker Status</div>
+            <div class="result-input-value">${statusLabel}</div>
+            <div class="result-input-sub">NIOSH RAL</div>
+          </div>
+          <button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Daily Exposure Schedule</button>
+          <div class="urec-source" style="text-align:left">NIOSH (2016) Recommended Alert Limits — Unacclimatized Workers</div>
+        </div>
+      </div>`;
+  }
+
+  function buildUnacclimChartTab(unit, rowIdx, colIdx) {
+    const unitKey  = unit === 'C' ? 'c' : 'f';
+    const labels   = RAL_ROW_LABELS[unitKey];
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
+    let html = '<div class="acclim-chart-grid" role="grid" aria-label="Work-rest cycles by WBGT and work intensity — unacclimatized workers" tabindex="0">';
+
+    html += '<div role="row" style="display:contents">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">WBGT Range</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
+    }
+    html += '</div>';
+
+    for (let ri = 0; ri < 9; ri++) {
+      const isUserRow = ri === rowIdx, isLastRow = ri === 8;
+      html += '<div role="row" style="display:contents">';
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}" role="rowheader" scope="row"${isUserRow ? ' aria-label="' + labels[ri].replace(/"/g,'&quot;') + ' — your WBGT range"' : ''}>${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const wr = WR_UNACCLIM[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol;
+        const cls = wrClass(wr);
+        const lbl = ralWrLabel(wr);
+        const sevLabel = cls === 'c-safe' ? 'Safe' : cls === 'c-caution' ? 'Caution' : cls === 'c-warn' ? 'Warning' : cls === 'c-high' ? 'High risk' : 'DANGER';
+        const ariaLbl = isUserCell ? `${sevLabel} — ${wrLabelText(wr)} — your recommended work-rest cycle` : `${sevLabel} — ${wrLabelText(wr)}`;
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+    html += '<div class="chart-caption">Work-rest cycles per hour. &nbsp;<sup>†</sup> Engineering controls and physiological monitoring required at this WBGT.</div>';
+    document.getElementById('unacclim-tab-chart').innerHTML = html;
+  }
+
+  function openSchedModal(btn) {
+    const d = window._schedData;
+    if (!d) return;
+
+    if (window.innerWidth <= 768) {
+      // ── Mobile: toggle inline panel below the sticky button ──
+      const inline = document.getElementById('mobile-sched-inline');
+      if (!inline) return;
+      if (!inline.hidden) {
+        inline.hidden = true;
+        if (btn) { btn.innerHTML = '📅 View Daily Exposure Schedule'; btn.setAttribute('aria-expanded','false'); }
+        return;
+      }
+      inline.innerHTML = `
+        <div class="sched-inline-title">📅 Daily Exposure Schedule</div>
+        <div class="sched-inline-sub">${d.sub}</div>
+        <div class="urec-sched-grid">${d.dayRowsHtml}</div>
+        <div class="sched-inline-foot">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+        <div class="sched-inline-fn">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>`;
+      inline.hidden = false;
+      if (btn) { btn.innerHTML = '✕ Close Schedule'; btn.setAttribute('aria-expanded','true'); }
+      return;
+    }
+
+    // ── Desktop: position modal above the button ──
+    document.getElementById('sched-dialog-sub').textContent  = d.sub;
+    document.getElementById('sched-dialog-grid').innerHTML   = '<div class="urec-sched-grid">' + d.dayRowsHtml + '</div>';
+    const dlg = document.getElementById('sched-dialog');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      const gap = 8;
+      const bottomFromViewport = window.innerHeight - rect.top + gap;
+      dlg.style.bottom = bottomFromViewport + 'px';
+      dlg.style.left = '50%';
+      dlg.style.transform = 'translateX(-50%)';
+    }
+    dlg.showModal();
+  }
+
+  function closeSchedModal() {
+    const dlg = document.getElementById('sched-dialog');
+    dlg.classList.add('sched-closing');
+    dlg.addEventListener('animationend', function handler() {
+      dlg.classList.remove('sched-closing');
+      dlg.removeEventListener('animationend', handler);
+      dlg.close();
+    });
+  }
+
+  // Close dialog on backdrop click
+  document.getElementById('sched-dialog').addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    if (e.clientX < rect.left || e.clientX > rect.right ||
+        e.clientY < rect.top  || e.clientY > rect.bottom) {
+      closeSchedModal();
+    }
+  });
+
+  function buildUnacclimScheduleTab(isNew) {
+    const sched  = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const title  = isNew ? 'New Workers — 5-Day Progressive Exposure Schedule' : 'Returning Workers — 4-Day Re-Acclimatization Schedule';
+    const sub    = isNew
+      ? 'No prior heat exposure — must complete full ramp. Maximum increase: 20%/day. Percentages are % of the NIOSH RAL. Full acclimatization typically requires ~14 days of continued heat work.'
+      : 'Prior experience, absent ≥1 week — abbreviated ramp. Percentages are % of the NIOSH RAL. After 4+ days at 100% RAL, monitor closely before considering the worker re-acclimatized.';
+    const accent = isNew ? '#E05C2C' : '#00966C';
+    let barsHtml = '';
+    sched.forEach(d => {
+      const isFull = d.pct === 100;
+      barsHtml += `<div style="display:flex;align-items:center;margin-bottom:12px">
+        <span style="min-width:60px;font-weight:${isFull?800:600};font-size:14px">${d.day}</span>
+        <div style="flex:1;height:22px;background:#E9EDEF;border-radius:4px;overflow:hidden;margin:0 12px">
+          <div style="width:${d.pct}%;height:100%;background:${isFull?'#00966C':accent};border-radius:4px"></div>
+        </div>
+        <span style="min-width:64px;text-align:right;font-weight:${isFull?800:600};color:${isFull?'#00966C':accent};font-size:14px">${d.pct}% <span style="font-size:11px;font-weight:500;opacity:0.8">of RAL</span></span>
+      </div>`;
+    });
+    document.getElementById('unacclim-tab-schedule').innerHTML = `
+      <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:6px;padding-top:14px">${title}</h3>
+      <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.55">${sub}</p>
+      ${barsHtml}
+      <div class="note-box" style="margin-top:20px;font-size:13px;line-height:1.6;border-left-color:#7B2500;background:#FFF3E0;color:#7B2500;font-weight:700;">
+        ⚠ Reaching 100% on this chart means 100% of the RAL (Recommended Alert Limit) — not full acclimatization. Full acclimatization typically requires <strong>~14 days</strong> of continued heat work. The REL (Recommended Exposure Limit), which applies to fully acclimatized workers, should not be used until acclimatization is complete.
+      </div>
+      <div class="note-box" style="margin-top:12px;font-size:13px;line-height:1.6;border-left-color:${accent};background:${isNew?'#FFF3EE':'#E0F5EE'};color:${isNew?'#7A2800':'#004A37'}">
+        <strong>Remember:</strong> Apply RAL-based work-rest cycles <em>during all heat exposure periods</em>, regardless of the daily percentage.
+        ${isNew?' Continue close monitoring throughout the full ~14-day acclimatization period before transitioning to REL-based limits.':' After 4+ days at 100% RAL under close monitoring, the worker may be considered re-acclimatized and REL limits may apply.'}
+      </div>
+      <p style="font-size:12px;color:var(--subtext);margin-top:14px;font-style:italic">Source: NIOSH (2016) Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments (Table B-3)</p>`;
+  }
+
+  function buildAcclimNotesTab() {
+    document.getElementById('acclim-tab-notes').innerHTML = `
+      <div class="wbgt-notes-layout">
+        <div class="wbgt-notes-col">
+          <div class="note-box warn-note">
+            <strong>Monitoring during acclimatized heat work:</strong>
+            <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.7">
+              <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+              <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+              <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+              <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans even after acclimatization</li>
+              <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+            </ul>
+          </div>
+        </div>
+        <div class="wbgt-notes-col">
+          <div class="note-box" style="border-left-color:#005540;background:#E0F5EE;color:#004A37">
+            <strong>Environmental monitoring required.</strong> The work-rest cycles above are based on WBGT measurements. WBGT already accounts for air temperature, humidity, wind, and solar radiation — continue monitoring conditions throughout the work period, as WBGT can change rapidly. Per NIOSH (2016), acclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Exposure Limits (REL).
+          </div>
+          <p class="wbgt-citation">
+            <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+          </p>
+        </div>
+      </div>`;
+  }
+
+  function buildUnacclimNotesTab() {
+    document.getElementById('unacclim-tab-notes').innerHTML = `
+      <div class="wbgt-notes-layout">
+        <div class="wbgt-notes-col">
+          <div class="note-box warn-note">
+            <strong>During all acclimatization periods:</strong>
+            <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.7">
+              <li>Consult an occupational health professional regarding appropriate work-rest cycles for the specific activity level and environmental conditions</li>
+              <li>Provide cool water (1 cup / 8 oz every 15–20 minutes) and shaded or air-conditioned rest areas</li>
+              <li>Assign a buddy or supervisor to monitor for early signs of heat illness</li>
+              <li>Workers at higher risk (cardiovascular disease, obesity, certain medications, prior heat illness) may require individualized plans</li>
+              <li>Reduce exposure duration or stop work if heat illness symptoms appear</li>
+            </ul>
+          </div>
+        </div>
+        <div class="wbgt-notes-col">
+          <div class="note-box" style="border-left-color:#005540;background:#E0F5EE;color:#004A37">
+            <strong>Environmental monitoring required throughout acclimatization.</strong> The schedule above controls <em>when</em> workers are in the heat (% of shift). It does not replace monitoring of <em>what conditions</em> those periods involve. Per NIOSH (2016), unacclimatized workers should not be exposed to combinations of metabolic and environmental heat greater than the Recommended Alert Limits (RAL) — even on day 1 at 20% exposure.
+          </div>
+          <p class="wbgt-citation">
+            <em>Source: National Institute for Occupational Safety and Health. (2016). NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments (DHHS [NIOSH] Publication No. 2016-106). U.S. Department of Health and Human Services.</em>
+          </p>
+        </div>
+      </div>`;
+  }
+
+  let _unacclimChartActive = false;
+  let _unacclimActiveTab   = 0;
+
+  function switchUnacclimTab(idx) {
+    const paneDefs = [
+      {id:'unacclim-tab-0-wrap',   display:'flex'},
+      {id:'unacclim-tab-chart',    display:'flex'},
+      {id:'unacclim-tab-schedule', display:'block'},
+      {id:'unacclim-tab-notes',    display:'block'},
+    ];
+    paneDefs.forEach((p, i) => {
+      const el = document.getElementById(p.id);
+      if (el) el.style.display = i === idx ? p.display : 'none';
+    });
+    for (let i = 0; i < 4; i++) {
+      const btn = document.getElementById('utab-btn-' + i);
+      if (btn) {
+        btn.classList.toggle('active', i === idx);
+        btn.setAttribute('aria-selected', String(i === idx));
+        btn.tabIndex = i === idx ? 0 : -1;
+      }
+    }
+    const isChart = idx === 1;
+    _unacclimChartActive = isChart;
+    _unacclimActiveTab   = idx;
+    sizeWbgtCard();
+  }
+
+  // Arrow-key navigation for unacclimatized tablist
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('unacclim-tab-bar').addEventListener('keydown', e => {
+      const total = 4;
+      const cur   = _unacclimActiveTab;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = (cur + 1) % total;
+        switchUnacclimTab(next); document.getElementById('utab-btn-' + next).focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = (cur - 1 + total) % total;
+        switchUnacclimTab(prev); document.getElementById('utab-btn-' + prev).focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault(); switchUnacclimTab(0); document.getElementById('utab-btn-0').focus();
+      } else if (e.key === 'End') {
+        e.preventDefault(); switchUnacclimTab(total-1); document.getElementById('utab-btn-' + (total-1)).focus();
+      }
+    });
+  });
+
+  // ── Legacy unit toggle (for non-acclimatized fallback table) ──
+  function setUnit(unit) {
+    currentUnit = unit;
+    document.getElementById('btn-f').classList.toggle('active', unit === 'F');
+    document.getElementById('btn-c').classList.toggle('active', unit === 'C');
+    wbgtRows.acclim.forEach((row, i) => {
+      const el = document.getElementById('wr-r' + (i + 1));
+      if (el) el.textContent = unit === 'C' ? row.c : row.f;
+    });
+  }
+
+  // ── Shareable URL ──
+  function buildShareUrl() {
+    const s = WRC.get();
+    const rawVal = s.measValue;
+    if (rawVal == null || s.instrument !== 'wbgt') return null;
+    const p = new URLSearchParams();
+    p.set('wbgt', rawVal);
+    p.set('unit', s.measUnit || 'F');
+    p.set('act', s.activity || 'moderate');
+    const ws = s.workerStatus || 'acclimatized';
+    if (ws !== 'acclimatized') p.set('status', ws);
+    if (s.clothingAdjustF) p.set('adj', s.clothingAdjustF);
+    return location.origin + location.pathname + '?' + p.toString();
+  }
+
+  function copyShareLink(btn) {
+    const url = buildShareUrl();
+    if (!url) {
+      if (btn) { btn.textContent = '⚠ No data'; setTimeout(() => { btn.textContent = '🔗 Copy'; }, 2000); }
+      return;
+    }
+    const restore = () => { if (btn) { btn.innerHTML = '🔗 Copy'; btn.style.opacity = ''; } };
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+      setTimeout(restore, 2400);
+    }).catch(() => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+        setTimeout(restore, 2400);
+      } catch(e) { if (btn) { btn.innerHTML = '⚠ Failed'; setTimeout(restore, 2000); } }
+    });
+  }
+
+  function hydrateFromUrl() {
+    const p = new URLSearchParams(location.search);
+    if (!p.has('wbgt')) return false;
+    const val = parseFloat(p.get('wbgt'));
+    if (isNaN(val)) return false;
+    const unit   = p.get('unit')   || 'F';
+    const act    = p.get('act')    || 'moderate';
+    const status = p.get('status') || 'acclimatized';
+    const adjF   = p.has('adj') ? (parseFloat(p.get('adj')) || 0) : 0;
+    const adjC   = adjF ? Math.round(adjF * 5/9 * 10) / 10 : 0;
+    WRC.set({
+      instrument: 'wbgt',
+      measValue: val,
+      measUnit: unit,
+      activity: act,
+      activityLabel: act.charAt(0).toUpperCase() + act.slice(1) + ' Work',
+      workerStatus: status,
+      workerStatusTable: status,
+      clothingAdjustF: adjF,
+      clothingAdjustC: adjC
+    });
+    return true;
+  }
+
+  let _sessionMode = ''; // 'acclim' | 'unacclim' | ''
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const main = document.querySelector('main');
+    if (main) {
+      const h = fixedTop.offsetHeight + 'px';
+      document.documentElement.style.setProperty('--fixed-top-h', h);
+      main.style.setProperty('padding-top', h, 'important');
+    }
+    sizeWbgtCard();
+  }
+
+  async function init() {
+    hydrateFromUrl();
+    await initData();
+    const s = WRC.get();
+    workerStatus = s.workerStatusTable || (s.workerStatus === 'acclimatized' ? 'acclimatized' : (s.workerStatus ? 'unacclimatized' : 'acclimatized'));
+
+    const isAcclim          = workerStatus === 'acclimatized';
+    const hasAcclimSession  = isAcclim && s.instrument === 'wbgt';
+    const hasUnacclimSession = !isAcclim && s.instrument === 'wbgt';
+
+    if (hasAcclimSession) {
+      _sessionMode = 'acclim';
+      // ── Two-tab view for acclimatized WBGT workers ──
+      document.getElementById('wbgt-acclim-tabs').style.display         = '';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = '';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display       = 'none';
+      const card = document.getElementById('wbgt-result-card');
+      if (card) card.style.display = '';
+      sizeWbgtCard();
+
+      buildResultTab(s);
+      buildChartTab(s.measUnit || 'F', window._wrcRowIdx, window._wrcColIdx);
+      buildAcclimNotesTab();
+
+    } else if (hasUnacclimSession) {
+      _sessionMode = 'unacclim';
+      // ── Four-tab view for unacclimatized WBGT workers ──
+      document.getElementById('wbgt-unacclim-tabs').style.display       = '';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = '';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = 'none';
+      document.getElementById('wbgt-acclim-tabs').style.display         = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = 'none';
+      const card = document.getElementById('wbgt-result-card');
+      if (card) card.style.display = '';
+      sizeWbgtCard();
+
+      buildUnacclimResultTab(s);
+      buildUnacclimChartTab(s.measUnit || 'F', window._wrcUnacclimRowIdx, window._wrcUnacclimColIdx);
+      buildUnacclimScheduleTab(s.workerStatus === 'unacclimatized-new');
+      buildUnacclimNotesTab();
+      switchUnacclimTab(0);
+
+    } else {
+      _sessionMode = '';
+      // ── Fallback: original table view ──
+      document.getElementById('wbgt-acclim-tabs').style.display         = 'none';
+      document.getElementById('wbgt-unacclim-tabs').style.display       = 'none';
+      document.getElementById('acclim-tab-bar-wrap').style.display      = 'none';
+      document.getElementById('unacclim-tab-bar-wrap').style.display    = 'none';
+      document.getElementById('wbgt-acclim-section').style.display      = isAcclim ? '' : 'none';
+      document.getElementById('wbgt-unacclim-section').style.display    = !isAcclim ? '' : 'none';
+      setUnit('F');
+    }
+
+    buildBreadcrumbs();
+    requestAnimationFrame(() => { updateLayout(); });
+    window.addEventListener('resize', () => { updateLayout(); });
+    window.addEventListener('load', () => { updateLayout(); });
+    if (window.ResizeObserver) {
+      new ResizeObserver(() => { updateLayout(); })
+        .observe(document.getElementById('fixed-top'));
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>

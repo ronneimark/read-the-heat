@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Heat Index Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+body { overflow: auto; }
+main { padding: 0; max-width: none; }
+@media (min-width: 601px) {
+  header { height: 76px; overflow: hidden; }
+  .header-attribution { display: none; }
+  .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
+  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
+}
+
+/* ── T+RH input strip (border moves here from tab bar wraps) ── */
+#hi-trh-strip {
+  background: #EBF0F5;
+  border-bottom: 4px solid var(--navy, #1A2A3A);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.trh-strip-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+  white-space: nowrap;
+}
+.trh-mode-toggle { display: flex; gap: 0; border-radius: 6px; overflow: hidden; border: 1px solid #AAB8C4; }
+.trh-mode-btn {
+  padding: 5px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  background: #fff;
+  color: var(--subtext, #484F58);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.trh-mode-btn.active { background: var(--navy, #1A2A3A); color: #fff; }
+.trh-mode-btn:not(.active):hover { background: #D6E0EA; }
+.trh-mode-btn:focus-visible { outline: 2px solid #005FCC; outline-offset: 1px; z-index: 1; }
+.trh-inputs-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.trh-field { display: flex; flex-direction: column; gap: 2px; }
+.trh-field label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-field input[type=number] {
+  width: 86px;
+  padding: 5px 8px;
+  border: 1px solid #AAB8C4;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  background: #fff;
+  color: var(--navy, #1A2A3A);
+  -moz-appearance: textfield;
+}
+.trh-field input[type=number]::-webkit-outer-spin-button,
+.trh-field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.trh-field input[type=number]:focus { outline: 2px solid #005FCC; outline-offset: 1px; }
+.trh-arrow { font-size: 20px; color: var(--subtext, #484F58); line-height: 1; padding-bottom: 4px; }
+.trh-hi-result { display: flex; flex-direction: column; gap: 2px; }
+.trh-hi-result-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--subtext, #484F58);
+}
+.trh-hi-result-value { font-size: 20px; font-weight: 900; color: var(--navy, #1A2A3A); min-width: 72px; }
+
+/* Result tab — derivation sentence */
+.result-derivation {
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 8px;
+  opacity: 0.88;
+  line-height: 1.4;
+}
+
+/* T+RH → HI calculation block */
+.result-trh-calc {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 8px;
+}
+.result-trh-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.result-trh-op { font-weight: 400; font-size: 15px; }
+.result-trh-note {
+  font-size: 14px;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+/* Formula check tab */
+.formula-check-pane { padding: 24px 20px 40px; max-width: 900px; margin: 0 auto; }
+.formula-check-pane h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--navy, #1A2A3A);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border, #D0D8E0);
+}
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 16px;
+}
+.formula-table th { text-align: left; padding: 6px 10px; background: var(--surface, #F0F4F8); font-weight: 700; border: 1px solid var(--border, #D0D8E0); }
+.formula-table td { padding: 6px 10px; border: 1px solid var(--border, #D0D8E0); }
+.formula-table .formula-total td { font-weight: 800; background: var(--surface, #F0F4F8); }
+.formula-code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--surface, #F0F4F8);
+  border: 1px solid var(--border, #D0D8E0);
+  border-radius: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.formula-temp-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  background: #FFF8E1;
+  border: 1px solid #E6B800;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #78350F;
+  margin-left: 6px;
+}
+
+/* Page-level formula footnote — hidden by default; shown on Notes/Formula tabs via JS */
+.hi-formula-footnote {
+  display: none;
+  border-top: 1px solid var(--border, #D0D8E0);
+  padding: 12px 20px 24px;
+  max-width: 900px;
+  margin: 20px auto 0;
+  font-size: 11px;
+  color: var(--subtext, #484F58);
+  line-height: 1.65;
+}
+.hi-formula-footnote strong { color: var(--navy, #1A2A3A); }
+
+/* ── Tab bar ── */
+.acclim-tab-bar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 6px;
+  background: #D6DFE9;
+  padding: 8px 8px 0;
+  flex-shrink: 0;
+}
+.acclim-tab-btn {
+  padding: 14px 28px 12px;
+  min-width: 160px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: inherit;
+}
+.acclim-tab-btn-title { font-size: 15px; font-weight: 800; line-height: 1.2; }
+.acclim-tab-btn-sub   { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; }
+.acclim-tab-btn.active { background: var(--navy, #1A2A3A); color: #fff; }
+.acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
+.acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
+.acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
+
+/* ── Result tab — 2-column viewport-fit layout ── */
+/* ── Heat-index specific (layout base: shared.css .result-wrap / .result-grid) ── */
+
+/* Radiant heat warning strip — amber on warm white background.
+   NOTE: This warning exists because heat index does NOT account for radiant heat
+   (direct sun, hot surfaces). WBGT is the gold standard that captures this. */
+/* Limitation strip — semi-transparent, renders over colored result background */
+.radiant-warn-strip {
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.15);
+  border-left: 3px solid rgba(255,255,255,0.5);
+  border-radius: 0 6px 6px 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: inherit;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+.radiant-warn-strip strong { display: inline; }
+
+/* ── Mobile inline T+RH switch chip (hidden on desktop) ── */
+.hi-trh-switch-chip { display: none; }
+
+/* Mobile sticky schedule button — hidden globally; media query below overrides on mobile */
+.mobile-sched-sticky { display: none; }
+/* Desktop sidebar schedule button — full-width in sidebar */
+.desktop-sched-btn { width: 100%; justify-content: center; margin-top: 6px; }
+
+/* ── Mobile: strip hidden in header; appears inline in content when active ── */
+@media (max-width: 768px) {
+  /* Strip banished from fixed header */
+  #hi-trh-strip { display: none !important; }
+
+  /* When moved into <main> by JS, show as a compact card */
+  #hi-trh-strip.mobile-trh-inline {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    position: static; /* in normal flow, NOT fixed */
+    border-bottom-width: 1px; /* override the thick bottom border */
+  }
+  /* Hide the label & toggle buttons inside the inline strip — switch chip handles it */
+  #hi-trh-strip.mobile-trh-inline .trh-strip-label,
+  #hi-trh-strip.mobile-trh-inline .trh-mode-toggle { display: none !important; }
+
+  /* Inline T+RH inputs — full width */
+  #hi-trh-strip.mobile-trh-inline .trh-inputs-row {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  #hi-trh-strip.mobile-trh-inline .trh-field input[type=number] { width: 100%; box-sizing: border-box; }
+  #hi-trh-strip.mobile-trh-inline .trh-arrow { display: none; }
+  #hi-trh-strip.mobile-trh-inline .trh-hi-result { flex: 1; }
+
+  /* Show the desktop-referral hint on mobile */
+  .mobile-result-hint { display: flex; }
+
+  /* Show the inline switch chip on mobile */
+  .hi-trh-switch-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--navy, #1A2A3A);
+    background: transparent;
+    border: 1px solid var(--navy, #1A2A3A);
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.72;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+  .hi-trh-switch-chip:hover { opacity: 1; }
+
+  /* Override shared.css "padding: 16px !important" shorthand */
+  main { padding-top: var(--fixed-top-h, 100px) !important; }
+
+  /* Hide tab bars — no switching on mobile */
+  #hi-acclim-tab-bar-wrap,
+  #hi-unacclim-tab-bar-wrap { display: none !important; }
+
+  /* Force non-result panes hidden */
+  #hi-tab-chart, #hi-tab-notes, #hi-tab-formula, #hi-tab-hitable,
+  #hi-utab-chart, #hi-utab-notes, #hi-utab-formula, #hi-utab-hitable,
+  #hi-formula-footnote { display: none !important; }
+
+  /* Release result panes from fixed/viewport-height sizing */
+  #hi-tab-result-wrap,
+  #hi-utab-result-wrap {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Mobile schedule sticky button */
+  .mobile-sched-sticky {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: var(--fixed-top-h, 80px);
+    z-index: 50;
+    background: var(--warm-white, #F6F3EC);
+    padding: 10px 14px;
+    margin: 0 -14px 0;
+    border-top: 1px solid var(--border, #D8DFE8);
+    border-bottom: 1px solid var(--border, #D8DFE8);
+  }
+  .mobile-sched-sticky .sched-modal-btn { width: 100%; justify-content: center; border-radius: 10px; margin-top: 0; }
+  /* Hide desktop sidebar button on mobile */
+  .desktop-sched-btn { display: none !important; }
+
+  .mobile-sched-inline {
+    background: var(--surface, #F8FAFB);
+    border: 1px solid var(--border, #D8DFE8);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .mobile-sched-inline .sched-inline-title {
+    font-size: 15px; font-weight: 800; color: var(--navy, #1A2A3A); margin-bottom: 2px;
+  }
+  .mobile-sched-inline .sched-inline-sub {
+    font-size: 11px; color: var(--subtext, #6B7785); margin-bottom: 10px; line-height: 1.4;
+  }
+  .mobile-sched-inline .sched-inline-foot {
+    background: var(--warn-bg, #FFF3E0); color: var(--warn-text, #7B2500);
+    border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 11px;
+    border-left: 3px solid var(--warn-text, #7B2500); margin-top: 10px;
+  }
+  .mobile-sched-inline .sched-inline-fn {
+    font-size: 10px; color: var(--subtext); font-style: italic; margin-top: 5px;
+  }
+
+  /* Desktop-referral hint */
+  .mobile-full-hint {
+    display: block !important;
+    text-align: center;
+    padding: 14px 20px 28px;
+    font-size: 13px;
+    color: var(--subtext, #6B7C93);
+    font-style: italic;
+    border-top: 1px solid var(--border, #D8DFE8);
+    margin-top: 4px;
+  }
+}
+
+/* ── Tab panels (shared base) ── */
+#hi-tab-chart,
+#hi-utab-chart {
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Desktop result card ── */
+@media (min-width: 769px) {
+  #hi-result-card {
+    position: fixed;
+    left: 35px; right: 35px; bottom: 35px;
+    /* top is set dynamically by sizeHICard() */
+    background: var(--bg, #FFFFFF);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 50;
+  }
+  #hi-tab-content-area {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #hi-acclim-tabs,
+  #hi-unacclim-tabs {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #hi-tab-result-wrap,
+  #hi-utab-result-wrap,
+  #hi-tab-formula,
+  #hi-utab-formula,
+  #hi-tab-hitable,
+  #hi-utab-hitable {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  #hi-tab-notes,
+  #hi-utab-notes {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  #hi-tab-chart,
+  #hi-utab-chart {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  /* ── Notes 2-column layout (desktop only) ── */
+  .hi-notes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px 10px;
+    box-sizing: border-box;
+  }
+  .hi-notes-col-left,
+  .hi-notes-col-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .hi-notes-layout .hi-notes-section {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .hi-notes-layout .activity-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 0;
+  }
+  .hi-notes-layout .activity-card {
+    padding: 9px 11px;
+  }
+  .hi-notes-layout .activity-card h4 { font-size: 13px; }
+  .hi-notes-layout .activity-card p  { font-size: 12px; }
+  .hi-notes-layout .note-box { font-size: 13px; padding: 10px 14px; }
+  /* ── Formula Check 2-column layout (desktop only) ── */
+  .formula-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px 24px 20px;
+    box-sizing: border-box;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .formula-col-left, .formula-col-right { min-width: 0; }
+  /* Formula variable highlights */
+  .fv-t  { color: #b91c1c; font-weight: 800; }
+  .fv-rh { color: #15803d; font-weight: 800; }
+}
+@media (max-width: 768px) {
+  #hi-result-card {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: var(--fixed-top-h, 100px);
+  }
+}
+
+/* Unit toggle strip inside chart pane */
+.chart-unit-strip {
+  background: var(--surface, #F0F4F8);
+  border-bottom: 1px solid var(--border, #D0D8E0);
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.chart-unit-strip .toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--subtext, #484F58);
+}
+
+.acclim-chart-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 22% repeat(4, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  min-height: 0;
+  position: relative;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.10);
+}
+.acc-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.13);
+  border-right: 1px solid rgba(0,0,0,0.07);
+  padding: 4px 6px;
+  line-height: 1.15;
+  box-sizing: border-box;
+  gap: 1px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.50);
+}
+.acc-cell.acc-last-row { border-bottom: none; }
+
+.acclim-chart-grid {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+.acc-hdr {
+  font-size: 12px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #253A52 0%, #1A2A3A 100%);
+  color: #fff;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid rgba(255,255,255,0.15) !important;
+  box-shadow: none;
+}
+.acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
+.acc-range {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--navy, #1A2A3A);
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  padding-left: 12px;
+  background: linear-gradient(to right, #E4EBF3 0%, #F0F4F8 100%);
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.60);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Value cells: color only, font size on .wr-nums */
+.acclim-chart-grid .c-safe,
+.acclim-chart-grid .c-low,
+.acclim-chart-grid .c-caution,
+.acclim-chart-grid .c-warn,
+.acclim-chart-grid .c-high,
+.acclim-chart-grid .c-stop { font-size: inherit; }
+/* Dark stop cells get a lighter inset shimmer */
+.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); border-right-color: rgba(255,255,255,0.12); }
+
+/* Column / row / cell highlights */
+.acc-user-col.acc-hdr {
+  background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
+  border-left: 3px solid rgba(255,255,255,0.35);
+  border-right: 3px solid rgba(255,255,255,0.35);
+}
+.acc-user-col:not(.acc-hdr) { background-image: linear-gradient(rgba(26,42,58,0.08), rgba(26,42,58,0.08)); }
+.acc-range.acc-user-row { background: linear-gradient(to right, #B8CCDF, #C8D9EC); font-weight: 800; border-left: 4px solid var(--navy, #1A2A3A); }
+.acc-user-row:not(.acc-range) { background-image: linear-gradient(rgba(26,42,58,0.10), rgba(26,42,58,0.10)); }
+.acc-user-cell {
+  outline: 6px solid var(--navy, #1A2A3A);
+  outline-offset: -6px;
+  position: relative;
+  z-index: 1;
+}
+.acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
+.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
+
+/* Work/rest cell content */
+.wr-nums {
+  display: flex; align-items: baseline; gap: 0.18em;
+  font-size: clamp(13px, 2.5vh, 32px); font-weight: 700; line-height: 1;
+}
+.wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
+.wr-unit {
+  font-size: clamp(9px, 1.5vh, 17px); font-weight: 500; opacity: 0.8;
+  letter-spacing: 0.1px; text-transform: none; line-height: 1; white-space: nowrap;
+}
+.wr-continuous { font-size: clamp(11px, 2vh, 26px); font-weight: 700; }
+.wr-danger { font-size: clamp(11px, 2vh, 24px); font-weight: 900; letter-spacing: 0.04em; }
+
+/* ── Chart caption / legend ── */
+.chart-caption {
+  flex: 0 0 auto;
+  background: rgba(240,244,248,0.97);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 6px;
+  font-size: clamp(11px, 1.55vh, 14px);
+  font-weight: 600;
+  color: #2E3A4A;
+  text-align: center;
+  padding: 6px 14px;
+  line-height: 1.45;
+  margin: 6px 10px 10px;
+}
+
+/* ── Notes tabs ── */
+#hi-tab-notes,
+#hi-utab-notes {
+  padding: 24px 20px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hi-notes-section { margin-bottom: 24px; }
+.hi-notes-section h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--navy, #1A2A3A);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border, #D0D8E0);
+}
+.hi-notes-block {
+  background: var(--surface, #F8FAFB);
+  border: 1px solid var(--border, #D0D8E0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+.hi-notes-range { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--navy, #1A2A3A); margin-bottom: 4px; }
+.hi-notes-text  { font-size: 13px; line-height: 1.55; }
+
+/* ── Acclimatization schedule modal ── */
+.sched-modal-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy,#1A2A3A); color: #fff;
+  border: none; border-radius: 999px;
+  padding: 11px 22px; font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: background .15s, box-shadow .15s;
+}
+.sched-modal-btn:hover { background: #0d1e33; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+#sched-dialog {
+  border: none; border-radius: 16px; padding: 0;
+  position: fixed; margin: 0;
+  max-width: min(640px, 94vw); width: 94vw;
+  max-height: 75vh; overflow-y: auto;
+  box-shadow: 0 -4px 36px rgba(0,0,0,.3);
+  background: var(--warm-white,#F6F3EC);
+}
+#sched-dialog[open]         { animation: schedOpen  .38s cubic-bezier(.22,.68,0,1.1) both; }
+#sched-dialog.sched-closing { animation: schedClose .28s cubic-bezier(.55,0,1,.45)   both; }
+@keyframes schedOpen  { from { clip-path: inset(0 0 100% 0 round 16px); } to { clip-path: inset(0 0 0% 0 round 16px); } }
+@keyframes schedClose { from { clip-path: inset(0 0 0% 0 round 16px); }  to { clip-path: inset(0 0 100% 0 round 16px); } }
+#sched-dialog::backdrop { background: rgba(0,0,0,.45); animation: backdropIn .38s ease both; }
+@keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
+.sched-dialog-inner { padding: 28px 28px 24px; }
+.sched-dialog-hdr {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 16px; gap: 12px;
+}
+.sched-dialog-title { font-size: 18px; font-weight: 800; color: var(--navy,#1A2A3A); }
+.sched-dialog-sub   { font-size: 12px; color: var(--subtext,#6B7785); margin-top: 3px; }
+.sched-dialog-close {
+  background: none; border: none; cursor: pointer; font-size: 22px;
+  color: var(--subtext,#6B7785); line-height: 1; flex-shrink: 0; padding: 2px 4px;
+}
+.sched-dialog-close:hover { color: var(--navy,#1A2A3A); }
+.sched-type-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.sched-type-tab {
+  flex: 1; padding: 8px 12px; border: 2px solid var(--border,#CDD3DA);
+  border-radius: 8px; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 700; color: var(--subtext,#6B7785);
+  transition: all .13s;
+}
+.sched-type-tab.active { background: var(--navy,#1A2A3A); color: #fff; border-color: var(--navy,#1A2A3A); }
+.urec-sched-grid { display: flex; flex-direction: column; gap: 6px; }
+.urec-day-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border,#CDD3DA); }
+.urec-day-row:last-child { border-bottom: none; }
+.urec-day-label { font-size: 13px; font-weight: 700; min-width: 56px; flex-shrink: 0; }
+.urec-bar-wrap  { flex: 1; height: 14px; background: #E9EDEF; border-radius: 4px; overflow: hidden; }
+.urec-bar       { height: 100%; border-radius: 4px; }
+.urec-day-pct   { font-size: 13px; font-weight: 800; min-width: 36px; text-align: right; flex-shrink: 0; }
+.urec-time-work { color: #005540; font-weight: 700; display: block; font-size: 12px; }
+.urec-time-rest { color: #7A1515; font-weight: 600; display: block; font-size: 12px; }
+.urec-time-out  { color: var(--subtext); display: block; font-size: 12px; }
+.urec-day-times { font-size: 12px; line-height: 1.25; min-width: 0; text-align: right; flex-shrink: 0; width: 180px; }
+.urec-day-full .urec-time-work { color: #0D3B10; }
+.sched-foot-warn {
+  background: var(--warn-bg,#FFF3E0); color: var(--warn-text,#7B2500);
+  border-radius: 6px; padding: 6px 10px; font-weight: 700; font-size: 12px;
+  border-left: 3px solid var(--warn-text,#7B2500); margin-top: 12px;
+}
+.sched-foot-note { font-size: 11px; color: var(--subtext); font-style: italic; margin-top: 6px; }
+/* ── Full Chart tab: activity column headers ── */
+.acc-hdr {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+.acc-hdr-sub { flex-direction: column !important; white-space: normal !important; overflow: visible !important; line-height: 1.3; }
+.acc-sub {
+  display: block; font-size: 0.68em; font-weight: 500;
+  opacity: 0.68; letter-spacing: 0.15px; margin-top: 3px;
+  text-transform: none; white-space: nowrap;
+}
+/* ── Table / chart header sub-labels ── */
+.th-sub {
+  display: block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.3px; opacity: 0.75; text-transform: none;
+  margin-top: 2px; white-space: nowrap;
+}
+/* ── Mobile: pad inner scroll containers so sticky bar doesn't clip content ── */
+@media (max-width: 768px) {
+  #hi-tab-result-wrap, #hi-utab-result-wrap,
+  #hi-tab-formula, #hi-utab-formula,
+  #hi-tab-hitable, #hi-utab-hitable,
+  #hi-tab-notes, #hi-utab-notes {
+    padding-bottom: 94px !important;
+  }
+}
+</style>
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<dialog id="sched-dialog" aria-labelledby="sched-dialog-title">
+  <div class="sched-dialog-inner">
+    <div class="sched-dialog-hdr">
+      <div>
+        <div class="sched-dialog-title" id="sched-dialog-title">📅 Daily Exposure Schedule</div>
+        <div class="sched-dialog-sub">Times shown per 60-minute period in heat</div>
+      </div>
+      <button class="sched-dialog-close" onclick="closeSchedModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="sched-type-tabs">
+      <button class="sched-type-tab active" onclick="switchSchedType('new',this)">New Worker <small style="font-weight:500;display:block">5-day ramp</small></button>
+      <button class="sched-type-tab"        onclick="switchSchedType('ret',this)">Returning Worker <small style="font-weight:500;display:block">4-day ramp</small></button>
+    </div>
+    <div id="sched-dialog-grid"></div>
+    <div class="sched-foot-warn">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+    <div class="sched-foot-note">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>
+  </div>
+</dialog>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <picture>
+        <source media="(max-width: 768px)" srcset="images/read-the-heat-logo-transparent.png">
+        <img class="header-brand" src="images/read-the-heat-logo-wide.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      </picture>
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+      <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+    </div>
+  </div>
+
+  <!-- T+RH input strip (shared; border-bottom separates header from content) -->
+  <div id="hi-trh-strip">
+    <span class="trh-strip-label">Input Method:</span>
+    <div class="trh-mode-toggle" role="group" aria-label="Heat index input method">
+      <button class="trh-mode-btn active" id="trh-btn-hi" aria-pressed="true"
+              onclick="setHiInputMode('hi')">Heat Index</button>
+      <button class="trh-mode-btn" id="trh-btn-trh" aria-pressed="false"
+              onclick="setHiInputMode('trh')">Temp + RH</button>
+    </div>
+    <div class="trh-inputs-row" id="hi-trh-inputs-row" style="display:none" aria-live="polite">
+      <div class="trh-field">
+        <label for="hi-trh-temp">Temperature (<span id="hi-trh-unit-label">°F</span>)</label>
+        <input type="number" id="hi-trh-temp" min="-50" max="200" step="0.1"
+               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
+      </div>
+      <div class="trh-field">
+        <label for="hi-trh-rh">Relative Humidity (%)</label>
+        <input type="number" id="hi-trh-rh" min="0" max="100" step="1"
+               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
+      </div>
+      <div class="trh-arrow" aria-hidden="true">→</div>
+      <div class="trh-hi-result">
+        <div class="trh-hi-result-label">Calculated Heat Index</div>
+        <div class="trh-hi-result-value" id="hi-trh-calc-display" aria-live="polite">—</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<!-- ── Desktop result card (tab bars + content, 35px from all edges) ── -->
+<div id="hi-result-card" style="display:none">
+
+  <!-- Acclimatized tab bar -->
+  <div id="hi-acclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="hi-acclim-tab-bar" role="tablist" aria-label="Heat Index acclimatized worker views">
+      <button class="acclim-tab-btn active" id="hi-tab-btn-result" role="tab"
+              aria-selected="true" aria-controls="hi-tab-result-wrap" tabindex="0"
+              onclick="switchHITab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
+        <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="hi-tab-chart" tabindex="-1"
+              onclick="switchHITab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="hi-tab-notes" tabindex="-1"
+              onclick="switchHITab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Hydration &amp; limitations</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="hi-tab-formula" tabindex="-1"
+              onclick="switchHITab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-tab-btn-hitable" role="tab"
+              aria-selected="false" aria-controls="hi-tab-hitable" tabindex="-1"
+              onclick="switchHITab('hitable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Unacclimatized tab bar -->
+  <div id="hi-unacclim-tab-bar-wrap" style="display:none">
+    <div class="acclim-tab-bar" id="hi-unacclim-tab-bar" role="tablist" aria-label="Heat Index unacclimatized worker views">
+      <button class="acclim-tab-btn active" id="hi-utab-btn-result" role="tab"
+              aria-selected="true" aria-controls="hi-utab-result-wrap" tabindex="0"
+              onclick="switchHIUnacclimTab('result')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📋 </span>My Work-Rest Cycle</span>
+        <span class="acclim-tab-btn-sub">Your personalized recommendation</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-chart" role="tab"
+              aria-selected="false" aria-controls="hi-utab-chart" tabindex="-1"
+              onclick="switchHIUnacclimTab('chart')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📊 </span>Full Chart</span>
+        <span class="acclim-tab-btn-sub">All conditions &amp; activity levels</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-notes" role="tab"
+              aria-selected="false" aria-controls="hi-utab-notes" tabindex="-1"
+              onclick="switchHIUnacclimTab('notes')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
+        <span class="acclim-tab-btn-sub">Guidance &amp; limitations</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-formula" role="tab"
+              aria-selected="false" aria-controls="hi-utab-formula" tabindex="-1"
+              onclick="switchHIUnacclimTab('formula')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
+        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
+      </button>
+      <button class="acclim-tab-btn" id="hi-utab-btn-hitable" role="tab"
+              aria-selected="false" aria-controls="hi-utab-hitable" tabindex="-1"
+              onclick="switchHIUnacclimTab('hitable')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
+        <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab content area: fills remaining card height -->
+  <div id="hi-tab-content-area">
+
+    <!-- ── Acclimatized tab panels ── -->
+    <div id="hi-acclim-tabs" style="display:none">
+      <div id="hi-tab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-tab-btn-result" tabindex="0">
+        <div id="hi-tab-result" class="result-grid"></div>
+      </div>
+      <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0"></div>
+      <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
+      <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
+      <div id="hi-tab-hitable" role="tabpanel" aria-labelledby="hi-tab-btn-hitable" tabindex="0"></div>
+    </div><!-- /hi-acclim-tabs -->
+
+    <!-- ── Unacclimatized tab panels ── -->
+    <div id="hi-unacclim-tabs" style="display:none">
+      <div id="hi-utab-result-wrap" class="result-wrap" role="tabpanel" aria-labelledby="hi-utab-btn-result" tabindex="0">
+        <div id="hi-utab-result" class="result-grid"></div>
+      </div>
+      <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0"></div>
+      <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
+      <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
+      <div id="hi-utab-hitable" role="tabpanel" aria-labelledby="hi-utab-btn-hitable" tabindex="0"></div>
+    </div><!-- /hi-unacclim-tabs -->
+
+  </div><!-- /hi-tab-content-area -->
+
+</div><!-- /hi-result-card -->
+
+<main></main>
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  // ── Module state ──────────────────────────────────────────────────────────────
+  let workerStatus          = 'acclimatized';
+  let _hiCurrentTab         = 'result';
+  let _hiUnacclimCurrentTab = 'result';
+  let _hiUnit               = 'F';
+  let _hiRowIdx             = -1;
+  let _hiColIdx             = 1;
+  let _hiUnacclimRowIdx     = -1;
+  let _hiUnacclimColIdx     = 1;
+  let _hiStoredVal          = null;
+  let _hiStoredUnit         = 'F';
+  let _hiActivity           = 'moderate';
+  let _hiInputMode          = 'hi';   // 'hi' | 'trh'
+  let _hiTempValF           = null;   // stored always in °F
+  let _hiRhVal              = null;
+  let _hiCalcHI             = null;   // calculated HI in °F
+
+  // ── Acclimatized HI data ──────────────────────────────────────────────────────
+  const HI_BOUNDS_F = [80, 91, 103, 115, 130];
+  const HI_DATA = [
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null}, {w:null,r:null} ],
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null,star:true}, {w:45,r:15} ],
+    [ {w:null,r:null,star:true}, {w:45,r:15}, {w:30,r:30}, {w:15,r:45} ],
+    [ {w:45,r:15}, {w:30,r:30}, {w:15,r:45}, null ],
+    [ {w:30,r:30}, {w:15,r:45}, null, null ],
+    [ null, null, null, null ]
+  ];
+  const HI_ROW_LABELS_F = ['Below 80°F','80–90°F','91–103°F','103–115°F','115–130°F','Above 130°F'];
+  const HI_ROW_LABELS_C = ['Below 27°C','27–32°C','33–39°C','39–46°C','46–54°C','Above 54°C'];
+
+  // ── Unacclimatized HI data ────────────────────────────────────────────────────
+  const HI_UNACCLIM_BOUNDS_F = [72, 83, 95, 107, 122];
+  const HI_UNACCLIM_DATA = [
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null}, {w:null,r:null} ],
+    [ {w:null,r:null}, {w:null,r:null}, {w:null,r:null,star:true}, {w:45,r:15} ],
+    [ {w:null,r:null,star:true}, {w:45,r:15}, {w:30,r:30}, {w:15,r:45} ],
+    [ {w:45,r:15}, {w:30,r:30}, {w:15,r:45}, null ],
+    [ {w:30,r:30}, {w:15,r:45}, null, null ],
+    [ null, null, null, null ]
+  ];
+  const HI_UNACCLIM_ROW_LABELS_F = ['Below 72°F','72–82°F','83–95°F','95–107°F','107–122°F','Above 122°F'];
+  const HI_UNACCLIM_ROW_LABELS_C = ['Below 22°C','22–28°C','28–35°C','35–42°C','42–50°C','Above 50°C'];
+
+  // ── Monitoring notes ──────────────────────────────────────────────────────────
+  const HI_RANGE_NOTES = [
+    { range:'Below 80°F (Below 27°C)',  text:'Normal work practices; maintain standard hydration (8 oz water every 20 min). Train workers on heat illness signs.' },
+    { range:'80–90°F (27–32°C)',         text:'Implement basic precautions. Buddy system. 1 cup (8 oz) water every 20 min. Schedule harder tasks in cooler parts of shift. *Monitor heavy workers closely.' },
+    { range:'91–103°F (33–39°C)',        text:'OSHA: Implement controls. Buddy system required. Enforce rest breaks in cool/shaded area. Hydration: 1 cup every 15–20 min. Watch new workers and unacclimatized workers especially.' },
+    { range:'103–115°F (39–46°C)',       text:'OSHA: Active monitoring; frequent vital sign checks. Cool-down periods in air-conditioned or ventilated rest areas. Hydration: 1 cup every 15 min. Consider limiting new workers to ≤20% of shift in heat.' },
+    { range:'115–130°F (46–54°C)',       text:'OSHA: Hazardous conditions. Engineering controls must be implemented or work suspended. Personal cooling (wet towels, cooling vests). Emergency response plan activated. Medical monitoring on-site.' },
+    { range:'Above 130°F (Above 54°C)', text:'Imminent danger. All work should cease until conditions are corrected. Evacuation if engineering controls cannot reduce heat to safe levels.' }
+  ];
+  const HI_UNACCLIM_RANGE_NOTES = [
+    { range:'Below 72°F (Below 22°C)',  text:'Normal work practices. Standard hydration, buddy system, and training on heat illness recognition. Unacclimatized workers require heightened supervisor attention.' },
+    { range:'72–82°F (22–28°C)',         text:'Implement precautions. Buddy system required. 1 cup (8 oz) water every 20 min. New workers: limit to lighter tasks initially. Monitor heavy workers closely.' },
+    { range:'83–95°F (28–35°C)',         text:'Active monitoring required. Enforce rest breaks in cool area. Hydration: 1 cup every 15–20 min. First week in heat: limit to 20% of shift exposure, increasing 20% per day.' },
+    { range:'95–107°F (35–42°C)',        text:'Hazardous for unacclimatized workers. Active monitoring; vital sign checks. Cool-down in air-conditioned rest areas. Consider removing unacclimatized workers from this environment.' },
+    { range:'107–122°F (42–50°C)',       text:'Unacclimatized workers should not be in this environment. Engineering controls must be implemented. Medical monitoring on-site. Emergency response plan activated.' },
+    { range:'Above 122°F (Above 50°C)', text:'Imminent danger for all workers. All work should cease until conditions are corrected.' }
+  ];
+
+  // ── Shared helpers ────────────────────────────────────────────────────────────
+  const ACT_COL   = { light:0, moderate:1, heavy:2, vh:3 };
+  const ACT_LABEL = { light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy' };
+  const ACT_FULL  = { light:'Light Work', moderate:'Moderate Work', heavy:'Heavy Work', vh:'Very Heavy Work' };
+  const ACT_EMOJI = { light:'🟢', moderate:'🟡', heavy:'🟠', vh:'🔴' };
+
+  const SCHED_NEW       = [{day:'Day 1',pct:20},{day:'Day 2',pct:40},{day:'Day 3',pct:60},{day:'Day 4',pct:80},{day:'Day 5+',pct:100}];
+  const SCHED_RETURNING = [{day:'Day 1',pct:50},{day:'Day 2',pct:60},{day:'Day 3',pct:80},{day:'Day 4+',pct:100}];
+  let   _schedCell      = null; // stored for modal
+
+  function _buildSchedRows(sched, cell) {
+    const accent = '#E05C2C';
+    const isContinuous = cell && cell.w === null;
+    let html = '';
+    sched.forEach(d => {
+      const isFull  = d.pct === 100;
+      let timesHtml = '';
+      if (isContinuous) {
+        // Continuous work — show percentage guidance only
+        timesHtml = d.pct < 100
+          ? `<span class="urec-time-work">Limit heat exposure to ${d.pct}% of shift</span>`
+          : `<span class="urec-time-work">Full shift — normal work practice</span>`;
+      } else {
+        const f       = d.pct / 100;
+        const workMin = cell ? Math.round(cell.w * f) : 0;
+        const restMin = cell ? Math.round(cell.r * f) : 0;
+        const outside = cell ? (60 - workMin - restMin) : 0;
+        if (d.pct < 100) {
+          timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+            (restMin > 0 ? `<span class="urec-time-rest">${restMin} min rest in heat</span>` : '') +
+            `<span class="urec-time-out">${outside} min outside heat</span>`;
+        } else {
+          timesHtml = `<span class="urec-time-work">${workMin} min work in heat</span>` +
+            `<span class="urec-time-rest">${restMin} min rest in heat</span>`;
+        }
+      }
+      html += `<div class="urec-day-row${isFull?' urec-day-full':''}">
+        <div class="urec-day-label">${d.day}</div>
+        <div class="urec-bar-wrap"><div class="urec-bar" style="width:${d.pct}%;background:${isFull?'#00966C':accent}"></div></div>
+        <div class="urec-day-pct" style="color:${isFull?'#00966C':accent}">${d.pct}%</div>
+        <div class="urec-day-times">${timesHtml}</div>
+      </div>`;
+    });
+    return html;
+  }
+
+  function openSchedModal(btn) {
+    if (!_schedCell) return;
+    const isNew = workerStatus !== 'unacclimatized-returning';
+    const sched = isNew ? SCHED_NEW : SCHED_RETURNING;
+    const sub   = (isNew ? 'New Worker — 5-day ramp' : 'Returning Worker — 4-day ramp') + '  ·  Times shown per 60-min period';
+    const gridHtml = '<div class="urec-sched-grid">' + _buildSchedRows(sched, _schedCell) + '</div>';
+
+    if (window.innerWidth <= 768) {
+      // ── Mobile: toggle inline panel below the sticky button ──
+      const inline = document.getElementById('mobile-sched-inline');
+      if (!inline) return;
+      if (!inline.hidden) {
+        inline.hidden = true;
+        if (btn) { btn.innerHTML = '📅 View Acclimatization Schedule'; btn.setAttribute('aria-expanded','false'); }
+        return;
+      }
+      inline.innerHTML = `
+        <div class="sched-inline-title">📅 Acclimatization Schedule</div>
+        <div class="sched-inline-sub">${sub}</div>
+        ${gridHtml}
+        <div class="sched-inline-foot">⚠ This schedule reaches 100% exposure — not full acclimatization. Full acclimatization may take up to 14 days of continued work in heat.</div>
+        <div class="sched-inline-fn">† Work-rest cycles apply during ALL heat exposure periods regardless of daily %</div>`;
+      inline.hidden = false;
+      if (btn) { btn.innerHTML = '✕ Close Schedule'; btn.setAttribute('aria-expanded','true'); }
+      return;
+    }
+
+    // ── Desktop: position modal above the button ──
+    const tabsEl = document.querySelector('.sched-type-tabs');
+    if (workerStatus === 'unacclimatized-new' || workerStatus === 'unacclimatized-returning') {
+      tabsEl.style.display = 'none';
+    } else {
+      tabsEl.style.display = '';
+      document.querySelectorAll('.sched-type-tab').forEach((b,i) => b.classList.toggle('active', i === (isNew ? 0 : 1)));
+    }
+    document.getElementById('sched-dialog-grid').innerHTML = gridHtml;
+    const dlg = document.getElementById('sched-dialog');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      dlg.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+      dlg.style.left = '50%';
+      dlg.style.transform = 'translateX(-50%)';
+    }
+    dlg.showModal();
+  }
+
+  function closeSchedModal() {
+    const dlg = document.getElementById('sched-dialog');
+    dlg.classList.add('sched-closing');
+    dlg.addEventListener('animationend', function handler() {
+      dlg.classList.remove('sched-closing');
+      dlg.removeEventListener('animationend', handler);
+      dlg.close();
+    });
+  }
+
+  function switchSchedType(type, btn) {
+    document.querySelectorAll('.sched-type-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const sched = type === 'new' ? SCHED_NEW : SCHED_RETURNING;
+    document.getElementById('sched-dialog-grid').innerHTML =
+      '<div class="urec-sched-grid">' + _buildSchedRows(sched, _schedCell) + '</div>';
+  }
+
+  document.getElementById('sched-dialog').addEventListener('click', function(e) {
+    const r = this.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeSchedModal();
+  });
+
+  function getHIRow(val, unit) {
+    const f = unit === 'F' ? parseFloat(val) : parseFloat(val) * 9/5 + 32;
+    for (let i = 0; i < HI_BOUNDS_F.length; i++) if (f < HI_BOUNDS_F[i]) return i;
+    return 5;
+  }
+  function getHIUnacclimRow(val, unit) {
+    const f = unit === 'F' ? parseFloat(val) : parseFloat(val) * 9/5 + 32;
+    for (let i = 0; i < HI_UNACCLIM_BOUNDS_F.length; i++) if (f < HI_UNACCLIM_BOUNDS_F[i]) return i;
+    return 5;
+  }
+  function hiClass(cell) {
+    if (!cell)          return 'c-stop';
+    if (cell.w === null) return 'c-safe';
+    if (cell.w === 45)   return 'c-caution';
+    if (cell.w === 30)   return 'c-warn';
+    if (cell.w === 15)   return 'c-high';
+    return 'c-safe';
+  }
+  function hiLabel(cell) {
+    if (!cell)           return '<span class="wr-danger">DANGER</span>';
+    if (cell.w === null) return `<span class="wr-continuous">Continuous${cell.star ? '<sup class="wr-fn">*</sup>' : ''}</span>`;
+    return `<span class="wr-nums"><span class="wr-w">${cell.w}</span><span class="wr-slash">/</span><span class="wr-r">${cell.r}</span></span><span class="wr-unit">min work / min rest</span>`;
+  }
+  function hiLabelText(cell) {
+    if (!cell)           return 'DANGER';
+    if (cell.w === null) return cell.star ? 'Continuous*' : 'Continuous';
+    return `${cell.w} min work / ${cell.r} min rest`;
+  }
+
+  // ── Rothfusz Heat Index regression (NOAA, 1990) ───────────────────────────────
+  function calcRothfuszHI(tempF, rh) {
+    const T = parseFloat(tempF), RH = Math.min(100, Math.max(0, parseFloat(rh)));
+    if (isNaN(T) || isNaN(RH)) return null;
+    // Steadman simple approximation (used when T < 80°F or result would be < 80°F)
+    const hiSimple = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    if (T < 80 || hiSimple < 80) return Math.round(hiSimple * 10) / 10;
+    // Full Rothfusz regression
+    let hi = -42.379
+      + 2.04901523  * T
+      + 10.14333127 * RH
+      - 0.22475541  * T  * RH
+      - 0.00683783  * T  * T
+      - 0.05481717  * RH * RH
+      + 0.00122874  * T  * T  * RH
+      + 0.00085282  * T  * RH * RH
+      - 0.00000199  * T  * T  * RH * RH;
+    // Low-RH adjustment
+    if (RH < 13 && T >= 80 && T <= 112) {
+      hi -= (13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+    }
+    // High-RH adjustment
+    if (RH > 85 && T >= 80 && T <= 87) {
+      hi += ((RH - 85) / 10) * ((87 - T) / 5);
+    }
+    return Math.round(hi * 10) / 10;
+  }
+
+  // ── T+RH input mode ───────────────────────────────────────────────────────────
+  function setHiInputMode(mode) {
+    _hiInputMode = mode;
+    document.getElementById('trh-btn-hi').classList.toggle('active', mode === 'hi');
+    document.getElementById('trh-btn-hi').setAttribute('aria-pressed', String(mode === 'hi'));
+    document.getElementById('trh-btn-trh').classList.toggle('active', mode === 'trh');
+    document.getElementById('trh-btn-trh').setAttribute('aria-pressed', String(mode === 'trh'));
+    const row = document.getElementById('hi-trh-inputs-row');
+    if (row) row.style.display = mode === 'trh' ? 'flex' : 'none';
+    if (mode === 'hi') {
+      _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      const calcEl = document.getElementById('hi-trh-calc-display');
+      if (calcEl) calcEl.textContent = '—';
+      buildHIResultTab({ measValue: _hiStoredVal, measUnit: _hiStoredUnit, activity: _hiActivity });
+      buildHIUnacclimResultTab(null);
+    } else {
+      onTrhInput();
+    }
+    buildHIFormulaTab();
+    buildHIUnacclimFormulaTab();
+  }
+
+  // ── Mobile: place T+RH strip inline right after the tapped card ─────────────
+  function mobileTrhToggle(toTrh, btn) {
+    if (window.innerWidth > 768) {
+      // On desktop just call setHiInputMode normally (strip is always visible)
+      setHiInputMode(toTrh ? 'trh' : 'hi');
+      return;
+    }
+    const strip    = document.getElementById('hi-trh-strip');
+    const fixedTop = document.getElementById('fixed-top');
+    if (toTrh) {
+      // Find the card that contains the tapped chip and insert strip right after it
+      const card = btn ? btn.closest('.result-input-card') : null;
+      if (card && card.parentElement) {
+        card.parentElement.insertBefore(strip, card.nextSibling);
+      } else {
+        // Fallback: prepend to the sidebar if we can't find the card
+        const sidebar = document.querySelector('.result-sidebar');
+        if (sidebar) sidebar.insertBefore(strip, sidebar.firstChild);
+      }
+      strip.classList.add('mobile-trh-inline');
+      // Add a small header label if not already present
+      let mHeader = strip.querySelector('.mobile-trh-header');
+      if (!mHeader) {
+        mHeader = document.createElement('div');
+        mHeader.className = 'mobile-trh-header';
+        mHeader.style.cssText = 'font-size:12px;font-weight:700;color:var(--navy,#1A2A3A);margin-bottom:2px';
+        mHeader.textContent = 'Enter Temp + RH';
+        strip.insertBefore(mHeader, strip.firstChild);
+      }
+      // Force inputs row visible
+      const row = document.getElementById('hi-trh-inputs-row');
+      if (row) row.style.display = 'flex';
+      setHiInputMode('trh');
+    } else {
+      // Move strip back to fixedTop (CSS hides it there on mobile)
+      strip.classList.remove('mobile-trh-inline');
+      const mHeader = strip.querySelector('.mobile-trh-header');
+      if (mHeader) mHeader.remove();
+      if (strip.parentElement !== fixedTop) fixedTop.appendChild(strip);
+      setHiInputMode('hi');
+    }
+  }
+
+  function onTrhInput() {
+    const tempEl = document.getElementById('hi-trh-temp');
+    const rhEl   = document.getElementById('hi-trh-rh');
+    if (!tempEl || !rhEl) return;
+    const tempRaw = parseFloat(tempEl.value);
+    const rh      = parseFloat(rhEl.value);
+    const calcEl  = document.getElementById('hi-trh-calc-display');
+    if (isNaN(tempRaw) || isNaN(rh)) {
+      _hiTempValF = null; _hiRhVal = null; _hiCalcHI = null;
+      if (calcEl) calcEl.textContent = '—';
+      return;
+    }
+    // Convert entered temp to °F for internal storage
+    const tempF = _hiUnit === 'C' ? Math.round((tempRaw * 9/5 + 32) * 10) / 10 : tempRaw;
+    _hiTempValF = tempF;
+    _hiRhVal    = rh;
+    _hiCalcHI   = calcRothfuszHI(tempF, rh);
+    if (calcEl) {
+      calcEl.textContent = _hiCalcHI != null
+        ? (_hiUnit === 'C'
+            ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+            : _hiCalcHI + '°F')
+        : '—';
+    }
+    if (_hiCalcHI != null) {
+      _hiStoredVal = _hiCalcHI; _hiStoredUnit = 'F';
+      buildHIResultTab({ measValue: _hiCalcHI, measUnit: 'F', activity: _hiActivity });
+      buildHIUnacclimResultTab(null);
+      buildHIFormulaTab();
+      buildHIUnacclimFormulaTab();
+      if (_hiCurrentTab         === 'hitable') buildHILookupTable('acclim');
+      if (_hiUnacclimCurrentTab === 'hitable') buildHILookupTable('unacclim');
+    }
+  }
+
+  // ── Formula Check tab builder ─────────────────────────────────────────────────
+  function _buildFormulaTab(paneId) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    if (_hiInputMode !== 'trh') {
+      pane.innerHTML = `<div class="formula-check-pane">
+        <p style="margin-top:8px;font-size:14px;color:var(--subtext)">Switch to <strong>Temp + RH</strong> input mode above to see the heat index calculation breakdown here.</p>
+      </div>`;
+      return;
+    }
+    const T = _hiTempValF, RH = _hiRhVal;
+    if (T == null || RH == null) {
+      pane.innerHTML = `<div class="formula-check-pane"><p style="margin-top:8px;font-size:14px;color:var(--subtext)">Enter a temperature and relative humidity above to see the step-by-step calculation.</p></div>`;
+      return;
+    }
+    const tDisplay = _hiUnit === 'C'
+      ? (Math.round((T - 32) * 5/9 * 10) / 10) + '°C'
+      : T + '°F';
+    const hiInUnit = _hiCalcHI != null
+      ? (_hiUnit === 'C' ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C' : _hiCalcHI + '°F')
+      : '—';
+    const hiSimpleVal = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094);
+    const usedSimple = T < 80 || hiSimpleVal < 80;
+    // Highlight standalone T (red) and RH (green) variable names in formula text
+    const hv = s => s
+      .replace(/\bRH\b/g, '<span class="fv-rh">RH</span>')
+      .replace(/\bT\b/g, '<span class="fv-t">T</span>');
+    const infoHtml = hv(`
+      <h3>Heat Index Calculation — Formula Check</h3>
+      <div style="font-size:15px;margin-bottom:6px;">
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Temperature</div>
+          <span style="font-size:26px;font-weight:800;line-height:1;color:#b91c1c;">${tDisplay}</span>${_hiUnit === 'C' ? ` <span class="formula-temp-badge">= ${T}°F in formula</span>` : ''}
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Relative Humidity</div>
+          <span style="font-size:26px;font-weight:800;line-height:1;color:#15803d;">${RH}%</span>
+        </div>
+        <p style="margin:0 0 8px;font-size:15px;"><strong>Method:</strong> ${usedSimple ? 'Steadman (1979) simple approximation (T &lt; 80°F or estimated HI &lt; 80°F)' : 'Rothfusz (1990) full regression'}</p>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border,#d0d8e0);">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--subtext,#888);margin-bottom:3px;">Heat Index</div>
+          <span style="font-size:32px;font-weight:800;line-height:1;">${hiInUnit}</span>${_hiUnit === 'C' ? `<span style="font-size:13px;color:var(--subtext,#888);margin-left:8px;">(${_hiCalcHI}°F internally)</span>` : ''}
+        </div>
+      </div>`);
+    const citation = `<div class="hi-formula-footnote" style="margin-top:16px;">
+      <strong>† Rothfusz Regression (NOAA, 1990):</strong>
+      HI = −42.379 + 2.04901523<em>T</em> + 10.14333127<em>RH</em> − 0.22475541<em>T</em>·<em>RH</em> − 0.00683783<em>T</em>² − 0.05481717<em>RH</em>² + 0.00122874<em>T</em>²·<em>RH</em> + 0.00085282<em>T</em>·<em>RH</em>² − 0.00000199<em>T</em>²·<em>RH</em>²
+      (<em>T</em> = °F, <em>RH</em> = %). Adjustments: RH &lt; 13% and 80–112°F; RH &gt; 85% and 80–87°F.
+      Below 80°F: Steadman (1979) HI = 0.5 × [<em>T</em> + 61.0 + (<em>T</em>−68.0)×1.2 + <em>RH</em>×0.094].
+      Sources: Rothfusz (1990) NWS SR 90-23; Steadman (1979) <em>J. Applied Meteorology</em> 18(7).
+    </div>`;
+    if (usedSimple) {
+      const innerSum = T + 61.0 + (T - 68.0) * 1.2 + RH * 0.094;
+      const formulaHtml = `<h3>Steadman Simple Formula</h3>
+      <div class="formula-code">${hv('HI = 0.5 × [T + 61.0 + (T − 68.0) × 1.2 + RH × 0.094]')}
+   = 0.5 × [${T} + 61.0 + (${T} − 68.0) × 1.2 + ${RH} × 0.094]
+   = 0.5 × [${innerSum.toFixed(3)}]
+   = ${(innerSum / 2).toFixed(1)}°F</div>${citation}`;
+      pane.innerHTML = `<div class="formula-two-col">
+        <div class="formula-col-left">${infoHtml}${formulaHtml}</div>
+        <div class="formula-col-right"></div>
+      </div>`;
+    } else {
+      const terms = [
+        ['Constant',               1,           -42.379,              -42.379],
+        ['2.04901523 × T',         T,           2.04901523,           2.04901523 * T],
+        ['10.14333127 × RH',       RH,          10.14333127,          10.14333127 * RH],
+        ['−0.22475541 × T × RH',  T*RH,        -0.22475541,          -0.22475541 * T * RH],
+        ['−0.00683783 × T²',      T*T,         -0.00683783,          -0.00683783 * T * T],
+        ['−0.05481717 × RH²',     RH*RH,       -0.05481717,          -0.05481717 * RH * RH],
+        ['0.00122874 × T² × RH',  T*T*RH,      0.00122874,           0.00122874 * T * T * RH],
+        ['0.00085282 × T × RH²',  T*RH*RH,     0.00085282,           0.00085282 * T * RH * RH],
+        ['−0.00000199 × T² × RH²',T*T*RH*RH,  -0.00000199,          -0.00000199 * T * T * RH * RH],
+      ];
+      const baseHI = terms.reduce((s, t) => s + t[3], 0);
+      let adj1 = 0, adj2 = 0;
+      const adj1Applied = RH < 13 && T >= 80 && T <= 112;
+      const adj2Applied = RH > 85 && T >= 80 && T <= 87;
+      if (adj1Applied) adj1 = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+      if (adj2Applied) adj2 = ((RH - 85) / 10) * ((87 - T) / 5);
+      const finalHI = Math.round((baseHI + adj1 + adj2) * 10) / 10;
+      let tableHtml = `<h3>Rothfusz Regression Terms</h3>
+      <table class="formula-table">
+        <tr><th>Term</th><th>Value computed</th><th>Contribution</th></tr>`;
+      terms.forEach(t => {
+        const contrib = t[3];
+        tableHtml += `<tr><td>${hv(t[0])}</td><td>${t[1] === 1 ? '—' : t[1].toFixed(4)}</td><td>${contrib >= 0 ? '+' : ''}${contrib.toFixed(4)}</td></tr>`;
+      });
+      tableHtml += `<tr class="formula-total"><td colspan="2"><strong>Base HI (sum of terms)</strong></td><td>${baseHI.toFixed(4)}°F</td></tr>`;
+      if (adj1Applied) {
+        const adj1val = -(13 - RH) / 4 * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+        tableHtml += `<tr><td colspan="2">${hv(`Low-RH adjustment (RH=${RH}% &lt; 13%, T=${T}°F)`)}</td><td>${adj1val >= 0 ? '+' : ''}${adj1val.toFixed(4)}</td></tr>`;
+      }
+      if (adj2Applied) {
+        const adj2val = ((RH - 85) / 10) * ((87 - T) / 5);
+        tableHtml += `<tr><td colspan="2">${hv(`High-RH adjustment (RH=${RH}% &gt; 85%, T=${T}°F)`)}</td><td>${adj2val >= 0 ? '+' : ''}${adj2val.toFixed(4)}</td></tr>`;
+      }
+      if (!adj1Applied && !adj2Applied) {
+        tableHtml += `<tr><td colspan="2">No adjustments apply</td><td>—</td></tr>`;
+      }
+      tableHtml += `<tr class="formula-total"><td colspan="2"><strong>Final Heat Index</strong></td><td><strong>${finalHI}°F</strong></td></tr>
+      </table>${citation}`;
+      pane.innerHTML = `<div class="formula-two-col">
+        <div class="formula-col-left">${infoHtml}</div>
+        <div class="formula-col-right">${tableHtml}</div>
+      </div>`;
+    }
+  }
+  function buildHIFormulaTab()        { _buildFormulaTab('hi-tab-formula'); }
+  function buildHIUnacclimFormulaTab() { _buildFormulaTab('hi-utab-formula'); }
+
+  // ── NWS Heat Index Lookup Table ───────────────────────────────────────────────
+  const HI_REF_TEMPS_F = [70, 75, 80, 85, 90, 95, 100, 105, 110];
+  const HI_REF_RHS     = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+  // NWS published values + Rothfusz formula for cells NWS omitted (≤200°F shown; >200 → 999)
+  const HI_REF_DATA = [
+    [65,  66,  67,  68,  69,  70,  70,  71,  71,  71],
+    [69,  71,  72,  73,  74,  75,  76,  77,  78,  77],
+    [75,  77,  78,  79,  81,  82,  83,  85,  86,  89],
+    [79,  82,  84,  86,  88,  90,  93,  97, 102, 108],
+    [83,  86,  88,  91,  95, 100, 106, 113, 122, 132],
+    [87,  91,  96, 101, 107, 114, 124, 136, 147, 161],
+    [91,  95, 100, 109, 118, 129, 143, 158, 176, 195],
+    [95, 101, 109, 118, 130, 149, 166, 187, 999, 999],
+    [99, 107, 118, 130, 152, 171, 194, 999, 999, 999]
+  ];
+
+  function buildHILookupTable(which) {
+    const paneId = which === 'acclim' ? 'hi-tab-hitable' : 'hi-utab-hitable';
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+
+    // Find nearest cell to user's current T+RH
+    let hlRow = -1, hlCol = -1;
+    if (_hiTempValF != null && _hiRhVal != null) {
+      let bestT = Infinity;
+      HI_REF_TEMPS_F.forEach((tf, i) => { const d = Math.abs(tf - _hiTempValF); if (d < bestT) { bestT = d; hlRow = i; } });
+      let bestR = Infinity;
+      HI_REF_RHS.forEach((rh, j) => { const d = Math.abs(rh - _hiRhVal); if (d < bestR) { bestR = d; hlCol = j; } });
+    }
+
+    function hiColor(hi) {
+      if (hi >= 999) return { bg:'#37474f', fg:'#fff' };
+      if (hi >= 125) return { bg:'#7b1fa2', fg:'#fff' };
+      if (hi >= 104) return { bg:'#c62828', fg:'#fff' };
+      if (hi >= 91)  return { bg:'#e65100', fg:'#fff' };
+      if (hi >= 80)  return { bg:'#f9a825', fg:'#222' };
+      return { bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)' };
+    }
+
+    const unit = _hiUnit;
+    const rowLabels = HI_REF_TEMPS_F.map(f =>
+      unit === 'C' ? (Math.round((f - 32) * 5/9 * 10) / 10) + '°C' : f + '°F'
+    );
+
+    const legendItems = [
+      { bg:'var(--surface,#f0f4f8)', fg:'var(--text,#222)', label:'No concern (< 80°F HI)' },
+      { bg:'#f9a825', fg:'#222', label:'Caution (80–90°F HI)' },
+      { bg:'#e65100', fg:'#fff', label:'Extreme Caution (91–103°F HI)' },
+      { bg:'#c62828', fg:'#fff', label:'Danger (104–124°F HI)' },
+      { bg:'#7b1fa2', fg:'#fff', label:'Extreme Danger (≥ 125°F HI)' },
+      { bg:'#37474f', fg:'#fff', label:'Exceeds table range' },
+    ];
+    let html = `<div style="padding:12px 16px;overflow-y:auto;height:100%;box-sizing:border-box">
+      <div style="display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:12px">`;
+    legendItems.forEach(({ bg, fg, label }) => {
+      html += `<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px">
+        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:${bg};border:1px solid #ccc"></span>
+        <span style="color:var(--text,#222)">${label}</span></span>`;
+    });
+    html += `</div>
+      <div style="overflow-x:auto">
+      <table style="border-collapse:collapse;font-size:13px;min-width:520px">
+        <thead><tr>
+          <th style="text-align:left;padding:7px 10px;width:100px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${unit === 'C' ? 'Air Temp (°C)' : 'Air Temp (°F)'}</th>`;
+    HI_REF_RHS.forEach(rh => {
+      html += `<th style="padding:7px 8px;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0);text-align:center">RH ${rh}%</th>`;
+    });
+    html += `</tr></thead><tbody>`;
+    HI_REF_TEMPS_F.forEach((tempF, ri) => {
+      html += `<tr><td style="padding:7px 10px;font-weight:700;background:var(--surface,#f0f4f8);border:1px solid var(--border,#d0d8e0)">${rowLabels[ri]}</td>`;
+      HI_REF_RHS.forEach((rh, ci) => {
+        const hi = HI_REF_DATA[ri][ci];
+        const { bg, fg } = hiColor(hi);
+        const isHL = (ri === hlRow && ci === hlCol);
+        const hiLabel = hi >= 999 ? '—' : (unit === 'C' ? (Math.round((hi - 32) * 5/9)) + '°C' : hi + '°F');
+        html += `<td style="padding:6px 8px;text-align:center;background:${bg};color:${fg};border:1px solid var(--border,#d0d8e0);${isHL ? 'outline:3px solid #fff;box-shadow:0 0 0 5px rgba(0,0,0,0.85);font-weight:900;position:relative;z-index:2;' : ''}">${hiLabel}</td>`;
+      });
+      html += `</tr>`;
+    });
+    html += `</tbody></table></div>
+      <p style="font-size:11px;color:var(--text-muted,#666);margin-top:10px">
+        <em>Source: National Weather Service Heat Index. Values in shade, light wind. Add 10–15°F in direct sunlight.</em>
+      </p>`;
+
+    if (_hiTempValF != null && _hiRhVal != null) {
+      const _T = _hiTempValF, _RH = _hiRhVal;
+      const _hiSimple = 0.5 * (_T + 61.0 + (_T - 68.0) * 1.2 + _RH * 0.094);
+      if (_T < 80 || _hiSimple < 80) {
+        const _tDisp = unit === 'C' ? (Math.round((_T - 32) * 5/9 * 10) / 10) + '°C' : _T + '°F';
+        const _hiDisp = unit === 'C' ? (Math.round((_hiSimple - 32) * 5/9 * 10) / 10) + '°C' : _hiSimple.toFixed(1) + '°F';
+        html += `<p style="font-size:12px;color:var(--text-muted,#666);margin-top:8px;padding:8px 12px;background:var(--surface,#f0f4f8);border-left:3px solid #64b5f6;border-radius:0 4px 4px 0;line-height:1.6">
+          <strong>ℹ Note:</strong> At your current reading (${_tDisp} / ${_RH}% RH), the estimated heat index is ${_hiDisp} — below the NWS 80°F advisory threshold.
+          The <strong>Steadman (1979) simple approximation</strong> applies here. Below 80°F, the full 0–100% RH range shifts heat index by only ~4.7°F,
+          so the color gradient in this chart is less informative for your current conditions.
+        </p>`;
+      }
+    }
+
+    html += `</div>`;
+    pane.innerHTML = html;
+  }
+
+  // ── Clock SVG ─────────────────────────────────────────────────────────────────
+  function buildClockSvg(cell) {
+    const sz = 148, cx = sz/2, cy = sz/2, r = 58, circ = 2 * Math.PI * r;
+    if (!cell) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFEBEE" stroke="#AE1515" stroke-width="10"/>
+        <text x="${cx}" y="${cy-6}" text-anchor="middle" dominant-baseline="middle" font-size="36" fill="#AE1515">⚠</text>
+        <text x="${cx}" y="${cy+22}" text-anchor="middle" font-size="13" font-weight="800" fill="#AE1515">DANGER</text>
+      </svg>`;
+    }
+    if (cell.w === null) {
+      return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#00966C" stroke-width="12"/>
+        <text x="${cx}" y="${cy-8}" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="900" fill="#005540">60</text>
+        <text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="13" font-weight="700" fill="#00966C">min / hr</text>
+      </svg>`;
+    }
+    const strokeColors = {45:'#E65100', 30:'#B71C1C', 15:'#8B0000'};
+    const bgColors     = {45:'#FFF3E0', 30:'#FFEBEE', 15:'#FFCDD2'};
+    const sc = strokeColors[cell.w] || '#1565C0';
+    const bc = bgColors[cell.w]     || '#E3F0FF';
+    const workDash = (cell.w / 60) * circ;
+    return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-hidden="true">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bc}" stroke="#BDBDBD" stroke-width="12"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sc}" stroke-width="12"
+              stroke-dasharray="${workDash} ${circ - workDash}"
+              stroke-dashoffset="${circ * 0.25}" transform="rotate(0 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy-10}" text-anchor="middle" font-size="26" font-weight="900" fill="${sc}">${cell.w}</text>
+      <text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="12" font-weight="700" fill="${sc}">min work</text>
+      <text x="${cx}" y="${cy+27}" text-anchor="middle" font-size="11" fill="#555">${cell.r} min rest</text>
+    </svg>`;
+  }
+
+  // ── Shared result tab builder ─────────────────────────────────────────────────
+  function _buildResultTab(containerId, data, rowLabelsF, rowLabelsC, rangeNotes, getRowFn, workerLabel, workerSub, sourceNote) {
+    const unit = _hiUnit;
+    let val = _hiStoredVal;
+    if (val != null && _hiStoredUnit !== unit) {
+      val = unit === 'C'
+        ? Math.round((_hiStoredVal - 32) * 5/9 * 10) / 10
+        : Math.round((_hiStoredVal * 9/5 + 32) * 10) / 10;
+    }
+    const rowIdx   = val != null ? getRowFn(val, unit) : -1;
+    const colIdx   = _hiActivity in ACT_COL ? ACT_COL[_hiActivity] : 1;
+    const cell     = rowIdx >= 0 ? data[rowIdx][colIdx] : null;
+    const cls      = rowIdx >= 0 ? hiClass(cell) : 'c-safe';
+    const rowLabel = rowIdx >= 0 ? (unit === 'C' ? rowLabelsC[rowIdx] : rowLabelsF[rowIdx]) : '—';
+    const unitLabel = unit === 'C' ? '°C' : '°F';
+
+    const bgMap = { 'c-safe':'var(--safe-bg)', 'c-low':'var(--safe-bg)', 'c-caution':'var(--caution-bg)', 'c-warn':'var(--warn-bg)', 'c-high':'var(--high-bg)', 'c-stop':'var(--stop-bg)' };
+    const fgMap = { 'c-safe':'var(--safe-text)', 'c-low':'var(--safe-text)', 'c-caution':'var(--caution-text)', 'c-warn':'var(--warn-text)', 'c-high':'var(--high-text)', 'c-stop':'var(--stop-text)' };
+
+    let headline, subtext;
+    if (rowIdx < 0) {
+      headline = 'See chart for conditions';
+      subtext  = 'No heat index reading was found in your session. View the Full Chart tab to look up your work-rest cycle, or return to the calculator to enter your heat index reading.';
+    } else if (!cell) {
+      headline = 'DANGER';
+      subtext  = 'Conditions exceed safe limits for ' + ACT_FULL[_hiActivity] + '. Work-practice controls alone are insufficient. Engineering controls and physiological monitoring are required before workers may be exposed.';
+    } else if (cell.w === null) {
+      headline = 'Continuous Work';
+      subtext  = 'No mandatory rest break is required at this heat index level for ' + ACT_FULL[_hiActivity] + '. Stay hydrated — drink approximately 1 cup (8 oz) of water every 20 minutes.';
+    } else {
+      headline = cell.w + ' min work<br>' + cell.r + ' min rest';
+      subtext  = 'For every 60-minute period, take <strong>' + cell.r + ' minutes of rest</strong> in a cool, shaded area before returning to ' + ACT_FULL[_hiActivity].toLowerCase() + '. Provide water and a cool rest area.';
+    }
+
+    const valDisplay = val != null ? val + unitLabel : '—';
+
+    // T+RH context (when calculating from temp + RH)
+    const inTrhMode = _hiInputMode === 'trh';
+    let tempDisplay = '—', rhDisplay = '—', trhDerivation = '', trhCards = '';
+    if (inTrhMode && _hiTempValF != null) {
+      tempDisplay = unit === 'C'
+        ? (Math.round((_hiTempValF - 32) * 5/9 * 10) / 10) + '°C'
+        : _hiTempValF + '°F';
+      rhDisplay = _hiRhVal != null ? _hiRhVal + '%' : '—';
+      if (_hiRhVal != null && val != null) {
+        const T_v = _hiTempValF, RH_v = _hiRhVal;
+        const hiSimpleCheck = 0.5 * (T_v + 61.0 + (T_v - 68.0) * 1.2 + RH_v * 0.094);
+        const usedSteadman = T_v < 80 || hiSimpleCheck < 80;
+        trhDerivation = `<div class="result-trh-calc">
+          <div class="result-trh-inputs">
+            <span class="result-trh-val">${tempDisplay}</span>
+            <span class="result-trh-op">+</span>
+            <span class="result-trh-val">${RH_v}% RH</span>
+            <span class="result-trh-op">=</span>
+            <span class="result-trh-val">${valDisplay} Heat Index</span>
+          </div>
+          <div class="result-trh-note">The heat index combines air temperature and relative humidity to estimate how hot conditions actually feel to the body. Humidity limits evaporative cooling (sweating), making conditions feel hotter than the thermometer reads. Calculated here using the ${usedSteadman ? 'Steadman (1979) simple approximation' : 'Rothfusz (1990) regression'}.</div>
+        </div>`;
+      }
+      if (_hiTempValF != null && _hiRhVal != null) {
+        trhCards = `<div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>Air Temperature</div>
+          <div class="result-input-value">${tempDisplay}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">💧 </span>Relative Humidity</div>
+          <div class="result-input-value">${rhDisplay}</div>
+        </div>`;
+      }
+    }
+    const hiCardLabel = inTrhMode ? 'Heat Index (calculated)' : 'Heat Index';
+
+    const monitoringRange = rowIdx >= 0 && rangeNotes[rowIdx]
+      ? (unit === 'C'
+          ? (rangeNotes[rowIdx].range.match(/\(([^)]+)\)/) || [])[1] || rangeNotes[rowIdx].range
+          : rangeNotes[rowIdx].range.replace(/\s*\([^)]*\)/g, ''))
+      : '';
+    const monitoringHtml = rowIdx >= 0 && rangeNotes[rowIdx]
+      ? `<div class="result-monitoring">
+           <div class="result-monitoring-label">Monitoring &amp; Guidance — ${monitoringRange}</div>
+           ${rangeNotes[rowIdx].text}
+         </div>`
+      : '';
+
+    document.getElementById(containerId).innerHTML = `
+      <div class="result-notification" role="note" aria-label="Assessment limitations">
+        <div class="result-notification-icon" aria-hidden="true">⚠️</div>
+        <div class="result-notification-title">Assessment Gap</div>
+        <div class="result-notification-body">
+          <div class="result-notification-item">
+            <div class="result-notification-dot"></div>
+            <div><strong>Radiant heat not captured</strong>Heat generated by ovens, radiators, equipment and solar load are not accounted for by any heat index method. Use a WBGT meter when radiant sources are present.</div>
+          </div>
+        </div>
+      </div>
+      <div class="result-main ${cls === 'c-stop' ? 'result-danger' : ''}"
+           style="background:${bgMap[cls]||'var(--safe-bg)'}; color:${fgMap[cls]||'var(--safe-text)'}">
+        <div class="result-main-inner">
+          <div class="result-clock">${buildClockSvg(rowIdx >= 0 ? cell : {w:null,r:null})}</div>
+          <div class="result-text">
+            <div class="result-label">Recommended Work-Rest Cycle</div>
+            <div class="result-headline">${headline}</div>
+            <div class="result-subtext">${subtext}</div>
+            ${trhDerivation}
+          </div>
+        </div>
+        ${(function(){
+          const u = buildShareUrl();
+          if (!u) return `<div class="mobile-result-hint"><p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p></div>`;
+          const mailHref = 'mailto:?subject=' + encodeURIComponent('Work-Rest Cycle Results') + '&body=' + encodeURIComponent('View your heat index work-rest cycle results:\n\n' + u);
+          return `<div class="mobile-result-hint">
+            <p>📊 <strong>Charts, detailed notes &amp; formula checks</strong> are available on a larger screen.</p>
+            <a class="share-email-btn" href="${mailHref.replace(/"/g,'&quot;')}">📧 E-Mail link to results</a>
+          </div>`;
+        })()}
+        ${(workerLabel === 'Unacclimatized' && cell) ? `<div class="mobile-sched-sticky">
+          <button class="sched-modal-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>
+          <div id="mobile-sched-inline" class="mobile-sched-inline" hidden></div>
+        </div>` : ''}
+      </div>
+      <div class="result-sidebar">
+        ${trhCards}
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">🌡️ </span>${hiCardLabel}</div>
+          <div class="result-input-value">${valDisplay}</div>
+          <div class="result-input-sub">Range: ${rowLabel}</div>
+          ${inTrhMode
+            ? `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(false,this)" aria-label="Switch to direct heat index entry">↔ Enter Heat Index directly</button>`
+            : `<button class="hi-trh-switch-chip" onclick="mobileTrhToggle(true,this)" aria-label="Switch to temperature and humidity entry">↔ Temp + RH</button>`
+          }
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">${ACT_EMOJI[_hiActivity]||'⚡'} </span>Work Intensity</div>
+          <div class="result-input-value">${ACT_LABEL[_hiActivity]||'Moderate'}</div>
+          <div class="result-input-sub">${ACT_FULL[_hiActivity]}</div>
+        </div>
+        <div class="result-input-card">
+          <div class="result-input-label"><span aria-hidden="true">✅ </span>Worker Status</div>
+          <div class="result-input-value">${workerLabel}</div>
+          <div class="result-input-sub">${workerSub}</div>
+        </div>
+        ${(function(){ const s=WRC.get(); return s.clothingAdjustC > 0 ? `<div class="radiant-warn-strip" role="note" style="background:#fff3e0;border-color:#e65100;color:#7f2900"><strong><span aria-hidden="true">🦺 </span>Impermeable PPE selected:</strong> The +${s.clothingAdjustC}°C / +${s.clothingAdjustF}°F clothing correction cannot be applied to Heat Index. For impermeable PPE, use <a href="wbgt.html" style="color:#c74600">WBGT</a> where the correction is applied automatically.</div>` : ''; })()}
+        ${(workerLabel === 'Unacclimatized' && cell) ? `<button class="sched-modal-btn desktop-sched-btn" onclick="openSchedModal(this)">📅 View Acclimatization Schedule</button>` : ''}
+      </div>
+      ${monitoringHtml}`;
+    if (workerLabel === 'Unacclimatized' && cell) _schedCell = cell;
+    else if (workerLabel !== 'Unacclimatized') { /* leave _schedCell as-is */ }
+    return { rowIdx, colIdx };
+  }
+
+  // ── Build acclimatized result tab ─────────────────────────────────────────────
+  function buildHIResultTab(s, overrideUnit) {
+    const storedVal  = s.hiF || s.heatIndex || s.measValue || null;
+    const storedUnit = s.hiUnit || s.measUnit || 'F';
+    const activity   = s.activity || 'moderate';
+    if (storedVal != null) { _hiStoredVal = storedVal; _hiStoredUnit = storedUnit; }
+    if (activity)           { _hiActivity  = activity; }
+    if (overrideUnit) _hiUnit = overrideUnit;
+
+    const res = _buildResultTab('hi-tab-result', HI_DATA, HI_ROW_LABELS_F, HI_ROW_LABELS_C, HI_RANGE_NOTES, getHIRow,
+      'Acclimatized', 'NIOSH REL applies',
+      'OSHA/NIOSH heat illness prevention guidance synthesized with NIOSH-based work-rest principles (NIOSH 2016)');
+    _hiRowIdx = res.rowIdx;
+    _hiColIdx = res.colIdx;
+  }
+
+  // ── Build unacclimatized result tab ───────────────────────────────────────────
+  function buildHIUnacclimResultTab(s) {
+    if (s) {
+      const storedVal  = s.hiF || s.heatIndex || s.measValue || null;
+      const storedUnit = s.hiUnit || s.measUnit || 'F';
+      const activity   = s.activity || 'moderate';
+      if (storedVal != null) { _hiStoredVal = storedVal; _hiStoredUnit = storedUnit; }
+      if (activity)           { _hiActivity  = activity; }
+    }
+    const res = _buildResultTab('hi-utab-result', HI_UNACCLIM_DATA, HI_UNACCLIM_ROW_LABELS_F, HI_UNACCLIM_ROW_LABELS_C,
+      HI_UNACCLIM_RANGE_NOTES, getHIUnacclimRow,
+      'Unacclimatized', 'NIOSH RAL applies',
+      'NIOSH RAL — methodology-derived HI approximation (NIOSH 2016). NIOSH RAL is expressed in WBGT; see WBGT tab for equation-confirmed values.');
+    _hiUnacclimRowIdx = res.rowIdx;
+    _hiUnacclimColIdx = res.colIdx;
+  }
+
+  // ── Shared chart builder ──────────────────────────────────────────────────────
+  function _buildChartTab(paneId, data, rowLabelsF, rowLabelsC, rowIdx, colIdx, gridLabel) {
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
+    const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
+    const existingGrid = pane.querySelector('.acclim-chart-grid');
+    if (existingGrid) existingGrid.remove();
+    const existingCaption = pane.querySelector('.chart-caption');
+    if (existingCaption) existingCaption.remove();
+
+    let html = `<div class="acclim-chart-grid" role="grid" aria-label="${gridLabel}" tabindex="0">`;
+    html += '<div role="row" style="display:contents">';
+    html += `<div class="acc-cell acc-hdr acc-range-hdr" role="columnheader" scope="col">Heat Index</div>`;
+    for (let ci = 0; ci < 4; ci++) {
+      const isUser = ci === colIdx;
+      html += `<div class="acc-cell acc-hdr acc-hdr-sub${isUser ? ' acc-user-col' : ''}" role="columnheader" scope="col"${isUser ? ' aria-label="' + actNames[ci] + ' — your selected work intensity"' : ''}>${actNames[ci]}<span class="acc-sub">${actSubs[ci]}</span></div>`;
+    }
+    html += '</div>';
+    for (let ri = 0; ri < 6; ri++) {
+      const isUserRow = ri === rowIdx;
+      const isLastRow = ri === 5;
+      html += '<div role="row" style="display:contents">';
+      html += `<div class="acc-cell acc-range${isUserRow ? ' acc-user-row' : ''}${isLastRow ? ' acc-last-row' : ''}" role="rowheader" scope="row"${isUserRow ? ' aria-label="' + labels[ri].replace(/"/g,'&quot;') + ' — your heat index range"' : ''}>${labels[ri]}</div>`;
+      for (let ci = 0; ci < 4; ci++) {
+        const cell       = data[ri][ci];
+        const isUserCol  = ci === colIdx;
+        const isUserCell = isUserRow && isUserCol && rowIdx >= 0;
+        const cls = hiClass(cell);
+        const lbl     = hiLabel(cell);
+        const sevLabel = cls === 'c-safe' ? 'Safe' : cls === 'c-caution' ? 'Caution' : cls === 'c-warn' ? 'Warning' : cls === 'c-high' ? 'High risk' : 'DANGER';
+        const ariaLbl = isUserCell ? `${sevLabel} — ${hiLabelText(cell)} — your recommended work-rest cycle` : `${sevLabel} — ${hiLabelText(cell)}`;
+        html += `<div class="acc-cell ${cls}${isUserCol ? ' acc-user-col' : ''}${isUserRow ? ' acc-user-row' : ''}${isUserCell ? ' acc-user-cell' : ''}${isLastRow ? ' acc-last-row' : ''}" role="gridcell" aria-label="${ariaLbl}">${lbl}</div>`;
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '<div class="chart-caption">Work-rest cycles per hour. &nbsp;* Continuous work approaches the hourly exposure limit; ensure acclimatization and close monitoring.</div>';
+    pane.insertAdjacentHTML('beforeend', html);
+  }
+
+  function buildHIChartTab() {
+    _buildChartTab('hi-tab-chart', HI_DATA, HI_ROW_LABELS_F, HI_ROW_LABELS_C, _hiRowIdx, _hiColIdx,
+      'Work-rest cycles by heat index and work intensity — acclimatized workers');
+  }
+  function buildHIUnacclimChartTab() {
+    _buildChartTab('hi-utab-chart', HI_UNACCLIM_DATA, HI_UNACCLIM_ROW_LABELS_F, HI_UNACCLIM_ROW_LABELS_C,
+      _hiUnacclimRowIdx, _hiUnacclimColIdx,
+      'Work-rest cycles by heat index and work intensity — unacclimatized workers');
+  }
+
+  // ── Notes tab builders ────────────────────────────────────────────────────────
+  const ACT_DEFS_HTML = `<div class="hi-notes-section">
+    <h3>Work Activity Level Definitions (NIOSH 2016)</h3>
+    <div class="activity-grid" style="margin-bottom:0">
+      <div class="activity-card" style="border-top-color:#005540">
+        <h4>🟢 Light Work</h4>
+        <p class="kcal">&lt; 200 kcal/hr &nbsp;·&nbsp; &lt; 233 W</p>
+        <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#7A4F00">
+        <h4>🟡 Moderate Work</h4>
+        <p class="kcal">201–300 kcal/hr &nbsp;·&nbsp; 234–349 W</p>
+        <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#8B2500">
+        <h4>🔴 Heavy Work</h4>
+        <p class="kcal">301–400 kcal/hr &nbsp;·&nbsp; 350–465 W</p>
+        <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
+      </div>
+      <div class="activity-card" style="border-top-color:#6D0000">
+        <h4>⛔ Very Heavy Work</h4>
+        <p class="kcal">401–500 kcal/hr &nbsp;·&nbsp; 466–580 W</p>
+        <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
+      </div>
+    </div>
+  </div>`;
+
+  function _buildNotesContent(rangeNotes, extraTop) {
+    const rightHtml = (extraTop || '') + `
+    <div class="hi-notes-section">
+      <h3>Hydration Guidance</h3>
+      <div class="note-box" style="margin:0">Workers should drink approximately 1 cup (8 oz / 240 mL) of cool water every 15–20 minutes during heat-exposed work — not waiting until thirsty. Avoid caffeine and alcohol. Electrolyte replacement is important for prolonged exposures (&gt;2 hours) with heavy sweating.</div>
+    </div>
+    <div class="hi-notes-section">
+      <h3>Radiant Heat Limitation</h3>
+      <div class="note-box warn-note" style="margin:0"><strong>Heat Index does not account for radiant heat from equipment, machinery, ovens, furnaces, or other hot surfaces.</strong> Heat index was developed for shade conditions with 5 mph wind. In indoor environments with direct radiant heat sources, very high or low air movement, or PPE/impermeable clothing — heat index <em>significantly underestimates</em> actual heat stress. If your work area has high levels of radiant heat, the work-rest cycles on this page may not adequately protect workers. WBGT is the preferred occupational heat stress measure in these settings.</div>
+    </div>`;
+    return `<div class="hi-notes-layout">
+      <div class="hi-notes-col-left">${ACT_DEFS_HTML}</div>
+      <div class="hi-notes-col-right">${rightHtml}</div>
+    </div>`;
+  }
+
+  function buildHINotesTab() {
+    const pane = document.getElementById('hi-tab-notes');
+    if (!pane) return;
+    pane.innerHTML = _buildNotesContent(HI_RANGE_NOTES, null);
+  }
+
+  function buildHIUnacclimNotesTab() {
+    const pane = document.getElementById('hi-utab-notes');
+    if (!pane) return;
+    const extra = `<div class="hi-notes-section">
+      <h3>Acclimatization Notice</h3>
+      <div class="note-box" style="margin:0; border-left-color:#AE1515; background:#FFF0F0; color:#6D0000;">
+        <strong><span aria-hidden="true">⚠ </span>Important:</strong> The unacclimatized work-rest cycles shown here do not capture the full acclimatization process recommended by NIOSH and OSHA. For detailed guidance on acclimatization protocols, employers should follow the recommendations in the NIOSH Criteria Document.<br><br>
+        <em>National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106).</em><br><br>
+        <strong>Note:</strong> These values are methodology-derived HI approximations. NIOSH RAL is expressed in WBGT — see the WBGT tab for equation-confirmed values.
+      </div>
+    </div>`;
+    pane.innerHTML = _buildNotesContent(HI_UNACCLIM_RANGE_NOTES, extra);
+  }
+
+  // ── Grid font fitting ─────────────────────────────────────────────────────────
+  function fitGridHeaderSize(gridEl) {
+    if (!gridEl) return;
+    const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
+    if (!cells.length) return;
+    let lo = 70, hi = 340;
+    while (lo < hi) {
+      const mid = Math.floor((lo + hi + 1) / 2);
+      const fs  = (mid / 10) + 'px';
+      cells.forEach(c => c.style.fontSize = fs);
+      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
+      else lo = mid;
+    }
+    cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
+  }
+
+  function sizeHICard() {
+    if (window.innerWidth <= 768) return;
+    const card     = document.getElementById('hi-result-card');
+    const fixedTop = document.getElementById('fixed-top');
+    if (!card || !fixedTop) return;
+    card.style.top = (fixedTop.offsetHeight + 35) + 'px';
+    // Re-fit chart grid headers after layout settles
+    requestAnimationFrame(() => {
+      const g1 = document.getElementById('hi-tab-chart')?.querySelector('.acclim-chart-grid');
+      const g2 = document.getElementById('hi-utab-chart')?.querySelector('.acclim-chart-grid');
+      if (g1) fitGridHeaderSize(g1);
+      if (g2) fitGridHeaderSize(g2);
+    });
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────────────────────
+  function switchHITab(which) {
+    _hiCurrentTab = which;
+    const tabs = ['result','chart','notes','formula','hitable'];
+    const flexTabs = new Set(['result','chart']);
+    tabs.forEach(t => {
+      const panelId = t === 'result' ? 'hi-tab-result-wrap' : 'hi-tab-' + t;
+      const panel = document.getElementById(panelId);
+      if (panel) panel.style.display = (t === which) ? (flexTabs.has(t) ? 'flex' : 'block') : 'none';
+      const btn = document.getElementById('hi-tab-btn-' + t);
+      if (btn) {
+        btn.classList.toggle('active', t === which);
+        btn.setAttribute('aria-selected', String(t === which));
+        btn.tabIndex = (t === which) ? 0 : -1;
+      }
+    });
+    if (which === 'hitable') buildHILookupTable('acclim');
+    sizeHICard();
+  }
+
+  function switchHIUnacclimTab(which) {
+    _hiUnacclimCurrentTab = which;
+    const tabs = ['result','chart','notes','formula','hitable'];
+    const flexTabs = new Set(['result','chart']);
+    tabs.forEach(t => {
+      const panelId = t === 'result' ? 'hi-utab-result-wrap' : 'hi-utab-' + t;
+      const panel = document.getElementById(panelId);
+      if (panel) panel.style.display = (t === which) ? (flexTabs.has(t) ? 'flex' : 'block') : 'none';
+      const btn = document.getElementById('hi-utab-btn-' + t);
+      if (btn) {
+        btn.classList.toggle('active', t === which);
+        btn.setAttribute('aria-selected', String(t === which));
+        btn.tabIndex = (t === which) ? 0 : -1;
+      }
+    });
+    if (which === 'hitable') buildHILookupTable('unacclim');
+    sizeHICard();
+  }
+
+  // ── Unit toggle ───────────────────────────────────────────────────────────────
+  function setHiUnit(unit) {
+    _hiUnit = unit;
+    // Update all unit toggle buttons
+    document.querySelectorAll('[id^="btn-hi-"]').forEach(el => {
+      const isF    = !el.id.includes('-c');
+      const isActive = (unit === 'F') === isF;
+      el.classList.toggle('active', isActive);
+      el.setAttribute('aria-pressed', String(isActive));
+    });
+    // Update T+RH strip unit label
+    const unitLabelEl = document.getElementById('hi-trh-unit-label');
+    if (unitLabelEl) unitLabelEl.textContent = unit === 'C' ? '°C' : '°F';
+    // If in T+RH mode with a stored temperature, convert the input field value
+    if (_hiInputMode === 'trh' && _hiTempValF != null) {
+      const tempEl = document.getElementById('hi-trh-temp');
+      if (tempEl) {
+        tempEl.value = unit === 'C'
+          ? Math.round((_hiTempValF - 32) * 5/9 * 10) / 10
+          : _hiTempValF;
+      }
+      onTrhInput();
+    }
+    // Rebuild charts if visible
+    if (_hiCurrentTab         === 'chart')   buildHIChartTab();
+    if (_hiUnacclimCurrentTab === 'chart')   buildHIUnacclimChartTab();
+    if (_hiCurrentTab         === 'hitable') buildHILookupTable('acclim');
+    if (_hiUnacclimCurrentTab === 'hitable') buildHILookupTable('unacclim');
+    // Rebuild result tabs with new unit
+    if (_hiStoredVal != null) {
+      buildHIResultTab({ measValue: _hiStoredVal, measUnit: _hiStoredUnit, activity: _hiActivity }, unit);
+      buildHIUnacclimResultTab(null);
+    }
+  }
+
+  // ── Worker status ─────────────────────────────────────────────────────────────
+  function setWorkerStatus(status) {
+    workerStatus = status;
+    WRC.set({ workerStatus: status });
+    const isAcclim = status === 'acclimatized';
+    document.getElementById('hi-acclim-tabs').style.display             = isAcclim ? '' : 'none';
+    document.getElementById('hi-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
+    document.getElementById('hi-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
+    document.getElementById('hi-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
+    // Show the result card (display:'' lets CSS apply flex on desktop, block on mobile)
+    const card = document.getElementById('hi-result-card');
+    if (card) card.style.display = '';
+    sizeHICard();
+  }
+
+  // ── Layout ────────────────────────────────────────────────────────────────────
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const main = document.querySelector('main');
+    if (main) {
+      const h = fixedTop.offsetHeight + 'px';
+      // Drive the CSS custom property so the !important rule in the mobile
+      // media query picks up the live header height (a plain inline-style
+      // assignment loses to !important stylesheet rules).
+      document.documentElement.style.setProperty('--fixed-top-h', h);
+      // Also set directly for desktop, where the media-query rule is absent.
+      main.style.setProperty('padding-top', h, 'important');
+    }
+    sizeHICard();
+  }
+
+  // ── Shareable URL ─────────────────────────────────────────────────────────────
+  function buildShareUrl() {
+    const p = new URLSearchParams();
+    // Always encode HI in °F for a canonical link
+    const hiF = (_hiStoredUnit === 'C' && _hiStoredVal != null)
+      ? Math.round((_hiStoredVal * 9/5 + 32) * 10) / 10
+      : _hiStoredVal;
+    if (_hiInputMode === 'trh' && _hiTempValF != null && _hiRhVal != null) {
+      p.set('mode', 'trh');
+      p.set('temp', _hiTempValF);
+      p.set('rh',   _hiRhVal);
+    } else if (hiF != null) {
+      p.set('hi', hiF);
+    } else {
+      return null; // no data to share
+    }
+    p.set('unit', _hiUnit);
+    p.set('act',  _hiActivity);
+    if (workerStatus && workerStatus !== 'acclimatized') p.set('status', workerStatus);
+    return location.origin + location.pathname + '?' + p.toString();
+  }
+
+  function copyShareLink(btn) {
+    const url = buildShareUrl();
+    if (!url) {
+      if (btn) { btn.textContent = '⚠ No results yet'; setTimeout(() => { btn.textContent = '🔗 Copy shareable link'; }, 2000); }
+      return;
+    }
+    // Mobile: use native share sheet if available
+    if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+      navigator.share({ title: 'Heat Index Work-Rest Results', url }).catch(() => {});
+      return;
+    }
+    const restore = () => { if (btn) { btn.innerHTML = '🔗 Copy shareable link'; btn.style.opacity = ''; } };
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+      setTimeout(restore, 2400);
+    }).catch(() => {
+      // execCommand fallback
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        if (btn) { btn.innerHTML = '✓ Copied!'; btn.style.opacity = '1'; }
+        setTimeout(restore, 2400);
+      } catch(e) { if (btn) { btn.innerHTML = '⚠ Copy failed'; setTimeout(restore, 2000); } }
+    });
+  }
+
+  // ── Hydrate from URL params (semi-permanent shareable links) ─────────────────
+  function hydrateFromUrl() {
+    const p = new URLSearchParams(location.search);
+    const hasHi  = p.has('hi');
+    const hasTrh = p.has('temp') && p.has('rh');
+    if (!hasHi && !hasTrh) return false;
+
+    const unit   = p.get('unit')   || 'F';
+    const act    = p.get('act')    || 'moderate';
+    const status = p.get('status') || 'acclimatized';
+
+    _hiUnit     = unit;
+    _hiActivity = act;
+    workerStatus = status;
+
+    if (hasTrh) {
+      const tF = parseFloat(p.get('temp'));
+      const rh = parseFloat(p.get('rh'));
+      _hiInputMode  = 'trh';
+      _hiTempValF   = isNaN(tF) ? null : tF;
+      _hiRhVal      = isNaN(rh) ? null : rh;
+      if (_hiTempValF != null && _hiRhVal != null) {
+        _hiCalcHI   = calcRothfuszHI(_hiTempValF, _hiRhVal);
+        _hiStoredVal  = _hiCalcHI;
+        _hiStoredUnit = 'F';
+      }
+      // Pre-fill the strip inputs
+      const tempEl = document.getElementById('hi-trh-temp');
+      const rhEl   = document.getElementById('hi-trh-rh');
+      if (tempEl) tempEl.value = unit === 'C' && _hiTempValF != null
+        ? Math.round((_hiTempValF - 32) * 5/9 * 10) / 10
+        : (_hiTempValF ?? '');
+      if (rhEl) rhEl.value = _hiRhVal ?? '';
+      // Show T+RH inputs row in the strip
+      const row = document.getElementById('hi-trh-inputs-row');
+      if (row) row.style.display = 'flex';
+      // Update calc display
+      const calcEl = document.getElementById('hi-trh-calc-display');
+      if (calcEl && _hiCalcHI != null) calcEl.textContent = unit === 'C'
+        ? (Math.round((_hiCalcHI - 32) * 5/9 * 10) / 10) + '°C'
+        : _hiCalcHI + '°F';
+    } else {
+      const hiF = parseFloat(p.get('hi'));
+      _hiInputMode  = 'hi';
+      _hiStoredVal  = isNaN(hiF) ? null : hiF;
+      _hiStoredUnit = 'F';
+    }
+
+    // Sync mode-toggle button states
+    const mBtnHI  = document.getElementById('trh-btn-hi');
+    const mBtnTrh = document.getElementById('trh-btn-trh');
+    if (mBtnHI)  { mBtnHI.classList.toggle('active', _hiInputMode === 'hi');   mBtnHI.setAttribute('aria-pressed',  String(_hiInputMode === 'hi')); }
+    if (mBtnTrh) { mBtnTrh.classList.toggle('active', _hiInputMode === 'trh'); mBtnTrh.setAttribute('aria-pressed', String(_hiInputMode === 'trh')); }
+
+    // Sync unit toggle buttons
+    if (unit !== 'F') {
+      document.querySelectorAll('[id^="btn-hi-"]').forEach(el => {
+        const isF = !el.id.includes('-c');
+        const active = (unit === 'F') === isF;
+        el.classList.toggle('active', active);
+        el.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    // Also push into WRC so back-bar and other UI reflect correctly
+    const updates = { activity: act, activityLabel: act.charAt(0).toUpperCase() + act.slice(1) + ' Work',
+      workerStatus: status, workerStatusTable: status, measUnit: unit,
+      measValue: _hiStoredVal, measTemp: _hiTempValF, measRH: _hiRhVal };
+    WRC.set(updates);
+    return true;
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    // Hydrate from URL params first (shareable link) — overrides sessionStorage
+    hydrateFromUrl();
+
+    const s = WRC.get();
+    const status   = s.workerStatusTable || s.workerStatus || 'acclimatized';
+    const act      = s.activity || 'moderate';
+    const actLabel = s.activityLabel || 'Moderate Work';
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const bbActivity = document.getElementById('back-bar-activity');
+    if (bbActivity) bbActivity.textContent = (emojiMap[act] || '') + ' ' + actLabel;
+
+    workerStatus = status;
+    const isAcclim = status === 'acclimatized';
+    document.getElementById('hi-acclim-tabs').style.display             = isAcclim ? '' : 'none';
+    document.getElementById('hi-acclim-tab-bar-wrap').style.display     = isAcclim ? '' : 'none';
+    document.getElementById('hi-unacclim-tabs').style.display           = isAcclim ? 'none' : '';
+    document.getElementById('hi-unacclim-tab-bar-wrap').style.display   = isAcclim ? 'none' : '';
+    // Reveal the result card (display:'' lets CSS apply flex on desktop)
+    const card = document.getElementById('hi-result-card');
+    if (card) card.style.display = '';
+
+    // Sync unit before building tabs
+    const sessionUnit = s.measUnit || 'F';
+    if (sessionUnit !== 'F') {
+      _hiUnit = sessionUnit;
+      document.querySelectorAll('[id^="btn-hi-"]').forEach(el => {
+        const isF    = !el.id.includes('-c');
+        const isActive = (sessionUnit === 'F') === isF;
+        el.classList.toggle('active', isActive);
+        el.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+
+    // Build all tab content
+    buildHIResultTab(s);
+    buildHIChartTab();
+    buildHINotesTab();
+    buildHIFormulaTab();
+    buildHIUnacclimResultTab(s);
+    buildHIUnacclimChartTab();
+    buildHIUnacclimNotesTab();
+    buildHIUnacclimFormulaTab();
+
+    // Activate first tab in each section
+    switchHITab('result');
+    switchHIUnacclimTab('result');
+
+    // Keyboard nav — acclimatized tablist
+    document.getElementById('hi-acclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result','chart','notes','formula','hitable'];
+      const cur  = tabs.findIndex(t => document.getElementById('hi-tab-btn-' + t).getAttribute('aria-selected') === 'true');
+      let next = cur;
+      if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
+      else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); next = (cur - 1 + tabs.length) % tabs.length; }
+      else if (e.key === 'Home')                                 { e.preventDefault(); next = 0; }
+      else if (e.key === 'End')                                  { e.preventDefault(); next = tabs.length - 1; }
+      else return;
+      switchHITab(tabs[next]);
+      document.getElementById('hi-tab-btn-' + tabs[next]).focus();
+    });
+
+    // Keyboard nav — unacclimatized tablist
+    document.getElementById('hi-unacclim-tab-bar').addEventListener('keydown', e => {
+      const tabs = ['result','chart','notes','formula','hitable'];
+      const cur  = tabs.findIndex(t => document.getElementById('hi-utab-btn-' + t).getAttribute('aria-selected') === 'true');
+      let next = cur;
+      if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
+      else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); next = (cur - 1 + tabs.length) % tabs.length; }
+      else if (e.key === 'Home')                                 { e.preventDefault(); next = 0; }
+      else if (e.key === 'End')                                  { e.preventDefault(); next = tabs.length - 1; }
+      else return;
+      switchHIUnacclimTab(tabs[next]);
+      document.getElementById('hi-utab-btn-' + tabs[next]).focus();
+    });
+
+    setTimeout(buildBreadcrumbs, 0);
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    window.addEventListener('load', updateLayout);
+    if (window.ResizeObserver) {
+      new ResizeObserver(updateLayout).observe(document.getElementById('fixed-top'));
+    }
+  });
+</script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>
