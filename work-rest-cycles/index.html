@@ -591,14 +591,6 @@
 /* tab panels */
 .intro-tab-panels {
   flex: 1;
-  min-height: 0; /* allow shrinking so notes stay visible below */
-}
-/* Desktop: cap panel height so note buttons below are always visible */
-@media (min-width: 769px) {
-  .intro-tab-panels {
-    max-height: clamp(180px, 42vh, 380px);
-    overflow-y: auto;
-  }
 }
 .intro-tab-panel {
   padding: 10px 14px 12px;
@@ -1173,14 +1165,11 @@
     panelsWrap.style.minHeight = '';
 
     const tallest = Math.max(...panels.map(p => p.scrollHeight));
-    // On desktop the panels have a CSS max-height (clamp(180px,42vh,380px)); clamp
-    // the locked minHeight to that so the note footer always stays visible.
-    const cssMaxH = Math.min(Math.max(180, window.innerHeight * 0.42), 380);
 
     // Restore original visibility
     panels.forEach((p, i) => { p.hidden = wasHidden[i]; });
 
-    panelsWrap.style.minHeight = Math.min(tallest, cssMaxH) + 'px';
+    panelsWrap.style.minHeight = tallest + 'px';
   }
 
   function updateStep5Hint() {
