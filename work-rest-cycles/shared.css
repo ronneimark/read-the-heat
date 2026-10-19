@@ -1911,10 +1911,11 @@
     main, #launcher { height: auto !important; overflow: visible !important; }
 
     /* Each launcher screen: let content flow */
-    #ls1, #ls2, #ls3 {
+    #ls1, #ls2, #ls3, #ls4 {
       overflow: visible !important;
       height: auto !important;
       flex: none !important;
+      position: static !important;
     }
 
     /* Sector grid: release clip, 2 columns on mobile */
@@ -1988,6 +1989,8 @@
       grid-template-columns: 1fr !important;
       grid-template-rows: none !important;
       grid-auto-rows: auto !important;
+      height: auto !important;
+      overflow: visible !important;
     }
     /* Mobile measurement cards: grid layout so title spans full width,
        photo and buttons sit side by side beneath it */
