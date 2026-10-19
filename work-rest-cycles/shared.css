@@ -1790,9 +1790,12 @@
      MOBILE RESPONSIVE  — all rules below use @media; desktop unchanged
      ══════════════════════════════════════════════════════════════ */
 
+  /* ── Mobile modal bottom bar — hidden on desktop ── */
+  .mobile-modal-bar { display: none; }
+
   /* ── Shorter header on phones ── */
   @media (max-width: 600px) {
-    header { height: 80px; grid-template-columns: 50px 1fr 50px; }
+    header { height: 80px; grid-template-columns: 1fr; }
     .header-inner { padding: 4px 0; gap: 3px; }
     .header-brand { max-height: 52px; }
     .header-attribution { display: none; }
@@ -1801,7 +1804,59 @@
   /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
   @media (max-width: 768px) {
     /* Body scrolls instead of clipping */
-    body { overflow: auto !important; }
+    body { overflow: auto !important; padding-bottom: 62px !important; }
+
+    /* Header: hide left/right buttons, center logo only */
+    header { grid-template-columns: 1fr !important; }
+    header .home-btn,
+    header .split-pill { display: none !important; }
+    .header-inner { pointer-events: auto; }
+
+    /* ── Bottom modal bar ── */
+    .mobile-modal-bar {
+      display: flex;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 1050;
+      background: #1A2A3A;
+      border-top: 2.5px solid #FFD600;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.30);
+    }
+    .mmb-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 7px 4px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font, system-ui, sans-serif);
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.80);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.12s, color 0.12s;
+    }
+    .mmb-btn:last-child { border-right: none; }
+    .mmb-btn:active { background: rgba(255,255,255,0.08); }
+    .mmb-btn svg {
+      width: 18px; height: 18px;
+      display: block;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .mmb-health svg { stroke: #FFD600; fill: #FFD600; }
+    .mmb-method svg { stroke: #aaccff; }
+    .mmb-feedback svg { stroke: #80cbc4; }
     html { height: auto; }
 
     /* Main launcher wrapper: release fixed height */
