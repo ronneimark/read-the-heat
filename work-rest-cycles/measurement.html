@@ -482,6 +482,36 @@ body { background: #F6F3EC !important; }
   margin: 0 0 6px;
 }
 #device-info-body strong { color: #000; }
+/* Formula block inside device info */
+.wbgt-formula-block {
+  background: #001E62;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 6px 0 8px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.wbgt-formula-block .formula-env {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.65;
+  margin-bottom: 2px;
+}
+.wbgt-formula-block .formula-eq {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wbgt-formula-block .formula-note {
+  font-size: 10px;
+  opacity: 0.75;
+  margin-top: 2px;
+  font-style: italic;
+}
 .device-info-badge {
   display: inline-block;
   background: #001E62;
@@ -1145,6 +1175,18 @@ body { background: #F6F3EC !important; }
       sections: [
         { h: 'What it measures', p: 'The Wet Bulb Globe Temperature integrates three separate readings: the <strong>natural wet bulb</strong> (evaporative cooling — how humidity limits sweat evaporation), the <strong>black globe</strong> (radiant heat from hot surfaces, furnaces, or overhead heat sources), and the <strong>dry bulb</strong> (air temperature). Together these capture every major factor driving heat stress on the human body.' },
         { h: 'Why it\'s the gold standard for indoor heat', p: 'WBGT is the preferred heat stress metric of OSHA, NIOSH, and ACGIH specifically because it captures radiant heat — the factor most likely to be missed in indoor workplaces (NIOSH, 2016; ACGIH, 2025). Near furnaces, boilers, commercial ovens, laundry equipment, and manufacturing heat sources, radiant heat can substantially raise heat strain even when the air temperature alone seems manageable. No other portable field instrument accounts for all of these factors simultaneously.' },
+        { h: 'How WBGT is calculated', html: `
+<p style="font-size:13px;line-height:1.5;margin:0 0 6px;">WBGT is a weighted average of three temperature readings. The weights differ depending on whether there is significant solar radiation (outdoors) or not (indoors):</p>
+<div class="wbgt-formula-block">
+  <div class="formula-env">🏢 Indoors / no direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.3 × GT</div>
+</div>
+<div class="wbgt-formula-block">
+  <div class="formula-env">☀️ Outdoors / direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.2 × GT + 0.1 × DB</div>
+  <div class="formula-note">DB (dry bulb) accounts for solar radiation absorbed through convection.</div>
+</div>
+<p style="font-size:12px;line-height:1.5;margin:4px 0 6px;color:#333;"><strong>NWB</strong> = natural wet bulb &nbsp;·&nbsp; <strong>GT</strong> = globe temperature &nbsp;·&nbsp; <strong>DB</strong> = dry bulb (air temp). The formula works identically in °F or °C — the coefficients don't change.</p>` },
         { h: 'Best suited for', p: 'All indoor industrial and commercial settings with significant heat sources: foundries, commercial kitchens, boiler rooms, laundries, glass and metal manufacturing, and any work environment where workers are near hot equipment or surfaces.' }
       ]
     },
@@ -1184,7 +1226,8 @@ body { background: #F6F3EC !important; }
     let html = '';
     if (info.badge) html += `<span class="device-info-badge">${info.badge}</span>`;
     info.sections.forEach(s => {
-      html += `<h4>${s.h}</h4><p>${s.p}</p>`;
+      if (s.html) { html += `<h4>${s.h}</h4>${s.html}`; }
+      else { html += `<h4>${s.h}</h4><p>${s.p}</p>`; }
     });
     document.getElementById('device-info-body').innerHTML = html;
     document.getElementById('device-info-overlay').hidden = false;
