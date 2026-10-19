@@ -188,7 +188,8 @@ body { background: #F6F3EC !important; }
     const fixedH = fixedTop.offsetHeight;
     const vh = window.innerHeight;
     ls4.style.paddingTop = (fixedH + 10) + 'px';
-    ls4.style.minHeight = vh + 'px';
+    if (window.innerWidth > 768) ls4.style.minHeight = vh + 'px';
+    else ls4.style.minHeight = '';
   }
 
   document.addEventListener('DOMContentLoaded', () => {

@@ -175,7 +175,8 @@
     const fixedH = fixedTop.offsetHeight;
     const vh = window.innerHeight;
     ls2.style.paddingTop = (fixedH + 10) + 'px';
-    ls2.style.height = vh + 'px';
+    if (window.innerWidth > 768) ls2.style.height = vh + 'px';
+    else ls2.style.height = '';
     // Pin sticky topbar exactly to the bottom of the fixed header on mobile
     if (topbar && window.innerWidth <= 768) {
       topbar.style.top = fixedH + 'px';
