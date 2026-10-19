@@ -1,0 +1,92 @@
+# ============================================================
+# Read the Heat & Take a Beat — GreenGeeks performance config
+# ============================================================
+
+# ----- Vanity redirect for QR code / shareable short link -----
+#
+# The QR code embedded in index.html points to:
+#   https://workerpowerforhealth.com/work-rest-cycles/app
+#
+# That URL hits THIS file and bounces the visitor to the real tool below.
+# To move the tool to a new host or path, just update the destination URL
+# on the Redirect line — the QR code image never needs to change.
+#
+# If you move to a new host that doesn't support .htaccess (e.g. GitHub Pages,
+# Netlify, Vercel), recreate this redirect in that platform's config:
+#
+#   Netlify  → add to netlify.toml:
+#     [[redirects]]
+#     from = "/work-rest-cycles/app"
+#     to   = "https://new-url-here/"
+#     status = 301
+#
+#   Vercel   → add to vercel.json:
+#     { "redirects": [{ "source": "/work-rest-cycles/app", "destination": "https://new-url-here/", "permanent": true }] }
+#
+#   GitHub Pages → .htaccess is ignored; use a small redirect HTML file at
+#     work-rest-cycles/app/index.html containing:
+#     <meta http-equiv="refresh" content="0; url=https://new-url-here/">
+#
+Redirect 301 /work-rest-cycles/app https://workerpowerforhealth.com/work-rest-cycles/
+
+
+# ----- Gzip / deflate compression -----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff font/woff2 application/font-woff application/font-woff2
+</IfModule>
+
+# ----- Browser caching (Cache-Control) -----
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # HTML, CSS & JS — always revalidate so deploys propagate immediately
+  ExpiresByType text/html                     "access plus 0 seconds"
+  ExpiresByType text/css                      "access plus 0 seconds"
+  ExpiresByType application/javascript        "access plus 0 seconds"
+  ExpiresByType text/javascript               "access plus 0 seconds"
+
+  # Images — 1 month (content rarely changes; extend to 1 year once stable)
+  ExpiresByType image/jpeg                    "access plus 1 month"
+  ExpiresByType image/png                     "access plus 1 month"
+  ExpiresByType image/webp                    "access plus 1 month"
+  ExpiresByType image/svg+xml                 "access plus 1 month"
+  ExpiresByType image/x-icon                  "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/woff                     "access plus 1 year"
+  ExpiresByType font/woff2                    "access plus 1 year"
+  ExpiresByType application/font-woff         "access plus 1 year"
+  ExpiresByType application/font-woff2        "access plus 1 year"
+</IfModule>
+
+# ----- Keep-Alive (connection reuse) -----
+<IfModule mod_headers.c>
+  Header set Connection keep-alive
+
+  # Cache-Control fallback (works even without mod_expires)
+  <FilesMatch "\.(jpg|jpeg|png|webp|gif|svg|ico|woff|woff2)$">
+    Header set Cache-Control "public, max-age=2592000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ----- Security headers (bonus hardening) -----
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # mockup.html embeds other pages on the same origin in an iframe.
+  # Remove X-Frame-Options for those pages so the preview loads correctly;
+  # SAMEORIGIN is still set above and then unset only for these files.
+  <FilesMatch "^(index|activity|wbgt|heat-index|temp-humidity|clothing|acclimatization|methodology)\.html$">
+    Header unset X-Frame-Options
+    Header set Content-Security-Policy "frame-ancestors 'self'"
+  </FilesMatch>
+</IfModule>
