@@ -1905,7 +1905,9 @@
     .calc-panel,
     .result-panel,
     .scroll-panel {
-      padding-bottom: 94px !important;
+      /* 94px base + safe-area-inset-bottom so this tracks the nav bar's real
+         height now that viewport-fit=cover activates the env() value. */
+      padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important;
     }
 
     html { height: auto; }
@@ -1922,7 +1924,7 @@
     }
 
     /* Activity and acclimatization: ensure last elements clear the fixed bottom bar */
-    #ls2, #ls3 { padding-bottom: 94px !important; }
+    #ls2, #ls3 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
 
     /* Sector grid: release clip, 2 columns on mobile */
     .ls1-sector-grid {

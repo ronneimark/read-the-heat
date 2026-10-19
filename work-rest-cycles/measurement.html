@@ -425,7 +425,7 @@ body { background: #F6F3EC !important; }
 @media (max-width: 768px) {
   /* Ensure bottom card clears the fixed nav bar.
      Use padding-bottom on #ls4 (the scroll root) — margin can collapse. */
-  #ls4 { padding-bottom: 94px !important; }
+  #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
   .method-card-full:last-child { padding-bottom: 16px !important; }
 }
 </style>
