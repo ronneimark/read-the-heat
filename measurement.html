@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Measurement Method — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background: #F6F3EC !important; }
+.method-card { background: #FEF8E0 !important; }
+
+/* ── Full-page colored borders for the 2×2 card grid ── */
+.method-cards-full {
+  gap: 0 !important;
+  background: transparent !important;
+  border-top: 3px solid #001E62 !important;
+  position: relative !important;
+}
+/* Measured dividers — positioned by JS to avoid percentage-guessing */
+.grid-div-h, .grid-div-v {
+  position: absolute;
+  pointer-events: none;
+}
+.grid-div-h {
+  height: 3px;
+  left: 0; right: 0;
+  background: #D50032;
+  z-index: 2;
+}
+.grid-div-v {
+  width: 6px;
+  background: #00966C;
+  z-index: 2;
+}
+
+/* ── Measurement input modal ── */
+#meas-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: transparent;
+  z-index: 9100;
+  align-items: stretch;   /* modal stretches full height of overlay */
+  justify-content: flex-end; /* modal hugs the right edge */
+  padding: 0;
+}
+#meas-modal-overlay.open { display: flex; }
+#meas-modal {
+  background: #F6F3EC;
+  border-radius: 0;
+  width: 50%;
+  height: 100%;
+  border: none;
+  border-left: 1px solid var(--border); /* mid-card divider only; top/right/bottom are the quadrant border */
+  box-shadow: none;
+  padding: 8px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.meas-field-group {
+  margin-bottom: 8px;
+}
+/* T+RH has two fields — compress inputs and spacing further */
+#meas-trh-fields .meas-field-group {
+  margin-bottom: 5px;
+}
+#meas-trh-fields .meas-input {
+  height: 34px;
+  font-size: 16px;
+}
+#meas-trh-fields .meas-toggle button {
+  height: 34px;
+  font-size: 11px;
+  padding: 0 7px;
+}
+.meas-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--subtext);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+  display: block;
+}
+.meas-input-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.meas-input {
+  flex: 1;
+  height: 38px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 0 9px;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  min-width: 0;
+}
+.meas-input:focus { border-color: var(--navy); }
+.meas-input.error { border-color: #D50032; }
+.meas-unit-suffix {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--subtext);
+  flex-shrink: 0;
+}
+.meas-toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.meas-toggle button {
+  padding: 0 9px;
+  height: 38px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--subtext);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.meas-toggle button.active {
+  background: var(--navy);
+  color: #fff;
+}
+.meas-error-msg {
+  color: #D50032;
+  font-size: 10px;
+  margin-top: 2px;
+  display: none;
+}
+.meas-error-msg.visible { display: block; }
+.meas-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 8px 0;
+}
+.meas-submit-btn {
+  width: 100%;
+  padding: 7px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, transform 0.1s;
+  letter-spacing: 0.02em;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.meas-submit-btn:hover { background: #002080; }
+.meas-submit-btn:active { transform: scale(0.98); }
+/* ── WBGT mode toggle (Direct / From components) ── */
+#meas-wbgt-mode-row { margin-bottom: 10px; margin-top: 2px; }
+.wbgt-mode-toggle {
+  display: flex;
+  border: 2px solid var(--navy);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.wbgt-mode-toggle button {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-mode-toggle button.active { background: var(--navy); color: #fff; }
+.wbgt-mode-toggle button + button { border-left: 2px solid var(--navy); }
+/* ── Indoor/outdoor setting toggle ── */
+.wbgt-setting-toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.wbgt-setting-toggle button {
+  flex: 1;
+  padding: 5px 4px;
+  background: transparent;
+  color: var(--subtext);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-setting-toggle button.active { background: #1A7A4A; color: #fff; }
+.wbgt-setting-toggle button + button { border-left: 2px solid var(--border); }
+/* ── Small italic helper text under field label ── */
+.meas-field-sub {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  font-style: italic;
+  color: #888;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 1px;
+}
+/* ── Compress component fields: slightly smaller inputs ── */
+#meas-wbgt-fields .meas-field-group { margin-bottom: 5px; }
+#meas-wbgt-fields .meas-field-label { font-size: clamp(14px, 3.8vw, 18px); text-transform: none; letter-spacing: 0; }
+#meas-wbgt-fields .meas-input { height: 34px; font-size: 16px; }
+#meas-wbgt-fields .meas-toggle button { height: 34px; font-size: 11px; padding: 0 7px; }
+/* ── Calculated WBGT result display ── */
+.wbgt-calc-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #C8102E;
+  color: #fff;
+  border-radius: 7px;
+  padding: 5px 12px;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+.wbgt-calc-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+  flex: 1;
+  white-space: nowrap;
+}
+.wbgt-calc-value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+/* ── Card two-column layout ── */
+.method-card-full {
+  flex-direction: row !important;
+  align-items: stretch;
+  cursor: default !important;
+  min-height: 164px;
+  gap: 14px;
+}
+.card-left {
+  flex: 0 0 54%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.card-left h3 { margin: 0; font-size: 22px !important; }
+.card-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Method card photo */
+.method-card-photo {
+  width: 100%;
+  max-width: 100%;
+  max-height: 114px;
+  object-fit: contain;
+  border-radius: 5px;
+  display: block;
+  background: rgba(255,255,255,0.12);
+  cursor: zoom-in;
+}
+.card-left { position: relative; }
+
+/* 3D action buttons */
+.card-btn {
+  width: 100%;
+  padding: 11px 10px;
+  border-radius: 9px;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  color: #fff;
+  transform: translateY(0);
+  transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
+}
+/* Information — navy */
+.card-btn-info {
+  background: linear-gradient(180deg, #0a2e8a 0%, #001E62 100%);
+  box-shadow: 0 5px 0 #001040, 0 6px 12px rgba(0,10,60,0.35);
+  text-shadow: 0 1px 2px rgba(0,0,50,0.3);
+}
+.card-btn-info:hover { background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%); }
+.card-btn-info:active { box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35); }
+/* Select — site red */
+.card-btn-select {
+  background: linear-gradient(180deg, #f0003a 0%, #D50032 100%);
+  box-shadow: 0 5px 0 #8a0020, 0 6px 12px rgba(80,0,20,0.35);
+  text-shadow: 0 1px 2px rgba(80,0,0,0.3);
+}
+.card-btn-select:hover { background: linear-gradient(180deg, #ff1a4a 0%, #e8003a 100%); }
+.card-btn-select:active { box-shadow: 0 1px 0 #8a0020, 0 2px 4px rgba(80,0,20,0.35); }
+.card-btn:active { transform: translateY(4px); }
+
+/* Photo expand — overlay zoom (counter-the-cough pattern) */
+#photo-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  background: rgba(0,0,20,0.88);
+  cursor: zoom-out;
+  transition: opacity .3s ease;
+}
+#photo-zoom-overlay[hidden] { display: none !important; }
+#photo-zoom-box {
+  position: fixed;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(0,0,20,0.55);
+}
+#photo-zoom-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#photo-zoom-close {
+  position: fixed;
+  z-index: 9997;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #001E62;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,20,0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+/* "Click to Enlarge" floating hint */
+.enl-hint {
+  position: absolute;
+  z-index: 5;
+  left: 0; top: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font: 700 12px/1 inherit;
+  letter-spacing: .02em;
+  color: #fff;
+  background: linear-gradient(165deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%),
+              linear-gradient(180deg, #1a3a8f 0%, #001E62 72%);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 999px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  padding: 5px 10px 5px 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 #001247, 0 4px 0 #000a26, 0 6px 10px rgba(0,0,0,0.3);
+  transition: opacity 0.2s ease;
+}
+.enl-hint.is-resting { animation: enl-bob 2.4s ease-in-out infinite; }
+@keyframes enl-bob { 0%,100%{translate:0 0} 50%{translate:0 -4px} }
+.enl-hint.is-hidden { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .enl-hint { transition: opacity 0.2s ease; } .enl-hint.is-resting { animation: none; } }
+@media (max-width: 768px) {
+  /* Suppress "(WBGT)" subtitle in the title bar — name fits on one line */
+  .method-card-full[data-instrument="wbgt"] h3 span { display: none !important; }
+  .enl-hint {
+    font-size: 9px !important;
+    padding: 3px 7px !important;
+    left: 0 !important;
+    top: 100% !important;
+    bottom: auto !important;
+    margin-top: 3px !important;
+    transform: none !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 0 #001247, 0 3px 6px rgba(0,0,0,0.3) !important;
+    animation: none !important;
+  }
+
+  /* Scroll-connected: absolute positioning scrolls with the page instead of floating fixed.
+     z-index below #fixed-top (1000) so the modal slides under the sticky header on scroll. */
+  #meas-modal-overlay {
+    position: absolute;
+    z-index: 900;
+  }
+
+  /* Condense modal padding so more vertical space is available */
+  #meas-modal {
+    padding-top: 4px !important;
+    padding-bottom: 6px !important;
+  }
+  /* Tighten the sticky header bottom gap */
+  #meas-modal .modal-sticky-header {
+    margin-bottom: 6px !important;
+  }
+  /* Compress T+RH two-field layout to fit within card height without scrolling */
+  #meas-trh-fields .meas-field-group {
+    margin-bottom: 2px;
+  }
+  #meas-trh-fields .meas-field-label {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+  #meas-trh-fields .meas-input {
+    height: 28px;
+    font-size: 14px;
+  }
+  #meas-trh-fields .meas-toggle button {
+    height: 28px;
+    font-size: 10px;
+    padding: 0 5px;
+  }
+  /* Trim submit button vertical padding */
+  .meas-submit-btn {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    font-size: 11px;
+  }
+}
+
+/* Device info modal */
+#device-info-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,10,30,0.52);
+  z-index: 9300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+#device-info-overlay[hidden] { display: none !important; }
+#device-info-modal {
+  background: #F6F3EC;
+  border-radius: 12px;
+  width: min(680px, 92vw);
+  max-height: 94vh;
+  overflow-y: auto;
+  padding: 8px 18px 20px;
+  box-shadow: 0 14px 48px rgba(0,10,60,0.22);
+  display: flex;
+  flex-direction: column;
+  color: #000; /* explicit black — 19.9:1 contrast on #FEF8E0, exceeds WCAG AAA */
+}
+#device-info-body h4 {
+  font-size: 12px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 14px 0 4px;
+}
+#device-info-body p {
+  font-size: 13px;
+  line-height: 1.58;
+  color: #000;
+  margin: 0 0 6px;
+}
+#device-info-body strong { color: #000; }
+/* Formula block inside device info */
+.wbgt-formula-block {
+  background: #001E62;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 6px 0 8px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.wbgt-formula-block .formula-env {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #A7B8D8; /* solid equivalent of #fff at ~0.65 opacity on #001E62 — 4.8:1 contrast */
+  margin-bottom: 2px;
+}
+.wbgt-formula-block .formula-eq {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wbgt-formula-block .formula-note {
+  font-size: 11px;
+  color: #C0CEDF; /* solid equivalent of #fff at ~0.75 opacity on #001E62 — 6.8:1 contrast */
+  margin-top: 2px;
+  font-style: italic;
+}
+.device-info-badge {
+  display: inline-block;
+  background: #001E62;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin: 8px 0 10px;
+}
+
+/* DBT warning on the Thermometer Only card */
+.meas-dbt-card-warning {
+  background: #FFF3CD;
+  border: 1px solid #FBBF24;
+  border-radius: 6px;
+  padding: 7px 10px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #78350F;
+  text-align: left;
+}
+@media (max-width: 768px) {
+  /* Ensure bottom card clears the fixed nav bar.
+     Use padding-bottom on #ls4 (the scroll root) — margin can collapse. */
+  #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
+  .method-card-full:last-child { padding-bottom: 16px !important; }
+  /* On mobile: narrower modal, top-anchored, scrollable */
+  #device-info-overlay { align-items: flex-start; }
+  #device-info-modal { width: min(520px, 92vw); }
+}
+</style>
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header onclick="if(!event.target.closest('a,button'))window.location.href='index.html'" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a,button')){event.preventDefault();window.location.href='index.html'}" tabindex="0" role="link" style="cursor:pointer" title="Return to home" aria-label="Return to home">
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+      <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls4">
+
+    <h1 class="ls-heading">Choose a measurement method and select temperature</h1>
+
+    <div class="method-cards method-cards-full">
+
+      <div class="method-card method-card-full" data-instrument="wbgt" style="--card-accent:#001E62">
+        <div class="card-left">
+          <h3 style="line-height:1.15">Wet Bulb Globe Thermometer<br><span style="font-size:0.72em;font-weight:600;opacity:0.75;display:block;margin-top:-2px">(WBGT)</span></h3>
+          <img class="method-card-photo" src="images/wbgt-monitors.jpg" alt="WBGT Monitors">
+        </div>
+        <div class="card-right">
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('wbgt')" aria-label="WBGT Monitor information">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('wbgt',this.closest('.method-card'))" aria-label="Select WBGT Monitor">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" data-instrument="trh" style="--card-accent:#1a3a8f">
+        <div class="card-left">
+          <h3>Temperature + Humidity</h3>
+          <img class="method-card-photo" src="images/trh-monitors.jpg" alt="Temperature &amp; Relative Humidity Monitors">
+        </div>
+        <div class="card-right">
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('trh')" aria-label="Temperature + Humidity Monitor information">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('trh',this.closest('.method-card'))" aria-label="Select Temperature + Humidity Monitor">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" data-instrument="hi" style="--card-accent:#E05C2C">
+        <div class="card-left">
+          <h3>Heat Index</h3>
+          <img class="method-card-photo" src="images/heat-index-monitors.jpg" alt="Heat Index Monitors">
+        </div>
+        <div class="card-right">
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('hi')" aria-label="Heat Index Monitor information">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('hi',this.closest('.method-card'))" aria-label="Select Heat Index Monitor">Select</button>
+        </div>
+      </div>
+
+      <div class="method-card method-card-full" data-instrument="dbt" style="--card-accent:#6B7280">
+        <div class="card-left">
+          <h3>Thermometer Only</h3>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:96px;line-height:1;">🌡️</div>
+        </div>
+        <div class="card-right">
+          <button class="card-btn card-btn-info" onclick="showDeviceInfo('dbt')" aria-label="Thermometer Only information">Information</button>
+          <button class="card-btn card-btn-select" onclick="openMeasModal('dbt',this.closest('.method-card'))" aria-label="Select Thermometer Only">Select</button>
+        </div>
+      </div>
+
+      <!-- Measured grid dividers — positioned by positionGridDividers() -->
+      <div class="grid-div-h" id="grid-div-h" aria-hidden="true"></div>
+      <div class="grid-div-v" id="grid-div-v-top" aria-hidden="true"></div>
+      <div class="grid-div-v" id="grid-div-v-bot" aria-hidden="true"></div>
+
+    </div>
+
+  </div><!-- /ls4 -->
+</div><!-- /launcher -->
+
+<!-- ── Photo expand backdrop ── -->
+<div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
+  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo">&times;</button>
+</div>
+
+<!-- ── Device info modal ── -->
+<div id="device-info-overlay" hidden onclick="if(event.target===this)closeDeviceInfo()">
+  <div id="device-info-modal" role="dialog" aria-modal="true" aria-labelledby="device-info-title">
+    <div class="modal-sticky-header" style="margin:-8px -18px 10px;padding:10px 18px;background:#F6F3EC;box-shadow:none;border-bottom:1px solid var(--border);">
+      <h2 id="device-info-title" style="font-size:15px;font-weight:800;color:#000;margin:0;"></h2>
+      <button id="device-info-close" class="modal-close-btn" onclick="closeDeviceInfo()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="device-info-body"></div>
+  </div>
+</div>
+
+<!-- ── Measurement input modal ── -->
+<div id="meas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="meas-modal-title" onclick="if(event.target===this)closeMeasModal()">
+  <div id="meas-modal">
+    <div class="modal-sticky-header" style="margin:-8px -14px 10px;background:#F6F3EC;box-shadow:none;border-bottom:1px solid var(--border);">
+      <h2 id="meas-modal-title" style="font-size:15px;font-weight:800;color:var(--navy);margin:0;">Enter Your Reading</h2>
+      <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
+    </div>
+
+    <!-- WBGT mode toggle: only shown when WBGT instrument selected -->
+    <div id="meas-wbgt-mode-row" hidden>
+      <div class="wbgt-mode-toggle" role="group" aria-label="WBGT entry mode">
+        <button id="wbgt-mode-direct" class="active" onclick="setWbgtMode('direct')" type="button">Direct WBGT reading</button>
+        <button id="wbgt-mode-calc" onclick="setWbgtMode('calc')" type="button">Calculate from components</button>
+      </div>
+    </div>
+
+    <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
+    <div id="meas-single-fields">
+      <div class="meas-field-group">
+        <label class="meas-field-label" id="meas-single-label" for="meas-value">WBGT Value</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-value" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+          <div class="meas-toggle">
+            <button id="meas-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-single-error">Please enter a value.</div>
+      </div>
+    </div>
+
+    <!-- WBGT component fields (NWB + GT + optional DB) -->
+    <div id="meas-wbgt-fields" hidden>
+      <!-- Indoor / Outdoor toggle -->
+      <div class="meas-field-group" style="margin-bottom:8px;">
+        <label class="meas-field-label" style="margin-bottom:4px;">Environment</label>
+        <div class="wbgt-setting-toggle" role="group" aria-label="Indoor or outdoor">
+          <button id="wbgt-env-indoor" class="active" onclick="setWbgtSetting('indoor')" type="button">🏢 Indoors</button>
+          <button id="wbgt-env-outdoor" onclick="setWbgtSetting('outdoor')" type="button">☀️ Outdoors</button>
+        </div>
+      </div>
+      <!-- Natural Wet Bulb -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-nwb">Natural Wet Bulb</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-nwb','meas-wbgt-nwb-error');updateWbgtCalc()">
+          <div class="meas-toggle">
+            <button id="meas-wbgt-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-wbgt-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-nwb-error">Please enter a value.</div>
+      </div>
+      <!-- Globe Temperature -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-gt">Globe Temperature</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-gt','meas-wbgt-gt-error');updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-gt-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-gt-error">Please enter a value.</div>
+      </div>
+      <!-- Dry Bulb (outdoor only) -->
+      <div class="meas-field-group" id="meas-wbgt-db-row">
+        <label class="meas-field-label" for="meas-wbgt-db">Dry Bulb</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-db','meas-wbgt-db-error');updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-db-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-db-error">Please enter a value.</div>
+      </div>
+      <!-- Calculated result -->
+      <div class="wbgt-calc-display" id="wbgt-calc-display">
+        <span class="wbgt-calc-label">WBGT</span>
+        <span class="wbgt-calc-value" id="wbgt-calc-value">—</span>
+      </div>
+    </div>
+
+    <!-- Two-field layout (Temperature + Humidity) -->
+    <div id="meas-trh-fields" hidden>
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-temp">Air Temperature</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+          <div class="meas-toggle">
+            <button id="meas-trh-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-trh-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-temp-error">Please enter a temperature.</div>
+      </div>
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-rh">Relative Humidity</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off">
+          <span class="meas-unit-suffix">%</span>
+        </div>
+        <div class="meas-error-msg" id="meas-rh-error">Please enter a value between 0 and 100.</div>
+      </div>
+    </div>
+
+    <button class="meas-submit-btn" onclick="submitMeasModal()">Find My Work-Rest Cycle →</button>
+  </div>
+</div>
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  let measCurrentInstrument = null;
+  let measCurrentUnit = 'F';
+  let wbgtMode    = 'direct';   // 'direct' | 'calc'
+  let wbgtSetting = 'indoor';   // 'indoor' | 'outdoor'
+  const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
+  const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Temp & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
+  const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
+
+  // ── Last-entered value memory (localStorage) ──────────────────────────────────
+  const _LS_TEMP = 'wrc_last_temp_f';
+  const _LS_RH   = 'wrc_last_rh';
+
+  function _loadLastMeas() {
+    try {
+      const t = parseFloat(localStorage.getItem(_LS_TEMP));
+      const r = parseFloat(localStorage.getItem(_LS_RH));
+      return { tempF: isNaN(t) ? null : t, rh: isNaN(r) ? null : r };
+    } catch { return { tempF: null, rh: null }; }
+  }
+  function _saveLastTemp(val, unit) {
+    try {
+      const f = unit === 'C' ? parseFloat(val) * 9/5 + 32 : parseFloat(val);
+      if (!isNaN(f)) localStorage.setItem(_LS_TEMP, Math.round(f * 10) / 10);
+    } catch {}
+  }
+  function _saveLastRh(rh) {
+    try { if (!isNaN(parseFloat(rh))) localStorage.setItem(_LS_RH, parseFloat(rh)); } catch {}
+  }
+
+  function setWbgtMode(mode) {
+    wbgtMode = mode;
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', mode === 'direct');
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', mode === 'calc');
+    document.getElementById('meas-single-fields').hidden = (mode !== 'direct');
+    document.getElementById('meas-wbgt-fields').hidden   = (mode !== 'calc');
+    // Clear errors on mode switch
+    document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible','submit-error'));
+    ['meas-value','meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('error');
+    });
+    if (mode === 'calc') updateWbgtCalc();
+  }
+
+  function setWbgtSetting(setting) {
+    wbgtSetting = setting;
+    document.getElementById('wbgt-env-indoor').classList.toggle('active',  setting === 'indoor');
+    document.getElementById('wbgt-env-outdoor').classList.toggle('active', setting === 'outdoor');
+    document.getElementById('meas-wbgt-db-row').hidden = (setting === 'indoor');
+    updateWbgtCalc();
+  }
+
+  function clearWbgtSubmitErr(inputId, errId) {
+    const inp = document.getElementById(inputId);
+    const err = document.getElementById(errId);
+    if (inp) inp.classList.remove('error');
+    if (err) err.classList.remove('submit-error'); // allow live warnings to re-evaluate freely
+  }
+
+  // Returns {nwbHigh} — true if NWB exceeds DB (outdoor only; wind can lower GT below DB/NWB so no GT constraints).
+  function _wbgtConstraintErrors(nwb, gt, db) {
+    const outdoor = wbgtSetting === 'outdoor';
+    return {
+      nwbHigh:  outdoor && !isNaN(nwb) && !isNaN(db) && nwb > db,
+      gtLowNwb: false,
+      gtLowDb:  false,
+    };
+  }
+
+  function updateWbgtCalc() {
+    const nwb = parseFloat(document.getElementById('meas-wbgt-nwb').value);
+    const gt  = parseFloat(document.getElementById('meas-wbgt-gt').value);
+    const db  = parseFloat(document.getElementById('meas-wbgt-db').value);
+    const errs = _wbgtConstraintErrors(nwb, gt, db);
+
+    // Live constraint warnings (don't mark .error — that's for submit; use warning text only)
+    const nwbErrEl  = document.getElementById('meas-wbgt-nwb-error');
+    const gtErrEl   = document.getElementById('meas-wbgt-gt-error');
+    // NWB > DB warning
+    if (errs.nwbHigh) {
+      nwbErrEl.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
+      nwbErrEl.classList.add('visible');
+    } else if (!nwbErrEl.classList.contains('submit-error')) {
+      nwbErrEl.classList.remove('visible');
+    }
+    // GT < NWB or GT < DB warning
+    const gtMsg = errs.gtLowNwb && errs.gtLowDb
+      ? 'Globe temp must be ≥ both NWB and dry bulb.'
+      : errs.gtLowNwb ? 'Globe temp cannot be lower than NWB.'
+      : errs.gtLowDb  ? 'Globe temp cannot be lower than dry bulb.'
+      : null;
+    if (gtMsg) {
+      gtErrEl.textContent = gtMsg;
+      gtErrEl.classList.add('visible');
+    } else if (!gtErrEl.classList.contains('submit-error')) {
+      gtErrEl.classList.remove('visible');
+    }
+
+    // Only show a calculated result if all constraints are satisfied
+    const anyErr = errs.nwbHigh || errs.gtLowNwb || errs.gtLowDb;
+    let wbgt = null;
+    if (!anyErr) {
+      if (wbgtSetting === 'indoor') {
+        wbgt = (!isNaN(nwb) && !isNaN(gt)) ? 0.7 * nwb + 0.3 * gt : null;
+      } else {
+        wbgt = (!isNaN(nwb) && !isNaN(gt) && !isNaN(db)) ? 0.7 * nwb + 0.2 * gt + 0.1 * db : null;
+      }
+    }
+    const display = document.getElementById('wbgt-calc-value');
+    const unit = measCurrentUnit === 'C' ? '°C' : '°F';
+    display.textContent = (wbgt !== null) ? Math.round(wbgt * 10) / 10 + ' ' + unit : '—';
+  }
+
+  function openMeasModal(instrument, triggerEl) {
+    measCurrentInstrument = instrument;
+    measCurrentUnit = 'F';
+    wbgtMode    = 'direct';
+    wbgtSetting = 'indoor';
+    WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
+    buildBreadcrumbs();   // show instrument pill immediately on card tap
+    document.getElementById('meas-modal-title').textContent = measTitles[instrument];
+    const isTrh  = instrument === 'trh';
+    const isWbgt = instrument === 'wbgt';
+    // Show/hide mode toggle row for WBGT only
+    document.getElementById('meas-wbgt-mode-row').hidden = !isWbgt;
+    // Reset WBGT mode buttons
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', true);
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', false);
+    // Reset env toggle
+    document.getElementById('wbgt-env-indoor').classList.add('active');
+    document.getElementById('wbgt-env-outdoor').classList.remove('active');
+    document.getElementById('meas-wbgt-db-row').hidden = true; // start as indoor
+    document.getElementById('meas-single-fields').hidden = isTrh;
+    document.getElementById('meas-trh-fields').hidden    = !isTrh;
+    document.getElementById('meas-wbgt-fields').hidden   = true; // always start in direct mode
+    if (!isTrh) document.getElementById('meas-single-label').textContent = measSingleLabels[instrument];
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id.endsWith('-f'));
+    });
+    // Reset component field unit suffixes
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '°F';
+    });
+    // Clear component inputs
+    ['meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('error'); }
+    });
+    document.getElementById('wbgt-calc-value').textContent = '—';
+    const _last = _loadLastMeas();
+    const measDefaults = {
+      'meas-value': _last.tempF != null ? _last.tempF : '74',
+      'meas-temp':  _last.tempF != null ? _last.tempF : '74',
+      'meas-rh':    _last.rh    != null ? _last.rh    : '50',
+    };
+    ['meas-value','meas-temp','meas-rh'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = measDefaults[id] ?? '74'; el.classList.remove('error'); }
+    });
+    document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
+    // Position overlay exactly within the clicked card's bounds
+    const overlay = document.getElementById('meas-modal-overlay');
+    if (triggerEl) {
+      const r = triggerEl.getBoundingClientRect();
+      // Offset below card's border-top + ::before accent bar (5px in full layout)
+      const borderTop = parseFloat(getComputedStyle(triggerEl).borderTopWidth) || 0;
+      const BAR_H = borderTop + 5;
+      let overlayWidth = r.width;
+      // For left-column cards: clip overlay so its right edge stops at the green divider
+      const divV = document.getElementById('grid-div-v-top');
+      if (divV) {
+        const dvr = divV.getBoundingClientRect();
+        // divider falls inside this card → it's a left-column card
+        if (dvr.left > r.left && dvr.left < r.right) {
+          overlayWidth = dvr.left - r.left;
+        }
+      }
+      // On mobile the overlay uses position:absolute (scrolls with page), so offset by scrollY
+      const scrollOffset = window.innerWidth <= 768 ? window.scrollY : 0;
+      overlay.style.top    = (r.top + BAR_H + scrollOffset) + 'px';
+      overlay.style.left   = r.left + 'px';
+      overlay.style.width  = overlayWidth + 'px';
+      overlay.style.height = (r.height - BAR_H) + 'px';
+    } else {
+      overlay.style.top = overlay.style.left = overlay.style.width = overlay.style.height = '';
+    }
+
+    overlay.classList.add('open');
+
+    // Hide "Click to Enlarge" hint on the active card while modal is open
+    openMeasModal._activeHint = triggerEl?.querySelector('.enl-hint') ?? null;
+    if (openMeasModal._activeHint) openMeasModal._activeHint.classList.add('is-hidden');
+
+    setTimeout(() => document.querySelector('#meas-modal input')?.focus(), 80);
+  }
+
+  function closeMeasModal() {
+    document.getElementById('meas-modal-overlay').classList.remove('open');
+    // Restore the hint
+    if (openMeasModal._activeHint) {
+      openMeasModal._activeHint.classList.remove('is-hidden');
+      openMeasModal._activeHint = null;
+    }
+  }
+
+  function setMeasUnit(unit) {
+    measCurrentUnit = unit;
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', id.endsWith(unit === 'F' ? '-f' : '-c'));
+    });
+    // Update suffix labels on component fields
+    const suffix = unit === 'C' ? '°C' : '°F';
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = suffix;
+    });
+    // Recalculate with new unit label
+    if (wbgtMode === 'calc') updateWbgtCalc();
+  }
+
+  function submitMeasModal() {
+    // ── WBGT from components ────────────────────────────────────────────────
+    if (measCurrentInstrument === 'wbgt' && wbgtMode === 'calc') {
+      let valid = true;
+      const nwbEl = document.getElementById('meas-wbgt-nwb');
+      const gtEl  = document.getElementById('meas-wbgt-gt');
+      const dbEl  = document.getElementById('meas-wbgt-db');
+      const nwb   = parseFloat(nwbEl.value);
+      const gt    = parseFloat(gtEl.value);
+      if (isNaN(nwb)) {
+        nwbEl.classList.add('error');
+        document.getElementById('meas-wbgt-nwb-error').classList.add('visible');
+        valid = false;
+      }
+      if (isNaN(gt)) {
+        gtEl.classList.add('error');
+        document.getElementById('meas-wbgt-gt-error').classList.add('visible');
+        valid = false;
+      }
+      if (wbgtSetting === 'outdoor') {
+        const db = parseFloat(dbEl.value);
+        if (isNaN(db)) {
+          dbEl.classList.add('error');
+          document.getElementById('meas-wbgt-db-error').classList.add('visible');
+          valid = false;
+        }
+      }
+      if (!valid) return;
+      const db  = parseFloat(dbEl.value);
+      // Physical constraint checks
+      const errs = _wbgtConstraintErrors(nwb, gt, db);
+      if (errs.nwbHigh) {
+        nwbEl.classList.add('error');
+        const el = document.getElementById('meas-wbgt-nwb-error');
+        el.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
+        el.classList.add('visible', 'submit-error');
+        valid = false;
+      }
+      if (errs.gtLowNwb || errs.gtLowDb) {
+        gtEl.classList.add('error');
+        const el = document.getElementById('meas-wbgt-gt-error');
+        el.textContent = errs.gtLowNwb && errs.gtLowDb
+          ? 'Globe temp must be ≥ both NWB and dry bulb.'
+          : errs.gtLowNwb ? 'Globe temp cannot be lower than NWB.'
+          : 'Globe temp cannot be lower than dry bulb.';
+        el.classList.add('visible', 'submit-error');
+        valid = false;
+      }
+      if (!valid) return;
+      const wbgt = wbgtSetting === 'indoor'
+        ? 0.7 * nwb + 0.3 * gt
+        : 0.7 * nwb + 0.2 * gt + 0.1 * db;
+      WRC.set({ measValue: Math.round(wbgt * 10) / 10, measUnit: measCurrentUnit });
+      closeMeasModal();
+      window.location.href = measDestUrls['wbgt'];
+      return;
+    }
+
+    let valid = true;
+    if (measCurrentInstrument === 'trh') {
+      const tempEl = document.getElementById('meas-temp');
+      const rhEl   = document.getElementById('meas-rh');
+      const tempVal = tempEl.value.trim();
+      const rhVal   = rhEl.value.trim();
+      if (!tempVal) {
+        tempEl.classList.add('error');
+        document.getElementById('meas-temp-error').classList.add('visible');
+        valid = false;
+      }
+      if (!rhVal || parseFloat(rhVal) < 0 || parseFloat(rhVal) > 100) {
+        rhEl.classList.add('error');
+        document.getElementById('meas-rh-error').classList.add('visible');
+        valid = false;
+      }
+      if (!valid) return;
+      _saveLastTemp(tempVal, measCurrentUnit);
+      _saveLastRh(rhVal);
+      WRC.set({ measTemp: parseFloat(tempVal), measUnit: measCurrentUnit, measRH: parseFloat(rhVal), dbtConservative: false });
+    } else if (measCurrentInstrument === 'dbt') {
+      const valEl = document.getElementById('meas-value');
+      const val = valEl.value.trim();
+      if (!val) {
+        valEl.classList.add('error');
+        document.getElementById('meas-single-error').classList.add('visible');
+        return;
+      }
+      // Conservative ceiling: assume 100% RH and route through T+RH calculator
+      _saveLastTemp(val, measCurrentUnit);
+      WRC.set({ measTemp: parseFloat(val), measValue: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
+      closeMeasModal();
+      window.location.href = 'temp-humidity.html';
+      return;
+    } else {
+      const valEl = document.getElementById('meas-value');
+      const val = valEl.value.trim();
+      if (!val) {
+        valEl.classList.add('error');
+        document.getElementById('meas-single-error').classList.add('visible');
+        return;
+      }
+      _saveLastTemp(val, measCurrentUnit);
+      WRC.set({ measValue: parseFloat(val), measUnit: measCurrentUnit });
+    }
+    closeMeasModal();
+    window.location.href = measDestUrls[measCurrentInstrument];
+  }
+
+  // ── Photo zoom (counter-the-cough pattern) ──
+  (function () {
+    const overlay  = document.getElementById('photo-zoom-overlay');
+    const box      = document.getElementById('photo-zoom-box');
+    const zoomImg  = document.getElementById('photo-zoom-img');
+    const closeBtn = document.getElementById('photo-zoom-close');
+    const EASE_IN  = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const EASE_OUT = 'cubic-bezier(0.4, 0, 0.6, 1)';
+    const REDUCE   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TOUCH    = window.matchMedia('(hover: none)').matches;
+    let _srcImg = null, _closing = false, _closeRaf = 0;
+
+    // Compute target rect: largest centered box preserving aspect ratio within 92% viewport
+    function targetRect(ratio) {
+      const maxW = window.innerWidth * 0.92, maxH = window.innerHeight * 0.92;
+      let w, h;
+      if (maxW / ratio <= maxH) { w = maxW; h = maxW / ratio; }
+      else { h = maxH; w = maxH * ratio; }
+      return { top: (window.innerHeight - h) / 2, left: (window.innerWidth - w) / 2, width: w, height: h };
+    }
+
+    // CSS transform that maps big box → small src rect (used as animation start)
+    function fromTransform(src) {
+      const b = box.getBoundingClientRect();
+      const sx = src.width / b.width, sy = src.height / b.height;
+      const tx = (src.left + src.width  / 2) - (b.left + b.width  / 2);
+      const ty = (src.top  + src.height / 2) - (b.top  + b.height / 2);
+      return `translate(${tx}px,${ty}px) scale(${sx},${sy})`;
+    }
+
+    function placeBox(r) {
+      box.style.left   = r.left   + 'px';
+      box.style.top    = r.top    + 'px';
+      box.style.width  = r.width  + 'px';
+      box.style.height = r.height + 'px';
+    }
+
+    function placeClose() {
+      const r = box.getBoundingClientRect();
+      const s = closeBtn.offsetWidth || 38;
+      let left = r.right  - s / 2, top = r.top - s / 2;
+      left = Math.min(Math.max(4, left), window.innerWidth  - s - 4);
+      top  = Math.min(Math.max(4, top),  window.innerHeight - s - 4);
+      closeBtn.style.left = left + 'px';
+      closeBtn.style.top  = top  + 'px';
+    }
+
+    function openZoom(img) {
+      if (_closing) return;
+      _srcImg = img;
+      const srcR  = img.getBoundingClientRect();
+      const ratio = (img.naturalWidth || srcR.width) / (img.naturalHeight || srcR.height);
+      const tgtR  = targetRect(ratio);
+
+      zoomImg.src = img.src;
+      zoomImg.alt = img.alt;
+      placeBox(tgtR);
+      overlay.hidden = false;
+      placeClose();
+
+      if (!REDUCE && box.animate) {
+        box.animate([{ transform: fromTransform(srcR), borderRadius: '5px' },
+                     { transform: 'none', borderRadius: '8px' }],
+                    { duration: 380, easing: EASE_IN, fill: 'none' });
+      }
+      closeBtn.focus();
+    }
+
+    function closeZoom() {
+      if (_closing || overlay.hidden) return;
+      if (!REDUCE && box.animate && _srcImg) {
+        _closing = true;
+        const srcR = _srcImg.getBoundingClientRect();
+        const anim = box.animate([{ transform: 'none', borderRadius: '8px' },
+                                   { transform: fromTransform(srcR), borderRadius: '5px' }],
+                                  { duration: 280, easing: EASE_OUT });
+        anim.onfinish = () => { _closing = false; overlay.hidden = true; _srcImg = null; };
+      } else {
+        overlay.hidden = true; _srcImg = null;
+      }
+    }
+
+    overlay.addEventListener('click', e => { if (e.target === overlay || e.target === box || e.target === zoomImg) closeZoom(); });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeDeviceInfo(); } });
+    window.addEventListener('resize', () => { if (!overlay.hidden && _srcImg) {
+      const ratio = (zoomImg.naturalWidth || 1) / (zoomImg.naturalHeight || 1);
+      placeBox(targetRect(ratio)); placeClose();
+    }});
+
+    // Wire up all method card photos
+    document.querySelectorAll('.method-card-photo').forEach(img => {
+      // Wrap img in a positioned span so the hint anchors correctly even
+      // when the parent uses display:contents (mobile grid layout)
+      const imgWrap = document.createElement('span');
+      imgWrap.className = 'method-card-photo-wrap';
+      img.parentNode.insertBefore(imgWrap, img);
+      imgWrap.appendChild(img);
+      const wrap = imgWrap;
+      img.style.cursor = 'zoom-in';
+
+      // "Click / Tap to Enlarge" hint
+      const hint = document.createElement('span');
+      hint.className = 'enl-hint is-resting';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.innerHTML = '<span style="margin-right:4px">&#128269;</span>' + (TOUCH ? 'Tap to Enlarge' : 'Click to Enlarge');
+      wrap.appendChild(hint);
+
+      function rest() {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        const x = Math.max(6, w - hint.offsetWidth  - 10);
+        const y = Math.max(6, h - hint.offsetHeight - 10);
+        hint.style.transform = `translate(${x}px,${y}px)`;
+        hint.classList.add('is-resting');
+      }
+      function follow(e) {
+        const r = wrap.getBoundingClientRect();
+        let x = (e.clientX - r.left) + 14, y = (e.clientY - r.top) + 16;
+        x = Math.min(Math.max(4, x), r.width  - hint.offsetWidth  - 4);
+        y = Math.min(Math.max(4, y), r.height - hint.offsetHeight - 4);
+        hint.style.transform = `translate(${x}px,${y}px)`;
+        hint.classList.remove('is-resting');
+      }
+      rest();
+      if (!TOUCH) {
+        wrap.addEventListener('mousemove', follow);
+        wrap.addEventListener('mouseleave', rest);
+      }
+      window.addEventListener('resize', rest);
+
+      // Hide hint while zoom is open
+      new MutationObserver(() => {
+        hint.classList.toggle('is-hidden', !overlay.hidden);
+        if (overlay.hidden) rest();
+      }).observe(overlay, { attributes: true, attributeFilter: ['hidden'] });
+
+      img.addEventListener('click', () => openZoom(img));
+    });
+  })();
+
+  // ── Device info modal ──
+  const DEVICE_INFO = {
+    wbgt: {
+      title: 'WBGT Monitors',
+      badge: '★ Gold Standard',
+      sections: [
+        { h: 'What it measures', p: 'The Wet Bulb Globe Temperature integrates three separate readings: the <strong>natural wet bulb</strong> (evaporative cooling — how humidity limits sweat evaporation), the <strong>black globe</strong> (radiant heat from hot surfaces, furnaces, or overhead heat sources), and the <strong>dry bulb</strong> (air temperature). Together these capture every major factor driving heat stress on the human body.' },
+        { h: 'Why it\'s the gold standard for indoor heat', p: 'WBGT is the preferred heat stress metric of OSHA, NIOSH, and ACGIH specifically because it captures radiant heat — the factor most likely to be missed in indoor workplaces (NIOSH, 2016; ACGIH, 2025). Near furnaces, boilers, commercial ovens, laundry equipment, and manufacturing heat sources, radiant heat can substantially raise heat strain even when the air temperature alone seems manageable. No other portable field instrument accounts for all of these factors simultaneously.' },
+        { h: 'How WBGT is calculated', html: `
+<p style="font-size:13px;line-height:1.5;margin:0 0 6px;">WBGT is a weighted average of three temperature readings. The weights differ depending on whether there is significant solar radiation (outdoors) or not (indoors):</p>
+<div class="wbgt-formula-block">
+  <div class="formula-env">🏢 Indoors / no direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.3 × GT</div>
+</div>
+<div class="wbgt-formula-block">
+  <div class="formula-env">☀️ Outdoors / direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.2 × GT + 0.1 × DB</div>
+  <div class="formula-note">DB (dry bulb) accounts for solar radiation absorbed through convection.</div>
+</div>
+<p style="font-size:13px;line-height:1.5;margin:4px 0 6px;"><strong>NWB</strong> = natural wet bulb &nbsp;·&nbsp; <strong>GT</strong> = globe temperature &nbsp;·&nbsp; <strong>DB</strong> = dry bulb (air temp). The formula works identically in °F or °C — the coefficients don't change.</p>` },
+        { h: 'Best suited for', p: 'All indoor industrial and commercial settings with significant heat sources: foundries, commercial kitchens, boiler rooms, laundries, glass and metal manufacturing, and any work environment where workers are near hot equipment or surfaces.' }
+      ]
+    },
+    trh: {
+      title: 'Temperature & Relative Humidity Monitors',
+      badge: null,
+      sections: [
+        { h: 'What it measures', p: 'These instruments record <strong>dry-bulb air temperature</strong> and <strong>relative humidity</strong> simultaneously. The two readings are then combined — using a heat index formula or a lookup table — to estimate the apparent temperature and the appropriate work-rest schedule.' },
+        { h: 'Better than a thermometer alone', p: 'Humidity has a large effect on how the body sheds heat. High humidity limits the evaporation of sweat — the body\'s primary cooling mechanism. A thermometer without a humidity reading will underestimate heat stress in humid environments, sometimes by a wide margin. Pairing temperature with relative humidity gives a meaningfully more accurate picture.' },
+        { h: 'Limitations compared to WBGT', p: 'Temperature and relative humidity do not capture <strong>radiant heat</strong> from hot surfaces or equipment, nor the cooling effect of air movement. In workplaces near furnaces, ovens, boilers, or other radiant heat sources, a T+RH estimate can substantially understate actual heat stress. WBGT remains the more protective and accurate measurement in those environments.' }
+      ]
+    },
+    hi: {
+      title: 'Heat Index Meters',
+      badge: null,
+      sections: [
+        { h: 'What it measures', p: 'Heat Index meters read <strong>air temperature</strong> and <strong>relative humidity</strong> and display a single computed "feels like" temperature — the apparent temperature that reflects the body\'s reduced ability to cool itself through sweat evaporation when humidity is high (NIOSH, 2016).' },
+        { h: 'Better than a thermometer alone', p: 'Because the humidity effect is built directly into the output, a heat index reading immediately communicates heat stress risk without requiring a separate calculation. It is the measure widely used by public health agencies and the National Weather Service to communicate outdoor heat danger to the public.' },
+        { h: 'Limitations compared to WBGT', p: 'Like any temperature-and-humidity-based measure, heat index does not account for <strong>radiant heat</strong> from hot surfaces or equipment, or the cooling benefit of air movement. In workplaces with strong radiant heat sources, heat index can meaningfully underestimate actual heat stress. WBGT is the preferred standard in those environments.' }
+      ]
+    },
+    dbt: {
+      title: 'Thermometer Only',
+      badge: 'Conservative Estimate',
+      sections: [
+        { h: 'What it measures', p: 'A standard thermometer reads dry-bulb <strong>air temperature only</strong>. Without a humidity reading, the exact level of heat stress cannot be determined — humidity is a major factor in how effectively the body cools itself through evaporative sweating (NIOSH, 2016).' },
+        { h: 'How this tool uses it', p: 'When only air temperature is available, this tool assumes <strong>100% relative humidity</strong> — the most conservative possible condition. The resulting work-rest schedule will never be less protective than necessary; if humidity is actually lower, the schedule simply errs on the side of caution.' },
+        { h: 'Recommendation', p: 'If resources allow, adding an inexpensive hygrometer (to pair with the thermometer) or upgrading to a combined T+RH monitor will give a more accurate — and potentially less restrictive — schedule. A WBGT meter gives the most complete picture for indoor workplaces with heat sources.' }
+      ]
+    }
+  };
+
+  let _deviceInfoTrigger = null;
+  function showDeviceInfo(key) {
+    const info = DEVICE_INFO[key];
+    if (!info) return;
+    _deviceInfoTrigger = document.activeElement;
+    document.getElementById('device-info-title').textContent = info.title;
+    let html = '';
+    if (info.badge) html += `<span class="device-info-badge">${info.badge}</span>`;
+    info.sections.forEach(s => {
+      if (s.html) { html += `<h4>${s.h}</h4>${s.html}`; }
+      else { html += `<h4>${s.h}</h4><p>${s.p}</p>`; }
+    });
+    document.getElementById('device-info-body').innerHTML = html;
+    document.getElementById('device-info-overlay').hidden = false;
+    document.getElementById('device-info-close').focus();
+  }
+  function closeDeviceInfo() {
+    document.getElementById('device-info-overlay').hidden = true;
+    if (_deviceInfoTrigger) { _deviceInfoTrigger.focus(); _deviceInfoTrigger = null; }
+  }
+
+  function positionGridDividers() {
+    const grid = document.querySelector('.method-cards-full');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.method-card-full');
+    if (cards.length < 3) return;
+    const gridRect  = grid.getBoundingClientRect();
+    const card3Rect = cards[2].getBoundingClientRect(); // bottom-left card
+    const card2Rect = cards[1].getBoundingClientRect(); // top-right card
+    // Red horizontal: sits at the top edge of the bottom-row cards
+    const redTop = card3Rect.top - gridRect.top;
+    const redH   = 3;
+    const divH = document.getElementById('grid-div-h');
+    if (divH) divH.style.top = redTop + 'px';
+    // Green vertical: two segments that stop/start at the red line (no overlap)
+    const vLeft = (card2Rect.left - gridRect.left - 3) + 'px';
+    const gridH = grid.offsetHeight;
+    const divTop = document.getElementById('grid-div-v-top');
+    if (divTop) {
+      divTop.style.left   = vLeft;
+      divTop.style.top    = '0px';
+      divTop.style.height = redTop + 'px';
+    }
+    const divBot = document.getElementById('grid-div-v-bot');
+    if (divBot) {
+      divBot.style.left   = vLeft;
+      divBot.style.top    = (redTop + redH) + 'px';
+      divBot.style.height = (gridH - redTop - redH) + 'px';
+    }
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls4 = document.getElementById('ls4');
+    const fixedH = fixedTop.offsetHeight;
+
+    if (window.innerWidth <= 768) {
+      // On mobile #ls4 is position:static — use paddingTop, not top
+      ls4.style.top = '';
+      ls4.style.paddingTop = (fixedH + 10) + 'px';
+
+      // Equalize all four card heights to the tallest
+      const cards = ls4.querySelectorAll('.method-card-full');
+      cards.forEach(c => { c.style.height = ''; });
+      let maxH = 0;
+      cards.forEach(c => { maxH = Math.max(maxH, c.offsetHeight); });
+      if (maxH > 0) cards.forEach(c => { c.style.height = maxH + 'px'; });
+    } else {
+      ls4.style.paddingTop = '';
+      ls4.style.top = fixedH + 'px';
+    }
+
+    positionGridDividers();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = WRC.get();
+    const labelEl = document.getElementById('ls4-activity-label');
+    const kcalEl  = document.getElementById('ls4-activity-kcal');
+    const badgeEl = document.getElementById('ls4-worker-status-badge');
+
+    const actLabel = s.activityLabel || 'Moderate Work';
+    const actKcal  = s.activityKcal  || '~200–350 kcal/hr';
+    const status   = s.workerStatus  || 'acclimatized';
+
+    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
+    const act = s.activity || 'moderate';
+    if (labelEl) labelEl.textContent = (emojiMap[act] || '') + ' ' + actLabel;
+    if (kcalEl)  kcalEl.textContent  = actKcal;
+
+    if (badgeEl) {
+      if (status === 'acclimatized') {
+        badgeEl.textContent = '✅ Acclimatized';
+        badgeEl.style.background = 'var(--safe-bg)';
+        badgeEl.style.color = '#005540';
+      } else {
+        badgeEl.textContent = '⚠ Unacclimatized';
+        badgeEl.style.background = 'var(--warn-bg)';
+        badgeEl.style.color = '#7B2500';
+      }
+    }
+
+    buildBreadcrumbs();
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>
