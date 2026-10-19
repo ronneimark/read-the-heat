@@ -1739,6 +1739,9 @@
     background: #D50032; /* prevents warm-white body from bleeding through subpixel gaps */
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     cursor: pointer; /* banner is clickable (navigates home); buttons/links override this */
+    /* Push content below the Dynamic Island / notch on iPhones.
+       viewport-fit=cover lets env() return the real inset; falls back to 0. */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   #def-panels-container {
     position: fixed;
