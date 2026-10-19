@@ -169,7 +169,7 @@
                 <li class="intro-step" role="button" tabindex="0" title="Highlight the results section on the page"
                     onclick="highlightStep(event,6)"
                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}">
-                  <div class="step-badge" aria-hidden="true">→</div>
+                  <div class="step-badge" aria-hidden="true">🟰</div>
                   <div class="step-body">
                     <span class="step-title">Get your work-rest recommendation</span>
                     <span class="step-desc">Your personalized NIOSH work-rest schedule appears — with minutes of work and rest per hour.</span>
@@ -620,7 +620,7 @@
   position: absolute;
   left: 14px; top: 18px; bottom: 18px;
   width: 2px;
-  background: linear-gradient(to bottom, #001E62 0%, rgba(0,30,98,0.15) 100%);
+  background: linear-gradient(to bottom, #C8102E 0%, rgba(200,16,46,0.12) 100%);
   border-radius: 2px;
   pointer-events: none;
 }
@@ -641,19 +641,20 @@
   flex-shrink: 0;
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: #001E62;
+  background: #C8102E;
   color: #fff;
   font-weight: 800;
   font-size: 14px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,30,98,0.30);
+  box-shadow: 0 2px 6px rgba(200,16,46,0.30);
   position: relative;
   z-index: 1;
   margin-top: 1px;
 }
 .intro-step:last-child .step-badge {
-  background: linear-gradient(135deg, #D50032 0%, #8B0000 100%);
-  box-shadow: 0 2px 6px rgba(213,0,50,0.30);
+  background: #FFD700;
+  color: #111;
+  box-shadow: 0 2px 6px rgba(255,215,0,0.40);
   font-size: 18px;
 }
 .step-body {
