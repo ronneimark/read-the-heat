@@ -187,8 +187,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   #trh-unacclim-tab-bar-wrap { display: none !important; }
 
   /* Force non-result panes hidden */
-  #trh-tab-chart, #trh-tab-notes, #trh-tab-formula, #trh-tab-reftable,
-  #trh-utab-chart, #trh-utab-notes, #trh-utab-formula, #trh-utab-reftable,
+  #trh-tab-chart, #trh-tab-notes, #trh-tab-formula, #trh-tab-reftable, #trh-tab-ewbgt,
+  #trh-utab-chart, #trh-utab-notes, #trh-utab-formula, #trh-utab-reftable, #trh-utab-ewbgt,
   #trh-formula-footnote { display: none !important; }
 
   /* Release result panes from fixed/viewport-height sizing */
@@ -277,7 +277,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   }
   #trh-tab-result-wrap, #trh-utab-result-wrap,
   #trh-tab-formula, #trh-utab-formula,
-  #trh-tab-reftable, #trh-utab-reftable {
+  #trh-tab-reftable, #trh-utab-reftable,
+  #trh-tab-ewbgt, #trh-utab-ewbgt {
     flex: 1; min-height: 0; overflow-y: auto;
   }
   #trh-tab-notes, #trh-utab-notes {
@@ -568,6 +569,84 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   opacity: 0.68; letter-spacing: 0.15px; margin-top: 3px;
   text-transform: none; white-space: nowrap;
 }
+/* ── eWBGT tab styles ── */
+.ewbgt-pane {
+  padding: 14px 16px 20px;
+  box-sizing: border-box;
+  max-width: 680px;
+}
+.ewbgt-result-row {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 4px;
+}
+.ewbgt-val {
+  font-size: 2.6rem; font-weight: 700; line-height: 1;
+  color: var(--hi-num, #1B4FA8);
+  font-variant-numeric: tabular-nums;
+}
+.ewbgt-unit-label {
+  font-size: 1.1rem; font-weight: 600; color: var(--subtext, #6B7C93);
+}
+.ewbgt-sub {
+  font-size: 12px; color: var(--subtext, #6B7C93); margin-bottom: 14px;
+}
+.ewbgt-caveat {
+  background: #FFF8E1; border: 1px solid #FFD54F; border-radius: 6px;
+  padding: 10px 12px; margin-bottom: 14px; font-size: 13px; line-height: 1.5;
+  color: #5D4037;
+}
+.ewbgt-caveat strong { color: #E65100; }
+@media (prefers-color-scheme: dark) {
+  .ewbgt-caveat { background: #3B2C00; border-color: #856500; color: #FFD97D; }
+  .ewbgt-caveat strong { color: #FFBA44; }
+}
+.ewbgt-formula-block {
+  background: var(--card-bg, #F4F7FB); border: 1px solid var(--border, #D8DFE8);
+  border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;
+  font-size: 12px; line-height: 1.6; color: var(--text, #1A2232);
+}
+.ewbgt-formula-block code { font-family: monospace; font-size: 12px; }
+.ewbgt-formula-block cite { font-style: italic; font-size: 11px; color: var(--subtext, #6B7C93); }
+/* NIOSH chart toggle */
+.ewbgt-chart-toggle {
+  width: 100%; text-align: left; background: var(--card-bg, #F4F7FB);
+  border: 1px solid var(--border, #D8DFE8); border-radius: 6px;
+  padding: 8px 12px; cursor: pointer; font-size: 13px; font-weight: 600;
+  color: var(--text, #1A2232); display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 0;
+}
+.ewbgt-chart-toggle:hover { background: var(--hover-bg, #E8EDF5); }
+.ewbgt-chart-toggle .toggle-arrow { transition: transform 0.2s; display: inline-block; }
+.ewbgt-chart-toggle.expanded .toggle-arrow { transform: rotate(180deg); }
+.ewbgt-niosh-wrap {
+  border: 1px solid var(--border, #D8DFE8); border-top: none;
+  border-radius: 0 0 6px 6px; overflow-x: auto; margin-bottom: 14px;
+}
+.ewbgt-niosh-wrap.mini { max-height: 130px; overflow: hidden; position: relative; }
+.ewbgt-niosh-wrap.mini::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 36px;
+  background: linear-gradient(transparent, var(--card-bg, #F4F7FB));
+  pointer-events: none;
+}
+table.ewbgt-niosh-tbl {
+  border-collapse: collapse; width: 100%; font-size: 12px;
+  background: var(--card-bg, #F4F7FB);
+}
+table.ewbgt-niosh-tbl th {
+  background: var(--table-head-bg, #E4EAF3); color: var(--text, #1A2232);
+  padding: 5px 8px; font-size: 11px; font-weight: 700; text-align: center;
+  white-space: nowrap;
+}
+table.ewbgt-niosh-tbl td {
+  padding: 4px 8px; text-align: center; border-top: 1px solid var(--border, #D8DFE8);
+  white-space: nowrap;
+}
+table.ewbgt-niosh-tbl td:first-child { text-align: left; font-weight: 600; }
+.ewbgt-niosh-tbl .hit-me { background: #FFE0B2 !important; font-weight: 700; }
+.ewbgt-niosh-note {
+  font-size: 11px; color: var(--subtext, #6B7C93); padding: 6px 10px;
+  background: var(--card-bg, #F4F7FB); border-top: 1px solid var(--border, #D8DFE8);
+}
 /* ── Table / chart header sub-labels ── */
 .th-sub {
   display: block; font-size: 10px; font-weight: 500;
@@ -579,7 +658,8 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   #trh-tab-result-wrap, #trh-utab-result-wrap,
   #trh-tab-formula, #trh-utab-formula,
   #trh-tab-reftable, #trh-utab-reftable,
-  #trh-tab-notes, #trh-utab-notes {
+  #trh-tab-notes, #trh-utab-notes,
+  #trh-tab-ewbgt, #trh-utab-ewbgt {
     padding-bottom: 94px !important;
   }
 }
@@ -671,6 +751,12 @@ body.trh-result-active .hi-formula-footnote { display: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
         <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
       </button>
+      <button class="acclim-tab-btn" id="trh-tab-btn-ewbgt" role="tab"
+              aria-selected="false" aria-controls="trh-tab-ewbgt" tabindex="-1"
+              onclick="switchTrhTab('ewbgt')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌐 </span>eWBGT</span>
+        <span class="acclim-tab-btn-sub">Estimated wet bulb globe temp</span>
+      </button>
     </div>
   </div>
 
@@ -707,6 +793,12 @@ body.trh-result-active .hi-formula-footnote { display: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">🌡 </span>T + RH → HI</span>
         <span class="acclim-tab-btn-sub">NWS heat index lookup chart</span>
       </button>
+      <button class="acclim-tab-btn" id="trh-utab-btn-ewbgt" role="tab"
+              aria-selected="false" aria-controls="trh-utab-ewbgt" tabindex="-1"
+              onclick="switchTrhUnacclimTab('ewbgt')">
+        <span class="acclim-tab-btn-title"><span aria-hidden="true">🌐 </span>eWBGT</span>
+        <span class="acclim-tab-btn-sub">Estimated wet bulb globe temp</span>
+      </button>
     </div>
   </div>
 
@@ -720,6 +812,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <div id="trh-tab-notes" role="tabpanel" aria-labelledby="trh-tab-btn-notes" tabindex="0"></div>
       <div id="trh-tab-formula" role="tabpanel" aria-labelledby="trh-tab-btn-formula" tabindex="0"></div>
       <div id="trh-tab-reftable" role="tabpanel" aria-labelledby="trh-tab-btn-reftable" tabindex="0"></div>
+      <div id="trh-tab-ewbgt" role="tabpanel" aria-labelledby="trh-tab-btn-ewbgt" tabindex="0"></div>
     </div>
 
     <!-- ── Unacclimatized tab panels ── -->
@@ -731,6 +824,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       <div id="trh-utab-notes" role="tabpanel" aria-labelledby="trh-utab-btn-notes" tabindex="0"></div>
       <div id="trh-utab-formula" role="tabpanel" aria-labelledby="trh-utab-btn-formula" tabindex="0"></div>
       <div id="trh-utab-reftable" role="tabpanel" aria-labelledby="trh-utab-btn-reftable" tabindex="0"></div>
+      <div id="trh-utab-ewbgt" role="tabpanel" aria-labelledby="trh-utab-btn-ewbgt" tabindex="0"></div>
     </div>
   </div><!-- /trh-tab-content-area -->
 </div><!-- /trh-result-card -->
@@ -1000,6 +1094,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
       buildTrhUnacclimResultTab();
       buildTrhFormulaTab();
       buildTrhUnacclimFormulaTab();
+      buildTrhEwbgtTab(); buildTrhUnacclimEwbgtTab();
       // Rebuild notes if RH state changed (so temp-only banner appears/disappears)
       if (!prevRhNull) { buildTrhNotesTab(); buildTrhUnacclimNotesTab(); }
       return;
@@ -1030,6 +1125,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     // Also rebuild NWS table so highlight cell updates
     if (prevRhNull) { buildTrhNotesTab(); buildTrhUnacclimNotesTab(); }
     buildTrhRefTable(); buildTrhUnacclimRefTable();
+    buildTrhEwbgtTab(); buildTrhUnacclimEwbgtTab();
   }
 
   // ── Formula Check tab builder ─────────────────────────────────────────────────
@@ -1635,10 +1731,141 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     });
   }
 
+  // ── eWBGT tab builder ─────────────────────────────────────────────────────────
+  // Bernard & Pourmoghani (1999) shade/indoor formula:
+  //   Pv (kPa) = (RH/100) × 0.6107 × exp(17.27 × T_C / (T_C + 237.3))
+  //   eWBGT (°C) = −0.7 + 0.66 × T_C + 2.9 × Pv
+  function calcEwbgt(tempF, rh) {
+    const T = (tempF - 32) * 5 / 9;  // convert to °C
+    const Pv = (rh / 100) * 0.6107 * Math.exp(17.27 * T / (T + 237.3));
+    const ewbgt_c = -0.7 + 0.66 * T + 2.9 * Pv;
+    return { c: Math.round(ewbgt_c * 10) / 10, f: Math.round((ewbgt_c * 9/5 + 32) * 10) / 10 };
+  }
+
+  // NIOSH 2016 WBGT action limits (REL = acclimatized, RAL = unacclimatized)
+  // Source: NIOSH Criteria Document (2016), DHHS Pub. No. 2016-106
+  // Values in °C; °F equivalents shown in parentheses
+  const _nioshWbgtData = [
+    // [work%, light-REL, mod-REL, heavy-REL, light-RAL, mod-RAL, heavy-RAL]
+    ['100% (continuous)',  30.0, 26.7, 25.0,  28.0, 25.0, 22.2],
+    ['75% work / 25% rest', 30.6, 28.0, 25.9, 29.4, 26.7, 23.9],
+    ['50% work / 50% rest', 31.4, 29.4, 27.9, 31.1, 28.9, 26.7],
+    ['25% work / 75% rest', 32.2, 31.1, 30.0, 32.2, 31.1, 28.9],
+  ];
+
+  function _buildEwbgtPane(paneId, acclimType) {
+    // acclimType: 'acclim' or 'unacclim'
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+
+    const hasData = _hiTempValF != null && _hiRhVal != null;
+    let ewbgt = null;
+    if (hasData) ewbgt = calcEwbgt(_hiTempValF, _hiRhVal);
+
+    const showF = _hiUnit !== 'C';
+    const valStr   = ewbgt ? (showF ? ewbgt.f + '°F' : ewbgt.c + '°C') : '—';
+    const unitLabel = showF ? '°F' : '°C';
+
+    // Determine which NIOSH column to highlight (REL vs RAL)
+    const relCols = [1, 2, 3];  // light, mod, heavy — REL (acclim)
+    const ralCols = [4, 5, 6];  // light, mod, heavy — RAL (unacclim)
+    const useCols = acclimType === 'acclim' ? relCols : ralCols;
+
+    // Build NIOSH table rows
+    // Find if ewbgt.c is at or above any limit — highlight first exceeded cell per row
+    function nioshRow(rowData) {
+      const [label, lREL, mREL, hREL, lRAL, mRAL, hRAL] = rowData;
+      const vals = acclimType === 'acclim'
+        ? [lREL, mREL, hREL]
+        : [lRAL, mRAL, hRAL];
+      const wlabels = ['Light', 'Moderate', 'Heavy'];
+      const cells = vals.map((v, i) => {
+        const vF = Math.round((v * 9/5 + 32) * 10) / 10;
+        const dispVal = showF ? vF + '°F' : v + '°C';
+        // highlight cell if eWBGT meets or exceeds this limit
+        const exceeded = ewbgt && ewbgt.c >= v;
+        return `<td class="${exceeded ? 'hit-me' : ''}">${dispVal}</td>`;
+      }).join('');
+      return `<tr><td>${label}</td>${cells}</tr>`;
+    }
+
+    const tableRows = _nioshWbgtData.map(nioshRow).join('');
+    const toggleId = paneId + '-toggle';
+    const wrapId   = paneId + '-nwrap';
+
+    const acclimLabel = acclimType === 'acclim'
+      ? 'REL (Recommended Exposure Limit) — <strong>acclimatized</strong>'
+      : 'RAL (Recommended Action Limit) — <strong>unacclimatized</strong>';
+
+    pane.innerHTML = `
+<div class="ewbgt-pane">
+  <div class="ewbgt-result-row">
+    <span class="ewbgt-val">${valStr}</span>
+  </div>
+  <div class="ewbgt-sub">
+    ${hasData
+      ? `Estimated WBGT from T = ${showF ? _hiTempValF + '°F' : Math.round((_hiTempValF-32)*5/9*10)/10 + '°C'}, RH = ${_hiRhVal}%`
+      : 'Enter temperature and relative humidity above to calculate.'}
+  </div>
+
+  <div class="ewbgt-caveat">
+    <strong>⚠️ Radiant heat not included.</strong>
+    This estimate uses only dry-bulb temperature and relative humidity.
+    The WBGT measured outdoors or near radiant heat sources (furnaces, sunlight, hot surfaces)
+    will be <em>higher</em> — sometimes substantially so.
+    Use a calibrated WBGT instrument in radiant or outdoor environments.
+    This figure is useful for <strong>indoor, shaded, or artificially ventilated</strong> settings only.
+  </div>
+
+  <div class="ewbgt-formula-block">
+    <strong>Formula (shade/indoor):</strong><br>
+    <code>P<sub>v</sub> = (RH/100) × 0.6107 × e<sup>17.27T / (T + 237.3)</sup></code><br>
+    <code>eWBGT = −0.7 + 0.66 × T + 2.9 × P<sub>v</sub></code>
+    &nbsp;(T in °C, P<sub>v</sub> in kPa)<br>
+    <cite>Bernard, T.E. &amp; Pourmoghani, M. (1999). Prediction of workplace wet bulb global temperature.
+    <em>Applied Occupational and Environmental Hygiene</em>, 14(2): 126–134.</cite>
+  </div>
+
+  <button class="ewbgt-chart-toggle" id="${toggleId}" aria-expanded="false"
+          onclick="(function(){
+            var btn = document.getElementById('${toggleId}');
+            var wrap = document.getElementById('${wrapId}');
+            var expanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', String(!expanded));
+            btn.classList.toggle('expanded', !expanded);
+            wrap.classList.toggle('mini', expanded);
+          })()">
+    <span>📊 NIOSH WBGT Action Limits — ${acclimLabel}</span>
+    <span class="toggle-arrow">▾</span>
+  </button>
+  <div class="ewbgt-niosh-wrap mini" id="${wrapId}">
+    <table class="ewbgt-niosh-tbl" aria-label="NIOSH WBGT limits by work-rest regimen">
+      <thead>
+        <tr>
+          <th>Work-Rest Regimen</th>
+          <th>Light<br><span class="th-sub">≤200 W</span></th>
+          <th>Moderate<br><span class="th-sub">200–350 W</span></th>
+          <th>Heavy<br><span class="th-sub">350–500 W</span></th>
+        </tr>
+      </thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+    <div class="ewbgt-niosh-note">
+      Highlighted cells (if any) indicate limits that equal or exceed your current eWBGT.
+      Source: NIOSH (2016). <em>Criteria for a Recommended Standard: Occupational Exposure to Heat and Hot Environments.</em>
+      DHHS (NIOSH) Publication No. 2016-106. Metabolic rate categories per ISO 8996.
+    </div>
+  </div>
+</div>`;
+  }
+
+  function buildTrhEwbgtTab()         { _buildEwbgtPane('trh-tab-ewbgt',  'acclim'); }
+  function buildTrhUnacclimEwbgtTab() { _buildEwbgtPane('trh-utab-ewbgt', 'unacclim'); }
+
   // ── Tab switching ─────────────────────────────────────────────────────────────
   function switchTrhTab(which) {
     _hiCurrentTab = which;
-    const tabs = ['result','chart','notes','formula','reftable'];
+    const tabs = ['result','chart','notes','formula','reftable','ewbgt'];
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'trh-tab-result-wrap' : 'trh-tab-' + t;
       const panel = document.getElementById(panelId);
@@ -1663,7 +1890,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
   function switchTrhUnacclimTab(which) {
     _hiUnacclimCurrentTab = which;
-    const tabs = ['result','chart','notes','formula','reftable'];
+    const tabs = ['result','chart','notes','formula','reftable','ewbgt'];
     tabs.forEach(t => {
       const panelId = t === 'result' ? 'trh-utab-result-wrap' : 'trh-utab-' + t;
       const panel = document.getElementById(panelId);
@@ -1717,6 +1944,9 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     // Rebuild ref tables if visible
     if (_hiCurrentTab         === 'reftable') buildTrhRefTable();
     if (_hiUnacclimCurrentTab === 'reftable') buildTrhUnacclimRefTable();
+    // Rebuild eWBGT tabs if visible
+    if (_hiCurrentTab         === 'ewbgt') buildTrhEwbgtTab();
+    if (_hiUnacclimCurrentTab === 'ewbgt') buildTrhUnacclimEwbgtTab();
     // Rebuild result tabs
     buildTrhResultTab();
     buildTrhUnacclimResultTab();
@@ -1872,12 +2102,14 @@ body.trh-result-active .hi-formula-footnote { display: none; }
     buildTrhNotesTab();
     buildTrhFormulaTab();
     buildTrhRefTable();
+    buildTrhEwbgtTab();
     buildTrhUnacclimResultTab();
 
     buildTrhUnacclimChartTab();
     buildTrhUnacclimNotesTab();
     buildTrhUnacclimFormulaTab();
     buildTrhUnacclimRefTable();
+    buildTrhUnacclimEwbgtTab();
 
     // Activate first tab in each section
     switchTrhTab('result');
@@ -1885,7 +2117,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
     // Keyboard nav — acclimatized tablist
     document.getElementById('trh-acclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula','reftable'];
+      const tabs = ['result','chart','notes','formula','reftable','ewbgt'];
       const cur  = tabs.findIndex(t => document.getElementById('trh-tab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
@@ -1899,7 +2131,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
     // Keyboard nav — unacclimatized tablist
     document.getElementById('trh-unacclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula','reftable'];
+      const tabs = ['result','chart','notes','formula','reftable','ewbgt'];
       const cur  = tabs.findIndex(t => document.getElementById('trh-utab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
