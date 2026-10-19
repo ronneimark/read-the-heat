@@ -863,14 +863,8 @@
     min-height: 0 !important;
   }
 
-  /* reinstate health/method notes that shared.css hides on mobile */
-  .intro-health-note,
-  .intro-method-note { display: block !important; }
-  /* separator line between panel content and the notes */
-  .intro-health-note:first-of-type {
-    border-top: 2px solid #c8d8b0 !important;
-    margin-top: 6px !important;
-  }
+  /* health/method notes hidden on mobile — shared.css already sets display:none;
+     intentionally not reinstated here so the popover stays focused on content */
 
   /* sticky tab bar — sticks to top of the scrolling modal */
   .intro-tab-bar {
