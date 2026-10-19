@@ -212,7 +212,7 @@
 
           <!-- health factors note — pinned below all tabs -->
           <button class="intro-health-note" onclick="highlightHealthBtn(event)" aria-label="Individual Health Risk Factors" title="Open Individual Health Risk Factors">
-            <span class="intro-health-note-label">NOTE: Individual Health Factors</span>
+            <span class="intro-note-btn-chip intro-note-btn-health" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#D50032" stroke="#D50032" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="intro-health-note-label">Individual Health Factors</span>
             play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
             Health factors commonly impacting heat stress can be viewed on this site.
             <span class="intro-health-note-link">↖ click to see</span>
@@ -220,13 +220,13 @@
 
           <!-- methodology note — secondary, pinned below health note -->
           <button class="intro-health-note intro-method-note" onclick="highlightMethodBtn(event)" aria-label="Sources and Methodology" title="Open Sources &amp; Methodology">
-            The <strong>ⓘ</strong> button opens the <strong>Sources &amp; Methodology</strong> page — background on the NIOSH standards and calculations behind this tool.
+            The <span class="intro-note-btn-chip intro-note-btn-method" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#001E62" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> button opens <strong>Sources &amp; Methodology</strong> — background on the NIOSH standards and calculations behind this tool.
             <span class="intro-health-note-link">↗ click to see</span>
           </button>
 
           <!-- feedback note — tertiary, pinned below methodology note -->
           <button class="intro-health-note intro-method-note" onclick="highlightFeedbackBtn(event)" aria-label="Comments and Suggestions" title="Open Comments &amp; Suggestions">
-            The <strong>💬</strong> button opens a <strong>Comments &amp; Suggestions</strong> form where you can send feedback or recommendations.
+            The <span class="intro-note-btn-chip intro-note-btn-feedback" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> button opens <strong>Comments &amp; Suggestions</strong> — send feedback or recommendations about the tool.
             <span class="intro-health-note-link">↗ click to see</span>
           </button>
 
@@ -327,6 +327,49 @@
   border-radius: 0 0 8px 8px;
 }
 .intro-method-note:hover { background: #eaf3e4; }
+
+/* ── mini button chips: replicas of the header buttons shown in footer notes ── */
+.intro-note-btn-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+  margin-right: 5px;
+}
+.intro-note-btn-chip svg { width: 14px; height: 14px; display: block; }
+/* Yellow circle — matches .health-btn */
+.intro-note-btn-health {
+  border-radius: 50%;
+  background: linear-gradient(180deg, #FFD600 0%, #F9A800 75%);
+  border: 2px solid #ffe066;
+  box-shadow: 0 2px 0 #b87800, 0 3px 8px rgba(0,0,0,0.22);
+}
+/* Yellow left-half pill — matches .split-pill-left */
+.intro-note-btn-method {
+  border-radius: 999px 3px 3px 999px;
+  background: linear-gradient(180deg, #FFD600 0%, #F9A800 80%);
+  border: 2px solid #ffe066;
+  border-right: none;
+  box-shadow: 0 2px 0 #b87800, 0 3px 8px rgba(0,0,0,0.22);
+}
+/* Teal right-half pill — matches .split-pill-right */
+.intro-note-btn-feedback {
+  border-radius: 3px 999px 999px 3px;
+  background: linear-gradient(180deg, #26A69A 0%, #00796B 80%);
+  border: 2px solid #00897B;
+  border-left: none;
+  box-shadow: 0 2px 0 #004D40, 0 3px 8px rgba(0,0,0,0.22);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-note-btn-health { box-shadow: 0 2px 0 #7a4f00, 0 3px 8px rgba(0,0,0,0.4); }
+  .intro-note-btn-method { box-shadow: 0 2px 0 #7a4f00, 0 3px 8px rgba(0,0,0,0.4); }
+  .intro-note-btn-feedback { box-shadow: 0 2px 0 #003020, 0 3px 8px rgba(0,0,0,0.4); }
+}
 
 /* ── health button pulse highlight ── */
 @keyframes health-pulse-ring {
