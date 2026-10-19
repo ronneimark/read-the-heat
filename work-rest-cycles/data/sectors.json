@@ -1,100 +1,3146 @@
-{
-  "restaurant": {
-    "label": "Restaurant / Food Service",
-    "light": ["Cashiering, hosting, and expediting", "Light prep work (chopping while seated, shelling, garnishing)", "Bartending at low volume", "Counter service and order taking", "Food running short distances on the same floor", "Restocking condiment stations and service areas"],
-    "moderate": ["Line cooking: continuous standing, stirring, and lifting pots", "Dishwashing — sustained standing with repeated lifts", "Bussing tables at volume", "Stocking walk-in coolers and dry storage", "Food delivery runs between floors", "Pizza dough handling and oven loading", "Prep cooking — sustained standing with repetitive cuts and mixing"],
-    "heavy": ["Rolling and lifting full kegs (≥50 kg / 110 lb)", "Sustained heavy pot handling in high-volume kitchens", "Manual bulk supply unloading from delivery vehicles", "Cleaning hood systems overhead with heavy equipment", "Scrubbing floors and equipment in full kitchen gear"],
-    "vh": ["Sustained heavy manual cleaning in boiler rooms or grease traps", "Intensive physical setup and breakdown for large banquet or catering events involving repeated heavy lifting"]
+[
+  {
+    "id": "restaurant-cashiering-hosting-and-expediting",
+    "description": "Cashiering, hosting, and expediting",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "warehouse": {
-    "label": "Warehouse / Distribution",
-    "light": ["Scanning and inventory counting on foot", "Light picking from conveyors or low shelves", "Quality inspection at a fixed station", "Clerical, dispatch, or supervisory work on the floor"],
-    "moderate": ["Order picking on foot across a large floor", "Pushing loaded pallet jacks with moderate loads", "Stocking mid-height shelves", "Receiving, sorting, and staging packages", "Operating a stand-up or sit-down forklift"],
-    "heavy": ["Manual unloading of freight trucks — carrying boxes piece-by-piece from trailer to dock", "Hand-stacking heavy cases on high shelves", "Breaking down and redistributing heavy pallets without mechanical assist", "Intensive order picking with loads over 30 kg (65 lb)", "Manual movement of large rolls, coils, or machinery components"],
-    "vh": ["Sustained manual unloading of extremely heavy bulk freight without conveyor assist", "Continuous hand-stacking of maximum-weight loads at full overhead reach", "Intensive freight handling in non-climate-controlled dock areas during summer"]
+  {
+    "id": "restaurant-light-prep-work-chopping-while",
+    "description": "Light prep work (chopping while seated, shelling, garnishing)",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "factory": {
-    "label": "Factory / Manufacturing",
-    "light": ["Machine monitoring and troubleshooting from a fixed position", "Light bench assembly of small components", "Quality control inspection at a station", "Packaging small parts or finished goods", "Data entry and production logging on the floor"],
-    "moderate": ["Assembly line work requiring walking and sustained arm exertion", "Operating hand tools continuously while standing", "Loading and unloading semi-automated equipment", "Spray painting or coating while standing and moving", "Textile or garment machine operation"],
-    "heavy": ["Heavy manual assembly with large or bulky components", "Sustained operation of heavy power tools (jackhammers, large grinders, compactors)", "Loading and unloading industrial kilns, ovens, or presses", "Foundry floor work — mold handling and pouring assist", "Heavy pressing, die work, and stamping operations"],
-    "vh": ["Foundry floor work — manual mold-breaking, tapping, slagging, and raking", "Heavy forging assist — sustained exertion with hot metals", "Sustained shoveling of materials into hoppers or conveyors", "Intensive indoor demolition of structures or equipment", "Heavy steel or aluminum fabrication — sustained cutting and shaping"]
+  {
+    "id": "restaurant-bartending-at-low-volume",
+    "description": "Bartending at low volume",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "healthcare": {
-    "label": "Healthcare",
-    "light": ["Charting, documentation, and computer work", "Medication dispensing and preparation", "Patient observation and monitoring from a station", "Reception, admissions, and clerical work", "Lab bench work and specimen processing", "Phone triage and care coordination"],
-    "moderate": ["Assisting and ambulating patients on the floor", "Making and changing occupied beds", "Transporting patients by wheelchair or stretcher", "Sustained floor nursing — walking and standing throughout a shift", "Phlebotomy and specimen collection rounds", "Central sterile processing and reprocessing"],
-    "heavy": ["Manual patient lifts and full lateral transfers without mechanical lift equipment", "Sustained or repeated CPR cycles", "Repositioning and turning bariatric patients", "Intensive physical and occupational therapy sessions", "Code response requiring extended physical effort"],
-    "vh": ["Extended manual CPR — multiple continuous cycles without relief", "Sustained physical management of combative or resistive patients", "Emergency multi-person patient extraction from a room or vehicle", "Sustained very heavy repositioning in mass casualty or code situations"]
+  {
+    "id": "restaurant-counter-service-and-order-taking",
+    "description": "Counter service and order taking",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "retail": {
-    "label": "Retail",
-    "light": ["Cashiering and point-of-sale transactions", "Customer service desk and returns processing", "Fitting room attendant", "Product demonstrations at a fixed location", "Greeter or door staff", "Jewelry or specialty counter work", "Phone-based customer service"],
-    "moderate": ["Stocking and facing shelves throughout a large sales floor", "Pushing merchandise carts and restocking floor displays", "Folding and organizing clothing at volume", "Backroom freight receiving and sorting", "Running purchases to customer vehicles", "Visual merchandising — moving and arranging displays"],
-    "heavy": ["Unloading and manually moving merchandise from delivery trucks", "Stocking heavy cases (water, pet food, appliances, lumber)", "Pushing heavily loaded floor jacks or pallet movers", "Moving large furniture or appliances across the sales floor", "Setting up and breaking down large gondolas and store fixtures"],
-    "vh": ["Sustained manual unloading of high-volume freight trucks without mechanical assist", "Continuous manual movement of maximum-weight merchandise at pace", "Intensive store resets and remodels — repeated heavy lifting, fixture movement, and sustained physical labor across a full shift"]
+  {
+    "id": "restaurant-food-running-short-distances-on",
+    "description": "Food running short distances on the same floor",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "construction": {
-    "label": "Indoor Construction",
-    "light": ["Blueprint review, layout measurement, and marking", "Light cleanup and debris removal (small items)", "Tool staging, organization, and inventory", "Operating controls from a fixed or cab position", "Safety inspection and site supervision on foot"],
-    "moderate": ["Drywall installation on walls (standing, lifting, fastening)", "Painting and priming at standing height", "Electrical wiring — pulling wire, mounting boxes, walking floor", "Plumbing rough-in on lower floors", "Light framing — measuring, cutting, nailing", "Tile setting at ground level"],
-    "heavy": ["Overhead drywall installation on ceilings", "Heavy structural framing — carrying and lifting lumber", "Concrete finishing — sustained bending, tamping, screeding", "Demolition of non-structural elements (walls, flooring)", "Setting large fixtures, beams, or mechanical equipment", "Sustained use of heavy power tools on a large area"],
-    "vh": ["Sustained concrete breaking and removal", "Intensive structural demolition", "Carrying heavy materials up stairs repeatedly without mechanical assist", "Sustained overhead work with heavy tools or components", "Major interior excavation, formwork, and heavy pour operations"]
+  {
+    "id": "restaurant-restocking-condiment-stations-and-service",
+    "description": "Restocking condiment stations and service areas",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "laundry": {
-    "label": "Laundry / Linen Services",
-    "light": ["Sorting clean, dry linens at a table", "Folding lightweight items (pillowcases, small linens)", "Supervisory rounds and quality inspection", "Operating automated sorting conveyors"],
-    "moderate": ["Operating commercial washing and drying machines", "Sorting and loading moderate-weight laundry", "Folding heavy linens (sheets, towels, gowns) at a standing station", "Pushing loaded laundry carts between stations", "Operating flatwork ironers and folder machines"],
-    "heavy": ["Lifting and moving full bags or bins of wet laundry", "Sustained loading and unloading of large industrial washers and dryers", "Manual transport of heavily loaded laundry carts over long distances", "Pressing and finishing of heavy institutional linens"],
-    "vh": ["Sustained lifting and moving of wet linen loads at production pace — one of the highest-metabolic-rate indoor occupations", "Intensive manual handling of large institutional laundry volumes without mechanical assist (e.g., large hotel or hospital linen operations)", "Extended high-pace sorting and loading under high ambient heat from dryers and steam equipment"]
+  {
+    "id": "restaurant-line-cooking-continuous-standing-stirring",
+    "description": "Line cooking: continuous standing, stirring, and lifting pots",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "foodprocessing": {
-    "label": "Food Processing / Meatpacking",
-    "light": ["Quality inspection at a station on the line", "Packaging supervision and monitoring", "Machine monitoring and basic adjustments", "Light sorting, grading, or labeling at a fixed station"],
-    "moderate": ["Product sorting and grading on a moving conveyor line", "Packaging and boxing at moderate sustained pace", "Poultry or fish processing line work — standing, repetitive cutting", "Machine operation with sustained repetitive arm movement", "Operating commercial baking or cooking equipment"],
-    "heavy": ["Sustained meat cutting and deboning", "Heavy lifting of filled product tubs, barrels, or containers", "Manual stacking of heavy cases in cold storage or shipping", "Sustained work across extreme temperature differentials (freezer to processing floor)", "Operating heavy processing machinery with physical exertion"],
-    "vh": ["Intensive sustained cutting and processing in high-volume meatpacking at full production speed", "Manual movement of heavy carcasses or large product loads", "Sustained work at maximum pace in hot processing environments (commercial bakeries, cooking or retort lines)", "High-pace line work combining heat exposure, standing, and repetitive exertion across an entire shift"]
+  {
+    "id": "restaurant-dishwashing-sustained-standing-with-repeated",
+    "description": "Dishwashing — sustained standing with repeated lifts",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "publicsafety": {
-    "label": "Public Safety",
-    "light": ["Report writing, dispatch, and administrative work", "Vehicle inspection and equipment checking", "Station duties and meal preparation", "Non-emergency patient monitoring (EMS at scene)"],
-    "moderate": ["Routine patrol on foot or active post (corrections)", "Non-emergency patient transport and assessment (EMS)", "Staging and positioning equipment at a scene", "Sustained standing during operations and crowd management", "Active scene management and coordination on foot"],
-    "heavy": ["Active fire suppression — interior structural firefighting", "Patient extrication from vehicles or confined spaces", "Physical management and escort of resistant individuals (corrections)", "Active search and rescue operations with equipment", "Emergency equipment deployment and hose advancement"],
-    "vh": ["Extended interior firefighting operations in full PPE under high heat", "Repeated emergency patient lifts with extrication equipment", "Sustained physical restraint situations in corrections or emergency settings", "Mass casualty response requiring continuous heavy exertion over an extended period"]
+  {
+    "id": "restaurant-bussing-tables-at-volume",
+    "description": "Bussing tables at volume",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "buildingservices": {
-    "label": "Janitorial / Housekeeping",
-    "light": ["Dusting, light wiping, and surface cleaning", "Restroom checks and restocking", "Lobby and common area cleaning with a lightweight mop", "Elevator and entryway cleaning"],
-    "moderate": ["Vacuuming large areas with a commercial upright or backpack vacuum", "Wet mopping corridors and large floor areas", "Trash collection and transport to consolidation points", "Window cleaning at ground or accessible height", "General deep cleaning of offices and common spaces"],
-    "heavy": ["Floor buffing and burnishing with heavy commercial equipment", "Floor stripping — applying and removing finish with heavy machine", "Deep cleaning of industrial or production spaces", "Trash compactor operation and large waste container movement", "Moving heavy furniture and equipment for cleaning access"],
-    "vh": ["Sustained heavy floor stripping and refinishing without mechanical assist on large areas", "Intensive cleaning of large industrial, food production, or manufacturing spaces", "Sustained heavy lifting of large waste containers or equipment in hot mechanical rooms"]
+  {
+    "id": "restaurant-stocking-walkin-coolers-and-dry",
+    "description": "Stocking walk-in coolers and dry storage",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "agriculture": {
-    "label": "Agriculture (Indoor / Greenhouse)",
-    "light": ["Seeding trays and transplanting small seedlings", "Plant inspection, scouting, and record keeping", "Light pruning and deadheading", "Irrigation system monitoring and adjustment", "Pesticide or nutrient mixing at a station"],
-    "moderate": ["Transplanting seedlings at pace across a large area", "Moderate harvesting — picking, trimming, and staging", "Pushing and positioning plant or harvest carts", "Sustained pruning, training, and trellising of plants", "Applying soil amendments and nutrients manually"],
-    "heavy": ["Harvesting and packing heavy crops (squash, melons, potted plants)", "Moving and repositioning heavy growing containers or trays", "Loading and staging produce for transport", "Sustained bending, lifting, and carrying in harvest operations in hot greenhouse conditions"],
-    "vh": ["Sustained intensive harvesting at production pace in hot greenhouse environments", "Manual movement of very heavy plant containers without mechanical assist", "Intensive post-harvest packing and loading operations in enclosed high-humidity spaces"]
+  {
+    "id": "restaurant-food-delivery-runs-between-floors",
+    "description": "Food delivery runs between floors",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "garment": {
-    "label": "Garment / Textile",
-    "light": ["Quality inspection of finished garments", "Pattern review and marking", "Light hand sewing, buttons, or finishing details", "Folding and packaging finished goods"],
-    "moderate": ["Machine sewing — sustained pedal operation with material handling", "Fabric cutting with powered equipment while standing", "Steam pressing of lightweight garments at a station", "Assembly line garment construction — sustained repetitive motion", "Thread trimming and finishing at pace"],
-    "heavy": ["Steam pressing and finishing of heavy garments (suits, coats, uniforms, workwear) in a hot pressing shop", "Sustained operation of heavy industrial sewing, knitting, or weaving machines", "Manual cutting of heavy fabric layers or leather", "Moving large bolts of fabric or rolls of material"],
-    "vh": ["Sustained industrial steam pressing operations in hot environments — prolonged exposure to steam and radiant heat with physical exertion", "Intensive manual handling of heavy textile materials in a high-heat production environment", "High-pace production finishing in a non-climate-controlled pressing or dyeing facility"]
+  {
+    "id": "restaurant-pizza-dough-handling-and-oven",
+    "description": "Pizza dough handling and oven loading",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "hospitality": {
-    "label": "Hospitality / Hotel",
-    "light": ["Front desk check-in and check-out", "Concierge and guest services at a desk or stand", "Reservation and phone handling", "Supervisory walkthroughs and quality inspection", "Light restocking of guest amenities at a cart"],
-    "moderate": ["Guestroom housekeeping — making beds, vacuuming, bathroom cleaning across multiple rooms", "Pushing a fully loaded housekeeping cart between rooms and floors", "Bussing and resetting banquet or restaurant tables at volume", "Sustained room attendant work with repeated bending, lifting, and carrying", "Laundry room operations — loading/unloading washers and dryers, folding linen", "Food and beverage running across a large property"],
-    "heavy": ["Manual setup and breakdown of large banquet or event rooms — moving tables, chairs, staging, and AV equipment", "Deep cleaning of common areas, kitchens, or event spaces with heavy equipment", "Moving heavy furniture, mattresses, or large fixtures between rooms", "Handling and transporting large linen or trash loads through the building", "Loading and unloading hotel supply deliveries — cases of beverages, food, or amenities"],
-    "vh": ["Intensive back-to-back banquet setup and breakdown with repeated heavy furniture lifts across a full shift", "Sustained manual movement of very heavy supply loads (kegs, bulk linens, equipment) without mechanical assist", "Extended deep-cleaning operations in a hot kitchen or laundry facility at production pace"]
+  {
+    "id": "restaurant-prep-cooking-sustained-standing-with",
+    "description": "Prep cooking — sustained standing with repetitive cuts and mixing",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   },
-  "childcare": {
-    "label": "Childcare",
-    "light": ["Administrative and clerical work at a desk or station", "Reading aloud to children while seated", "Supervising quiet or seated activities (art, storytime, puzzles)", "Check-in and check-out desk duties", "Meal preparation — light tasks at a counter"],
-    "moderate": ["Active supervision on a play floor — continuous walking and attending to children", "Walking alongside toddlers and young children throughout the environment", "Leading group movement activities, songs, and games", "Pushing strollers or adaptive equipment", "Diaper changing and dressing — repeated bending, lifting, and positioning", "Setting up and breaking down activity areas and tables", "Carrying infants and small toddlers for short distances and durations"],
-    "heavy": ["Sustained lifting and carrying of infants and toddlers (repeated throughout a shift)", "Physically redirecting or restraining a child in distress or during a behavioral episode", "Moving cribs, cots, high chairs, and heavy classroom furniture", "Carrying children up and down stairs repeatedly", "Sustained active physical play — running, chasing, or physically supporting children during gross motor activities"],
-    "vh": ["Sustained carrying of multiple heavy toddlers or children across a full shift without adequate rest — a frequently underrecognized source of cumulative physical strain", "Intensive physical management of multiple children during outdoor play or emergency situations", "Moving heavy playground equipment, large furniture, or supply deliveries without mechanical assist"]
+  {
+    "id": "restaurant-rolling-and-lifting-full-kegs",
+    "description": "Rolling and lifting full kegs (≥50 kg / 110 lb)",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Load weight (≥50 kg) places this near upper end of category"
+  },
+  {
+    "id": "restaurant-sustained-heavy-pot-handling-in",
+    "description": "Sustained heavy pot handling in high-volume kitchens",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "restaurant-manual-bulk-supply-unloading-from",
+    "description": "Manual bulk supply unloading from delivery vehicles",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "restaurant-cleaning-hood-systems-overhead-with",
+    "description": "Cleaning hood systems overhead with heavy equipment",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "restaurant-scrubbing-floors-and-equipment-in",
+    "description": "Scrubbing floors and equipment in full kitchen gear",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "restaurant-sustained-heavy-manual-cleaning-in",
+    "description": "Sustained heavy manual cleaning in boiler rooms or grease traps",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "High radiant heat exposure compounds metabolic and thermal burden"
+  },
+  {
+    "id": "restaurant-intensive-physical-setup-and-breakdown",
+    "description": "Intensive physical setup and breakdown for large banquet or catering events involving repeated heavy lifting",
+    "sector": [
+      "restaurant"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-scanning-and-inventory-counting-on",
+    "description": "Scanning and inventory counting on foot",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-light-picking-from-conveyors-or",
+    "description": "Light picking from conveyors or low shelves",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-quality-inspection-at-a-fixed",
+    "description": "Quality inspection at a fixed station",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-clerical-dispatch-or-supervisory-work",
+    "description": "Clerical, dispatch, or supervisory work on the floor",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-order-picking-on-foot-across",
+    "description": "Order picking on foot across a large floor",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-pushing-loaded-pallet-jacks-with",
+    "description": "Pushing loaded pallet jacks with moderate loads",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-stocking-midheight-shelves",
+    "description": "Stocking mid-height shelves",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-receiving-sorting-and-staging-packages",
+    "description": "Receiving, sorting, and staging packages",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-operating-a-standup-or-sitdown",
+    "description": "Operating a stand-up or sit-down forklift",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-manual-unloading-of-freight-trucks",
+    "description": "Manual unloading of freight trucks — carrying boxes piece-by-piece from trailer to dock",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Pace and load weight determine exact MET; high-volume sustained pace approaches very heavy"
+  },
+  {
+    "id": "warehouse-handstacking-heavy-cases-on-high",
+    "description": "Hand-stacking heavy cases on high shelves",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-breaking-down-and-redistributing-heavy",
+    "description": "Breaking down and redistributing heavy pallets without mechanical assist",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-intensive-order-picking-with-loads",
+    "description": "Intensive order picking with loads over 30 kg (65 lb)",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-manual-movement-of-large-rolls",
+    "description": "Manual movement of large rolls, coils, or machinery components",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-sustained-manual-unloading-of-extremely",
+    "description": "Sustained manual unloading of extremely heavy bulk freight without conveyor assist",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-continuous-handstacking-of-maximumweight-loads",
+    "description": "Continuous hand-stacking of maximum-weight loads at full overhead reach",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "warehouse-intensive-freight-handling-in-nonclimatecontrolled",
+    "description": "Intensive freight handling in non-climate-controlled dock areas during summer",
+    "sector": [
+      "warehouse"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-machine-monitoring-and-troubleshooting-from",
+    "description": "Machine monitoring and troubleshooting from a fixed position",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-light-bench-assembly-of-small",
+    "description": "Light bench assembly of small components",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-quality-control-inspection-at-a",
+    "description": "Quality control inspection at a station",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-packaging-small-parts-or-finished",
+    "description": "Packaging small parts or finished goods",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-data-entry-and-production-logging",
+    "description": "Data entry and production logging on the floor",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-assembly-line-work-requiring-walking",
+    "description": "Assembly line work requiring walking and sustained arm exertion",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-operating-hand-tools-continuously-while",
+    "description": "Operating hand tools continuously while standing",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-loading-and-unloading-semiautomated-equipment",
+    "description": "Loading and unloading semi-automated equipment",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-spray-painting-or-coating-while",
+    "description": "Spray painting or coating while standing and moving",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-textile-or-garment-machine-operation",
+    "description": "Textile or garment machine operation",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-heavy-manual-assembly-with-large",
+    "description": "Heavy manual assembly with large or bulky components",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-sustained-operation-of-heavy-power",
+    "description": "Sustained operation of heavy power tools (jackhammers, large grinders, compactors)",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-loading-and-unloading-industrial-kilns",
+    "description": "Loading and unloading industrial kilns, ovens, or presses",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-foundry-floor-work-mold-handling",
+    "description": "Foundry floor work — mold handling and pouring assist",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-heavy-pressing-die-work-and",
+    "description": "Heavy pressing, die work, and stamping operations",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-foundry-floor-work-manual-moldbreaking",
+    "description": "Foundry floor work — manual mold-breaking, tapping, slagging, and raking",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-heavy-forging-assist-sustained-exertion",
+    "description": "Heavy forging assist — sustained exertion with hot metals",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-sustained-shoveling-of-materials-into",
+    "description": "Sustained shoveling of materials into hoppers or conveyors",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-intensive-indoor-demolition-of-structures",
+    "description": "Intensive indoor demolition of structures or equipment",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "factory-heavy-steel-or-aluminum-fabrication",
+    "description": "Heavy steel or aluminum fabrication — sustained cutting and shaping",
+    "sector": [
+      "factory"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-charting-documentation-and-computer-work",
+    "description": "Charting, documentation, and computer work",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-medication-dispensing-and-preparation",
+    "description": "Medication dispensing and preparation",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-patient-observation-and-monitoring-from",
+    "description": "Patient observation and monitoring from a station",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-reception-admissions-and-clerical-work",
+    "description": "Reception, admissions, and clerical work",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-lab-bench-work-and-specimen",
+    "description": "Lab bench work and specimen processing",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-phone-triage-and-care-coordination",
+    "description": "Phone triage and care coordination",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-assisting-and-ambulating-patients-on",
+    "description": "Assisting and ambulating patients on the floor",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-making-and-changing-occupied-beds",
+    "description": "Making and changing occupied beds",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-transporting-patients-by-wheelchair-or",
+    "description": "Transporting patients by wheelchair or stretcher",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-sustained-floor-nursing-walking-and",
+    "description": "Sustained floor nursing — walking and standing throughout a shift",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-phlebotomy-and-specimen-collection-rounds",
+    "description": "Phlebotomy and specimen collection rounds",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-central-sterile-processing-and-reprocessing",
+    "description": "Central sterile processing and reprocessing",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-manual-patient-lifts-and-full",
+    "description": "Manual patient lifts and full lateral transfers without mechanical lift equipment",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-sustained-or-repeated-cpr-cycles",
+    "description": "Sustained or repeated CPR cycles",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-repositioning-and-turning-bariatric-patients",
+    "description": "Repositioning and turning bariatric patients",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-intensive-physical-and-occupational-therapy",
+    "description": "Intensive physical and occupational therapy sessions",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-code-response-requiring-extended-physical",
+    "description": "Code response requiring extended physical effort",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-extended-manual-cpr-multiple-continuous",
+    "description": "Extended manual CPR — multiple continuous cycles without relief",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-sustained-physical-management-of-combative",
+    "description": "Sustained physical management of combative or resistive patients",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-emergency-multiperson-patient-extraction-from",
+    "description": "Emergency multi-person patient extraction from a room or vehicle",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "healthcare-sustained-very-heavy-repositioning-in",
+    "description": "Sustained very heavy repositioning in mass casualty or code situations",
+    "sector": [
+      "healthcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-cashiering-and-pointofsale-transactions",
+    "description": "Cashiering and point-of-sale transactions",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-customer-service-desk-and-returns",
+    "description": "Customer service desk and returns processing",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-fitting-room-attendant",
+    "description": "Fitting room attendant",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-product-demonstrations-at-a-fixed",
+    "description": "Product demonstrations at a fixed location",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-greeter-or-door-staff",
+    "description": "Greeter or door staff",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-jewelry-or-specialty-counter-work",
+    "description": "Jewelry or specialty counter work",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-phonebased-customer-service",
+    "description": "Phone-based customer service",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-stocking-and-facing-shelves-throughout",
+    "description": "Stocking and facing shelves throughout a large sales floor",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-pushing-merchandise-carts-and-restocking",
+    "description": "Pushing merchandise carts and restocking floor displays",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-folding-and-organizing-clothing-at",
+    "description": "Folding and organizing clothing at volume",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-backroom-freight-receiving-and-sorting",
+    "description": "Backroom freight receiving and sorting",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-running-purchases-to-customer-vehicles",
+    "description": "Running purchases to customer vehicles",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-visual-merchandising-moving-and-arranging",
+    "description": "Visual merchandising — moving and arranging displays",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-unloading-and-manually-moving-merchandise",
+    "description": "Unloading and manually moving merchandise from delivery trucks",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-stocking-heavy-cases-water-pet",
+    "description": "Stocking heavy cases (water, pet food, appliances, lumber)",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-pushing-heavily-loaded-floor-jacks",
+    "description": "Pushing heavily loaded floor jacks or pallet movers",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-moving-large-furniture-or-appliances",
+    "description": "Moving large furniture or appliances across the sales floor",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-setting-up-and-breaking-down",
+    "description": "Setting up and breaking down large gondolas and store fixtures",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-sustained-manual-unloading-of-highvolume",
+    "description": "Sustained manual unloading of high-volume freight trucks without mechanical assist",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-continuous-manual-movement-of-maximumweight",
+    "description": "Continuous manual movement of maximum-weight merchandise at pace",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "retail-intensive-store-resets-and-remodels",
+    "description": "Intensive store resets and remodels — repeated heavy lifting, fixture movement, and sustained physical labor across a full shift",
+    "sector": [
+      "retail"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-blueprint-review-layout-measurement-and",
+    "description": "Blueprint review, layout measurement, and marking",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-light-cleanup-and-debris-removal",
+    "description": "Light cleanup and debris removal (small items)",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-tool-staging-organization-and-inventory",
+    "description": "Tool staging, organization, and inventory",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-operating-controls-from-a-fixed",
+    "description": "Operating controls from a fixed or cab position",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-safety-inspection-and-site-supervision",
+    "description": "Safety inspection and site supervision on foot",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-drywall-installation-on-walls-standing",
+    "description": "Drywall installation on walls (standing, lifting, fastening)",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-painting-and-priming-at-standing",
+    "description": "Painting and priming at standing height",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-electrical-wiring-pulling-wire-mounting",
+    "description": "Electrical wiring — pulling wire, mounting boxes, walking floor",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-plumbing-roughin-on-lower-floors",
+    "description": "Plumbing rough-in on lower floors",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-light-framing-measuring-cutting-nailing",
+    "description": "Light framing — measuring, cutting, nailing",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-tile-setting-at-ground-level",
+    "description": "Tile setting at ground level",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-overhead-drywall-installation-on-ceilings",
+    "description": "Overhead drywall installation on ceilings",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-heavy-structural-framing-carrying-and",
+    "description": "Heavy structural framing — carrying and lifting lumber",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-concrete-finishing-sustained-bending-tamping",
+    "description": "Concrete finishing — sustained bending, tamping, screeding",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-demolition-of-nonstructural-elements-walls",
+    "description": "Demolition of non-structural elements (walls, flooring)",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-setting-large-fixtures-beams-or",
+    "description": "Setting large fixtures, beams, or mechanical equipment",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-sustained-use-of-heavy-power",
+    "description": "Sustained use of heavy power tools on a large area",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-sustained-concrete-breaking-and-removal",
+    "description": "Sustained concrete breaking and removal",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-intensive-structural-demolition",
+    "description": "Intensive structural demolition",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-carrying-heavy-materials-up-stairs",
+    "description": "Carrying heavy materials up stairs repeatedly without mechanical assist",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-sustained-overhead-work-with-heavy",
+    "description": "Sustained overhead work with heavy tools or components",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "construction-major-interior-excavation-formwork-and",
+    "description": "Major interior excavation, formwork, and heavy pour operations",
+    "sector": [
+      "construction"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-sorting-clean-dry-linens-at",
+    "description": "Sorting clean, dry linens at a table",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-folding-lightweight-items-pillowcases-small",
+    "description": "Folding lightweight items (pillowcases, small linens)",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-supervisory-rounds-and-quality-inspection",
+    "description": "Supervisory rounds and quality inspection",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-operating-automated-sorting-conveyors",
+    "description": "Operating automated sorting conveyors",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-operating-commercial-washing-and-drying",
+    "description": "Operating commercial washing and drying machines",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-sorting-and-loading-moderateweight-laundry",
+    "description": "Sorting and loading moderate-weight laundry",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-folding-heavy-linens-sheets-towels",
+    "description": "Folding heavy linens (sheets, towels, gowns) at a standing station",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-pushing-loaded-laundry-carts-between",
+    "description": "Pushing loaded laundry carts between stations",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-operating-flatwork-ironers-and-folder",
+    "description": "Operating flatwork ironers and folder machines",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-lifting-and-moving-full-bags",
+    "description": "Lifting and moving full bags or bins of wet laundry",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-sustained-loading-and-unloading-of",
+    "description": "Sustained loading and unloading of large industrial washers and dryers",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-manual-transport-of-heavily-loaded",
+    "description": "Manual transport of heavily loaded laundry carts over long distances",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-pressing-and-finishing-of-heavy",
+    "description": "Pressing and finishing of heavy institutional linens",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-sustained-lifting-and-moving-of",
+    "description": "Sustained lifting and moving of wet linen loads at production pace — one of the highest-metabolic-rate indoor occupations",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-intensive-manual-handling-of-large",
+    "description": "Intensive manual handling of large institutional laundry volumes without mechanical assist (e.g., large hotel or hospital linen operations)",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "laundry-extended-highpace-sorting-and-loading",
+    "description": "Extended high-pace sorting and loading under high ambient heat from dryers and steam equipment",
+    "sector": [
+      "laundry"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-quality-inspection-at-a-station",
+    "description": "Quality inspection at a station on the line",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-packaging-supervision-and-monitoring",
+    "description": "Packaging supervision and monitoring",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-machine-monitoring-and-basic-adjustments",
+    "description": "Machine monitoring and basic adjustments",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-light-sorting-grading-or-labeling",
+    "description": "Light sorting, grading, or labeling at a fixed station",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-product-sorting-and-grading-on",
+    "description": "Product sorting and grading on a moving conveyor line",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-packaging-and-boxing-at-moderate",
+    "description": "Packaging and boxing at moderate sustained pace",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-poultry-or-fish-processing-line",
+    "description": "Poultry or fish processing line work — standing, repetitive cutting",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-machine-operation-with-sustained-repetitive",
+    "description": "Machine operation with sustained repetitive arm movement",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-operating-commercial-baking-or-cooking",
+    "description": "Operating commercial baking or cooking equipment",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-sustained-meat-cutting-and-deboning",
+    "description": "Sustained meat cutting and deboning",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-heavy-lifting-of-filled-product",
+    "description": "Heavy lifting of filled product tubs, barrels, or containers",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-manual-stacking-of-heavy-cases",
+    "description": "Manual stacking of heavy cases in cold storage or shipping",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-sustained-work-across-extreme-temperature",
+    "description": "Sustained work across extreme temperature differentials (freezer to processing floor)",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-operating-heavy-processing-machinery-with",
+    "description": "Operating heavy processing machinery with physical exertion",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-intensive-sustained-cutting-and-processing",
+    "description": "Intensive sustained cutting and processing in high-volume meatpacking at full production speed",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-manual-movement-of-heavy-carcasses",
+    "description": "Manual movement of heavy carcasses or large product loads",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-sustained-work-at-maximum-pace",
+    "description": "Sustained work at maximum pace in hot processing environments (commercial bakeries, cooking or retort lines)",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "foodprocessing-highpace-line-work-combining-heat",
+    "description": "High-pace line work combining heat exposure, standing, and repetitive exertion across an entire shift",
+    "sector": [
+      "foodprocessing"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-report-writing-dispatch-and-administrative",
+    "description": "Report writing, dispatch, and administrative work",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-vehicle-inspection-and-equipment-checking",
+    "description": "Vehicle inspection and equipment checking",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-station-duties-and-meal-preparation",
+    "description": "Station duties and meal preparation",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-nonemergency-patient-monitoring-ems-at",
+    "description": "Non-emergency patient monitoring (EMS at scene)",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-routine-patrol-on-foot-or",
+    "description": "Routine patrol on foot or active post (corrections)",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-nonemergency-patient-transport-and-assessment",
+    "description": "Non-emergency patient transport and assessment (EMS)",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-staging-and-positioning-equipment-at",
+    "description": "Staging and positioning equipment at a scene",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-sustained-standing-during-operations-and",
+    "description": "Sustained standing during operations and crowd management",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-active-scene-management-and-coordination",
+    "description": "Active scene management and coordination on foot",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-active-fire-suppression-interior-structural",
+    "description": "Active fire suppression — interior structural firefighting",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Full PPE (turnout gear) dramatically increases effective heat stress; near very-heavy category in gear"
+  },
+  {
+    "id": "publicsafety-patient-extrication-from-vehicles-or",
+    "description": "Patient extrication from vehicles or confined spaces",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-physical-management-and-escort-of",
+    "description": "Physical management and escort of resistant individuals (corrections)",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-active-search-and-rescue-operations",
+    "description": "Active search and rescue operations with equipment",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-emergency-equipment-deployment-and-hose",
+    "description": "Emergency equipment deployment and hose advancement",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-extended-interior-firefighting-operations-in",
+    "description": "Extended interior firefighting operations in full PPE under high heat",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Full PPE (turnout gear, SCBA) can add 50–100% to effective metabolic load; MET in gear far exceeds bare-skin estimates"
+  },
+  {
+    "id": "publicsafety-repeated-emergency-patient-lifts-with",
+    "description": "Repeated emergency patient lifts with extrication equipment",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-sustained-physical-restraint-situations-in",
+    "description": "Sustained physical restraint situations in corrections or emergency settings",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "publicsafety-mass-casualty-response-requiring-continuous",
+    "description": "Mass casualty response requiring continuous heavy exertion over an extended period",
+    "sector": [
+      "publicsafety"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-dusting-light-wiping-and-surface",
+    "description": "Dusting, light wiping, and surface cleaning",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-restroom-checks-and-restocking",
+    "description": "Restroom checks and restocking",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-lobby-and-common-area-cleaning",
+    "description": "Lobby and common area cleaning with a lightweight mop",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-elevator-and-entryway-cleaning",
+    "description": "Elevator and entryway cleaning",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-vacuuming-large-areas-with-a",
+    "description": "Vacuuming large areas with a commercial upright or backpack vacuum",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-wet-mopping-corridors-and-large",
+    "description": "Wet mopping corridors and large floor areas",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-trash-collection-and-transport-to",
+    "description": "Trash collection and transport to consolidation points",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-window-cleaning-at-ground-or",
+    "description": "Window cleaning at ground or accessible height",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-general-deep-cleaning-of-offices",
+    "description": "General deep cleaning of offices and common spaces",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-floor-buffing-and-burnishing-with",
+    "description": "Floor buffing and burnishing with heavy commercial equipment",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-floor-stripping-applying-and-removing",
+    "description": "Floor stripping — applying and removing finish with heavy machine",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-deep-cleaning-of-industrial-or",
+    "description": "Deep cleaning of industrial or production spaces",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-trash-compactor-operation-and-large",
+    "description": "Trash compactor operation and large waste container movement",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-moving-heavy-furniture-and-equipment",
+    "description": "Moving heavy furniture and equipment for cleaning access",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-sustained-heavy-floor-stripping-and",
+    "description": "Sustained heavy floor stripping and refinishing without mechanical assist on large areas",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-intensive-cleaning-of-large-industrial",
+    "description": "Intensive cleaning of large industrial, food production, or manufacturing spaces",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "buildingservices-sustained-heavy-lifting-of-large",
+    "description": "Sustained heavy lifting of large waste containers or equipment in hot mechanical rooms",
+    "sector": [
+      "buildingservices"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-seeding-trays-and-transplanting-small",
+    "description": "Seeding trays and transplanting small seedlings",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-plant-inspection-scouting-and-record",
+    "description": "Plant inspection, scouting, and record keeping",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-light-pruning-and-deadheading",
+    "description": "Light pruning and deadheading",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-irrigation-system-monitoring-and-adjustment",
+    "description": "Irrigation system monitoring and adjustment",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-pesticide-or-nutrient-mixing-at",
+    "description": "Pesticide or nutrient mixing at a station",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-transplanting-seedlings-at-pace-across",
+    "description": "Transplanting seedlings at pace across a large area",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-moderate-harvesting-picking-trimming-and",
+    "description": "Moderate harvesting — picking, trimming, and staging",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-pushing-and-positioning-plant-or",
+    "description": "Pushing and positioning plant or harvest carts",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-sustained-pruning-training-and-trellising",
+    "description": "Sustained pruning, training, and trellising of plants",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-applying-soil-amendments-and-nutrients",
+    "description": "Applying soil amendments and nutrients manually",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-harvesting-and-packing-heavy-crops",
+    "description": "Harvesting and packing heavy crops (squash, melons, potted plants)",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-moving-and-repositioning-heavy-growing",
+    "description": "Moving and repositioning heavy growing containers or trays",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-loading-and-staging-produce-for",
+    "description": "Loading and staging produce for transport",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-sustained-bending-lifting-and-carrying",
+    "description": "Sustained bending, lifting, and carrying in harvest operations in hot greenhouse conditions",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-sustained-intensive-harvesting-at-production",
+    "description": "Sustained intensive harvesting at production pace in hot greenhouse environments",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-manual-movement-of-very-heavy",
+    "description": "Manual movement of very heavy plant containers without mechanical assist",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "agriculture-intensive-postharvest-packing-and-loading",
+    "description": "Intensive post-harvest packing and loading operations in enclosed high-humidity spaces",
+    "sector": [
+      "agriculture"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-quality-inspection-of-finished-garments",
+    "description": "Quality inspection of finished garments",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-pattern-review-and-marking",
+    "description": "Pattern review and marking",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-light-hand-sewing-buttons-or",
+    "description": "Light hand sewing, buttons, or finishing details",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-folding-and-packaging-finished-goods",
+    "description": "Folding and packaging finished goods",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-machine-sewing-sustained-pedal-operation",
+    "description": "Machine sewing — sustained pedal operation with material handling",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-fabric-cutting-with-powered-equipment",
+    "description": "Fabric cutting with powered equipment while standing",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-steam-pressing-of-lightweight-garments",
+    "description": "Steam pressing of lightweight garments at a station",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-assembly-line-garment-construction-sustained",
+    "description": "Assembly line garment construction — sustained repetitive motion",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-thread-trimming-and-finishing-at",
+    "description": "Thread trimming and finishing at pace",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-steam-pressing-and-finishing-of",
+    "description": "Steam pressing and finishing of heavy garments (suits, coats, uniforms, workwear) in a hot pressing shop",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-sustained-operation-of-heavy-industrial",
+    "description": "Sustained operation of heavy industrial sewing, knitting, or weaving machines",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-manual-cutting-of-heavy-fabric",
+    "description": "Manual cutting of heavy fabric layers or leather",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-moving-large-bolts-of-fabric",
+    "description": "Moving large bolts of fabric or rolls of material",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-sustained-industrial-steam-pressing-operations",
+    "description": "Sustained industrial steam pressing operations in hot environments — prolonged exposure to steam and radiant heat with physical exertion",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Steam and radiant heat exposure significantly compounds metabolic thermal burden"
+  },
+  {
+    "id": "garment-intensive-manual-handling-of-heavy",
+    "description": "Intensive manual handling of heavy textile materials in a high-heat production environment",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "garment-highpace-production-finishing-in-a",
+    "description": "High-pace production finishing in a non-climate-controlled pressing or dyeing facility",
+    "sector": [
+      "garment"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-front-desk-checkin-and-checkout",
+    "description": "Front desk check-in and check-out",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-concierge-and-guest-services-at",
+    "description": "Concierge and guest services at a desk or stand",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-reservation-and-phone-handling",
+    "description": "Reservation and phone handling",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-supervisory-walkthroughs-and-quality-inspection",
+    "description": "Supervisory walkthroughs and quality inspection",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-light-restocking-of-guest-amenities",
+    "description": "Light restocking of guest amenities at a cart",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-guestroom-housekeeping-making-beds-vacuuming",
+    "description": "Guestroom housekeeping — making beds, vacuuming, bathroom cleaning across multiple rooms",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-pushing-a-fully-loaded-housekeeping",
+    "description": "Pushing a fully loaded housekeeping cart between rooms and floors",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-bussing-and-resetting-banquet-or",
+    "description": "Bussing and resetting banquet or restaurant tables at volume",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-sustained-room-attendant-work-with",
+    "description": "Sustained room attendant work with repeated bending, lifting, and carrying",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-laundry-room-operations-loadingunloading-washers",
+    "description": "Laundry room operations — loading/unloading washers and dryers, folding linen",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-food-and-beverage-running-across",
+    "description": "Food and beverage running across a large property",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-manual-setup-and-breakdown-of",
+    "description": "Manual setup and breakdown of large banquet or event rooms — moving tables, chairs, staging, and AV equipment",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-deep-cleaning-of-common-areas",
+    "description": "Deep cleaning of common areas, kitchens, or event spaces with heavy equipment",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-moving-heavy-furniture-mattresses-or",
+    "description": "Moving heavy furniture, mattresses, or large fixtures between rooms",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-handling-and-transporting-large-linen",
+    "description": "Handling and transporting large linen or trash loads through the building",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-loading-and-unloading-hotel-supply",
+    "description": "Loading and unloading hotel supply deliveries — cases of beverages, food, or amenities",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-intensive-backtoback-banquet-setup-and",
+    "description": "Intensive back-to-back banquet setup and breakdown with repeated heavy furniture lifts across a full shift",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-sustained-manual-movement-of-very",
+    "description": "Sustained manual movement of very heavy supply loads (kegs, bulk linens, equipment) without mechanical assist",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "hospitality-extended-deepcleaning-operations-in-a",
+    "description": "Extended deep-cleaning operations in a hot kitchen or laundry facility at production pace",
+    "sector": [
+      "hospitality"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-administrative-and-clerical-work-at",
+    "description": "Administrative and clerical work at a desk or station",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-reading-aloud-to-children-while",
+    "description": "Reading aloud to children while seated",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-supervising-quiet-or-seated-activities",
+    "description": "Supervising quiet or seated activities (art, storytime, puzzles)",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-checkin-and-checkout-desk-duties",
+    "description": "Check-in and check-out desk duties",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-meal-preparation-light-tasks-at",
+    "description": "Meal preparation — light tasks at a counter",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "light",
+    "met_approx": "~1.5–2.8",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-active-supervision-on-a-play",
+    "description": "Active supervision on a play floor — continuous walking and attending to children",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-walking-alongside-toddlers-and-young",
+    "description": "Walking alongside toddlers and young children throughout the environment",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-leading-group-movement-activities-songs",
+    "description": "Leading group movement activities, songs, and games",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-pushing-strollers-or-adaptive-equipment",
+    "description": "Pushing strollers or adaptive equipment",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-diaper-changing-and-dressing-repeated",
+    "description": "Diaper changing and dressing — repeated bending, lifting, and positioning",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-setting-up-and-breaking-down",
+    "description": "Setting up and breaking down activity areas and tables",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-carrying-infants-and-small-toddlers",
+    "description": "Carrying infants and small toddlers for short distances and durations",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "moderate",
+    "met_approx": "~2.9–4.3",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-sustained-lifting-and-carrying-of",
+    "description": "Sustained lifting and carrying of infants and toddlers (repeated throughout a shift)",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": "Cumulative load across a shift can exceed what a single lift suggests; frequently underestimated"
+  },
+  {
+    "id": "childcare-physically-redirecting-or-restraining-a",
+    "description": "Physically redirecting or restraining a child in distress or during a behavioral episode",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-moving-cribs-cots-high-chairs",
+    "description": "Moving cribs, cots, high chairs, and heavy classroom furniture",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-carrying-children-up-and-down",
+    "description": "Carrying children up and down stairs repeatedly",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-sustained-active-physical-play-running",
+    "description": "Sustained active physical play — running, chasing, or physically supporting children during gross motor activities",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "heavy",
+    "met_approx": "~4.3–5.7",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-sustained-carrying-of-multiple-heavy",
+    "description": "Sustained carrying of multiple heavy toddlers or children across a full shift without adequate rest — a frequently underrecognized source of cumulative physical strain",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-intensive-physical-management-of-multiple",
+    "description": "Intensive physical management of multiple children during outdoor play or emergency situations",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
+  },
+  {
+    "id": "childcare-moving-heavy-playground-equipment-large",
+    "description": "Moving heavy playground equipment, large furniture, or supply deliveries without mechanical assist",
+    "sector": [
+      "childcare"
+    ],
+    "niosh_level": "vh",
+    "met_approx": "~5.7–8.5",
+    "met_ref_weight_kg": 70,
+    "source": "NIOSH 2016 Table 5-1 (level)",
+    "notes": ""
   }
-}
+]
