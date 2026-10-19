@@ -1795,9 +1795,9 @@
 
   /* ── Shorter header on phones ── */
   @media (max-width: 600px) {
-    header { height: 80px; grid-template-columns: 1fr; }
-    .header-inner { padding: 4px 0; gap: 3px; }
-    .header-brand { max-height: 52px; }
+    header { height: 96px; grid-template-columns: 1fr; }
+    .header-inner { padding: 8px 0; gap: 0; }
+    .header-brand { max-height: calc(100% - 16px) !important; height: auto; max-width: 88%; }
     .header-attribution { display: none; }
   }
 
@@ -1810,7 +1810,13 @@
     header { grid-template-columns: 1fr !important; }
     header .home-btn,
     header .split-pill { display: none !important; }
-    .header-inner { pointer-events: auto; }
+    /* grid-column: 2 on .header-inner would create an implicit column — reset to 1 */
+    .header-inner {
+      grid-column: 1 !important;
+      pointer-events: auto;
+      align-items: center;
+      justify-content: center;
+    }
 
     /* ── Bottom modal bar ── */
     .mobile-modal-bar {

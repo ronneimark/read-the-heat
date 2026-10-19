@@ -959,16 +959,7 @@
   }
 }
 
-/* Shrink header on narrow phones */
-@media (max-width: 600px) {
-  header {
-    height: 80px !important;
-    grid-template-columns: 50px 1fr 50px !important;
-  }
-  .header-inner { padding: 4px 0 !important; gap: 3px !important; }
-  .header-brand { max-height: 52px !important; }
-  .header-attribution { display: none !important; }
-}
+/* shared.css handles mobile header — no local overrides needed */
 
 /* ── Mockup page link ── */
 @keyframes mockup-btn-bob {
