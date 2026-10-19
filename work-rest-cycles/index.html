@@ -841,9 +841,11 @@
   }
 
   /* "How to use this site" bar: full-width, centered button */
-  /* top is set dynamically by updateLayout() via JS */
+  /* top fallback keeps button visible if JS fires before layout is ready (e.g. PWA standalone);
+     updateLayout() overrides this with the exact measured value */
   .intro-anchor {
     position: fixed !important;
+    top: 96px !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
@@ -1868,6 +1870,8 @@
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
+    // Re-run after full load — standalone PWA mode can have offsetHeight=0 at DOMContentLoaded
+    window.addEventListener('load', updateLayout);
   });
 </script>
 
