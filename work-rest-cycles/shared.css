@@ -1804,7 +1804,7 @@
   /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
   @media (max-width: 768px) {
     /* Body scrolls instead of clipping */
-    body { overflow: auto !important; padding-bottom: 86px !important; }
+    body { overflow: auto !important; padding-bottom: 94px !important; }
 
     /* Header: hide left/right buttons, center logo only */
     header { grid-template-columns: 1fr !important; }
@@ -1875,7 +1875,7 @@
       gap: 9px;
       width: 100%;
       background: linear-gradient(180deg, #c8001e 0%, #A50028 100%);
-      padding: 6px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 16px max(14px, env(safe-area-inset-bottom, 14px));
       box-sizing: border-box;
     }
     .mmb-credit-text {
@@ -1902,7 +1902,7 @@
     .calc-panel,
     .result-panel,
     .scroll-panel {
-      padding-bottom: 86px !important;
+      padding-bottom: 94px !important;
     }
 
     html { height: auto; }
