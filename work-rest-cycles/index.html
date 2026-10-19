@@ -249,25 +249,25 @@
 </div><!-- /launcher -->
 
 <style>
-/* ── modal close button ── */
+/* ── modal close button — floats just outside top-right corner ── */
 .intro-popover-close {
-  display: flex; /* visible on all screen sizes */
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
+  display: flex;
+  position: fixed; /* JS positions it relative to the modal's rect */
+  width: 28px;
+  height: 28px;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.08);
-  border: none;
+  background: #fff;
+  border: 1.5px solid rgba(0,0,0,0.15);
   border-radius: 50%;
-  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  font-size: 16px;
   line-height: 1;
   color: #333;
   cursor: pointer;
-  z-index: 10;
+  z-index: 1100;
   flex-shrink: 0;
+  transform: translate(40%, -40%);
 }
 .intro-popover-close:hover { background: rgba(0,0,0,0.15); }
 @media (prefers-color-scheme: dark) {
@@ -917,6 +917,12 @@
 @media (max-width: 768px) {
   /* Arrow points to button position on desktop — hide on mobile full-width drawer */
   .intro-popover-arrow { display: none !important; }
+  .intro-popover-close {
+    position: absolute !important;
+    top: 8px !important; left: auto !important;
+    right: 8px !important;
+    transform: none !important;
+  }
   /* Flat edges, upward shadow, full-width drop animation with no horizontal shift */
   .intro-popover {
     border-radius: 0 !important;
@@ -1064,6 +1070,15 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  function positionCloseBtn() {
+    const pop = document.getElementById('intro-popover');
+    const btn = pop.querySelector('.intro-popover-close');
+    if (!btn) return;
+    const r = pop.getBoundingClientRect();
+    btn.style.top   = r.top  + 'px';
+    btn.style.left  = r.right + 'px';
+  }
+
   function positionIntroPopover() {
     const pop = document.getElementById('intro-popover');
     const vpad = 4;           /* min gap from viewport edges, px */
@@ -1135,6 +1150,7 @@
         pop.style.overflowY = 'auto';
       }
     }
+    positionCloseBtn();
   }
 
   function lockPanelHeight() {
