@@ -1,0 +1,14 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy webhook
+        run: |
+          curl -f -X POST https://workerpo.com/deploy-webhook.php \
+            -H "X-Deploy-Secret: wrc-deploy-2026"
