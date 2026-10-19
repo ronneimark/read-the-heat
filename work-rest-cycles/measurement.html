@@ -228,6 +228,7 @@ body { background: #F6F3EC !important; }
 }
 /* ── Compress component fields: slightly smaller inputs ── */
 #meas-wbgt-fields .meas-field-group { margin-bottom: 5px; }
+#meas-wbgt-fields .meas-field-label { font-size: clamp(14px, 3.8vw, 18px); text-transform: none; letter-spacing: 0; }
 #meas-wbgt-fields .meas-input { height: 34px; font-size: 16px; }
 #meas-wbgt-fields .meas-toggle button { height: 34px; font-size: 11px; padding: 0 7px; }
 /* ── Calculated WBGT result display ── */
@@ -691,12 +692,9 @@ body { background: #F6F3EC !important; }
           <button id="wbgt-env-outdoor" onclick="setWbgtSetting('outdoor')" type="button">☀️ Outdoors</button>
         </div>
       </div>
-      <!-- NWB -->
+      <!-- Natural Wet Bulb -->
       <div class="meas-field-group">
-        <label class="meas-field-label" for="meas-wbgt-nwb">
-          NWB
-          <span class="meas-field-sub">natural wet bulb temperature</span>
-        </label>
+        <label class="meas-field-label" for="meas-wbgt-nwb">Natural Wet Bulb</label>
         <div class="meas-input-row">
           <input class="meas-input" id="meas-wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-nwb','meas-wbgt-nwb-error');updateWbgtCalc()">
           <div class="meas-toggle">
@@ -706,24 +704,18 @@ body { background: #F6F3EC !important; }
         </div>
         <div class="meas-error-msg" id="meas-wbgt-nwb-error">Please enter a value.</div>
       </div>
-      <!-- GT -->
+      <!-- Globe Temperature -->
       <div class="meas-field-group">
-        <label class="meas-field-label" for="meas-wbgt-gt">
-          GT
-          <span class="meas-field-sub">globe temperature</span>
-        </label>
+        <label class="meas-field-label" for="meas-wbgt-gt">Globe Temperature</label>
         <div class="meas-input-row">
           <input class="meas-input" id="meas-wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-gt','meas-wbgt-gt-error');updateWbgtCalc()">
           <span class="meas-unit-suffix" id="meas-wbgt-gt-unit">°F</span>
         </div>
         <div class="meas-error-msg" id="meas-wbgt-gt-error">Please enter a value.</div>
       </div>
-      <!-- DB (outdoor only) -->
+      <!-- Dry Bulb (outdoor only) -->
       <div class="meas-field-group" id="meas-wbgt-db-row">
-        <label class="meas-field-label" for="meas-wbgt-db">
-          DB
-          <span class="meas-field-sub">dry bulb (air) temperature</span>
-        </label>
+        <label class="meas-field-label" for="meas-wbgt-db">Dry Bulb</label>
         <div class="meas-input-row">
           <input class="meas-input" id="meas-wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-db','meas-wbgt-db-error');updateWbgtCalc()">
           <span class="meas-unit-suffix" id="meas-wbgt-db-unit">°F</span>
@@ -732,7 +724,7 @@ body { background: #F6F3EC !important; }
       </div>
       <!-- Calculated result -->
       <div class="wbgt-calc-display" id="wbgt-calc-display">
-        <span class="wbgt-calc-label">Calculated WBGT</span>
+        <span class="wbgt-calc-label">WBGT</span>
         <span class="wbgt-calc-value" id="wbgt-calc-value">—</span>
       </div>
     </div>
@@ -847,7 +839,7 @@ body { background: #F6F3EC !important; }
     const gtErrEl   = document.getElementById('meas-wbgt-gt-error');
     // NWB > DB warning
     if (errs.nwbHigh) {
-      nwbErrEl.textContent = 'NWB cannot exceed dry bulb temperature.';
+      nwbErrEl.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
       nwbErrEl.classList.add('visible');
     } else if (!nwbErrEl.classList.contains('submit-error')) {
       nwbErrEl.classList.remove('visible');
@@ -1024,7 +1016,7 @@ body { background: #F6F3EC !important; }
       if (errs.nwbHigh) {
         nwbEl.classList.add('error');
         const el = document.getElementById('meas-wbgt-nwb-error');
-        el.textContent = 'NWB cannot exceed dry bulb temperature.';
+        el.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
         el.classList.add('visible', 'submit-error');
         valid = false;
       }
