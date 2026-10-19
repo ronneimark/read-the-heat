@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<!-- auto-deploy test -->
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Indoor Heat Stress: Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<link rel="preload" as="image" href="images/read-the-heat-logo-transparent.png">
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+    <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+    </div>
+  </div>
+
+  <!-- Install banner inside #fixed-top so it stays visible below the header -->
+  <div id="install-banner" style="display:none;" role="region" aria-label="Install this site">
+    <span class="install-banner-text">Install on your phone for quick, one-tap access</span>
+    <button type="button" id="install-banner-btn" class="install-banner-btn">Add to Home Screen</button>
+    <button type="button" id="install-banner-dismiss" class="install-banner-dismiss" aria-label="Dismiss">&#x2715;</button>
+  </div>
+</div><!-- /fixed-top -->
+
+<!-- iOS install instructions (shown when tapping Add to Home Screen on iPhone/iPad) -->
+<div id="ios-install-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="ios-modal-title">
+  <div id="ios-install-modal">
+    <button type="button" id="ios-modal-close" aria-label="Close">&#x2715;</button>
+    <h2 id="ios-modal-title">Add to Home Screen</h2>
+    <p>Install <strong>Read the Heat</strong> for one-tap access, no app store needed.</p>
+    <ol>
+      <li><strong>Safari:</strong> tap the <strong>Share</strong> button <span aria-hidden="true">&#x2197;</span>, then <em>Add to Home Screen</em>, then <em>Add</em>.</li>
+      <li><strong>Chrome:</strong> tap the <strong>Share</strong> icon beside the address bar, then <em>Add to Home Screen</em>.</li>
+      <li><strong>Firefox:</strong> open the <strong>menu</strong>, tap <em>Share</em>, then <em>Add to Home Screen</em>.</li>
+    </ol>
+    <p class="ios-modal-note">The icon will appear on your home screen under <strong>Read the Heat</strong>.</p>
+  </div>
+</div>
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls1">
+
+    <!-- heading row with How to use button -->
+    <div class="ls1-header">
+      <h1 class="ls-heading">What industry is this work in?</h1>
+      <div class="intro-anchor" id="intro-anchor">
+        <button class="intro-open-btn" id="intro-open-btn"
+                onclick="toggleIntroPopover()"
+                aria-expanded="false"
+                aria-controls="intro-popover"
+                title="How to use this site">How to use this site</button>
+
+        <!-- tabbed popover -->
+        <div class="intro-popover" id="intro-popover" hidden role="dialog" aria-label="How to use this tool">
+          <div class="intro-popover-arrow"></div>
+          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close" title="Close">&times;</button>
+
+          <!-- intro paragraph above tabs -->
+          <div class="intro-preamble">
+            <p class="intro-preamble-tagline">Get your NIOSH-recommended work-rest schedule in about 30 seconds.</p>
+            <div class="intro-preamble-chips">
+              <span class="intro-chip">6 steps</span>
+              <span class="intro-chip chip-red">~30 seconds</span>
+            </div>
+            <p class="intro-preamble-sub">Follow each step below — pick your industry, describe the work, check acclimatization status, note clothing &amp; PPE, then enter the heat reading. Your personalized recommendation appears at the end.</p>
+          </div>
+
+          <!-- tab bar -->
+          <div class="intro-tab-bar" role="tablist">
+            <button class="intro-tab active" id="itab-btn-1" role="tab" aria-selected="true"  aria-controls="itab-1" onclick="switchIntroTab(1)" title="Step-by-step guide to using this tool">
+              <span class="intro-tab-title">How to use</span>
+              <span class="intro-tab-sub">Step-by-step guide</span>
+            </button>
+            <button class="intro-tab"        id="itab-btn-2" role="tab" aria-selected="false" aria-controls="itab-2" onclick="switchIntroTab(2)" title="Instruments and methods for measuring heat">
+              <span class="intro-tab-title">Measuring heat</span>
+              <span class="intro-tab-sub">Instruments &amp; methods</span>
+            </button>
+            <button class="intro-tab"        id="itab-btn-3" role="tab" aria-selected="false" aria-controls="itab-3" onclick="switchIntroTab(3)" title="Who uses this tool and how">
+              <span class="intro-tab-title">Use Cases</span>
+              <span class="intro-tab-sub">Who uses this tool</span>
+            </button>
+          </div>
+
+          <!-- tab panels -->
+          <div class="intro-tab-panels">
+
+            <div class="intro-tab-panel active" id="itab-1" role="tabpanel" aria-labelledby="itab-btn-1">
+              <ol class="intro-steps">
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 1 on the page"
+                    onclick="highlightStep(event,1)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,1)}">
+                  <div class="step-badge">1</div>
+                  <div class="step-body">
+                    <span class="step-title">Pick your industry</span>
+                    <span class="step-desc">Choose the sector that best matches your workplace.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 2 on the page"
+                    onclick="highlightStep(event,2)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,2)}">
+                  <div class="step-badge">2</div>
+                  <div class="step-body">
+                    <span class="step-title">Describe the work</span>
+                    <span class="step-desc">Select the physical activity level — light, moderate, heavy, or very heavy.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 3 on the page"
+                    onclick="highlightStep(event,3)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,3)}">
+                  <div class="step-badge">3</div>
+                  <div class="step-body">
+                    <span class="step-title">Acclimatization status</span>
+                    <span class="step-desc">Is the worker new, returning after time off, or fully acclimatized? This directly affects safe exposure limits.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 4 on the page"
+                    onclick="highlightStep(event,4)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,4)}">
+                  <div class="step-badge">4</div>
+                  <div class="step-body">
+                    <span class="step-title">Clothing &amp; PPE</span>
+                    <span class="step-desc">Standard clothing, or impermeable/vapor-barrier PPE? Impermeable gear adds a +10 °C WBGT correction automatically.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight Step 5 on the page"
+                    onclick="highlightStep(event,5)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,5)}">
+                  <div class="step-badge">5</div>
+                  <div class="step-body">
+                    <span class="step-title">Measure and enter the heat</span>
+                    <span class="step-desc">Use a WBGT meter, thermometer + humidity, or a plain thermometer. The tool adapts to whatever you can measure.</span>
+                    <span class="step-cue">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+                <li class="intro-step" role="button" tabindex="0" title="Highlight the results section on the page"
+                    onclick="highlightStep(event,6)"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();highlightStep(event,6)}">
+                  <div class="step-badge" aria-hidden="true">🟰</div>
+                  <div class="step-body">
+                    <span class="step-title">Get your work-rest recommendation</span>
+                    <span class="step-desc">Your personalized NIOSH work-rest schedule appears — with minutes of work and rest per hour.</span>
+                    <span class="step-cue" id="step5-hint">↗ Show me on the page</span>
+                  </div>
+                </li>
+
+              </ol>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+            <div class="intro-tab-panel" id="itab-2" role="tabpanel" aria-labelledby="itab-btn-2" hidden>
+              <ul class="intro-uses">
+                <li>🌡️ <button class="instrument-link" onclick="showInstrumentPhoto(event,'wbgt')"><span class="instr-pill">📷 WBGT Monitors</span></button> are the gold standard (NIOSH, 2016; ACGIH, 2025) — they measure air temperature, humidity, <em>and</em> radiant heat, and give the most complete picture of heat stress.</li>
+                <li>💧 <button class="instrument-link" onclick="showInstrumentPhoto(event,'hi')"><span class="instr-pill">📷 Heat Index Meters</span></button> or <button class="instrument-link" onclick="showInstrumentPhoto(event,'trh')"><span class="instr-pill">📷 Temperature and Relative Humidity Monitors</span></button> are a solid second choice.</li>
+                <li>⚠️ <strong>Thermometers alone are not sufficient.</strong> Organizations relying on a plain thermometer during hot conditions should assume <strong>100% relative humidity</strong> — the physical maximum, and therefore the most conservative possible heat stress estimate — this tool does that automatically — to ensure workers are fully protected. Organizations with workers exposed to heat should invest in instruments that can actually measure it.</li>
+                <li>🤝 <strong>Workers and their representatives should have transparent and continuous access to those instruments and to the information.</strong>
+                  <br><br>
+                  For more information about the instruments and their functions, see the Instrument step. <button class="intro-health-note-link" onclick="highlightInstrumentCrumb(event)" aria-label="Show Instrument step location">↗ click to see</button>
+                </li>
+              </ul>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+            <div class="intro-tab-panel" id="itab-3" role="tabpanel" aria-labelledby="itab-btn-3" hidden>
+              <ul class="intro-uses">
+                <li>👷 <strong>Workers</strong> — identify the breaks you and your co-workers can push for based on health and safety needs.</li>
+                <li>🧑‍💼 <strong>Supervisors</strong> — check conditions before a shift and post the recommended schedule for the crew.</li>
+                <li>🦺 <strong>Safety reps</strong> — run through scenarios during a training or walkthrough to show workers what protection looks like in practice.</li>
+                <li>✊ <strong>Union stewards</strong> — use this tool to document potential grievances and charges based on the employer's obligation to provide a safe workplace.</li>
+                <li>📋 <strong>Safety committees</strong> — document conditions and recommended cycles as part of a heat illness prevention plan.</li>
+              </ul>
+              <!-- illustration slot -->
+              <div class="intro-illus-slot" aria-hidden="true"></div>
+            </div>
+
+          </div><!-- /tab-panels -->
+
+          <!-- health factors note — pinned below all tabs -->
+          <button class="intro-health-note" onclick="highlightHealthBtn(event)" aria-label="Individual Health Risk Factors" title="Open Individual Health Risk Factors">
+            <span class="intro-note-btn-chip intro-note-btn-health" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#D50032" stroke="#D50032" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="intro-health-note-label">Individual Health Factors</span>
+            play a role in how individuals adapt to heat stress. These formulas do not take that into consideration, but workers and employers may need to.
+            Health factors commonly impacting heat stress can be viewed on this site.
+            <span class="intro-health-note-link">↖ click to see</span>
+          </button>
+
+          <!-- methodology note — secondary, pinned below health note -->
+          <button class="intro-health-note intro-method-note" onclick="highlightMethodBtn(event)" aria-label="Sources and Methodology" title="Open Sources &amp; Methodology">
+            The <span class="intro-note-btn-chip intro-note-btn-method" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#001E62" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> button opens <strong>Sources &amp; Methodology</strong> — background on the NIOSH standards and calculations behind this tool.
+            <span class="intro-health-note-link">↗ click to see</span>
+          </button>
+
+          <!-- feedback note — tertiary, pinned below methodology note -->
+          <button class="intro-health-note intro-method-note" onclick="highlightFeedbackBtn(event)" aria-label="Comments and Suggestions" title="Open Comments &amp; Suggestions">
+            The <span class="intro-note-btn-chip intro-note-btn-feedback" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> button opens <strong>Comments &amp; Suggestions</strong> — send feedback or recommendations about the tool.
+            <span class="intro-health-note-link">↗ click to see</span>
+          </button>
+
+        </div><!-- /intro-popover -->
+      </div><!-- /intro-anchor -->
+    </div><!-- /ls1-header -->
+
+    <div class="ls1-sector-grid" id="ls1-sector-grid">
+      <button class="ls1-sector-btn" data-sector="restaurant" onclick="ls1SelectSector('restaurant')"><img class="ls1-photo" src="images/industries/restaurant.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Restaurant</span></button>
+      <button class="ls1-sector-btn" data-sector="warehouse" onclick="ls1SelectSector('warehouse')"><img class="ls1-photo" src="images/industries/warehouse.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Warehouse</span></button>
+      <button class="ls1-sector-btn" data-sector="factory" onclick="ls1SelectSector('factory')"><img class="ls1-photo" src="images/industries/factory.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Manufacturing</span></button>
+      <button class="ls1-sector-btn" data-sector="healthcare" onclick="ls1SelectSector('healthcare')"><img class="ls1-photo" src="images/industries/healthcare.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Healthcare</span></button>
+      <button class="ls1-sector-btn" data-sector="retail" onclick="ls1SelectSector('retail')"><img class="ls1-photo" src="images/industries/retail.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Retail</span></button>
+      <button class="ls1-sector-btn" data-sector="construction" onclick="ls1SelectSector('construction')"><img class="ls1-photo" src="images/industries/construction.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Indoor Construction</span></button>
+      <button class="ls1-sector-btn" data-sector="laundry" onclick="ls1SelectSector('laundry')"><img class="ls1-photo" src="images/industries/laundry.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Laundry</span></button>
+      <button class="ls1-sector-btn" data-sector="foodprocessing" onclick="ls1SelectSector('foodprocessing')"><img class="ls1-photo" src="images/industries/foodprocessing.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Food Processing</span></button>
+      <button class="ls1-sector-btn" data-sector="publicsafety" onclick="ls1SelectSector('publicsafety')"><img class="ls1-photo" src="images/industries/publicsafety.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Public Safety</span></button>
+      <button class="ls1-sector-btn" data-sector="buildingservices" onclick="ls1SelectSector('buildingservices')"><img class="ls1-photo" src="images/industries/buildingservices.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Housekeeping</span></button>
+      <button class="ls1-sector-btn" data-sector="agriculture" onclick="ls1SelectSector('agriculture')"><img class="ls1-photo" src="images/industries/agriculture.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Greenhouse</span></button>
+      <button class="ls1-sector-btn" data-sector="garment" onclick="ls1SelectSector('garment')"><img class="ls1-photo" src="images/industries/garment.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Textile</span></button>
+      <button class="ls1-sector-btn" data-sector="hospitality" onclick="ls1SelectSector('hospitality')"><img class="ls1-photo" src="images/industries/hospitality.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Hospitality</span></button>
+      <button class="ls1-sector-btn" data-sector="childcare" onclick="ls1SelectSector('childcare')"><img class="ls1-photo" src="images/industries/childcare.jpg" alt="" loading="lazy"><span class="ls1-sector-label">Childcare</span></button>
+    </div>
+
+    <div class="ls1-footer">
+      <a class="mockup-link" href="./mockup.html?d=iphone15">&#128247; Set Up on Phone &amp; Tablet</a>
+    </div>
+
+  </div><!-- /ls1 -->
+</div><!-- /launcher -->
+
+<style>
+/* ── modal close button — floats just outside top-right corner ── */
+.intro-popover-close {
+  display: flex;
+  position: absolute;
+  top: 19px;
+  right: -28px;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  background: #DDD4BA;
+  border: 1.5px solid rgba(0,0,0,0.18);
+  border-left: none;
+  border-radius: 0 999px 999px 0;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.18);
+  font-size: 22px;
+  line-height: 1;
+  color: #333;
+  cursor: pointer;
+  z-index: 1100;
+  flex-shrink: 0;
+}
+.intro-popover-close:hover { background: #C9BFA2; }
+@media (prefers-color-scheme: dark) {
+  .intro-popover-close { background: #1a2235; color: #dde2ee; border-color: rgba(255,255,255,0.15); }
+  .intro-popover-close:hover { background: #243050; }
+}
+
+/* ── health factors note ── */
+.intro-health-note {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  padding: 7px 12px;
+  border-top: 1.5px solid #e0c040;
+  background: #fffbe8;
+  font-size: 0.88rem;
+  font-family: inherit;
+  line-height: 1.45;
+  color: #222;
+  border-radius: 0 0 8px 8px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.intro-health-note:hover { background: #fff5c0; }
+.intro-health-note-label {
+  font-weight: 700;
+  color: #D50032;
+}
+.intro-health-note-link {
+  display: inline;
+  margin-left: 4px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #001E62;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.intro-health-note:hover .intro-health-note-link { color: #D50032; }
+.intro-method-note {
+  border-top: 1px dashed #c8d8b0;
+  background: #f5f9f0;
+  color: #444;
+  font-style: italic;
+  border-radius: 0 0 8px 8px;
+}
+.intro-method-note:hover { background: #eaf3e4; }
+
+/* ── mini button chips: replicas of the header buttons shown in footer notes ── */
+.intro-note-btn-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+  margin-right: 5px;
+}
+.intro-note-btn-chip svg { width: 14px; height: 14px; display: block; }
+/* Yellow circle — matches .health-btn */
+.intro-note-btn-health {
+  border-radius: 50%;
+  background: linear-gradient(180deg, #FFD600 0%, #F9A800 75%);
+  border: 2px solid #ffe066;
+  box-shadow: 0 2px 0 #b87800, 0 3px 8px rgba(0,0,0,0.22);
+}
+/* Yellow left-half pill — matches .split-pill-left */
+.intro-note-btn-method {
+  border-radius: 999px 3px 3px 999px;
+  background: linear-gradient(180deg, #FFD600 0%, #F9A800 80%);
+  border: 2px solid #ffe066;
+  border-right: none;
+  box-shadow: 0 2px 0 #b87800, 0 3px 8px rgba(0,0,0,0.22);
+}
+/* Teal right-half pill — matches .split-pill-right */
+.intro-note-btn-feedback {
+  border-radius: 3px 999px 999px 3px;
+  background: linear-gradient(180deg, #26A69A 0%, #00796B 80%);
+  border: 2px solid #00897B;
+  border-left: none;
+  box-shadow: 0 2px 0 #004D40, 0 3px 8px rgba(0,0,0,0.22);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-note-btn-health { box-shadow: 0 2px 0 #7a4f00, 0 3px 8px rgba(0,0,0,0.4); }
+  .intro-note-btn-method { box-shadow: 0 2px 0 #7a4f00, 0 3px 8px rgba(0,0,0,0.4); }
+  .intro-note-btn-feedback { box-shadow: 0 2px 0 #003020, 0 3px 8px rgba(0,0,0,0.4); }
+}
+
+/* ── health button pulse highlight ── */
+@keyframes health-pulse-ring {
+  0%   { box-shadow: 0 0 0 0px rgba(243,185,24,0.9); }
+  50%  { box-shadow: 0 0 0 10px rgba(243,185,24,0.3); }
+  100% { box-shadow: 0 0 0 18px rgba(243,185,24,0); }
+}
+.health-btn-highlight {
+  animation: health-pulse-ring 0.6s ease-out 3;
+  outline: 3px solid #F3B918 !important;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+/* ── heading row ── */
+.ls1-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.ls-heading {
+  margin: 0;
+  text-align: left;
+  grid-column: 1;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transform: scale(2);
+  transform-origin: left center;
+}
+.intro-anchor {
+  grid-column: 2;
+}
+/* narrow screens: handled by the mobile block below; this rule is superseded */
+
+/* ── anchor wrapper ── */
+.intro-anchor { position: relative; }
+
+/* ── red 3D button ── */
+@keyframes intro-btn-pulse {
+  0%   { box-shadow: 0 5px 0 #8b0000, 0 6px 18px rgba(180,0,0,0.45), 0 0 0 0 rgba(210,30,30,0.55); }
+  60%  { box-shadow: 0 5px 0 #8b0000, 0 6px 18px rgba(180,0,0,0.45), 0 0 0 14px rgba(210,30,30,0); }
+  100% { box-shadow: 0 5px 0 #8b0000, 0 6px 18px rgba(180,0,0,0.45), 0 0 0 0   rgba(210,30,30,0); }
+}
+@keyframes intro-btn-bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+.intro-open-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  padding: 10px 28px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(180deg, #e82020 0%, #b50000 100%);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(80,0,0,0.4);
+  box-shadow: 0 5px 0 #8b0000, 0 6px 18px rgba(180,0,0,0.45);
+  animation: intro-btn-pulse 2s ease-out infinite, intro-btn-bob 3s ease-in-out infinite;
+  transition: transform .08s, box-shadow .08s, background .12s;
+  position: relative;
+  z-index: 1001;
+}
+.intro-open-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+.intro-open-btn:hover {
+  background: linear-gradient(180deg, #f03030 0%, #cc0000 100%);
+  animation: none;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #8b0000, 0 8px 24px rgba(180,0,0,0.55);
+}
+.intro-open-btn:active {
+  animation: none;
+  transform: translateY(4px) !important;
+  box-shadow: 0 1px 0 #8b0000, 0 2px 6px rgba(180,0,0,0.3) !important;
+}
+
+/* ── popover shell ── */
+.intro-popover {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(200px, 96vw);
+  background: #F6F3EC;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
+  z-index: 1002;
+  overflow-y: auto;
+  transform-origin: top center;
+  animation: popoverIn .5s cubic-bezier(0.34, 1.1, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  transition: opacity .3s ease, mask-image .3s ease, -webkit-mask-image .3s ease;
+}
+.intro-popover[hidden] { display: none; }
+.intro-popover.closing {
+  animation: popoverOut .45s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+@keyframes popoverIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 12px);
+    transform: translateX(-50%);
+  }
+  35% { opacity: 1; transform: translateX(-50%); }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0% 0 round 12px);
+    transform: translateX(-50%);
+  }
+}
+@keyframes popoverOut {
+  from {
+    opacity: 1;
+    clip-path: inset(0 0 0% 0 round 12px);
+    transform: translateX(-50%);
+  }
+  65% { opacity: .6; transform: translateX(-50%); }
+  to {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 12px);
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .intro-popover { background: #1a2235; color: #dde2ee; }
+}
+
+/* triangle arrow */
+.intro-popover-arrow {
+  position: absolute;
+  top: -7px; left: 50%; transform: translateX(-50%);
+  width: 14px; height: 7px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.intro-popover-arrow::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  background: #FEF8E0;
+  transform: rotate(45deg);
+  top: 3px; left: 1px;
+  box-shadow: -2px -2px 4px rgba(0,0,0,.1);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-popover-arrow::after { background: #1a2235; }
+}
+
+/* preamble — warm cream above the tab bar */
+.intro-preamble {
+  background: #FEF8E0;
+  padding: 10px 16px 9px;
+  border-radius: 12px 12px 0 0;
+}
+.intro-preamble-tagline {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #001E62;
+  line-height: 1.35;
+  margin: 0 0 6px;
+}
+.intro-preamble-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+.intro-chip {
+  font-size: .74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #001E62;
+  color: #fff;
+}
+.intro-chip.chip-red { background: #D50032; }
+.intro-preamble-sub {
+  font-size: .9rem;
+  color: #3a4858;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* tab bar */
+.intro-tab-bar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+  background: #D6DFE9;
+  padding: 6px 8px 0;
+  margin-top: 10px;
+  flex-shrink: 0;
+  border-bottom: 4px solid var(--navy, #1A2A3A);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-tab-bar { background: #1e2a38; border-bottom-color: #0d1520; }
+}
+:root[data-theme="dark"] .intro-tab-bar { background: #1e2a38; border-bottom-color: #0d1520; }
+.intro-tab {
+  padding: 6px 10px 5px;
+  min-width: 0;
+  flex: none;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,0.45);
+  color: #4A5A6A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.01em;
+  white-space: normal;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+.intro-tab-title {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.intro-tab-sub {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.72;
+  letter-spacing: 0.02em;
+}
+.intro-tab.active {
+  background: var(--navy, #1A2A3A);
+  color: #fff;
+}
+.intro-tab.active .intro-tab-sub { opacity: 0.75; }
+.intro-tab:not(.active):hover {
+  background: rgba(255,255,255,0.7);
+  color: var(--navy, #1A2A3A);
+}
+@media (prefers-color-scheme: dark) {
+  .intro-tab { background: rgba(255,255,255,.08); color: #9ab; }
+  .intro-tab:not(.active):hover { background: rgba(255,255,255,.15); color: #cde; }
+  .intro-tab.active { background: #0d1520; color: #fff; }
+}
+:root[data-theme="dark"] .intro-tab { background: rgba(255,255,255,.08); color: #9ab; }
+:root[data-theme="dark"] .intro-tab:not(.active):hover { background: rgba(255,255,255,.15); color: #cde; }
+:root[data-theme="dark"] .intro-tab.active { background: #0d1520; color: #fff; }
+
+/* tab panels */
+.intro-tab-panels {
+  flex: 1;
+}
+.intro-tab-panel {
+  padding: 10px 14px 12px;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.intro-tab-panel[hidden] { display: none; }
+
+/* ── Step-by-step track ── */
+.intro-steps {
+  list-style: none;
+  padding: 0 0 0 6px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+/* vertical connector line */
+.intro-steps::before {
+  content: '';
+  position: absolute;
+  left: 14px; top: 18px; bottom: 18px;
+  width: 2px;
+  background: linear-gradient(to bottom, #C8102E 0%, rgba(200,16,46,0.12) 100%);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.intro-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 4px 6px 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .13s;
+  position: relative;
+}
+.intro-step:hover  { background: rgba(0,30,98,0.06); }
+.intro-step:active { background: rgba(0,30,98,0.11); }
+.intro-step:focus-visible { outline: 2px solid #005FCC; outline-offset: 1px; }
+.step-badge {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #C8102E;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(200,16,46,0.30);
+  position: relative;
+  z-index: 1;
+  margin-top: 1px;
+}
+.intro-step:last-child .step-badge {
+  background: #FFD700;
+  color: #111;
+  box-shadow: 0 2px 6px rgba(255,215,0,0.40);
+  font-size: 18px;
+}
+.step-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.step-title {
+  font-weight: 800;
+  font-size: .96rem;
+  color: #001E62;
+  line-height: 1.25;
+  display: block;
+}
+.step-desc {
+  font-size: .86rem;
+  color: #3a4858;
+  line-height: 1.4;
+  display: block;
+}
+.step-cue {
+  font-size: .77rem;
+  font-weight: 700;
+  color: #D50032;
+  opacity: 0;
+  transition: opacity .12s;
+  display: block;
+  margin-top: 1px;
+}
+.intro-step:hover .step-cue { opacity: 1; }
+
+/* nudge below steps */
+.intro-steps-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 5px 0 0;
+  font-size: .8rem;
+  font-weight: 700;
+  color: #001E62;
+  opacity: .55;
+  letter-spacing: .02em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.intro-uses {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rights-statement { color: #c0392b; }
+
+/* clickable instrument links */
+.instrument-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  display: inline;
+  vertical-align: middle;
+}
+.instr-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #e8f0fb;
+  border: 1.5px solid #a8c0e8;
+  color: #1a4f9c;
+  font-weight: 700;
+  font-size: .88em;
+  padding: 3px 10px 3px 8px;
+  border-radius: 999px;
+  transition: background .13s, border-color .13s, box-shadow .13s;
+  white-space: nowrap;
+}
+.instrument-link:hover .instr-pill,
+.instrument-link:focus-visible .instr-pill {
+  background: #d0e2f7;
+  border-color: #1e5fa8;
+  box-shadow: 0 2px 6px rgba(30,95,168,.18);
+}
+.instrument-link:active .instr-pill {
+  background: #bed4f0;
+  box-shadow: none;
+}
+@media (prefers-color-scheme: dark) {
+  .instr-pill { background: #1a2c4a; border-color: #3a5c8a; color: #7ab4f5; }
+  .instrument-link:hover .instr-pill { background: #1f3557; border-color: #6096d8; }
+}
+:root[data-theme="dark"] .instr-pill { background: #1a2c4a; border-color: #3a5c8a; color: #7ab4f5; }
+:root[data-theme="dark"] .instrument-link:hover .instr-pill { background: #1f3557; border-color: #6096d8; }
+
+/* ── Instrument photo zoom (same pattern as measurement.html) ── */
+#photo-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  background: rgba(0,0,20,0.88);
+  cursor: zoom-out;
+  transition: opacity .3s ease;
+}
+#photo-zoom-overlay[hidden] { display: none !important; }
+#photo-zoom-box {
+  position: fixed;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(0,0,20,0.55);
+}
+#photo-zoom-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#photo-zoom-close {
+  position: fixed;
+  z-index: 9997;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #001E62;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,20,0.45);
+  display: flex; align-items: center; justify-content: center;
+}
+/* zoom-in cursor signals enlargeability */
+.instrument-link { cursor: zoom-in; }
+
+/* legacy step-hint — no longer rendered but kept for safety */
+.step-hint { display: none; }
+@keyframes drawPath { to { stroke-dashoffset: 0; } }
+
+/* illustration placeholder — invisible until an image is placed */
+.intro-illus-slot {
+  min-height: 0;
+  border-radius: 8px;
+}
+.intro-illus-slot:not(:empty) {
+  min-height: 120px;
+  background: var(--surface, #f5f6f8);
+  margin-top: 4px;
+}
+
+/* ── Mobile: industry cards 2-across, heading left, "How to use" button sticky ── */
+@media (max-width: 768px) {
+  /* 2 columns — declared here (outside :root nesting) to reliably override */
+  .ls1-sector-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: auto !important;
+    overflow: visible !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  /* Heading: full-width, left-aligned, sits below the fixed "How to use" bar */
+  .ls1-header {
+    grid-template-columns: 1fr !important;
+    justify-items: start !important;
+    gap: 0 !important;
+    /* push heading below the fixed button bar (~44px tall) */
+    padding-top: 50px !important;
+  }
+  .ls1-header .ls-heading {
+    text-align: left !important;
+    justify-self: start !important;
+    grid-column: 1 !important;
+    font-size: clamp(11px, 3.1vw, 16px) !important;
+    line-height: 1.25 !important;
+    padding-right: 0 !important;   /* button is above, not beside */
+    word-break: break-word !important;
+  }
+
+  /* "How to use this site" bar: full-width, centered button */
+  /* top fallback keeps button visible if JS fires before layout is ready (e.g. PWA standalone);
+     updateLayout() overrides this with the exact measured value */
+  .intro-anchor {
+    position: fixed !important;
+    top: 96px; /* fallback only — no !important so JS inline style can override */
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 500 !important;
+    background: #F6F3EC !important;
+    padding: 6px 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10) !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* modal: collapse dead space between panels and footer notes */
+  .intro-tab-panels {
+    flex: none !important;
+    min-height: 0 !important;
+  }
+
+  /* health/method notes hidden on mobile — shared.css already sets display:none;
+     intentionally not reinstated here so the popover stays focused on content */
+
+  /* sticky tab bar — sticks to top of the scrolling modal */
+  .intro-tab-bar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    background: #f3f4f7 !important;
+  }
+
+  /* Equal-width tabs: each tab gets 1/3 of the bar; subtitle not needed at this size */
+  .intro-tab {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+  .intro-tab-sub { display: none !important; }
+  .intro-tab-title { font-size: 13px !important; }
+
+  /* close button: fixed just below the blue strip, right side */
+  /* top is set dynamically by updateLayout() via JS */
+  .intro-popover-close {
+    display: flex !important;
+    position: fixed !important;
+    right: 12px !important;
+    bottom: auto !important;
+    left: auto !important;
+  }
+}
+
+/* sticky tab bar dark-mode tint on mobile */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+  .intro-tab-bar { background: #1e2a38 !important; }
+}
+@media (max-width: 768px) {
+  :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
+}
+
+/* ── Mobile: popover as full-width bottom drawer ── */
+@keyframes popoverInMobile {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: none;
+  }
+  35% { opacity: 1; transform: none; }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0% 0);
+    transform: none;
+  }
+}
+@keyframes popoverOutMobile {
+  from {
+    opacity: 1;
+    clip-path: inset(0 0 0% 0);
+    transform: none;
+  }
+  65% { opacity: .6; transform: none; }
+  to {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: none;
+  }
+}
+@media (max-width: 768px) {
+  /* Arrow points to button position on desktop — hide on mobile full-width drawer */
+  .intro-popover-arrow { display: none !important; }
+  .intro-popover-close {
+    top: 8px !important;
+    right: 8px !important;
+    transform: none !important;
+  }
+  /* Flat edges, upward shadow, full-width drop animation with no horizontal shift */
+  .intro-popover {
+    border-radius: 0 !important;
+    box-shadow: 0 -2px 12px rgba(0,0,0,.18) !important;
+    animation: popoverInMobile .5s cubic-bezier(0.34, 1.1, 0.64, 1) !important;
+  }
+  .intro-popover.closing {
+    animation: popoverOutMobile .45s cubic-bezier(0.4, 0, 0.6, 1) forwards !important;
+  }
+}
+
+/* ── Critical mobile overrides — declared here (plain CSS, no :root nesting)
+   to ensure they apply regardless of browser CSS-nesting support ── */
+@media (max-width: 768px) {
+  /* Allow full-page scroll */
+  body { overflow: auto !important; }
+  html { height: auto !important; }
+  /* Release fixed-height containers */
+  main, #launcher { height: auto !important; overflow: visible !important; }
+  #ls1, #ls2, #ls3 {
+    overflow: visible !important;
+    height: auto !important;
+    flex: none !important;
+  }
+}
+
+/* shared.css handles mobile header — no local overrides needed */
+
+/* ── Mockup page link ── */
+@keyframes mockup-btn-bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+.ls1-footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.mockup-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  padding: 10px 26px;
+  border-radius: 50px;
+  background: linear-gradient(180deg, #e82020 0%, #b50000 100%);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(80,0,0,0.4);
+  box-shadow: 0 5px 0 #8b0000, 0 6px 18px rgba(180,0,0,0.45);
+  animation: mockup-btn-bob 3.5s ease-in-out infinite;
+  transition: transform .08s, box-shadow .08s, background .12s;
+  position: relative;
+}
+.mockup-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+.mockup-link:hover {
+  background: linear-gradient(180deg, #f03030 0%, #cc0000 100%);
+  animation: none;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #8b0000, 0 8px 24px rgba(180,0,0,0.55);
+}
+.mockup-link:active {
+  animation: none;
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #8b0000, 0 2px 6px rgba(180,0,0,0.3);
+}
+@media (max-width: 768px) { .mockup-link { display: none !important; } }
+
+/* ── Install banner ── */
+#install-banner {
+  display: flex; align-items: center; gap: 10px;
+  background: #001E62; color: #fff;
+  padding: 10px 16px; flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+  font: 400 14px/1.3 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+}
+.install-banner-text { flex: 1; min-width: 0; }
+.install-banner-btn {
+  background: #D50032; color: #fff; border: none;
+  border-radius: 8px; padding: 10px 16px;
+  font: 600 14px 'Source Sans 3', sans-serif; cursor: pointer;
+  white-space: nowrap; min-height: 44px;
+}
+.install-banner-btn:hover { background: #b8002b; }
+.install-banner-dismiss {
+  background: none; border: none; color: rgba(255,255,255,.7);
+  font-size: 20px; cursor: pointer; padding: 6px 8px; line-height: 1;
+  min-height: 44px; min-width: 44px;
+}
+.install-banner-dismiss:hover { color: #fff; }
+
+/* ── iOS install modal ── */
+#ios-install-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  z-index: 9000; display: flex; align-items: flex-end;
+}
+#ios-install-modal {
+  background: #fff; border-radius: 18px 18px 0 0;
+  padding: 24px 22px 32px; width: 100%; max-width: 540px;
+  margin: 0 auto; position: relative;
+  font: 400 15px/1.5 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  color: #1c1c24;
+}
+#ios-install-modal h2 {
+  margin: 0 0 10px; font-size: 19px; color: #001E62; font-weight: 700;
+}
+#ios-install-modal p { margin: 0 0 10px; }
+#ios-install-modal ol { padding-left: 18px; margin: 0 0 12px; }
+#ios-install-modal ol li { margin-bottom: 8px; }
+.ios-modal-note { font-size: 13px; color: #6b6970; }
+#ios-modal-close {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; font-size: 22px;
+  color: #6b6970; cursor: pointer; min-height: 44px; min-width: 44px;
+}
+#ios-modal-close:hover { color: #1c1c24; }
+</style>
+
+<!-- ── Instrument photo zoom overlay (must be before the inline script so the IIFE can find these elements) ── -->
+<div id="photo-zoom-overlay" hidden role="dialog" aria-modal="true" aria-label="Enlarged photo">
+  <div id="photo-zoom-box"><img id="photo-zoom-img" src="" alt=""></div>
+  <button id="photo-zoom-close" aria-label="Close enlarged photo" title="Close enlarged photo">&times;</button>
+</div>
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function positionIntroPopover() {
+    const pop = document.getElementById('intro-popover');
+    const vpad = 4;           /* min gap from viewport edges, px */
+    const vpH  = window.innerHeight;
+    const vpW  = window.innerWidth;
+    const availH = vpH - vpad * 2;
+
+    /* ── Step 1: reset sizing so we can measure freely ── */
+    pop.style.top        = '';
+    pop.style.bottom     = '';
+    pop.style.maxHeight  = '';
+    pop.style.overflowY  = '';
+    pop.style.width      = '';
+    pop.style.maxWidth   = '';
+    pop.style.position   = 'fixed';
+    pop.style.left       = '50%';
+    pop.style.transform  = 'translateX(-50%)';
+
+    /* ── Step 2: on desktop/laptop widen until content fits or we hit the
+       viewport edge, so no vertical scroll is needed.
+       On narrow screens (≤ 767px) skip this and fall straight to scroll. ── */
+    if (vpW >= 768) {
+      /* Start at minimum width; grow only until content fits */
+      const minW = Math.min(200, vpW * 0.96);
+      const maxW = vpW * 0.96;          /* never bleed off screen */
+      const step = 20;                  /* px increments */
+
+      pop.style.width = minW + 'px';
+
+      /* Widen in steps until scrollHeight ≤ availH or we hit maxW */
+      let w = minW;
+      while (pop.scrollHeight > availH && w < maxW) {
+        w = Math.min(w + step, maxW);
+        pop.style.width = w + 'px';
+      }
+    } else {
+      pop.style.width = Math.min(200, vpW * 0.96) + 'px';
+    }
+
+    /* ── Step 3: position vertically ── */
+    if (vpW <= 768) {
+      /* Mobile: full-width drawer from right below the fixed bars to viewport bottom */
+      const fixedTopEl = document.getElementById('fixed-top');
+      const anchor = document.getElementById('intro-anchor');
+      const fixedH = (fixedTopEl ? fixedTopEl.offsetHeight : 0)
+                   + (anchor ? anchor.offsetHeight : 0);
+      pop.style.left        = '0';
+      pop.style.right       = '0';
+      pop.style.width       = '100%';
+      pop.style.maxWidth    = '100%';
+      pop.style.transform   = 'none';
+      pop.style.borderRadius = '0';
+      pop.style.top         = fixedH + 'px';
+      pop.style.bottom      = '0';
+      pop.style.maxHeight   = (vpH - fixedH) + 'px';
+      pop.style.overflowY   = 'auto';
+    } else {
+      pop.style.bottom = vpad + 'px';
+
+      if (pop.scrollHeight <= availH) {
+        /* Content fits at this width — no scroll needed */
+        pop.style.top       = '';
+        pop.style.maxHeight = '';
+        pop.style.overflowY = 'visible';
+      } else {
+        /* Even at max width it's taller than the viewport — pin top and scroll */
+        pop.style.top       = vpad + 'px';
+        pop.style.maxHeight = availH + 'px';
+        pop.style.overflowY = 'auto';
+      }
+    }
+  }
+
+  function lockPanelHeight() {
+    // On mobile the panels container is flex:none so no locking needed.
+    if (window.innerWidth <= 768) return;
+    // Measure each tab panel at its natural height, fix the panels container
+    // to the tallest so tab switches never shrink the modal.
+    const panelsWrap = document.querySelector('.intro-tab-panels');
+    const panels = [...document.querySelectorAll('.intro-tab-panel')];
+    if (!panelsWrap || !panels.length) return;
+
+    // Temporarily show all panels to measure them
+    const wasHidden = panels.map(p => p.hidden);
+    panels.forEach(p => { p.hidden = false; p.style.display = ''; });
+    panelsWrap.style.minHeight = '';
+
+    const tallest = Math.max(...panels.map(p => p.scrollHeight));
+
+    // Restore original visibility
+    panels.forEach((p, i) => { p.hidden = wasHidden[i]; });
+
+    panelsWrap.style.minHeight = tallest + 'px';
+  }
+
+  function updateStep5Hint() {
+    const hint = document.getElementById('step5-hint');
+    if (!hint) return;
+    const hasGoBtn = !!document.querySelector('.wrc-crumb-go');
+    hint.style.display = hasGoBtn ? '' : 'none';
+  }
+
+  function toggleIntroPopover() {
+    const pop = document.getElementById('intro-popover');
+    const btn = document.getElementById('intro-open-btn');
+    if (!pop.hidden) {
+      animateClosePopover(pop, btn);
+    } else {
+      updateStep5Hint();
+      pop.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => {
+        positionIntroPopover();
+        lockPanelHeight();
+        positionIntroPopover(); /* re-check after heights are locked */
+      });
+    }
+  }
+
+  function animateClosePopover(pop, btn) {
+    if (pop.hidden || pop.classList.contains('closing')) return;
+    clearPopoverMask(pop);
+    pop.classList.add('closing');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    document.getElementById('wrc-step-overlay')?.remove();
+    window._introZoom?.close();
+    setTimeout(() => {
+      pop.hidden = true;
+      pop.classList.remove('closing');
+    }, 440);
+  }
+
+  function closeIntroPopover() {
+    const pop = document.getElementById('intro-popover');
+    const btn = document.getElementById('intro-open-btn');
+    animateClosePopover(pop, btn);
+  }
+
+  function switchIntroTab(n) {
+    restorePopoverFullHeight();
+    document.querySelectorAll('.intro-tab').forEach((t, i) => {
+      const active = i + 1 === n;
+      t.classList.toggle('active', active);
+      t.setAttribute('aria-selected', String(active));
+    });
+    document.querySelectorAll('.intro-tab-panel').forEach((p, i) => {
+      p.hidden = i + 1 !== n;
+    });
+    document.getElementById('wrc-step-overlay')?.remove();
+  }
+
+  document.addEventListener('click', e => {
+    // Don't close the intro modal when the user is interacting with the photo zoom overlay
+    const zoomOverlay = document.getElementById('photo-zoom-overlay');
+    if (zoomOverlay && !zoomOverlay.hidden && zoomOverlay.contains(e.target)) return;
+    if (!document.getElementById('intro-anchor').contains(e.target)) closeIntroPopover();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeIntroPopover();
+  });
+  window.addEventListener('resize', () => {
+    const pop = document.getElementById('intro-popover');
+    if (!pop.hidden) { positionIntroPopover(); lockPanelHeight(); positionIntroPopover(); }
+  });
+
+  const INSTRUMENT_PHOTOS = {
+    wbgt: 'images/wbgt-monitors.jpg',
+    hi:   'images/heat-index-monitors.jpg',
+    trh:  'images/trh-monitors.jpg',
+  };
+
+  // ── Instrument photo zoom (same pattern as measurement.html) ──
+  (function () {
+    const overlay  = document.getElementById('photo-zoom-overlay');
+    const box      = document.getElementById('photo-zoom-box');
+    const zoomImg  = document.getElementById('photo-zoom-img');
+    const closeBtn = document.getElementById('photo-zoom-close');
+    const EASE_IN  = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const EASE_OUT = 'cubic-bezier(0.4, 0, 0.6, 1)';
+    const REDUCE   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let _srcImg = null, _closing = false;
+
+    function targetRect(ratio) {
+      const maxW = window.innerWidth * 0.92, maxH = window.innerHeight * 0.92;
+      let w, h;
+      if (maxW / ratio <= maxH) { w = maxW; h = maxW / ratio; }
+      else { h = maxH; w = maxH * ratio; }
+      return { top: (window.innerHeight - h) / 2, left: (window.innerWidth - w) / 2, width: w, height: h };
+    }
+    function fromTransform(src) {
+      const b = box.getBoundingClientRect();
+      const sx = src.width / b.width, sy = src.height / b.height;
+      const tx = (src.left + src.width  / 2) - (b.left + b.width  / 2);
+      const ty = (src.top  + src.height / 2) - (b.top  + b.height / 2);
+      return `translate(${tx}px,${ty}px) scale(${sx},${sy})`;
+    }
+    function placeBox(r) {
+      box.style.left = r.left + 'px'; box.style.top    = r.top    + 'px';
+      box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
+    }
+    function placeClose() {
+      const r = box.getBoundingClientRect(), s = closeBtn.offsetWidth || 38;
+      let left = r.right - s / 2, top = r.top - s / 2;
+      left = Math.min(Math.max(4, left), window.innerWidth  - s - 4);
+      top  = Math.min(Math.max(4, top),  window.innerHeight - s - 4);
+      closeBtn.style.left = left + 'px'; closeBtn.style.top = top + 'px';
+    }
+
+    function openZoom(img) {
+      if (_closing) return;
+      _srcImg = img;
+      const srcR  = img.getBoundingClientRect();
+      const ratio = (img.naturalWidth || srcR.width) / (img.naturalHeight || srcR.height);
+      const tgtR  = targetRect(ratio);
+      zoomImg.src = img.src; zoomImg.alt = img.alt;
+      placeBox(tgtR);
+      overlay.hidden = false;
+      placeClose();
+      if (!REDUCE && box.animate) {
+        box.animate([{ transform: fromTransform(srcR), borderRadius: '5px' },
+                     { transform: 'none', borderRadius: '8px' }],
+                    { duration: 380, easing: EASE_IN, fill: 'none' });
+      }
+      closeBtn.focus();
+    }
+
+    function closeZoom() {
+      if (_closing || overlay.hidden) return;
+      if (!REDUCE && box.animate && _srcImg) {
+        _closing = true;
+        const srcR = _srcImg.getBoundingClientRect();
+        const anim = box.animate([{ transform: 'none', borderRadius: '8px' },
+                                   { transform: fromTransform(srcR), borderRadius: '5px' }],
+                                  { duration: 280, easing: EASE_OUT });
+        anim.onfinish = () => { _closing = false; overlay.hidden = true; _srcImg = null; };
+      } else { overlay.hidden = true; _srcImg = null; }
+    }
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay || e.target === box || e.target === zoomImg) closeZoom();
+    });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+    window.addEventListener('resize', () => {
+      if (!overlay.hidden && _srcImg) {
+        const ratio = (zoomImg.naturalWidth || 1) / (zoomImg.naturalHeight || 1);
+        placeBox(targetRect(ratio)); placeClose();
+      }
+    });
+
+    // Expose openZoom for showInstrumentPhoto
+    window._introZoom = { open: openZoom, close: closeZoom, overlay };
+
+  })();
+
+  function showInstrumentPhoto(e, key) {
+    e.stopPropagation();
+    // Build a temporary hidden img to zoom from the click point
+    const zoom = window._introZoom;
+    // If zoom already showing the same key, close it
+    if (!zoom.overlay.hidden && zoom.overlay.dataset.key === key) {
+      zoom.close(); return;
+    }
+    zoom.overlay.dataset.key = key;
+
+    const altMap = { wbgt: 'WBGT Monitors', hi: 'Heat Index Meters', trh: 'Temperature and Relative Humidity Monitors' };
+    // Create a tiny off-screen proxy img so the zoom animation originates from the click
+    const proxy = document.createElement('img');
+    proxy.src = INSTRUMENT_PHOTOS[key];
+    proxy.alt = altMap[key] || key;
+    // Position proxy at click point (zero-size, invisible)
+    Object.assign(proxy.style, {
+      position: 'fixed', left: e.clientX + 'px', top: e.clientY + 'px',
+      width: '1px', height: '1px', opacity: '0', pointerEvents: 'none'
+    });
+    document.body.appendChild(proxy);
+
+    function doOpen() {
+      zoom.open(proxy);
+      // Clean up proxy once image naturally loads into zoomImg
+      document.getElementById('photo-zoom-img').addEventListener('load', () => proxy.remove(), { once: true });
+    }
+    // Wait for naturalWidth to be available (may already be cached)
+    if (proxy.complete && proxy.naturalWidth) { doOpen(); }
+    else { proxy.addEventListener('load', doOpen, { once: true }); }
+  }
+
+  function clearPopoverMask(pop) {
+    pop.style.maskImage = '';
+    pop.style.webkitMaskImage = '';
+    pop.style.opacity = '';
+    pop._maskedStep = null;
+  }
+
+  function highlightStep(e, n) {
+    if (window.innerWidth <= 768) return;
+    const pop = document.getElementById('intro-popover');
+
+    // If same step clicked while masked — clear mask and return
+    if (pop._maskedStep === n) {
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+      document.getElementById('wrc-step-overlay')?.remove();
+      return;
+    }
+
+    // Always restore full height first; the overlap check below will re-apply
+    // a mask only if the target genuinely sits behind the modal.
+    restorePopoverFullHeight();
+    clearPopoverMask(pop);
+
+    const NS = 'http://www.w3.org/2000/svg';
+
+    // Target: steps 1–5 → breadcrumb pills; step 6 → Work-Rest Cycle button
+    let target;
+    if (n === 6) {
+      target = document.querySelector('.wrc-crumb-go');
+    } else {
+      const crumbs = document.querySelectorAll('#wrc-breadcrumbs .wrc-crumb, #wrc-breadcrumbs .wrc-crumb-pending');
+      target = crumbs[n - 1];
+    }
+    if (!target) return;
+    const tR = target.getBoundingClientRect();
+
+    // Remove any existing overlay
+    document.getElementById('wrc-step-overlay')?.remove();
+
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9998',
+    });
+
+    // Arrowhead marker + drop-shadow filter
+    const defs = document.createElementNS(NS, 'defs');
+
+    const filter = document.createElementNS(NS, 'filter');
+    filter.setAttribute('id', 'wrc-shadow');
+    filter.setAttribute('x', '-20%'); filter.setAttribute('y', '-20%');
+    filter.setAttribute('width', '140%'); filter.setAttribute('height', '140%');
+    const shadow = document.createElementNS(NS, 'feDropShadow');
+    shadow.setAttribute('dx', '0'); shadow.setAttribute('dy', '0');
+    shadow.setAttribute('stdDeviation', '3');
+    shadow.setAttribute('flood-color', '#000');
+    shadow.setAttribute('flood-opacity', '0.6');
+    filter.appendChild(shadow); defs.appendChild(filter);
+
+    const marker = document.createElementNS(NS, 'marker');
+    marker.setAttribute('id', 'wrc-ah');
+    marker.setAttribute('markerWidth', '9'); marker.setAttribute('markerHeight', '6');
+    marker.setAttribute('refX', '9');        marker.setAttribute('refY', '3');
+    marker.setAttribute('orient', 'auto');
+    const tip = document.createElementNS(NS, 'polygon');
+    tip.setAttribute('points', '0 0, 9 3, 0 6');
+    tip.setAttribute('fill', '#00C47A');
+    marker.appendChild(tip); defs.appendChild(marker); svg.appendChild(defs);
+
+    // Arrow exits from the left or right edge of the modal (never top/bottom)
+    const pR2 = pop.getBoundingClientRect();
+    const tx = tR.left + tR.width / 2;   // target centre x
+    const ty = tR.top  + tR.height / 2;  // target centre y
+    // Pick whichever modal edge is closer to the target horizontally
+    const distLeft  = Math.abs(tx - pR2.left);
+    const distRight = Math.abs(tx - pR2.right);
+    const fromRight = distRight < distLeft;
+    // Start point: modal edge, at the Y of the clicked list item
+    const x1 = e.clientX;
+    const y1 = e.clientY;
+    // End point: near edge of the target ring (not dead-centre)
+    const x2 = tR.left + tR.width / 2;  // horizontal midpoint of target
+    const y2 = tR.bottom + 6;           // just below the target
+    // Control points curve outward horizontally so the arrow flows left/right
+    const cpOff = Math.abs(x2 - x1) * 0.5;
+    const cp1x = fromRight ? x1 + cpOff : x1 - cpOff;
+    const cp2x = fromRight ? x2 + cpOff : x2 - cpOff;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#00C47A');
+    arrow.setAttribute('stroke-width', '4');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-shadow)');
+    svg.appendChild(arrow);
+    // Click anywhere → dismiss overlay and restore modal
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
+      svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+    });
+
+    document.body.appendChild(svg);
+
+    // Animate arrow draw
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    // Ring around target pill
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    const r  = Math.max(tR.width, tR.height) / 2 + 10;
+    const circum = 2 * Math.PI * r;
+
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', r);
+    tint.setAttribute('fill', 'rgba(26,122,60,.12)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', r);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#00C47A');
+    ring.setAttribute('stroke-width', '6');
+    ring.setAttribute('filter', 'url(#wrc-shadow)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+
+    // Draw circle fast after arrow
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 300);
+    // No auto-fade — stays until next step click or modal close
+
+    // Check if popover overlaps the target; fade the top of the modal transparent
+    // so the target (behind the modal's top) becomes visible while the clicked
+    // step (lower in the modal) stays fully opaque.
+    clearPopoverMask(pop);
+    requestAnimationFrame(() => {
+      const pR = pop.getBoundingClientRect();
+      const overlaps = !(pR.right < tR.left || pR.left > tR.right ||
+                         pR.bottom < tR.top  || pR.top  > tR.bottom);
+      if (overlaps) {
+        // Distance from modal top to target bottom (the zone to make transparent)
+        const fadeBuffer = 28; // extra px of feather below target
+        const transparentEndPx = tR.bottom - pR.top;
+        const opaqueStartPx = transparentEndPx + fadeBuffer;
+        const h = pR.height || 1;
+        const pct1 = Math.min(100, (transparentEndPx / h * 100)).toFixed(1);
+        const pct2 = Math.min(100, (opaqueStartPx   / h * 100)).toFixed(1);
+        // transparent at top → opaque below the target
+        const mask = `linear-gradient(to bottom, transparent 0%, transparent ${pct1}%, black ${pct2}%)`;
+        pop.style.maskImage = mask;
+        pop.style.webkitMaskImage = mask;
+        pop._maskedStep = n;
+      }
+    });
+  }
+
+
+  function highlightInstrumentCrumb(e) {
+    highlightStep(e, 5);
+  }
+
+  function restorePopoverFullHeight() {
+    const pop = document.getElementById('intro-popover');
+    if (!pop || pop.hidden) return;
+    // Clear any CSS mask gradient that was fading the top of the modal
+    // transparent (applied when a step target overlapped the popover).
+    // This must happen BEFORE positionIntroPopover so the layout pass
+    // measures the fully-visible modal, not the masked/clipped version.
+    clearPopoverMask(pop);
+    // Re-run the full layout pass so height is recalculated for the current
+    // tab's content. Simply clearing maxHeight isn't enough — the popover is
+    // fixed to bottom:4px so excess height silently overflows above the
+    // viewport and looks unchanged to the user.
+    positionIntroPopover();
+  }
+
+  function highlightHealthBtn(e) {
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openHealthModal();
+      return;
+    }
+    restorePopoverFullHeight();
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.health-btn');
+    if (!target) return;
+
+    // Remove any existing overlay
+    document.getElementById('wrc-step-overlay')?.remove();
+
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9999', overflow: 'visible'
+    });
+
+    // Shadow filter
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter');
+    filt.id = 'wrc-hh-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+
+    // Arrowhead marker (gold)
+    const marker = document.createElementNS(NS, 'marker');
+    marker.id = 'wrc-hh-ah';
+    marker.setAttribute('markerWidth', '10'); marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('refX', '10'); marker.setAttribute('refY', '3.5');
+    marker.setAttribute('orient', 'auto');
+    const mpoly = document.createElementNS(NS, 'polygon');
+    mpoly.setAttribute('points', '0 0, 10 3.5, 0 7');
+    mpoly.setAttribute('fill', '#00966C');
+    marker.appendChild(mpoly);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Arrow origin: from the click point
+    const x1 = e ? e.clientX : tR.left - 60;
+    const y1 = e ? e.clientY : tR.top + tR.height / 2;
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    // Shorten arrow so it stops at edge of ring
+    const dx = cx - x1, dy = cy - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const ringR = Math.max(tR.width, tR.height) / 2 + 10;
+    const ratio = Math.max(0, (dist - ringR - 6)) / dist;
+    const x2 = x1 + dx * ratio;
+    const y2 = y1 + dy * ratio;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#00966C');
+    arrow.setAttribute('stroke-width', '3.5');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-hh-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-hh-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    // Gold tint fill + ring around health button
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', ringR);
+    tint.setAttribute('fill', 'rgba(0,150,108,0.15)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', ringR);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#00966C');
+    ring.setAttribute('stroke-width', '5');
+    ring.setAttribute('filter', 'url(#wrc-hh-shadow)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    const circum = 2 * Math.PI * ringR;
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+
+    // Click on overlay → dismiss without closing modal
+    const pop = document.getElementById('intro-popover');
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
+      svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+    });
+    document.addEventListener('keydown', function onKey() {
+      svg.remove();
+      clearPopoverMask(pop);
+      restorePopoverFullHeight();
+      document.removeEventListener('keydown', onKey);
+    });
+  }
+
+  function highlightMethodBtn(e) {
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openMethodologyModal();
+      return;
+    }
+    restorePopoverFullHeight();
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.split-pill') || document.querySelector('.split-pill-left');
+    if (!target) return;
+
+    document.getElementById('wrc-step-overlay')?.remove();
+
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      pointerEvents: 'none', zIndex: '9999', overflow: 'visible'
+    });
+
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter');
+    filt.id = 'wrc-mb-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+
+    const marker = document.createElementNS(NS, 'marker');
+    marker.id = 'wrc-mb-ah';
+    marker.setAttribute('markerWidth', '10'); marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('refX', '10'); marker.setAttribute('refY', '3.5');
+    marker.setAttribute('orient', 'auto');
+    const mpoly = document.createElementNS(NS, 'polygon');
+    mpoly.setAttribute('points', '0 0, 10 3.5, 0 7');
+    mpoly.setAttribute('fill', '#00966C');
+    marker.appendChild(mpoly);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Arrow origin: from the click point
+    const x1 = e ? e.clientX : tR.right + 60;
+    const y1 = e ? e.clientY : tR.top + tR.height / 2;
+    const cx = tR.left + tR.width / 2;
+    const cy = tR.top + tR.height / 2;
+    const dx = cx - x1, dy = cy - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const ringR = Math.max(tR.width, tR.height) / 2 + 10;
+    const ratio = Math.max(0, (dist - ringR - 6)) / dist;
+    const x2 = x1 + dx * ratio;
+    const y2 = y1 + dy * ratio;
+
+    const arrow = document.createElementNS(NS, 'path');
+    arrow.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+    arrow.setAttribute('fill', 'none');
+    arrow.setAttribute('stroke', '#00966C');
+    arrow.setAttribute('stroke-width', '3.5');
+    arrow.setAttribute('stroke-linecap', 'round');
+    arrow.setAttribute('marker-end', 'url(#wrc-mb-ah)');
+    arrow.setAttribute('filter', 'url(#wrc-mb-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+
+    const len = arrow.getTotalLength();
+    arrow.style.strokeDasharray = len;
+    arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+
+    const tint = document.createElementNS(NS, 'circle');
+    tint.setAttribute('cx', cx); tint.setAttribute('cy', cy); tint.setAttribute('r', ringR);
+    tint.setAttribute('fill', 'rgba(0,150,108,0.15)');
+    svg.appendChild(tint);
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy); ring.setAttribute('r', ringR);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#00966C');
+    ring.setAttribute('stroke-width', '5');
+    ring.setAttribute('filter', 'url(#wrc-mb-shadow)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`;
+    ring.style.transform = 'rotate(-90deg)';
+    const circum = 2 * Math.PI * ringR;
+    ring.style.strokeDasharray = circum;
+    ring.style.strokeDashoffset = circum;
+    ring.style.transition = 'stroke-dashoffset .5s ease';
+    svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+
+    // Click on overlay → dismiss without closing modal
+    const pop2 = document.getElementById('intro-popover');
+    svg.style.pointerEvents = 'all';
+    svg.style.cursor = 'pointer';
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
+      svg.remove();
+      clearPopoverMask(pop2);
+      restorePopoverFullHeight();
+    });
+    document.addEventListener('keydown', function onKey2() {
+      svg.remove();
+      clearPopoverMask(pop2);
+      restorePopoverFullHeight();
+      document.removeEventListener('keydown', onKey2);
+    });
+  }
+
+  function highlightFeedbackBtn(e) {
+    if (window.innerWidth <= 768) {
+      _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
+      closeIntroPopover();
+      openFeedbackModal();
+      return;
+    }
+    // Desktop: arrow to the 💬 (right half of split pill)
+    restorePopoverFullHeight();
+    const NS = 'http://www.w3.org/2000/svg';
+    const target = document.querySelector('.split-pill-right');
+    if (!target) return;
+    document.getElementById('wrc-step-overlay')?.remove();
+    const tR = target.getBoundingClientRect();
+    const svg = document.createElementNS(NS, 'svg');
+    svg.id = 'wrc-step-overlay';
+    Object.assign(svg.style, { position:'fixed', top:'0', left:'0', width:'100vw', height:'100vh', pointerEvents:'none', zIndex:'9999', overflow:'visible' });
+    const defs = document.createElementNS(NS, 'defs');
+    const filt = document.createElementNS(NS, 'filter'); filt.id = 'wrc-fb-shadow';
+    filt.innerHTML = '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>';
+    defs.appendChild(filt);
+    const marker = document.createElementNS(NS, 'marker'); marker.id = 'wrc-fb-ah';
+    marker.setAttribute('markerWidth','10'); marker.setAttribute('markerHeight','7');
+    marker.setAttribute('refX','10'); marker.setAttribute('refY','3.5'); marker.setAttribute('orient','auto');
+    const mpoly = document.createElementNS(NS, 'polygon'); mpoly.setAttribute('points','0 0, 10 3.5, 0 7'); mpoly.setAttribute('fill','#00966C');
+    marker.appendChild(mpoly); defs.appendChild(marker); svg.appendChild(defs);
+    const cx = tR.left + tR.width/2, cy = tR.top + tR.height/2;
+    const x1 = e ? e.clientX : cx - 60, y1 = e ? e.clientY : cy;
+    const dx = cx-x1, dy = cy-y1, dist = Math.sqrt(dx*dx+dy*dy);
+    const ringR = Math.max(tR.width,tR.height)/2+10;
+    const ratio = Math.max(0,(dist-ringR-6))/dist;
+    const arrow = document.createElementNS(NS,'path');
+    arrow.setAttribute('d',`M ${x1} ${y1} L ${x1+dx*ratio} ${y1+dy*ratio}`);
+    arrow.setAttribute('fill','none'); arrow.setAttribute('stroke','#00966C');
+    arrow.setAttribute('stroke-width','3.5'); arrow.setAttribute('stroke-linecap','round');
+    arrow.setAttribute('marker-end','url(#wrc-fb-ah)'); arrow.setAttribute('filter','url(#wrc-fb-shadow)');
+    svg.appendChild(arrow);
+    document.body.appendChild(svg);
+    const len = arrow.getTotalLength(); arrow.style.strokeDasharray = len; arrow.style.strokeDashoffset = len;
+    arrow.style.transition = 'stroke-dashoffset .35s ease';
+    requestAnimationFrame(() => { arrow.style.strokeDashoffset = '0'; });
+    const tint = document.createElementNS(NS,'circle'); tint.setAttribute('cx',cx); tint.setAttribute('cy',cy); tint.setAttribute('r',ringR); tint.setAttribute('fill','rgba(0,150,108,0.15)'); svg.appendChild(tint);
+    const ring = document.createElementNS(NS,'circle'); ring.setAttribute('cx',cx); ring.setAttribute('cy',cy); ring.setAttribute('r',ringR); ring.setAttribute('fill','none'); ring.setAttribute('stroke','#00966C'); ring.setAttribute('stroke-width','5'); ring.setAttribute('filter','url(#wrc-fb-shadow)'); ring.setAttribute('stroke-linecap','round');
+    ring.style.transformOrigin = `${cx}px ${cy}px`; ring.style.transform = 'rotate(-90deg)';
+    const circ = 2*Math.PI*ringR; ring.style.strokeDasharray = circ; ring.style.strokeDashoffset = circ; ring.style.transition = 'stroke-dashoffset .5s ease'; svg.appendChild(ring);
+    setTimeout(() => { ring.style.strokeDashoffset = '0'; }, 280);
+    const pop3 = document.getElementById('intro-popover');
+    svg.style.pointerEvents = 'all'; svg.style.cursor = 'pointer';
+    svg.addEventListener('click', ev => { ev.stopPropagation(); svg.remove(); clearPopoverMask(pop3); restorePopoverFullHeight(); });
+    document.addEventListener('keydown', function onKey3() { svg.remove(); clearPopoverMask(pop3); restorePopoverFullHeight(); document.removeEventListener('keydown', onKey3); });
+  }
+
+  function ls1SelectSector(key) {
+    document.querySelectorAll('.ls1-sector-btn').forEach(b =>
+      b.classList.toggle('selected', b.dataset.sector === key));
+    setTimeout(() => navigate('activity.html', { sector: key }), 220);
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    if (!fixedTop) return;
+    const fixedH = fixedTop.offsetHeight;
+
+    // Position the "How to use" bar flush below fixed-top
+    const anchor = document.getElementById('intro-anchor');
+    if (anchor && window.innerWidth <= 768) {
+      anchor.style.top = fixedH + 'px';
+      // Close button sits vertically centered within the anchor bar
+      const closeBtn = document.querySelector('.intro-popover-close');
+      if (closeBtn) {
+        const anchorH = anchor.offsetHeight || 36;
+        closeBtn.style.top = (fixedH + Math.floor((anchorH - 32) / 2)) + 'px';
+      }
+    }
+
+    const ls1 = document.getElementById('ls1');
+    ls1.style.paddingTop = (fixedH + 16) + 'px';
+    ls1.style.height = window.innerHeight + 'px';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prev = WRC.val('sector', null);
+    if (prev) {
+      document.querySelectorAll('.ls1-sector-btn').forEach(b =>
+        b.classList.toggle('selected', b.dataset.sector === prev));
+    }
+    buildBreadcrumbs();
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    // Re-run after full load — standalone PWA mode can have offsetHeight=0 at DOMContentLoaded
+    window.addEventListener('load', updateLayout);
+  });
+</script>
+
+<script>
+/* ── PWA: Install banner + service worker ── */
+(function () {
+  var DISMISSED_KEY = 'rth_install_banner_dismissed';
+  var IS_MOBILE = window.matchMedia('(max-width: 860px), (pointer: coarse) and (max-width: 1366px)').matches;
+  var IS_STANDALONE = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  var IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  var banner = document.getElementById('install-banner');
+  var bannerBtn = document.getElementById('install-banner-btn');
+  var dismissBtn = document.getElementById('install-banner-dismiss');
+  var overlay = document.getElementById('ios-install-modal-overlay');
+  var modalClose = document.getElementById('ios-modal-close');
+
+  var dismissed = false;
+  try { dismissed = !!localStorage.getItem(DISMISSED_KEY); } catch(e){}
+
+  var deferredPrompt = null;
+
+  function showBanner() {
+    if (banner) { banner.style.display = 'flex'; if(typeof updateLayout==='function') updateLayout(); }
+  }
+  function hideBanner() {
+    if (banner) { banner.style.display = 'none'; if(typeof updateLayout==='function') updateLayout(); }
+  }
+
+  if (!IS_MOBILE || IS_STANDALONE || dismissed) return;
+
+  if (IS_IOS) {
+    showBanner();
+    if (bannerBtn) bannerBtn.addEventListener('click', function () {
+      if (overlay) overlay.style.display = 'flex';
+    });
+  } else {
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      showBanner();
+      if (bannerBtn) bannerBtn.addEventListener('click', function () {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () {
+          deferredPrompt = null;
+          hideBanner();
+        });
+      });
+    });
+  }
+
+  if (dismissBtn) dismissBtn.addEventListener('click', function () {
+    hideBanner();
+    try { localStorage.setItem(DISMISSED_KEY, '1'); } catch(e){}
+  });
+  if (modalClose) modalClose.addEventListener('click', function () {
+    if (overlay) overlay.style.display = 'none';
+  });
+  if (overlay) overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) overlay.style.display = 'none';
+  });
+})();
+
+/* ── Service worker registration (phones only, not inside iframe) ── */
+if ('serviceWorker' in navigator && window.matchMedia('(max-width: 860px)').matches && window.self === window.top) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+}
+</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>
