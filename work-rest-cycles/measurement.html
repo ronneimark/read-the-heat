@@ -493,11 +493,11 @@ body { background: #F6F3EC !important; }
   line-height: 1.7;
 }
 .wbgt-formula-block .formula-env {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  opacity: 0.65;
+  color: #A7B8D8; /* solid equivalent of #fff at ~0.65 opacity on #001E62 — 4.8:1 contrast */
   margin-bottom: 2px;
 }
 .wbgt-formula-block .formula-eq {
@@ -507,8 +507,8 @@ body { background: #F6F3EC !important; }
   letter-spacing: 0.01em;
 }
 .wbgt-formula-block .formula-note {
-  font-size: 10px;
-  opacity: 0.75;
+  font-size: 11px;
+  color: #C0CEDF; /* solid equivalent of #fff at ~0.75 opacity on #001E62 — 6.8:1 contrast */
   margin-top: 2px;
   font-style: italic;
 }
@@ -1189,7 +1189,7 @@ body { background: #F6F3EC !important; }
   <div class="formula-eq">WBGT = 0.7 × NWB + 0.2 × GT + 0.1 × DB</div>
   <div class="formula-note">DB (dry bulb) accounts for solar radiation absorbed through convection.</div>
 </div>
-<p style="font-size:12px;line-height:1.5;margin:4px 0 6px;color:#333;"><strong>NWB</strong> = natural wet bulb &nbsp;·&nbsp; <strong>GT</strong> = globe temperature &nbsp;·&nbsp; <strong>DB</strong> = dry bulb (air temp). The formula works identically in °F or °C — the coefficients don't change.</p>` },
+<p style="font-size:13px;line-height:1.5;margin:4px 0 6px;"><strong>NWB</strong> = natural wet bulb &nbsp;·&nbsp; <strong>GT</strong> = globe temperature &nbsp;·&nbsp; <strong>DB</strong> = dry bulb (air temp). The formula works identically in °F or °C — the coefficients don't change.</p>` },
         { h: 'Best suited for', p: 'All indoor industrial and commercial settings with significant heat sources: foundries, commercial kitchens, boiler rooms, laundries, glass and metal manufacturing, and any work environment where workers are near hot equipment or surfaces.' }
       ]
     },
@@ -1222,9 +1222,11 @@ body { background: #F6F3EC !important; }
     }
   };
 
+  let _deviceInfoTrigger = null;
   function showDeviceInfo(key) {
     const info = DEVICE_INFO[key];
     if (!info) return;
+    _deviceInfoTrigger = document.activeElement;
     document.getElementById('device-info-title').textContent = info.title;
     let html = '';
     if (info.badge) html += `<span class="device-info-badge">${info.badge}</span>`;
@@ -1238,6 +1240,7 @@ body { background: #F6F3EC !important; }
   }
   function closeDeviceInfo() {
     document.getElementById('device-info-overlay').hidden = true;
+    if (_deviceInfoTrigger) { _deviceInfoTrigger.focus(); _deviceInfoTrigger = null; }
   }
 
   function positionGridDividers() {
