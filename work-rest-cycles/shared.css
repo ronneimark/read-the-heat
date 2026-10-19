@@ -1804,7 +1804,7 @@
   /* ── Mobile: allow full-page scroll, release viewport-locked containers ── */
   @media (max-width: 768px) {
     /* Body scrolls instead of clipping */
-    body { overflow: auto !important; padding-bottom: 62px !important; }
+    body { overflow: auto !important; padding-bottom: 86px !important; }
 
     /* Header: hide left/right buttons, center logo only */
     header { grid-template-columns: 1fr !important; }
@@ -1821,13 +1821,17 @@
     /* ── Bottom modal bar ── */
     .mobile-modal-bar {
       display: flex;
+      flex-direction: column;
       position: fixed;
       bottom: 0; left: 0; right: 0;
       z-index: 1050;
       background: #1A2A3A;
       border-top: 2.5px solid #FFD600;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
       box-shadow: 0 -2px 12px rgba(0,0,0,0.30);
+    }
+    .mmb-btn-row {
+      display: flex;
+      width: 100%;
     }
     .mmb-btn {
       flex: 1;
@@ -1863,6 +1867,29 @@
     .mmb-health svg { stroke: #FFD600; fill: #FFD600; }
     .mmb-method svg { stroke: #aaccff; }
     .mmb-feedback svg { stroke: #80cbc4; }
+    /* ── Credit bar inside mobile footer ── */
+    .mmb-credit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      background: linear-gradient(180deg, #c8001e 0%, #A50028 100%);
+      padding: 6px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+      box-sizing: border-box;
+    }
+    .mmb-credit-text {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.90);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+    .wrc-sph-pill--sm {
+      padding: 2px 5px !important;
+      box-shadow: 0 0 0 2px #D50032, 0 1px 0 2px #9a0000, 0 2px 5px rgba(40,0,10,0.35) !important;
+    }
+    .wrc-sph-pill--sm img { height: 13px !important; }
 
     /* ── Ensure inner scroll containers clear the fixed bottom bar ── */
     /* Targets flex panels that are the real scroll containers on calculator pages */
@@ -1875,7 +1902,7 @@
     .calc-panel,
     .result-panel,
     .scroll-panel {
-      padding-bottom: 62px !important;
+      padding-bottom: 86px !important;
     }
 
     html { height: auto; }
