@@ -254,7 +254,14 @@ main { padding: 0; max-width: none; }
   }
 }
 @media (max-width: 768px) {
-  #wbgt-result-card { position: static; border-radius: 0; box-shadow: none; }
+  /* Card is position:static on mobile — it flows from top:0 under the fixed
+     header. Use the CSS var set by updateLayout() to clear it. */
+  #wbgt-result-card {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: var(--fixed-top-h, 100px);
+  }
 }
 
 .acclim-chart-grid {

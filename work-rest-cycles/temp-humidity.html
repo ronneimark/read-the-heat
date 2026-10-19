@@ -316,7 +316,12 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   .formula-col-left, .formula-col-right { min-width: 0; }
 }
 @media (max-width: 768px) {
-  #trh-result-card { position: static; border-radius: 0; box-shadow: none; }
+  #trh-result-card {
+    position: static;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: var(--fixed-top-h, 100px);
+  }
 }
 
 /* Unit toggle strip inside chart pane */
