@@ -1918,6 +1918,9 @@
       position: static !important;
     }
 
+    /* Activity and acclimatization: ensure last elements clear the fixed bottom bar */
+    #ls2, #ls3 { padding-bottom: 94px !important; }
+
     /* Sector grid: release clip, 2 columns on mobile */
     .ls1-sector-grid {
       overflow: visible !important;
@@ -2324,12 +2327,14 @@
      All rules below are inside @media — desktop is unchanged.
      ══════════════════════════════════════════════════════════════ */
 
-  /* ── Results pages: reduce the 32px side gutter to something phone-friendly ── */
+  /* ── Results pages: reduce the 32px side gutter to something phone-friendly ──
+     Use padding-inline (sides only) so padding-top set by JS/CSS-var for the
+     fixed header is NOT overwritten by a shorthand. */
   @media (max-width: 640px) {
-    main { padding: 16px 16px !important; }
+    main { padding-inline: 16px !important; }
   }
   @media (max-width: 480px) {
-    main { padding: 12px 12px !important; }
+    main { padding-inline: 12px !important; }
     .section-label { margin-top: 16px; }
     .launcher-intro { font-size: 13px; margin-bottom: 16px; }
   }
