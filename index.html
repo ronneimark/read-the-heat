@@ -1010,8 +1010,11 @@
     right: 8px !important;
     transform: none !important;
   }
-  /* Flat edges, upward shadow, full-width drop animation with no horizontal shift */
+  /* Full-width drawer: edge-to-edge, no rounding, slide-up animation */
   .intro-popover {
+    width: 100vw !important;
+    left: 0 !important;
+    transform: none !important;
     border-radius: 0 !important;
     box-shadow: 0 -2px 12px rgba(0,0,0,.18) !important;
     animation: popoverInMobile .5s cubic-bezier(0.34, 1.1, 0.64, 1) !important;
