@@ -77,7 +77,9 @@
         <!-- tabbed popover -->
         <div class="intro-popover" id="intro-popover" hidden role="dialog" aria-label="How to use this tool">
           <div class="intro-popover-arrow"></div>
-          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close" title="Close">&times;</button>
+          <button class="intro-popover-close" onclick="closeIntroPopover()" aria-label="Close" title="Close">
+            <span aria-hidden="true">&times;</span><span class="intro-close-label">Close</span>
+          </button>
 
           <!-- intro paragraph above tabs -->
           <div class="intro-preamble">
@@ -282,6 +284,7 @@
   flex-shrink: 0;
 }
 .intro-popover-close:hover { background: #C9BFA2; }
+.intro-close-label { display: none; } /* shown as labeled pill on mobile/tablet */
 @media (prefers-color-scheme: dark) {
   .intro-popover-close { background: #1a2235; color: #dde2ee; border-color: rgba(255,255,255,0.15); }
   .intro-popover-close:hover { background: #243050; }
@@ -946,7 +949,22 @@
     right: 12px !important;
     bottom: auto !important;
     left: auto !important;
+    /* labeled pill — clearly readable */
+    width: auto !important;
+    height: 34px !important;
+    padding: 0 14px 0 11px !important;
+    border-radius: 50px !important;
+    border: 1.5px solid rgba(0,0,0,0.22) !important;
+    border-left: 1.5px solid rgba(0,0,0,0.22) !important;
+    gap: 5px !important;
+    font-size: 0.875rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    background: #DDD4BA !important;
+    color: #333 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18) !important;
   }
+  .intro-close-label { display: inline !important; }
 }
 
 /* sticky tab bar dark-mode tint on mobile/tablet */
@@ -1906,7 +1924,7 @@
       const closeBtn = document.querySelector('.intro-popover-close');
       if (closeBtn) {
         const anchorH = anchor.offsetHeight || 36;
-        closeBtn.style.top = (fixedH + Math.floor((anchorH - 32) / 2)) + 'px';
+        closeBtn.style.top = (fixedH + Math.floor((anchorH - 34) / 2)) + 'px';
       }
     }
 
