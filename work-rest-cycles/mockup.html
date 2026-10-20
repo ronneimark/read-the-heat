@@ -46,7 +46,8 @@
   header { height: 76px; overflow: hidden; }
   .header-attribution { display: none; }
   .header-inner { padding: 0; gap: 0; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
-  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; }
+  .header-brand { max-height: none; height: 76px; width: auto; max-width: none; object-fit: contain; margin-bottom: 0; transform: scale(1.55); transform-origin: center center; pointer-events: none; }
+  .header-inner a[href] { display: flex; align-items: center; justify-content: center; height: 100%; }
   /* Reduce the header's own pointer on the strip */
   .wrc-banner-strip { cursor: default; }
 
