@@ -396,7 +396,9 @@
   margin: 0;
   text-align: left;
   grid-column: 1;
-  font-size: 1.05rem;
+  /* fluid font — base size before scale(2) doubles it visually;
+     scales from ~21px visual at 1025px up to ~34px at 1680px+ */
+  font-size: clamp(0.65rem, 1.1vw, 1.05rem);
   font-weight: 700;
   transform: scale(2);
   transform-origin: left center;
@@ -854,8 +856,8 @@
   margin-top: 4px;
 }
 
-/* ── Mobile: industry cards 2-across, heading left, "How to use" button sticky ── */
-@media (max-width: 768px) {
+/* ── Mobile/tablet: industry cards 2-across, heading left, "How to use" button sticky ── */
+@media (max-width: 1024px) {
   /* 2 columns — declared here (outside :root nesting) to reliably override */
   .ls1-sector-grid {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -878,7 +880,9 @@
     text-align: left !important;
     justify-self: start !important;
     grid-column: 1 !important;
-    font-size: clamp(11px, 3.1vw, 16px) !important;
+    /* direct size (no transform) — scales from ~16px on phone to ~29px on 1024px tablet */
+    font-size: clamp(1rem, 3.5vw, 1.8rem) !important;
+    transform: none !important;
     line-height: 1.25 !important;
     padding-right: 0 !important;   /* button is above, not beside */
     word-break: break-word !important;
@@ -939,11 +943,11 @@
   }
 }
 
-/* sticky tab bar dark-mode tint on mobile */
-@media (max-width: 768px) and (prefers-color-scheme: dark) {
+/* sticky tab bar dark-mode tint on mobile/tablet */
+@media (max-width: 1024px) and (prefers-color-scheme: dark) {
   .intro-tab-bar { background: #1e2a38 !important; }
 }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   :root[data-theme="dark"] .intro-tab-bar { background: #1e2a38 !important; }
 }
 
@@ -974,8 +978,8 @@
     transform: none;
   }
 }
-@media (max-width: 768px) {
-  /* Arrow points to button position on desktop — hide on mobile full-width drawer */
+@media (max-width: 1024px) {
+  /* Arrow points to button position on desktop — hide on mobile/tablet full-width drawer */
   .intro-popover-arrow { display: none !important; }
   .intro-popover-close {
     top: 8px !important;
@@ -993,9 +997,9 @@
   }
 }
 
-/* ── Critical mobile overrides — declared here (plain CSS, no :root nesting)
+/* ── Critical mobile/tablet overrides — declared here (plain CSS, no :root nesting)
    to ensure they apply regardless of browser CSS-nesting support ── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   /* Allow full-page scroll */
   body { overflow: auto !important; }
   html { height: auto !important; }
@@ -1197,7 +1201,7 @@
 
   function lockPanelHeight() {
     // On mobile the panels container is flex:none so no locking needed.
-    if (window.innerWidth <= 768) return;
+    if (window.innerWidth <= 1024) return;
     // Measure each tab panel at its natural height, fix the panels container
     // to the tallest so tab switches never shrink the modal.
     const panelsWrap = document.querySelector('.intro-tab-panels');
@@ -1417,7 +1421,7 @@
   }
 
   function highlightStep(e, n) {
-    if (window.innerWidth <= 768) return;
+    if (window.innerWidth <= 1024) return;
     const pop = document.getElementById('intro-popover');
 
     // If same step clicked while masked — clear mask and return
@@ -1603,7 +1607,7 @@
   }
 
   function highlightHealthBtn(e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
       closeIntroPopover();
       openHealthModal();
@@ -1717,7 +1721,7 @@
   }
 
   function highlightMethodBtn(e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
       closeIntroPopover();
       openMethodologyModal();
@@ -1826,7 +1830,7 @@
   }
 
   function highlightFeedbackBtn(e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       _afterModalClose = () => { const pop = document.getElementById('intro-popover'); if (pop && pop.hidden) toggleIntroPopover(); };
       closeIntroPopover();
       openFeedbackModal();
@@ -1890,7 +1894,7 @@
 
     // Position the "How to use" bar flush below fixed-top
     const anchor = document.getElementById('intro-anchor');
-    if (anchor && window.innerWidth <= 768) {
+    if (anchor && window.innerWidth <= 1024) {
       anchor.style.top = fixedH + 'px';
       // Close button sits vertically centered within the anchor bar
       const closeBtn = document.querySelector('.intro-popover-close');
