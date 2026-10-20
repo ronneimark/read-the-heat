@@ -466,7 +466,7 @@
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  width: min(200px, 96vw);
+  width: min(520px, 96vw);
   background: #F6F3EC;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.14);
@@ -1145,7 +1145,7 @@
        On narrow screens (≤ 767px) skip this and fall straight to scroll. ── */
     if (vpW >= 768) {
       /* Start at minimum width; grow only until content fits */
-      const minW = Math.min(200, vpW * 0.96);
+      const minW = Math.min(520, vpW * 0.96);
       const maxW = vpW * 0.96;          /* never bleed off screen */
       const step = 20;                  /* px increments */
 

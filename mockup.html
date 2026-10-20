@@ -529,7 +529,7 @@
   var state = {
     d:   ALL[q.get('d')] ? q.get('d') : 'iphone15',
     r:   q.get('r') === '1' && ALL[q.get('d')] && ALL[q.get('d')].kind === 'tablet',
-    p:   safePage(q.get('p')) || 'activity.html',
+    p:   safePage(q.get('p')) || 'index.html',
     fit: true
   };
   var CHROME_H = 38;
@@ -555,7 +555,7 @@
     var s = new URLSearchParams();
     s.set('d', state.d);
     if (state.r) s.set('r', '1');
-    if (state.p !== 'activity.html') s.set('p', state.p);
+    if (state.p !== 'index.html') s.set('p', state.p);
     history.replaceState(null, '', location.pathname + '?' + s.toString());
   }
 
