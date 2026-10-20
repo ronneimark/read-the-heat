@@ -1092,7 +1092,11 @@
   transform: translateY(4px);
   box-shadow: 0 1px 0 #8b0000, 0 2px 6px rgba(180,0,0,0.3);
 }
-@media (max-width: 768px) { .mockup-link { display: none !important; } }
+/* Hide mockup link on phones (any orientation) and portrait tablets */
+@media (max-width: 767px), (max-width: 1024px) and (orientation: portrait) {
+  .mockup-link { display: none !important; }
+  .ls1-footer  { display: none !important; }
+}
 
 /* ── Tablet modal text: scale up content for wider full-screen drawer (landscape only) ── */
 @media (min-width: 540px) and (max-width: 1024px) and (orientation: landscape) {
