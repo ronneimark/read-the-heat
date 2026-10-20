@@ -171,6 +171,92 @@ body { background: #F6F3EC !important; }
 }
 .meas-submit-btn:hover { background: #002080; }
 .meas-submit-btn:active { transform: scale(0.98); }
+/* ── WBGT mode toggle (Direct / From components) ── */
+#meas-wbgt-mode-row { margin-bottom: 10px; margin-top: 2px; }
+.wbgt-mode-toggle {
+  display: flex;
+  border: 2px solid var(--navy);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.wbgt-mode-toggle button {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.2;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-mode-toggle button.active { background: var(--navy); color: #fff; }
+.wbgt-mode-toggle button + button { border-left: 2px solid var(--navy); }
+/* ── Indoor/outdoor setting toggle ── */
+.wbgt-setting-toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.wbgt-setting-toggle button {
+  flex: 1;
+  padding: 5px 4px;
+  background: transparent;
+  color: var(--subtext);
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+}
+.wbgt-setting-toggle button.active { background: #1A7A4A; color: #fff; }
+.wbgt-setting-toggle button + button { border-left: 2px solid var(--border); }
+/* ── Small italic helper text under field label ── */
+.meas-field-sub {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  font-style: italic;
+  color: #888;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 1px;
+}
+/* ── Compress component fields: slightly smaller inputs ── */
+#meas-wbgt-fields .meas-field-group { margin-bottom: 5px; }
+#meas-wbgt-fields .meas-field-label { font-size: clamp(14px, 3.8vw, 18px); text-transform: none; letter-spacing: 0; }
+#meas-wbgt-fields .meas-input { height: 34px; font-size: 16px; }
+#meas-wbgt-fields .meas-toggle button { height: 34px; font-size: 11px; padding: 0 7px; }
+/* ── Calculated WBGT result display ── */
+.wbgt-calc-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #C8102E;
+  color: #fff;
+  border-radius: 7px;
+  padding: 5px 12px;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+.wbgt-calc-label {
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  flex: 1;
+  white-space: nowrap;
+}
+.wbgt-calc-value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 /* ── Card two-column layout ── */
 .method-card-full {
   flex-direction: row !important;
@@ -365,7 +451,7 @@ body { background: #F6F3EC !important; }
   background: rgba(0,10,30,0.52);
   z-index: 9300;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   padding: 16px;
   overflow-y: auto;
@@ -374,8 +460,8 @@ body { background: #F6F3EC !important; }
 #device-info-modal {
   background: #F6F3EC;
   border-radius: 12px;
-  width: min(520px, 92vw);
-  max-height: 96vh;
+  width: min(680px, 92vw);
+  max-height: 94vh;
   overflow-y: auto;
   padding: 8px 18px 20px;
   box-shadow: 0 14px 48px rgba(0,10,60,0.22);
@@ -398,6 +484,36 @@ body { background: #F6F3EC !important; }
   margin: 0 0 6px;
 }
 #device-info-body strong { color: #000; }
+/* Formula block inside device info */
+.wbgt-formula-block {
+  background: #001E62;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 6px 0 8px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.wbgt-formula-block .formula-env {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #A7B8D8; /* solid equivalent of #fff at ~0.65 opacity on #001E62 — 4.8:1 contrast */
+  margin-bottom: 2px;
+}
+.wbgt-formula-block .formula-eq {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.wbgt-formula-block .formula-note {
+  font-size: 11px;
+  color: #C0CEDF; /* solid equivalent of #fff at ~0.75 opacity on #001E62 — 6.8:1 contrast */
+  margin-top: 2px;
+  font-style: italic;
+}
 .device-info-badge {
   display: inline-block;
   background: #001E62;
@@ -427,6 +543,9 @@ body { background: #F6F3EC !important; }
      Use padding-bottom on #ls4 (the scroll root) — margin can collapse. */
   #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
   .method-card-full:last-child { padding-bottom: 16px !important; }
+  /* On mobile: narrower modal, top-anchored, scrollable */
+  #device-info-overlay { align-items: flex-start; }
+  #device-info-modal { width: min(520px, 92vw); }
 }
 </style>
 <script src="./lang-link.js" defer></script>
@@ -445,6 +564,7 @@ body { background: #F6F3EC !important; }
       </div>
     </div>
       <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  <span class="revision-date">Revised October 19, 2026</span>
   </header>
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
@@ -540,6 +660,14 @@ body { background: #F6F3EC !important; }
       <button class="modal-close-btn" onclick="closeMeasModal()" aria-label="Close">&#x2715;</button>
     </div>
 
+    <!-- WBGT mode toggle: only shown when WBGT instrument selected -->
+    <div id="meas-wbgt-mode-row" hidden>
+      <div class="wbgt-mode-toggle" role="group" aria-label="WBGT entry mode">
+        <button id="wbgt-mode-direct" class="active" onclick="setWbgtMode('direct')" type="button">Direct WBGT reading</button>
+        <button id="wbgt-mode-calc" onclick="setWbgtMode('calc')" type="button">Calculate from components</button>
+      </div>
+    </div>
+
     <!-- Single-value fields (WBGT / Heat Index / Dry-bulb) -->
     <div id="meas-single-fields">
       <div class="meas-field-group">
@@ -552,6 +680,53 @@ body { background: #F6F3EC !important; }
           </div>
         </div>
         <div class="meas-error-msg" id="meas-single-error">Please enter a value.</div>
+      </div>
+    </div>
+
+    <!-- WBGT component fields (NWB + GT + optional DB) -->
+    <div id="meas-wbgt-fields" hidden>
+      <!-- Indoor / Outdoor toggle -->
+      <div class="meas-field-group" style="margin-bottom:8px;">
+        <label class="meas-field-label" style="margin-bottom:4px;">Environment</label>
+        <div class="wbgt-setting-toggle" role="group" aria-label="Indoor or outdoor">
+          <button id="wbgt-env-indoor" class="active" onclick="setWbgtSetting('indoor')" type="button">🏢 Indoors</button>
+          <button id="wbgt-env-outdoor" onclick="setWbgtSetting('outdoor')" type="button">☀️ Outdoors</button>
+        </div>
+      </div>
+      <!-- Natural Wet Bulb -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-nwb">Natural Wet Bulb</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-nwb','meas-wbgt-nwb-error');updateWbgtCalc()">
+          <div class="meas-toggle">
+            <button id="meas-wbgt-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+            <button id="meas-wbgt-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+          </div>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-nwb-error">Please enter a value.</div>
+      </div>
+      <!-- Globe Temperature -->
+      <div class="meas-field-group">
+        <label class="meas-field-label" for="meas-wbgt-gt">Globe Temperature</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-gt','meas-wbgt-gt-error');updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-gt-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-gt-error">Please enter a value.</div>
+      </div>
+      <!-- Dry Bulb (outdoor only) -->
+      <div class="meas-field-group" id="meas-wbgt-db-row">
+        <label class="meas-field-label" for="meas-wbgt-db">Dry Bulb</label>
+        <div class="meas-input-row">
+          <input class="meas-input" id="meas-wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtSubmitErr('meas-wbgt-db','meas-wbgt-db-error');updateWbgtCalc()">
+          <span class="meas-unit-suffix" id="meas-wbgt-db-unit">°F</span>
+        </div>
+        <div class="meas-error-msg" id="meas-wbgt-db-error">Please enter a value.</div>
+      </div>
+      <!-- Calculated result -->
+      <div class="wbgt-calc-display" id="wbgt-calc-display">
+        <span class="wbgt-calc-label">WBGT</span>
+        <span class="wbgt-calc-value" id="wbgt-calc-value">—</span>
       </div>
     </div>
 
@@ -587,6 +762,8 @@ body { background: #F6F3EC !important; }
 <script>
   let measCurrentInstrument = null;
   let measCurrentUnit = 'F';
+  let wbgtMode    = 'direct';   // 'direct' | 'calc'
+  let wbgtSetting = 'indoor';   // 'indoor' | 'outdoor'
   const measDestUrls = { wbgt: 'wbgt.html', trh: 'temp-humidity.html', hi: 'heat-index.html', dbt: 'wbgt.html' };
   const measTitles   = { wbgt: 'Enter Your WBGT Reading', trh: 'Temp & Humidity', hi: 'Enter Your Heat Index', dbt: 'Enter Air Temperature' };
   const measSingleLabels = { wbgt: 'WBGT Value', hi: 'Heat Index Value', dbt: 'Air Temperature' };
@@ -612,20 +789,128 @@ body { background: #F6F3EC !important; }
     try { if (!isNaN(parseFloat(rh))) localStorage.setItem(_LS_RH, parseFloat(rh)); } catch {}
   }
 
+  function setWbgtMode(mode) {
+    wbgtMode = mode;
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', mode === 'direct');
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', mode === 'calc');
+    document.getElementById('meas-single-fields').hidden = (mode !== 'direct');
+    document.getElementById('meas-wbgt-fields').hidden   = (mode !== 'calc');
+    // Clear errors on mode switch
+    document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible','submit-error'));
+    ['meas-value','meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('error');
+    });
+    if (mode === 'calc') updateWbgtCalc();
+  }
+
+  function setWbgtSetting(setting) {
+    wbgtSetting = setting;
+    document.getElementById('wbgt-env-indoor').classList.toggle('active',  setting === 'indoor');
+    document.getElementById('wbgt-env-outdoor').classList.toggle('active', setting === 'outdoor');
+    document.getElementById('meas-wbgt-db-row').hidden = (setting === 'indoor');
+    updateWbgtCalc();
+  }
+
+  function clearWbgtSubmitErr(inputId, errId) {
+    const inp = document.getElementById(inputId);
+    const err = document.getElementById(errId);
+    if (inp) inp.classList.remove('error');
+    if (err) err.classList.remove('submit-error'); // allow live warnings to re-evaluate freely
+  }
+
+  // Returns {nwbHigh} — true if NWB exceeds DB (outdoor only; wind can lower GT below DB/NWB so no GT constraints).
+  function _wbgtConstraintErrors(nwb, gt, db) {
+    const outdoor = wbgtSetting === 'outdoor';
+    return {
+      nwbHigh:  outdoor && !isNaN(nwb) && !isNaN(db) && nwb > db,
+      gtLowNwb: false,
+      gtLowDb:  false,
+    };
+  }
+
+  function updateWbgtCalc() {
+    const nwb = parseFloat(document.getElementById('meas-wbgt-nwb').value);
+    const gt  = parseFloat(document.getElementById('meas-wbgt-gt').value);
+    const db  = parseFloat(document.getElementById('meas-wbgt-db').value);
+    const errs = _wbgtConstraintErrors(nwb, gt, db);
+
+    // Live constraint warnings (don't mark .error — that's for submit; use warning text only)
+    const nwbErrEl  = document.getElementById('meas-wbgt-nwb-error');
+    const gtErrEl   = document.getElementById('meas-wbgt-gt-error');
+    // NWB > DB warning
+    if (errs.nwbHigh) {
+      nwbErrEl.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
+      nwbErrEl.classList.add('visible');
+    } else if (!nwbErrEl.classList.contains('submit-error')) {
+      nwbErrEl.classList.remove('visible');
+    }
+    // GT < NWB or GT < DB warning
+    const gtMsg = errs.gtLowNwb && errs.gtLowDb
+      ? 'Globe temp must be ≥ both NWB and dry bulb.'
+      : errs.gtLowNwb ? 'Globe temp cannot be lower than NWB.'
+      : errs.gtLowDb  ? 'Globe temp cannot be lower than dry bulb.'
+      : null;
+    if (gtMsg) {
+      gtErrEl.textContent = gtMsg;
+      gtErrEl.classList.add('visible');
+    } else if (!gtErrEl.classList.contains('submit-error')) {
+      gtErrEl.classList.remove('visible');
+    }
+
+    // Only show a calculated result if all constraints are satisfied
+    const anyErr = errs.nwbHigh || errs.gtLowNwb || errs.gtLowDb;
+    let wbgt = null;
+    if (!anyErr) {
+      if (wbgtSetting === 'indoor') {
+        wbgt = (!isNaN(nwb) && !isNaN(gt)) ? 0.7 * nwb + 0.3 * gt : null;
+      } else {
+        wbgt = (!isNaN(nwb) && !isNaN(gt) && !isNaN(db)) ? 0.7 * nwb + 0.2 * gt + 0.1 * db : null;
+      }
+    }
+    const display = document.getElementById('wbgt-calc-value');
+    const unit = measCurrentUnit === 'C' ? '°C' : '°F';
+    display.textContent = (wbgt !== null) ? Math.round(wbgt * 10) / 10 + ' ' + unit : '—';
+  }
+
   function openMeasModal(instrument, triggerEl) {
     measCurrentInstrument = instrument;
     measCurrentUnit = 'F';
+    wbgtMode    = 'direct';
+    wbgtSetting = 'indoor';
     WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
     buildBreadcrumbs();   // show instrument pill immediately on card tap
     document.getElementById('meas-modal-title').textContent = measTitles[instrument];
-    const isTrh = instrument === 'trh';
+    const isTrh  = instrument === 'trh';
+    const isWbgt = instrument === 'wbgt';
+    // Show/hide mode toggle row for WBGT only
+    document.getElementById('meas-wbgt-mode-row').hidden = !isWbgt;
+    // Reset WBGT mode buttons
+    document.getElementById('wbgt-mode-direct').classList.toggle('active', true);
+    document.getElementById('wbgt-mode-calc').classList.toggle('active', false);
+    // Reset env toggle
+    document.getElementById('wbgt-env-indoor').classList.add('active');
+    document.getElementById('wbgt-env-outdoor').classList.remove('active');
+    document.getElementById('meas-wbgt-db-row').hidden = true; // start as indoor
     document.getElementById('meas-single-fields').hidden = isTrh;
-    document.getElementById('meas-trh-fields').hidden = !isTrh;
+    document.getElementById('meas-trh-fields').hidden    = !isTrh;
+    document.getElementById('meas-wbgt-fields').hidden   = true; // always start in direct mode
     if (!isTrh) document.getElementById('meas-single-label').textContent = measSingleLabels[instrument];
-    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith('-f'));
     });
+    // Reset component field unit suffixes
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '°F';
+    });
+    // Clear component inputs
+    ['meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('error'); }
+    });
+    document.getElementById('wbgt-calc-value').textContent = '—';
     const _last = _loadLastMeas();
     const measDefaults = {
       'meas-value': _last.tempF != null ? _last.tempF : '74',
@@ -684,13 +969,78 @@ body { background: #F6F3EC !important; }
 
   function setMeasUnit(unit) {
     measCurrentUnit = unit;
-    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c'].forEach(id => {
+    ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith(unit === 'F' ? '-f' : '-c'));
     });
+    // Update suffix labels on component fields
+    const suffix = unit === 'C' ? '°C' : '°F';
+    ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = suffix;
+    });
+    // Recalculate with new unit label
+    if (wbgtMode === 'calc') updateWbgtCalc();
   }
 
   function submitMeasModal() {
+    // ── WBGT from components ────────────────────────────────────────────────
+    if (measCurrentInstrument === 'wbgt' && wbgtMode === 'calc') {
+      let valid = true;
+      const nwbEl = document.getElementById('meas-wbgt-nwb');
+      const gtEl  = document.getElementById('meas-wbgt-gt');
+      const dbEl  = document.getElementById('meas-wbgt-db');
+      const nwb   = parseFloat(nwbEl.value);
+      const gt    = parseFloat(gtEl.value);
+      if (isNaN(nwb)) {
+        nwbEl.classList.add('error');
+        document.getElementById('meas-wbgt-nwb-error').classList.add('visible');
+        valid = false;
+      }
+      if (isNaN(gt)) {
+        gtEl.classList.add('error');
+        document.getElementById('meas-wbgt-gt-error').classList.add('visible');
+        valid = false;
+      }
+      if (wbgtSetting === 'outdoor') {
+        const db = parseFloat(dbEl.value);
+        if (isNaN(db)) {
+          dbEl.classList.add('error');
+          document.getElementById('meas-wbgt-db-error').classList.add('visible');
+          valid = false;
+        }
+      }
+      if (!valid) return;
+      const db  = parseFloat(dbEl.value);
+      // Physical constraint checks
+      const errs = _wbgtConstraintErrors(nwb, gt, db);
+      if (errs.nwbHigh) {
+        nwbEl.classList.add('error');
+        const el = document.getElementById('meas-wbgt-nwb-error');
+        el.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
+        el.classList.add('visible', 'submit-error');
+        valid = false;
+      }
+      if (errs.gtLowNwb || errs.gtLowDb) {
+        gtEl.classList.add('error');
+        const el = document.getElementById('meas-wbgt-gt-error');
+        el.textContent = errs.gtLowNwb && errs.gtLowDb
+          ? 'Globe temp must be ≥ both NWB and dry bulb.'
+          : errs.gtLowNwb ? 'Globe temp cannot be lower than NWB.'
+          : 'Globe temp cannot be lower than dry bulb.';
+        el.classList.add('visible', 'submit-error');
+        valid = false;
+      }
+      if (!valid) return;
+      const wbgt = wbgtSetting === 'indoor'
+        ? 0.7 * nwb + 0.3 * gt
+        : 0.7 * nwb + 0.2 * gt + 0.1 * db;
+      WRC.set({ measValue: Math.round(wbgt * 10) / 10, measUnit: measCurrentUnit });
+      closeMeasModal();
+      window.location.href = measDestUrls['wbgt'];
+      return;
+    }
+
     let valid = true;
     if (measCurrentInstrument === 'trh') {
       const tempEl = document.getElementById('meas-temp');
@@ -888,6 +1238,18 @@ body { background: #F6F3EC !important; }
       sections: [
         { h: 'What it measures', p: 'The Wet Bulb Globe Temperature integrates three separate readings: the <strong>natural wet bulb</strong> (evaporative cooling — how humidity limits sweat evaporation), the <strong>black globe</strong> (radiant heat from hot surfaces, furnaces, or overhead heat sources), and the <strong>dry bulb</strong> (air temperature). Together these capture every major factor driving heat stress on the human body.' },
         { h: 'Why it\'s the gold standard for indoor heat', p: 'WBGT is the preferred heat stress metric of OSHA, NIOSH, and ACGIH specifically because it captures radiant heat — the factor most likely to be missed in indoor workplaces (NIOSH, 2016; ACGIH, 2025). Near furnaces, boilers, commercial ovens, laundry equipment, and manufacturing heat sources, radiant heat can substantially raise heat strain even when the air temperature alone seems manageable. No other portable field instrument accounts for all of these factors simultaneously.' },
+        { h: 'How WBGT is calculated', html: `
+<p style="font-size:13px;line-height:1.5;margin:0 0 6px;">WBGT is a weighted average of three temperature readings. The weights differ depending on whether there is significant solar radiation (outdoors) or not (indoors):</p>
+<div class="wbgt-formula-block">
+  <div class="formula-env">🏢 Indoors / no direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.3 × GT</div>
+</div>
+<div class="wbgt-formula-block">
+  <div class="formula-env">☀️ Outdoors / direct solar load</div>
+  <div class="formula-eq">WBGT = 0.7 × NWB + 0.2 × GT + 0.1 × DB</div>
+  <div class="formula-note">DB (dry bulb) accounts for solar radiation absorbed through convection.</div>
+</div>
+<p style="font-size:13px;line-height:1.5;margin:4px 0 6px;"><strong>NWB</strong> = natural wet bulb &nbsp;·&nbsp; <strong>GT</strong> = globe temperature &nbsp;·&nbsp; <strong>DB</strong> = dry bulb (air temp). The formula works identically in °F or °C — the coefficients don't change.</p>` },
         { h: 'Best suited for', p: 'All indoor industrial and commercial settings with significant heat sources: foundries, commercial kitchens, boiler rooms, laundries, glass and metal manufacturing, and any work environment where workers are near hot equipment or surfaces.' }
       ]
     },
@@ -920,14 +1282,17 @@ body { background: #F6F3EC !important; }
     }
   };
 
+  let _deviceInfoTrigger = null;
   function showDeviceInfo(key) {
     const info = DEVICE_INFO[key];
     if (!info) return;
+    _deviceInfoTrigger = document.activeElement;
     document.getElementById('device-info-title').textContent = info.title;
     let html = '';
     if (info.badge) html += `<span class="device-info-badge">${info.badge}</span>`;
     info.sections.forEach(s => {
-      html += `<h4>${s.h}</h4><p>${s.p}</p>`;
+      if (s.html) { html += `<h4>${s.h}</h4>${s.html}`; }
+      else { html += `<h4>${s.h}</h4><p>${s.p}</p>`; }
     });
     document.getElementById('device-info-body').innerHTML = html;
     document.getElementById('device-info-overlay').hidden = false;
@@ -935,6 +1300,7 @@ body { background: #F6F3EC !important; }
   }
   function closeDeviceInfo() {
     document.getElementById('device-info-overlay').hidden = true;
+    if (_deviceInfoTrigger) { _deviceInfoTrigger.focus(); _deviceInfoTrigger = null; }
   }
 
   function positionGridDividers() {
