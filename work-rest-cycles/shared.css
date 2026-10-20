@@ -45,6 +45,20 @@
     align-items: center;
     overflow: clip;
     overflow-clip-margin: 0px;
+    position: relative; /* anchor for .revision-date */
+  }
+  .revision-date {
+    position: absolute;
+    bottom: 6px;
+    right: 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.50);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1;
+    text-transform: uppercase;
   }
   /* ── HOME BUTTON (navy circle in red banner, non-index pages) ── */
   .home-btn {

@@ -764,6 +764,7 @@ main { padding: 0; max-width: none; }
       </div>
     </div>
       <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  <span class="revision-date">Revised October 19, 2026</span>
   </header>
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
@@ -857,22 +858,22 @@ main { padding: 0; max-width: none; }
   <div class="activity-grid" id="wbgt-activity-defs">
     <div class="activity-card" style="border-top-color:#005540">
       <h4>🟢 Light Work</h4>
-      <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+      <p class="kcal">&lt; 200 kcal/hr &nbsp;·&nbsp; &lt; 233 W</p>
       <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
     </div>
     <div class="activity-card" style="border-top-color:#7A4F00">
       <h4>🟡 Moderate Work</h4>
-      <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+      <p class="kcal">201–300 kcal/hr &nbsp;·&nbsp; 234–349 W</p>
       <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
     </div>
     <div class="activity-card" style="border-top-color:#8B2500">
       <h4>🔴 Heavy Work</h4>
-      <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+      <p class="kcal">301–400 kcal/hr &nbsp;·&nbsp; 350–465 W</p>
       <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
     </div>
     <div class="activity-card" style="border-top-color:#6D0000">
       <h4>⛔ Very Heavy Work</h4>
-      <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+      <p class="kcal">401–500 kcal/hr &nbsp;·&nbsp; 466–580 W</p>
       <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
     </div>
   </div>
@@ -884,10 +885,10 @@ main { padding: 0; max-width: none; }
       <thead>
         <tr>
           <th class="left" style="width:180px">WBGT Range</th>
-          <th>Light Work<br><span class="th-sub">≤ 200 kcal/hr</span></th>
-          <th>Moderate Work<br><span class="th-sub">200–350 kcal/hr</span></th>
-          <th>Heavy Work<br><span class="th-sub">350–500 kcal/hr</span></th>
-          <th>Very Heavy Work<br><span class="th-sub">&gt; 500 kcal/hr</span></th>
+          <th>Light Work<br><span class="th-sub">&lt; 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">201–300 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">301–400 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">401–500 kcal/hr</span></th>
         </tr>
       </thead>
       <tbody>
@@ -898,7 +899,7 @@ main { padding: 0; max-width: none; }
           <td class="c-safe">Continuous</td>
           <td class="c-safe">Continuous</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Below this threshold all activity levels are within REL. Standard hydration and monitoring. Very Heavy REL<sub>60</sub> ≈ 24.9°C per NIOSH equation.</td></tr>
+        <tr><td class="sublabel" colspan="5">All activity levels are below their REL. Standard hydration and monitoring. Very Heavy REL<sub>60</sub> = 25°C (NIOSH 2016, Table 5-1).</td></tr>
         <tr>
           <td class="label" id="wr-r2">25.0–25.9°C</td>
           <td class="c-safe">Continuous</td>
@@ -906,63 +907,63 @@ main { padding: 0; max-width: none; }
           <td class="c-safe">Continuous</td>
           <td class="c-caution">45 / 15</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>60</sub> (≈24.9°C). Light, Moderate, and Heavy remain within continuous-work REL.</td></tr>
+        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>60</sub> (25°C, Table 5-1). Light, Moderate, and Heavy remain within continuous-work REL.</td></tr>
         <tr>
-          <td class="label" id="wr-r3">26.0–27.4°C</td>
+          <td class="label" id="wr-r3">26.0–27.9°C</td>
           <td class="c-safe">Continuous</td>
           <td class="c-safe">Continuous</td>
           <td class="c-caution">45 / 15</td>
           <td class="c-warn">30 / 30</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>60</sub> (26.0°C). Very Heavy has exceeded REL<sub>45</sub> (26.3°C). Light and Moderate remain continuous.</td></tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>60</sub> (26°C, Table 5-1). Very Heavy has exceeded REL<sub>45</sub> (26.3°C). Light and Moderate remain continuous (Moderate REL<sub>60</sub> = 28°C, Table 5-1).</td></tr>
         <tr>
-          <td class="label" id="wr-r4">27.5–28.3°C</td>
+          <td class="label" id="wr-r4">28.0–28.8°C</td>
           <td class="c-safe">Continuous</td>
           <td class="c-caution">45 / 15</td>
           <td class="c-warn">30 / 30</td>
-          <td class="c-warn">30 / 30</td>
-        </tr>
-        <tr><td class="sublabel" colspan="5">Moderate has exceeded REL<sub>60</sub> (≈27.5°C). Heavy has exceeded REL<sub>45</sub> (27.5°C). Light remains continuous.</td></tr>
-        <tr>
-          <td class="label" id="wr-r5">28.4–29.4°C</td>
-          <td class="c-safe">Continuous</td>
-          <td class="c-warn">30 / 30</td>
-          <td class="c-warn">30 / 30</td>
           <td class="c-high">15 / 45</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>30</sub> (28.4°C). Moderate exceeds REL<sub>45</sub> (28.9°C) within this row — shown conservatively as 30/30. Light remains continuous (REL<sub>60</sub>=29.5°C).</td></tr>
+        <tr><td class="sublabel" colspan="5">Moderate has exceeded REL<sub>60</sub> (28°C, Table 5-1). Heavy has exceeded REL<sub>45</sub> (27.2°C). Very Heavy has exceeded REL<sub>30</sub> (28.0°C). Light remains continuous (REL<sub>60</sub> = 30°C, Table 5-1).</td></tr>
         <tr>
-          <td class="label" id="wr-r6">29.5–30.8°C</td>
+          <td class="label" id="wr-r5">28.9–29.9°C</td>
+          <td class="c-safe">Continuous</td>
+          <td class="c-warn">30 / 30</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-high">15 / 45</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>30</sub> (28.9°C). Moderate has exceeded REL<sub>45</sub> (29.1°C) — shown conservatively as 30/30. Light remains continuous (REL<sub>60</sub> = 30°C, Table 5-1).</td></tr>
+        <tr>
+          <td class="label" id="wr-r6">30.0–30.5°C</td>
           <td class="c-caution">45 / 15</td>
           <td class="c-warn">30 / 30</td>
           <td class="c-high">15 / 45</td>
           <td class="c-high">15 / 45</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Light has exceeded REL<sub>60</sub> (≈29.5°C). Heavy has exceeded REL<sub>30</sub> (29.5°C). Moderate remains at 30/30 (REL<sub>30</sub>=30.9°C).</td></tr>
+        <tr><td class="sublabel" colspan="5">Light has exceeded REL<sub>60</sub> (30°C, Table 5-1). Moderate REL<sub>30</sub> (30.6°C) and Very Heavy REL<sub>15</sub> (30.6°C) are approached at the upper end of this range.</td></tr>
         <tr>
-          <td class="label" id="wr-r7">30.9–31.7°C</td>
-          <td class="c-warn">30 / 30</td>
-          <td class="c-high">15 / 45</td>
-          <td class="c-high">15 / 45</td>
-          <td class="c-high">15 / 45</td>
-        </tr>
-        <tr><td class="sublabel" colspan="5">Light has exceeded REL<sub>45</sub> (30.9°C). Moderate has exceeded REL<sub>30</sub> (30.9°C). Very Heavy REL<sub>15</sub>=31.8°C.</td></tr>
-        <tr>
-          <td class="label" id="wr-r8">31.8–32.8°C</td>
+          <td class="label" id="wr-r7">30.6–31.3°C</td>
           <td class="c-warn">30 / 30</td>
           <td class="c-high">15 / 45</td>
           <td class="c-high">15 / 45</td>
           <td class="c-stop">DANGER!†</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>15</sub> (31.8°C). Heavy REL<sub>15</sub>=32.9°C.</td></tr>
+        <tr><td class="sublabel" colspan="5">Very Heavy has exceeded REL<sub>15</sub> (30.6°C) — DANGER. Moderate has exceeded REL<sub>30</sub> (30.6°C). Light has exceeded REL<sub>45</sub> (31.0°C) — shown conservatively as 30/30.</td></tr>
         <tr>
-          <td class="label" id="wr-r9">≥ 32.9°C</td>
-          <td class="c-high">15 / 45</td>
+          <td class="label" id="wr-r8">31.4–32.6°C</td>
+          <td class="c-warn">30 / 30</td>
           <td class="c-high">15 / 45</td>
           <td class="c-stop">DANGER!†</td>
           <td class="c-stop">DANGER!†</td>
         </tr>
-        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>15</sub> (32.9°C). Moderate REL<sub>15</sub>=34.4°C — severely restricted above that. Light REL<sub>15</sub>=36.4°C. †DANGER!: above the REL<sub>15</sub> curve; work-practice controls alone are insufficient.</td></tr>
+        <tr><td class="sublabel" colspan="5">Heavy has exceeded REL<sub>15</sub> (31.4°C) — DANGER. Light REL<sub>30</sub> = 32.2°C — at and above 32.2°C Light should transition to 15/45.</td></tr>
+        <tr>
+          <td class="label" id="wr-r9">≥ 32.7°C</td>
+          <td class="c-high">15 / 45</td>
+          <td class="c-stop">DANGER!†</td>
+          <td class="c-stop">DANGER!†</td>
+          <td class="c-stop">DANGER!†</td>
+        </tr>
+        <tr><td class="sublabel" colspan="5">Moderate has exceeded REL<sub>15</sub> (32.7°C) — DANGER. Light REL<sub>15</sub> = 33.9°C — at ≥33.9°C all activity levels exceed all REL thresholds. †DANGER!: above REL<sub>15</sub>; work-practice controls alone are insufficient — engineering controls and physiological monitoring required.</td></tr>
       </tbody>
     </table>
   </div>
@@ -1010,10 +1011,10 @@ main { padding: 0; max-width: none; }
       <thead>
         <tr>
           <th class="left" style="width:180px">WBGT Range</th>
-          <th>Light Work<br><span class="th-sub">≤ 200 kcal/hr</span></th>
-          <th>Moderate Work<br><span class="th-sub">200–350 kcal/hr</span></th>
-          <th>Heavy Work<br><span class="th-sub">350–500 kcal/hr</span></th>
-          <th>Very Heavy Work<br><span class="th-sub">&gt; 500 kcal/hr</span></th>
+          <th>Light Work<br><span class="th-sub">&lt; 200 kcal/hr</span></th>
+          <th>Moderate Work<br><span class="th-sub">201–300 kcal/hr</span></th>
+          <th>Heavy Work<br><span class="th-sub">301–400 kcal/hr</span></th>
+          <th>Very Heavy Work<br><span class="th-sub">401–500 kcal/hr</span></th>
         </tr>
       </thead>
       <tbody>
@@ -1064,22 +1065,22 @@ main { padding: 0; max-width: none; }
   let currentUnit = 'F';
 
   // ── WBGT lookup data ──
-  const WBGT_BOUNDS_C = [25.0, 26.0, 27.5, 28.4, 29.5, 30.9, 31.8, 32.9];
+  const WBGT_BOUNDS_C = [25.0, 26.0, 28.0, 28.9, 30.0, 30.6, 31.4, 32.7];
   const WBGT_ROW_LABELS = {
-    c: ['Below 25.0°C','25.0–25.9°C','26.0–27.4°C','27.5–28.3°C','28.4–29.4°C','29.5–30.8°C','30.9–31.7°C','31.8–32.8°C','≥ 32.9°C'],
-    f: ['Below 77.0°F','77.0–78.6°F','78.8–81.3°F','81.5–82.9°F','83.1–84.9°F','85.1–87.4°F','87.6–89.1°F','89.2–91.0°F','≥ 91.2°F']
+    c: ['Below 25.0°C','25.0–25.9°C','26.0–27.9°C','28.0–28.8°C','28.9–29.9°C','30.0–30.5°C','30.6–31.3°C','31.4–32.6°C','≥ 32.7°C'],
+    f: ['Below 77.0°F','77.0–78.6°F','78.8–82.2°F','82.4–83.8°F','84.0–85.8°F','86.0–86.9°F','87.1–88.3°F','88.5–90.7°F','≥ 90.9°F']
   };
   // [row 0-8][col: 0=light 1=moderate 2=heavy 3=vh], null=DANGER
   const WR_ACCLIM = [
     [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:60,r:0}],
     [{w:60,r:0},{w:60,r:0},{w:60,r:0},{w:45,r:15}],
     [{w:60,r:0},{w:60,r:0},{w:45,r:15},{w:30,r:30}],
-    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:30,r:30}],
-    [{w:60,r:0},{w:30,r:30},{w:30,r:30},{w:15,r:45}],
-    [{w:45,r:15},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
-    [{w:30,r:30},{w:15,r:45},{w:15,r:45},{w:15,r:45}],
+    [{w:60,r:0},{w:45,r:15},{w:30,r:30},{w:15,r:45}],
+    [{w:60,r:0},{w:30,r:30},{w:15,r:45},{w:15,r:45}],
+    [{w:45,r:15},{w:30,r:30},{w:15,r:45},null],
     [{w:30,r:30},{w:15,r:45},{w:15,r:45},null],
-    [{w:15,r:45},{w:15,r:45},null,null]
+    [{w:30,r:30},{w:15,r:45},null,null],
+    [{w:15,r:45},null,null,null]
   ];
   const ACT_COL   = {light:0, moderate:1, heavy:2, vh:3};
   const ACT_LABEL = {light:'Light', moderate:'Moderate', heavy:'Heavy', vh:'Very Heavy'};
@@ -1156,15 +1157,15 @@ main { padding: 0; max-width: none; }
 
   // ── Monitoring & guidance notes (one per WBGT row) ──
   const WBGT_ACCLIM_RANGE_NOTES = [
-    { range:'Below 25.0°C / Below 77°F',  text:'Normal work practices. Standard hydration (1 cup / 8 oz water every 20 min). Training on heat illness recognition. No mandatory rest breaks required at any activity level.' },
-    { range:'25.0–25.9°C / 77–79°F',       text:'Very Heavy work exceeds REL₆₀. Monitor Very Heavy workers closely. All others: standard hydration and buddy system recommended.' },
-    { range:'26.0–27.4°C / 79–81°F',       text:'Heavy and Very Heavy work require mandatory rest breaks. Enforce rest in cool or shaded areas. Buddy system required. Hydration: 1 cup every 20 min.' },
-    { range:'27.5–28.3°C / 82–83°F',       text:'Moderate work now exceeds REL. Mandatory rest breaks for Moderate, Heavy, and Very Heavy activity. Buddy system required. Hydration: 1 cup every 20 min.' },
-    { range:'28.4–29.4°C / 83–85°F',       text:'Very Heavy work exceeds 15-min REL. Active monitoring required. Cool rest area mandatory. Hydration: 1 cup every 15–20 min.' },
-    { range:'29.5–30.8°C / 85–87°F',       text:'Light work now requires rest breaks. All activity levels restricted. Engineering controls recommended. Hydration: 1 cup every 15 min.' },
-    { range:'30.9–31.7°C / 88–89°F',       text:'Hazardous conditions. Engineering controls required. Physiological monitoring. Cool rest area (air-conditioned if possible). Hydration: 1 cup every 15 min.' },
-    { range:'31.8–32.8°C / 89–91°F',       text:'Very high risk. Engineering controls must be in place. Consider suspending Heavy and Very Heavy work. Medical monitoring on-site. Hydration: 1 cup every 15 min.' },
-    { range:'≥ 32.9°C / ≥ 91°F',           text:'Imminent danger. Engineering controls mandatory. Emergency response plan activated. Consider suspending all work until conditions improve.' }
+    { range:'Below 25.0°C / Below 77.0°F',  text:'Normal work practices. Standard hydration (1 cup / 8 oz water every 20 min). Training on heat illness recognition. No mandatory rest breaks required at any activity level.' },
+    { range:'25.0–25.9°C / 77.0–78.6°F',   text:'Very Heavy work exceeds REL₆₀ (25°C, Table 5-1). Monitor Very Heavy workers closely. All others: standard hydration and buddy system recommended.' },
+    { range:'26.0–27.9°C / 78.8–82.2°F',   text:'Heavy work exceeds REL₆₀ (26°C, Table 5-1). Heavy and Very Heavy require mandatory rest breaks. Enforce rest in cool or shaded areas. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'28.0–28.8°C / 82.4–83.8°F',   text:'Moderate work now exceeds REL₆₀ (28°C, Table 5-1). Mandatory rest breaks for Moderate, Heavy, and Very Heavy activity. Buddy system required. Hydration: 1 cup every 20 min.' },
+    { range:'28.9–29.9°C / 84.0–85.8°F',   text:'Heavy work exceeds REL₃₀. Very Heavy work exceeds REL₃₀ (28°C). Active monitoring required. Cool rest area mandatory. Hydration: 1 cup every 15–20 min.' },
+    { range:'30.0–30.5°C / 86.0–86.9°F',   text:'Light work now exceeds REL₆₀ (30°C, Table 5-1). All activity levels restricted. Engineering controls recommended. Hydration: 1 cup every 15 min.' },
+    { range:'30.6–31.3°C / 87.1–88.3°F',   text:'Very Heavy exceeds REL₁₅ — DANGER. Hazardous conditions for all. Engineering controls required. Physiological monitoring. Cool rest area (air-conditioned if possible). Hydration: 1 cup every 15 min.' },
+    { range:'31.4–32.6°C / 88.5–90.7°F',   text:'Heavy exceeds REL₁₅ — DANGER. Very high risk. Engineering controls must be in place. Consider suspending Heavy and Very Heavy work. Medical monitoring on-site. Hydration: 1 cup every 15 min.' },
+    { range:'≥ 32.7°C / ≥ 90.9°F',         text:'Moderate exceeds REL₁₅ — DANGER. Imminent danger. Engineering controls mandatory. Emergency response plan activated. Consider suspending all work until conditions improve.' }
   ];
   const WBGT_UNACCLIM_RANGE_NOTES = [
     { range:'Below 21.0°C / Below 70°F',  text:'Normal work practices. Standard hydration, buddy system, and training on heat illness recognition. Heightened supervisor attention for unacclimatized workers.' },
@@ -1293,7 +1294,7 @@ main { padding: 0; max-width: none; }
     const unitKey = unit === 'C' ? 'c' : 'f';
     const labels  = WBGT_ROW_LABELS[unitKey];
     const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
-    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
     let html = '<div class="acclim-chart-grid" role="grid" aria-label="Work-rest cycles by WBGT and work intensity — acclimatized workers" tabindex="0">';
 
     html += '<div role="row" style="display:contents">';
@@ -1615,7 +1616,7 @@ main { padding: 0; max-width: none; }
     const unitKey  = unit === 'C' ? 'c' : 'f';
     const labels   = RAL_ROW_LABELS[unitKey];
     const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
-    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
     let html = '<div class="acclim-chart-grid" role="grid" aria-label="Work-rest cycles by WBGT and work intensity — unacclimatized workers" tabindex="0">';
 
     html += '<div role="row" style="display:contents">';

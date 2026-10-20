@@ -774,6 +774,7 @@ main { padding: 0; max-width: none; }
       </div>
     </div>
       <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  <span class="revision-date">Revised October 19, 2026</span>
   </header>
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
@@ -1687,7 +1688,7 @@ main { padding: 0; max-width: none; }
     if (!pane) return;
     const labels   = _hiUnit === 'C' ? rowLabelsC : rowLabelsF;
     const actNames = ['Light', 'Moderate', 'Heavy', 'Very Heavy'];
-    const actSubs  = ['≤ 200 kcal/hr', '200–350 kcal/hr', '350–500 kcal/hr', '> 500 kcal/hr'];
+    const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
     const existingCaption = pane.querySelector('.chart-caption');
@@ -1739,22 +1740,22 @@ main { padding: 0; max-width: none; }
     <div class="activity-grid" style="margin-bottom:0">
       <div class="activity-card" style="border-top-color:#005540">
         <h4>🟢 Light Work</h4>
-        <p class="kcal">≤ 200 kcal/hr &nbsp;·&nbsp; ≤ 233 W &nbsp;·&nbsp; ≤ 3.0 METs</p>
+        <p class="kcal">&lt; 200 kcal/hr &nbsp;·&nbsp; &lt; 233 W</p>
         <p>Sitting or standing with light hand and arm work — writing, filing, small-parts assembly. Slow walking (&lt; 2 mph). Driving. Operating light equipment.</p>
       </div>
       <div class="activity-card" style="border-top-color:#7A4F00">
         <h4>🟡 Moderate Work</h4>
-        <p class="kcal">200–350 kcal/hr &nbsp;·&nbsp; 233–407 W &nbsp;·&nbsp; 3.0–5.0 METs</p>
+        <p class="kcal">201–300 kcal/hr &nbsp;·&nbsp; 234–349 W</p>
         <p>Walking at 2–3.5 mph. Moderate lifting and carrying (≤ 50 lb). Carpentry, painting, roofing. Pushing or pulling light carts.</p>
       </div>
       <div class="activity-card" style="border-top-color:#8B2500">
         <h4>🔴 Heavy Work</h4>
-        <p class="kcal">350–500 kcal/hr &nbsp;·&nbsp; 407–582 W &nbsp;·&nbsp; 5.0–7.0 METs</p>
+        <p class="kcal">301–400 kcal/hr &nbsp;·&nbsp; 350–465 W</p>
         <p>Shoveling, digging, demolition. Lifting heavy loads (50–90 lb). Climbing stairs or ladders with loads. Sustained construction or excavation work.</p>
       </div>
       <div class="activity-card" style="border-top-color:#6D0000">
         <h4>⛔ Very Heavy Work</h4>
-        <p class="kcal">&gt; 500 kcal/hr &nbsp;·&nbsp; &gt; 582 W &nbsp;·&nbsp; &gt; 7.0 METs</p>
+        <p class="kcal">401–500 kcal/hr &nbsp;·&nbsp; 466–580 W</p>
         <p>Pick-and-shovel work. Carrying heavy loads uphill. Very fast walking or climbing. Highly intensive, sustained manual labor at maximum exertion.</p>
       </div>
     </div>
