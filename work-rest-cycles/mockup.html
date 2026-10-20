@@ -384,7 +384,7 @@
   <div class="wrc-banner-strip">
     <div class="preview-strip wrc-banner-strip-inner">
       <span class="preview-label">Phone &amp; Tablet Preview &mdash; the live tool, as it looks and works on a phone or tablet</span>
-      <a class="back" href="./activity.html">&larr; Back to the tool</a>
+      <a class="back" href="./index.html">&larr; Back to the tool</a>
     </div>
   </div>
 
@@ -427,7 +427,6 @@
     <select id="page">
       <option value="activity.html">Activity Level</option>
       <option value="index.html">Home / Sector Select</option>
-      <option value="wbgt.html">WBGT Calculator</option>
       <option value="heat-index.html">Heat Index</option>
       <option value="temp-humidity.html">Temp + Humidity</option>
       <option value="clothing.html">Clothing Factors</option>
@@ -538,7 +537,6 @@
   var PAGES = [
     { file: 'activity.html',        name: 'Activity Level' },
     { file: 'index.html',           name: 'Home / Sector Select' },
-    { file: 'wbgt.html',            name: 'WBGT Calculator' },
     { file: 'heat-index.html',      name: 'Heat Index' },
     { file: 'temp-humidity.html',   name: 'Temp + Humidity' },
     { file: 'clothing.html',        name: 'Clothing Factors' },
@@ -609,9 +607,13 @@
     $('fit').textContent = state.fit ? 'Fit to window' : 'Full size';
   }
 
+  var loadTimer;
+
   function go(page) {
     state.p = page;
     loading.classList.remove('gone');
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () { loading.classList.add('gone'); }, 7000);
     frame.src = './' + page;
     $('url').textContent = 'read-the-heat.app/' + page;
     $('newtab').href = './' + page;
@@ -620,6 +622,7 @@
   }
 
   frame.addEventListener('load', function () {
+    clearTimeout(loadTimer);
     loading.classList.add('gone');
     try {
       var loc = frame.contentWindow.location;
@@ -648,6 +651,8 @@
   $('page').addEventListener('change', function () { go(this.value); });
   $('reload').addEventListener('click', function () {
     loading.classList.remove('gone');
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () { loading.classList.add('gone'); }, 7000);
     frame.src = './' + state.p + '?r=' + Date.now();
   });
   $('fit').addEventListener('click', function () { state.fit = !state.fit; layout(); });
