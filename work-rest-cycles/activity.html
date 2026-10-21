@@ -12,37 +12,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Activity Level — Work-Rest Cycles</title>
-<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="shared.css?v=3">
 <style>
 .ls2-level-examples-label { color: #000 !important; }
 .ls2-level-examples { color: #000 !important; }
 .ls2-level-examples li { color: #000 !important; }
-.ls2-select-btn {
-  background: var(--panel-accent) !important;
-  color: #000 !important;
-  font-size: 16px !important;
-  font-family: sans-serif !important;
-  font-weight: 800;
-  text-shadow: none !important;
-  border-color: transparent !important;
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--panel-accent) 55%, #000), 0 6px 12px rgba(0,0,0,0.25) !important;
-  transform: translateY(0);
-  transition: transform .08s, box-shadow .08s !important;
-}
-.ls2-select-btn:hover {
-  filter: brightness(1.1);
-}
-.ls2-select-btn:active {
-  transform: translateY(4px) !important;
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--panel-accent) 55%, #000), 0 2px 4px rgba(0,0,0,0.2) !important;
-}
-/* All Select buttons use white text. Panel accent colors are darkened so
-   white text meets WCAG AA (≥4.5:1) on every level:
-   Light #007A55 (5.36:1), Moderate #C47A00 (4.52:1), Heavy #C04000 (5.28:1), VH #880E4F (9.45:1). */
-.ls2-select-btn {
-  color: #fff !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
-}
+/* Panel accent colors meet WCAG AA (≥4.5:1) with white text:
+   Light #007A55 (5.36:1), Moderate #A16207 (4.73:1), Heavy #B91C1C (5.82:1), VH #880E4F (9.45:1). */
 </style>
 <script src="./lang-link.js" defer></script>
 </head>
@@ -85,70 +61,66 @@
     <div class="ls2-review-grid">
 
       <!-- Light -->
-      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#007A55">
+      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#007A55"
+           onclick="commitActivity('light')" role="button" tabindex="0" aria-label="Select Light Work">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Light Work</span>
           <span class="ls2-level-kcal">&lt; 200 kcal/hr (&lt; 233 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
         </div>
-        <div class="ls2-level-body">
+        <div class="ls2-card-front">
           <p class="ls2-level-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
+        </div>
+        <div class="ls2-card-back">
           <div class="ls2-level-examples-label">Examples in this sector</div>
           <ul class="ls2-level-examples" id="ls2-ex-light"><li style="font-style:italic;color:#999">Loading…</li></ul>
-          <button class="ls2-select-btn" onclick="commitActivity('light')">
-            Select Light Work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
       </div>
 
-      <!-- Moderate -->
-      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#B45309">
+      <!-- Moderate — #A16207 (dark golden-amber, clearly distinct from Heavy red) -->
+      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#A16207"
+           onclick="commitActivity('moderate')" role="button" tabindex="0" aria-label="Select Moderate Work">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Moderate Work</span>
           <span class="ls2-level-kcal">201–300 kcal/hr (234–349 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
         </div>
-        <div class="ls2-level-body">
+        <div class="ls2-card-front">
           <p class="ls2-level-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
+        </div>
+        <div class="ls2-card-back">
           <div class="ls2-level-examples-label">Examples in this sector</div>
           <ul class="ls2-level-examples" id="ls2-ex-moderate"><li style="font-style:italic;color:#999">Loading…</li></ul>
-          <button class="ls2-select-btn" onclick="commitActivity('moderate')">
-            Select Moderate Work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
       </div>
 
-      <!-- Heavy -->
-      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#C04000">
+      <!-- Heavy — #B91C1C (clear red, distinct from amber above and magenta below) -->
+      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#B91C1C"
+           onclick="commitActivity('heavy')" role="button" tabindex="0" aria-label="Select Heavy Work">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Heavy Work</span>
           <span class="ls2-level-kcal">301–400 kcal/hr (350–465 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
         </div>
-        <div class="ls2-level-body">
+        <div class="ls2-card-front">
           <p class="ls2-level-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, or pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
+        </div>
+        <div class="ls2-card-back">
           <div class="ls2-level-examples-label">Examples in this sector</div>
           <ul class="ls2-level-examples" id="ls2-ex-heavy"><li style="font-style:italic;color:#999">Loading…</li></ul>
-          <button class="ls2-select-btn" onclick="commitActivity('heavy')">
-            Select Heavy Work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
       </div>
 
       <!-- Very Heavy -->
-      <div class="ls2-level-panel" data-activity="vh" style="--panel-accent:#880E4F">
+      <div class="ls2-level-panel" data-activity="vh" style="--panel-accent:#880E4F"
+           onclick="commitActivity('vh')" role="button" tabindex="0" aria-label="Select Very Heavy Work">
         <div class="ls2-level-header">
           <span class="ls2-level-name">Very Heavy Work</span>
           <span class="ls2-level-kcal">401–500 kcal/hr (466–580 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
         </div>
-        <div class="ls2-level-body">
+        <div class="ls2-card-front">
           <p class="ls2-level-desc">Maximum sustained physical exertion with whole-body effort. More common than many realize. Requires the greatest heat stress precautions at any elevated temperature.</p>
+        </div>
+        <div class="ls2-card-back">
           <div class="ls2-level-examples-label">Examples in this sector</div>
           <ul class="ls2-level-examples" id="ls2-ex-vh"><li style="font-style:italic;color:#999">Loading…</li></ul>
-          <button class="ls2-select-btn" onclick="commitActivity('vh')">
-            Select Very Heavy Work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
       </div>
 
@@ -160,6 +132,14 @@
 <script src="shared.js?v=2"></script>
 <script src="./lang-switch.js"></script>
 <script>
+  // Keyboard support: Enter/Space activates the card
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const panel = e.target.closest('.ls2-level-panel');
+      if (panel) { e.preventDefault(); panel.click(); }
+    }
+  });
+
   function commitActivity(level) {
     const m = activityMeta[level];
     navigate('acclimatization.html', {
