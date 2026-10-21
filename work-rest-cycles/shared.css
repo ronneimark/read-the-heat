@@ -1211,6 +1211,27 @@
     }
   }
 
+  /* Short wide screens: grid becomes scrollable so the Select button is never clipped */
+  @media (max-height: 700px) and (min-width: 901px) {
+    .ls2-review-grid {
+      overflow-y: auto;
+      align-content: start;
+    }
+    .ls2-level-panel {
+      height: auto;
+    }
+    .ls2-level-body {
+      overflow: visible;
+    }
+    .ls2-level-desc {
+      min-height: 0;
+    }
+    .ls2-level-examples {
+      overflow: visible;
+      max-height: none;
+    }
+  }
+
   /* ── SCREEN 3: ACCLIMATIZATION STATUS ── */
   #ls3 {
     display: none;
