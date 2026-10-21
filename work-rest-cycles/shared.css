@@ -1211,24 +1211,51 @@
     }
   }
 
-  /* Short wide screens: grid becomes scrollable so the Select button is never clipped */
+  /* Short wide screens: switch card body to 2-column layout so all content stays in viewport */
   @media (max-height: 700px) and (min-width: 901px) {
-    .ls2-review-grid {
-      overflow-y: auto;
-      align-content: start;
-    }
-    .ls2-level-panel {
-      height: auto;
-    }
     .ls2-level-body {
-      overflow: visible;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "desc  label"
+        "desc  examples"
+        "btn   examples";
+      column-gap: 12px;
+      row-gap: 0;
+      padding: 8px 12px 10px;
     }
     .ls2-level-desc {
+      grid-area: desc;
       min-height: 0;
+      margin-bottom: 0;
+      font-size: 13px;
+      align-self: start;
+    }
+    .ls2-level-examples-label {
+      grid-area: label;
+      align-self: start;
     }
     .ls2-level-examples {
-      overflow: visible;
-      max-height: none;
+      grid-area: examples;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+    .ls2-select-btn {
+      grid-area: btn;
+      margin-top: 6px;
+      align-self: end;
+      padding: 7px 0;
+      font-size: 13px;
+    }
+    .ls2-level-header {
+      padding: 8px 12px 6px;
+    }
+    .ls2-level-name {
+      font-size: 18px;
+    }
+    .ls2-level-kcal {
+      font-size: 10px;
     }
   }
 
