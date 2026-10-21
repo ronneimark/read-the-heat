@@ -888,10 +888,10 @@
 
   /* ── SHARED: HEADINGS / BACK LINKS ── */
   .ls-heading {
-    font-size: 20px;
+    font-size: clamp(15px, 2.5vh, 20px);
     font-weight: 700;
     color: var(--navy);
-    margin-bottom: 6px;
+    margin-bottom: clamp(2px, 0.6vh, 6px);
   }
   .ls-sub {
     font-size: 14px;
@@ -955,7 +955,7 @@
   }
   .ls1-header {
     flex-shrink: 0;
-    padding: 10px 12px 8px;
+    padding: clamp(4px, 1vh, 10px) 12px clamp(3px, 0.8vh, 8px);
   }
   .ls1-sector-grid {
     flex: 1;
@@ -1040,7 +1040,7 @@
 
   .ls1-footer {
     flex-shrink: 0;
-    padding: 8px 12px 12px;
+    padding: clamp(4px, 0.8vh, 8px) 12px clamp(5px, 1vh, 12px);
     display: flex;
     align-items: center;
     gap: 16px;
