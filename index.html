@@ -931,7 +931,7 @@
   /* Button: slightly smaller inside the sticky bar — less padding, tighter font */
   .intro-open-btn {
     font-size: 0.875rem !important;
-    padding: 7px 20px !important;
+    padding: clamp(4px, 0.9vh, 7px) 20px !important;
   }
 
   /* Equal-width tabs: each tab gets 1/3 of the bar; subtitle not needed at this size */
@@ -1058,13 +1058,13 @@
   align-items: center;
   gap: 7px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: clamp(0.8rem, 1.2vh, 0.95rem);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: 0.01em;
   white-space: nowrap;
   text-decoration: none;
-  padding: 10px 26px;
+  padding: clamp(5px, 1.2vh, 10px) 26px;
   border-radius: 50px;
   background: linear-gradient(180deg, #e82020 0%, #b50000 100%);
   color: #fff;
