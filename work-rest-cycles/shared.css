@@ -1230,7 +1230,7 @@
       margin-bottom: 0;
       font-size: 13px;
       overflow-y: auto;
-      align-self: start;
+      /* stretch (default) so the grid area constrains height and overflow-y can scroll */
     }
     /* Right col, row 1: examples label */
     .ls2-level-examples-label {
