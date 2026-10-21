@@ -13,9 +13,9 @@ jobs:
           CPANEL_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
         run: |
           result=$(curl -sf -X POST \
-            -H "Authorization: cpanel workerpo:${CPANEL_TOKEN}" \
-            "https://workerpowerforhealth.com:2083/execute/VersionControlDeployment/create" \
-            --data-urlencode "repository_root=/home/workerpo/repositories/work-rest-cycles")
+            -H "Authorization: cpanel readtheh:${CPANEL_TOKEN}" \
+            "https://chi203.greengeeks.net:2083/execute/VersionControlDeployment/create" \
+            --data-urlencode "repository_root=/home/readtheh/repositories/read-the-heat")
           echo "$result"
           echo "$result" | python3 -c "
           import sys, json
