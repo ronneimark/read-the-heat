@@ -1112,34 +1112,44 @@
     flex-direction: column;
     transition: border-color 0.15s, box-shadow 0.15s;
     min-height: 0;
+    cursor: pointer;
+    user-select: none;
   }
   .ls2-level-panel:hover {
     border-color: var(--panel-accent, var(--navy));
-    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  }
+  .ls2-level-panel:active {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .ls2-level-panel:focus-visible {
+    outline: 3px solid #005FCC;
+    outline-offset: 2px;
   }
   .ls2-level-header {
     background: var(--panel-accent, var(--navy));
-    padding: 12px 16px 10px;
+    padding: 8px 14px 7px;
     flex-shrink: 0;
     text-align: center;
   }
   .ls2-level-name {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 800;
     color: #fff;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     letter-spacing: 0.1px;
   }
   .ls2-level-kcal {
-    font-size: 11px;
+    font-size: 10px;
     color: #fff;
     font-weight: 500;
     opacity: 0.85;
     display: block;
   }
-  .ls2-level-body {
+  /* Front face: description */
+  .ls2-card-front {
     padding: 12px 16px 14px;
     flex: 1;
     display: flex;
@@ -1147,13 +1157,26 @@
     min-height: 0;
     overflow: hidden;
   }
+  /* Back face: examples — hidden until hover */
+  .ls2-card-back {
+    padding: 12px 16px 14px;
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls2-level-panel:hover .ls2-card-front { display: none; }
+  .ls2-level-panel:hover .ls2-card-back  { display: flex; }
   .ls2-level-desc {
     font-size: 15px;
     font-weight: 600;
     color: var(--navy);
     line-height: 1.5;
-    margin-bottom: 12px;
-    min-height: 6.75em;
+    margin-bottom: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
   }
   .ls2-level-examples-label {
     font-size: 11px;
@@ -1162,6 +1185,7 @@
     text-transform: uppercase;
     color: var(--mid);
     margin-bottom: 5px;
+    flex-shrink: 0;
   }
   .ls2-level-examples {
     font-size: 13px;
@@ -1170,39 +1194,13 @@
     padding-left: 14px;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     margin: 0;
   }
   .ls2-level-none {
     font-size: 13px;
     color: var(--subtext);
     font-style: italic;
-  }
-  .ls2-select-btn {
-    margin-top: 10px;
-    width: 100%;
-    padding: 10px 0;
-    border: 2px solid var(--panel-accent, var(--navy));
-    background: #fff;
-    color: var(--panel-accent, var(--navy));
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.13s, color 0.13s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .ls2-select-btn:hover {
-    background: var(--panel-accent, var(--navy));
-    color: #fff;
-  }
-  .ls2-select-btn:focus-visible {
-    outline: 3px solid #005FCC;
-    outline-offset: 2px;
   }
   @media (max-width: 900px) {
     .ls2-review-grid {
