@@ -963,8 +963,8 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 10px;
-    padding: 6px 12px 12px;
+    gap: clamp(4px, 1vh, 10px);
+    padding: clamp(4px, 0.8vh, 6px) 12px clamp(6px, 1.2vh, 12px);
     overflow: hidden;
   }
   .ls1-sector-btn {
@@ -977,7 +977,7 @@
     border: 2px solid #c5cfdd;
     border-radius: 12px;
     padding: 0;
-    min-height: 112px;
+    min-height: clamp(70px, 12vh, 112px);
     background: #001E62;
     color: white;
     font: 600 clamp(12px, 1.1vw, 16px)/1.25 inherit;
@@ -997,10 +997,10 @@
   .ls1-sector-btn .ls1-sector-label {
     display: block;
     width: 100%;
-    padding: 10px 5px;
+    padding: clamp(4px, 1.2vh, 10px) 5px;
     background: #001E62;
     color: white;
-    font-size: clamp(12px, 1.05vw, 16px);
+    font-size: clamp(11px, 1.05vw, 16px);
     font-weight: 700;
   }
   .ls1-sector-btn:hover {
