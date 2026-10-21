@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Activity Level — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.ls2-level-examples-label { color: #000 !important; }
+.ls2-level-examples { color: #000 !important; }
+.ls2-level-examples li { color: #000 !important; }
+/* Panel accent colors meet WCAG AA (≥4.5:1) with white text:
+   Light #007A55 (5.36:1), Moderate #A16207 (4.73:1), Heavy #B91C1C (5.82:1), VH #880E4F (9.45:1). */
+</style>
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+      <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  <span class="revision-date">Revised October 19, 2026</span>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+      <!-- language selector injected here by lang-switch.js -->
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls2">
+
+    <div class="ls2-topbar">
+      <div class="ls2-sector-banner">
+        <strong id="ls2-sector-name">Loading…</strong>
+        <span>— sample activities by exertion level</span>
+      </div>
+      <h1 class="sr-only">Activity Level</h1>
+      <span class="ls2-topbar-hint">Select the level that best matches. <strong style="color:var(--text)">When in doubt, choose higher.</strong> <button class="strip-btn" onclick="openActivityModal()" style="margin-left:8px;vertical-align:middle">📋 Additional tips on determining activity level</button></span>
+    </div>
+
+    <div class="ls2-review-grid">
+
+      <!-- Light -->
+      <div class="ls2-level-panel" data-activity="light" style="--panel-accent:#007A55"
+           onclick="commitActivity('light')" role="button" tabindex="0" aria-label="Select Light Work">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Light Work</span>
+          <span class="ls2-level-kcal">&lt; 200 kcal/hr (&lt; 233 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
+        </div>
+        <div class="ls2-card-front">
+          <p class="ls2-level-desc">Seated or standing tasks, light hand/arm work, occasional walking on level surfaces. Little sustained muscle effort required.</p>
+        </div>
+        <div class="ls2-card-back">
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-light"><li style="font-style:italic;color:#999">Loading…</li></ul>
+        </div>
+      </div>
+
+      <!-- Moderate — #A16207 (dark golden-amber, clearly distinct from Heavy red) -->
+      <div class="ls2-level-panel" data-activity="moderate" style="--panel-accent:#A16207"
+           onclick="commitActivity('moderate')" role="button" tabindex="0" aria-label="Select Moderate Work">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Moderate Work</span>
+          <span class="ls2-level-kcal">201–300 kcal/hr (234–349 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
+        </div>
+        <div class="ls2-card-front">
+          <p class="ls2-level-desc">Sustained walking, moderate lifting (up to ~20 kg / 44 lb), pushing or pulling loaded carts, repeated bending and reaching.</p>
+        </div>
+        <div class="ls2-card-back">
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-moderate"><li style="font-style:italic;color:#999">Loading…</li></ul>
+        </div>
+      </div>
+
+      <!-- Heavy — #B91C1C (clear red, distinct from amber above and magenta below) -->
+      <div class="ls2-level-panel" data-activity="heavy" style="--panel-accent:#B91C1C"
+           onclick="commitActivity('heavy')" role="button" tabindex="0" aria-label="Select Heavy Work">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Heavy Work</span>
+          <span class="ls2-level-kcal">301–400 kcal/hr (350–465 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
+        </div>
+        <div class="ls2-card-front">
+          <p class="ls2-level-desc">Sustained vigorous exertion — heavy lifting, carrying, shoveling, or pushing/pulling heavy loads. Arms, legs, and trunk all engaged continuously at high effort.</p>
+        </div>
+        <div class="ls2-card-back">
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-heavy"><li style="font-style:italic;color:#999">Loading…</li></ul>
+        </div>
+      </div>
+
+      <!-- Very Heavy -->
+      <div class="ls2-level-panel" data-activity="vh" style="--panel-accent:#880E4F"
+           onclick="commitActivity('vh')" role="button" tabindex="0" aria-label="Select Very Heavy Work">
+        <div class="ls2-level-header">
+          <span class="ls2-level-name">Very Heavy Work</span>
+          <span class="ls2-level-kcal">401–500 kcal/hr (466–580 W) <span style="font-weight:400;font-size:0.8em;opacity:0.7">(NIOSH, 2016)</span></span>
+        </div>
+        <div class="ls2-card-front">
+          <p class="ls2-level-desc">Maximum sustained physical exertion with whole-body effort. More common than many realize. Requires the greatest heat stress precautions at any elevated temperature.</p>
+        </div>
+        <div class="ls2-card-back">
+          <div class="ls2-level-examples-label">Examples in this sector</div>
+          <ul class="ls2-level-examples" id="ls2-ex-vh"><li style="font-style:italic;color:#999">Loading…</li></ul>
+        </div>
+      </div>
+
+    </div><!-- /ls2-review-grid -->
+
+  </div><!-- /ls2 -->
+</div><!-- /launcher -->
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  // Keyboard support: Enter/Space activates the card
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const panel = e.target.closest('.ls2-level-panel');
+      if (panel) { e.preventDefault(); panel.click(); }
+    }
+  });
+
+  function commitActivity(level) {
+    const m = activityMeta[level];
+    navigate('acclimatization.html', {
+      activity: level,
+      activityLabel: m.label,
+      activityKcal: m.kcal
+    });
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls2 = document.getElementById('ls2');
+    const topbar = document.querySelector('.ls2-topbar');
+    const fixedH = fixedTop.offsetHeight;
+    const vh = window.innerHeight;
+    ls2.style.paddingTop = (fixedH + 10) + 'px';
+    if (window.innerWidth > 768) ls2.style.height = vh + 'px';
+    else ls2.style.height = '';
+    // Pin sticky topbar exactly to the bottom of the fixed header on mobile
+    if (topbar && window.innerWidth <= 768) {
+      topbar.style.top = fixedH + 'px';
+    }
+  }
+
+  async function init() {
+    await initData();
+    const sector = WRC.val('sector', 'restaurant');
+    const data = sectorData[sector] || {};
+    ['light','moderate','heavy','vh'].forEach(level => {
+      const ul = document.getElementById('ls2-ex-' + level);
+      if (!ul) return;
+      const items = data[level];
+      if (items && items.length) {
+        ul.innerHTML = items.map(x => '<li>' + x + '</li>').join('');
+      } else {
+        ul.innerHTML = '<li class="ls2-level-none">No specific examples listed for this sector at this level.</li>';
+      }
+    });
+    const nameEl = document.getElementById('ls2-sector-name');
+    if (nameEl) nameEl.textContent = sectorLabels[sector] || sector;
+    buildBreadcrumbs();
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>
