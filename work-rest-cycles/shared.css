@@ -39,12 +39,12 @@
   header {
     background: #D50032;
     height: 191px;
+    max-height: 191px;            /* never grows on any screen width */
     padding: 0;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    overflow: clip;
-    overflow-clip-margin: 0px;
+    overflow: hidden;
     position: relative; /* anchor for .revision-date */
   }
   .revision-date {
@@ -231,34 +231,40 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 6px 0;
+    gap: 4px;
+    padding: 4px 0;
     pointer-events: none;
     height: 100%;
+    max-height: 100%;
     min-width: 0;
+    overflow: hidden;             /* content never pushes past 191px */
   }
   .header-brand {
     height: auto;
     width: auto;
-    max-height: 128px;
+    max-height: 120px;            /* slightly tighter to leave room for attribution */
     max-width: 100%;
     object-fit: contain;
     display: block;
     flex-shrink: 1;
     min-height: 0;
-    margin-bottom: -6px; /* trim transparent whitespace at bottom edge of PNG */
+    margin-bottom: -4px; /* trim transparent whitespace at bottom edge of PNG */
   }
   .header-attribution {
     display: flex;
     align-items: center;
     gap: 7px;
     pointer-events: auto;
+    flex-shrink: 0;
+    overflow: hidden;
   }
   .header-attribution-text {
-    font-size: 13px;
+    font-size: 12px;
     color: #fff;
     white-space: nowrap;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   /* ── UIC SPH PILL ── */
   .wrc-sph-pill {
@@ -678,7 +684,9 @@
   .wrc-banner-strip {
     background: #001E62;
     border-bottom: 1px solid rgba(255,255,255,0.12);
-    overflow: hidden;             /* never taller than its inner row */
+    height: 36px;                 /* locked — never grows on any screen width */
+    max-height: 36px;
+    overflow: hidden;
   }
   .wrc-banner-strip-inner {
     position: relative;
@@ -686,7 +694,8 @@
     align-items: center;
     padding: 0 20px;
     gap: 12px;
-    height: 36px;                 /* fixed — never grows on wide screens */
+    height: 36px;
+    max-height: 36px;
     flex-wrap: nowrap;
     overflow: hidden;
   }
