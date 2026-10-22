@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#001E62">
+  <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Heat-Beat">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Clothing &amp; PPE — Work-Rest Cycles</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background: #F6F3EC !important; }
+
+/* ── Layout: fill viewport like ls3 ── */
+#ls4 {
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ls4-clothing-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(4px, 1vh, 10px) 12px clamp(4px, 1vh, 12px);
+  overflow: hidden;
+}
+.ls4-clothing-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(6px, 1.2vh, 16px);
+  flex: 1;
+  min-height: 0;
+  max-width: 820px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media (max-width: 600px) {
+  .ls4-clothing-cards { grid-template-columns: 1fr; overflow-y: auto; }
+}
+
+/* ── Cards ── */
+.ls4-clothing-card {
+  background: #FEF8E0;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(12px, 2.5vh, 24px) 24px clamp(8px, 1.8vh, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.8vh, 10px);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+.ls4-standard    { border-top: 4px solid #007A55; }
+.ls4-impermeable { border-top: 4px solid #C04000; }
+.ls4-clothing-card:hover  { background: #f5f0d4; }
+.ls4-clothing-card:active { transform: translateY(2px); }
+.ls4-clothing-card:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+/* ── Content ── */
+.ls4-clothing-icon {
+  font-size: clamp(22px, 4vh, 36px);
+  line-height: 1;
+  text-align: center;
+}
+.ls4-clothing-title {
+  font-size: clamp(18px, 3vh, 26px);
+  font-weight: 800;
+  color: var(--navy);
+  text-align: center;
+}
+.ls4-clothing-front {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+.ls4-clothing-back {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.ls4-clothing-card:hover .ls4-clothing-front { display: none; }
+.ls4-clothing-card:hover .ls4-clothing-back  { display: flex; }
+.ls4-clothing-desc {
+  font-size: clamp(16px, 2.8vh, 24px);
+  line-height: 1.55;
+  color: var(--text);
+}
+.ls4-clothing-desc strong { font-size: inherit; }
+.ls4-clothing-examples {
+  font-size: clamp(14px, 2vh, 18px);
+  line-height: 1.55;
+  color: var(--subtext);
+  margin: 0;
+  padding-left: 18px;
+}
+.ls4-clothing-examples li { margin-bottom: 3px; }
+.ls4-clothing-adjust {
+  font-size: clamp(12px, 1.6vh, 16px);
+  font-weight: 700;
+  border-radius: 6px;
+  padding: clamp(4px, 0.8vh, 8px) 10px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.ls4-standard    .ls4-clothing-adjust { background: #e8f5e9; color: #1b5e20; }
+.ls4-impermeable .ls4-clothing-adjust { background: #fff3e0; color: #bf360c; }
+
+@media (max-width: 768px) {
+  #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+</style>
+<script src="./lang-link.js" defer></script>
+</head>
+<body>
+
+<div id="fixed-top">
+  <div class="hazard-bar"></div>
+  <header>
+    <button class="home-btn health-btn" onclick="openHealthModal()" title="Individual Health Risk Factors" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+    <div class="header-inner">
+      <img class="header-brand" src="images/read-the-heat-logo-transparent.png" alt="Read the Heat &amp; Take a Beat — for indoor occupations">
+      <div class="header-attribution">
+        <a class="wrc-sph-pill" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+        <span class="header-attribution-text">An outreach project of the Great Lakes Center for Occupational Health and Safety</span>
+      </div>
+    </div>
+      <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
+  <span class="revision-date">Revised October 20, 2026</span>
+  </header>
+  <div class="wrc-banner-strip">
+    <div class="wrc-banner-strip-inner">
+      <div class="wrc-breadcrumbs" id="wrc-breadcrumbs"></div>
+    </div>
+  </div>
+</div><!-- /fixed-top -->
+
+<div id="launcher">
+  <div class="launcher-screen active" id="ls4">
+    <div class="ls4-clothing-wrap">
+
+      <div class="launcher-step">
+        <h1 class="ls-heading">What type of clothing or PPE is the worker wearing?</h1>
+      </div>
+
+      <div class="ls4-clothing-cards">
+
+        <div class="ls4-clothing-card ls4-standard" data-clothing="standard"
+             onclick="commitClothing('standard', 0)" role="button" tabindex="0" aria-label="Select Standard Work Clothing">
+          <span class="ls4-clothing-icon">👕</span>
+          <div class="ls4-clothing-title">Standard Work Clothing</div>
+          <div class="ls4-clothing-front">
+            <div class="ls4-clothing-desc"><strong>Typical work clothes that allow sweat to evaporate normally.</strong> No adjustment is applied to WBGT thresholds — NIOSH limits assume standard summer work clothing.</div>
+          </div>
+          <div class="ls4-clothing-back">
+            <ul class="ls4-clothing-examples">
+              <li>Cotton or poly-blend shirts and pants</li>
+              <li>Standard work coveralls (single-layer, breathable)</li>
+              <li>Hard hat, gloves, safety glasses, steel-toed boots</li>
+              <li>Most standard hi-vis vests</li>
+            </ul>
+          </div>
+          <div class="ls4-clothing-adjust">No adjustment — standard assumption</div>
+        </div>
+
+        <div class="ls4-clothing-card ls4-impermeable" data-clothing="impermeable"
+             onclick="commitClothing('impermeable', 10)" role="button" tabindex="0" aria-label="Select Impermeable or Vapor-Barrier PPE">
+          <span class="ls4-clothing-icon">🦺</span>
+          <div class="ls4-clothing-title">Impermeable or Vapor-Barrier PPE</div>
+          <div class="ls4-clothing-front">
+            <div class="ls4-clothing-desc"><strong>PPE that blocks sweat evaporation, substantially increasing heat strain at any given temperature.</strong> A +10°C correction is applied to the measured WBGT, lowering all effective exposure thresholds (NIOSH, 2016; ACGIH, 2025, Table 2).</div>
+          </div>
+          <div class="ls4-clothing-back">
+            <ul class="ls4-clothing-examples">
+              <li>Chemical-resistant or hazmat suits</li>
+              <li>Impermeable rain gear or rubber/PVC suits</li>
+              <li>Limited-use vapor-barrier coveralls (e.g., Tyvek)</li>
+              <li>Fully encapsulating protective ensembles</li>
+            </ul>
+          </div>
+          <div class="ls4-clothing-adjust" style="background:#fff3e0;color:#bf360c;">+10°C (+18°F) correction applied to WBGT</div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /ls4 -->
+</div><!-- /launcher -->
+
+<script src="shared.js?v=2"></script>
+<script src="./lang-switch.js"></script>
+<script>
+  function commitClothing(type, adjustC) {
+    navigate('measurement.html', {
+      clothingType: type,
+      clothingAdjustC: adjustC,
+      clothingAdjustF: Math.round(adjustC * 9 / 5)
+    });
+  }
+
+  function updateLayout() {
+    const fixedTop = document.getElementById('fixed-top');
+    const ls4 = document.getElementById('ls4');
+    ls4.style.paddingTop = (fixedTop.offsetHeight + 10) + 'px';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('.ls4-clothing-card');
+      if (card) { e.preventDefault(); card.click(); }
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    buildBreadcrumbs();
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+  });
+</script>
+<script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
+<nav class="mobile-modal-bar" aria-label="Quick access">
+  <div class="mmb-btn-row">
+    <button class="mmb-btn mmb-health" onclick="openHealthModal()" aria-label="Individual Health Risk Factors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Health Factors</span></button>
+    <button class="mmb-btn mmb-method" onclick="openMethodologyModal()" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Methodology</span></button>
+    <button class="mmb-btn mmb-feedback" onclick="openFeedbackModal()" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Feedback</span></button>
+  </div>
+  <div class="mmb-credit">
+    <a class="wrc-sph-pill wrc-sph-pill--sm" href="https://glcohs.uic.edu" target="_blank" rel="noopener" aria-label="UIC Great Lakes Center for Occupational Health and Safety"><img src="images/uic-public-health-logo.png" alt="UIC Public Health"></a>
+    <span class="mmb-credit-text">Great Lakes Center for Occupational Health and Safety</span>
+  </div>
+</nav>
+
+</body>
+</html>
