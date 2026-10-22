@@ -1576,48 +1576,46 @@ body { background: #F6F3EC !important; }
     updateLayout();
     window.addEventListener('resize', updateLayout);
 
-    // Touch-friendly card flip: tap a card's front face to reveal the back face.
-    // :hover alone is unreliable on touch devices (not sticky on Android Chrome).
+    // ── Mobile card selection (touch devices only) ──────────────────────────────
+    // Single tap on any card front → activateCard directly.
+    // Skips the back-face intermediate step which is unreliable on Safari iOS:
+    // after scrolling to card 4, the second tap (Select button) was often eaten
+    // by Safari's momentum-scroll protection.
     //
-    // Safari-specific: even with cursor:pointer, older iOS Safari may not fire 'click'
-    // on plain divs. We listen to 'touchend' directly on the cards AND 'click' (for
-    // desktop/mouse). A timestamp guard prevents the click from double-firing ~300ms
-    // after touchend on iOS. stopPropagation keeps the document-level dismiss from
-    // also seeing the same card tap.
-    let _lastCardTapTs = 0;
-    function _handleCardTap(e) {
-      const now = Date.now();
-      if (now - _lastCardTapTs < 500) return; // skip if touchend already handled this tap
-      _lastCardTapTs = now;
-      if (this.classList.contains('ls5-meas-active')) return; // entry face showing — ignore
-      if (e.target.closest('.ls5-meas-back'))  return; // on back face; let buttons handle it
-      if (e.target.closest('.ls5-meas-entry')) return;
-      const wasFlipped = this.classList.contains('ls5-touch-flip');
-      document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
-      if (!wasFlipped) this.classList.add('ls5-touch-flip');
-      e.stopPropagation(); // prevent document dismiss handler from firing on the same event
-    }
+    // Desktop: hover CSS already shows the back face; inline onclick on the
+    // Select button calls activateCard. No JS needed for desktop card selection.
+    //
+    // Scroll detection: compare touchstart Y to touchend Y; ignore if Δ > 10px.
+    // passive:false on touchend allows e.preventDefault() which suppresses the
+    // synthetic click (prevents double-activation if click also bubbles).
     document.querySelectorAll('.ls5-meas-card').forEach(card => {
-      card.addEventListener('touchend', _handleCardTap);
-      card.addEventListener('click',    _handleCardTap);
+      let _tapY = 0;
+      card.addEventListener('touchstart', function(e) {
+        _tapY = e.touches[0].clientY;
+      }, { passive: true });
+
+      card.addEventListener('touchend', function(e) {
+        if (this.classList.contains('ls5-meas-active')) return; // already active
+        if (e.target.closest('.ls5-meas-entry')) return;        // inside entry form
+        if (Math.abs(e.changedTouches[0].clientY - _tapY) > 10) return; // was a scroll
+        e.preventDefault(); // suppress synthetic click
+        activateCard(this.dataset.instrument, this);
+      }, { passive: false });
     });
 
-    // Dismiss touch-flip AND deactivate active card when tapping anywhere outside all cards.
-    // iOS Safari doesn't fire 'click' on non-interactive background elements, so we use
-    // both 'click' and 'touchend'. Guard prevents double-firing when both events fire.
-    let _lastDismissTs = 0;
-    function _dismissOutside(e) {
-      const now = Date.now();
-      if (now - _lastDismissTs < 400) return; // de-dupe click fired after touchend
-      if (e.target.closest('.ls5-meas-card')) return; // tap was on a card — ignore
-      _lastDismissTs = now;
-      document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+    // Deactivate active card when tapping anywhere outside all cards.
+    // Use touchstart (fires immediately, no 300ms delay, works on all elements in Safari).
+    let _dismissTapY = 0;
+    document.addEventListener('touchstart', function(e) {
+      _dismissTapY = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+      if (e.target.closest('.ls5-meas-card')) return;
+      if (Math.abs(e.changedTouches[0].clientY - _dismissTapY) > 10) return; // was a scroll
       if (document.querySelector('.ls5-meas-cards.ls5-has-active')) {
         deactivateCard();
       }
-    }
-    document.addEventListener('click',    _dismissOutside);
-    document.addEventListener('touchend', _dismissOutside);
+    }, { passive: true });
   });
 </script>
 <script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
