@@ -116,6 +116,17 @@ body { background: #F6F3EC !important; }
   gap: clamp(4px, 0.8vh, 10px);
   overflow: hidden;
   min-height: 0;
+  /* button reset — element is now <button> for Safari iOS compatibility */
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+  margin: 0;
+  text-align: inherit;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
 }
 .ls5-meas-back {
   flex: 1;
@@ -798,13 +809,13 @@ body { background: #F6F3EC !important; }
       <div class="ls5-meas-cards">
 
         <!-- ── WBGT ── -->
-        <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
-          <div class="ls5-meas-front">
+        <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt">
+          <button class="ls5-meas-front" type="button" onclick="activateCard(this.closest('.ls5-meas-card').dataset.instrument,this.closest('.ls5-meas-card'))" aria-label="Select Wet Bulb Globe Thermometer">
             <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
             <div class="ls5-meas-photo-area" style="max-height:170px">
               <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
             </div>
-          </div>
+          </button>
           <div class="ls5-meas-back">
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
@@ -899,13 +910,13 @@ body { background: #F6F3EC !important; }
         </div><!-- /wbgt card -->
 
         <!-- ── Temperature + Humidity ── -->
-        <div class="ls5-meas-card ls5-trh" data-instrument="trh" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
-          <div class="ls5-meas-front">
+        <div class="ls5-meas-card ls5-trh" data-instrument="trh">
+          <button class="ls5-meas-front" type="button" onclick="activateCard(this.closest('.ls5-meas-card').dataset.instrument,this.closest('.ls5-meas-card'))" aria-label="Select Temperature + Humidity">
             <div class="ls5-meas-title">Temperature + Humidity</div>
             <div class="ls5-meas-photo-area">
               <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
             </div>
-          </div>
+          </button>
           <div class="ls5-meas-back">
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Temperature + Humidity</div>
@@ -960,13 +971,13 @@ body { background: #F6F3EC !important; }
         </div><!-- /trh card -->
 
         <!-- ── Heat Index ── -->
-        <div class="ls5-meas-card ls5-hi" data-instrument="hi" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
-          <div class="ls5-meas-front">
+        <div class="ls5-meas-card ls5-hi" data-instrument="hi">
+          <button class="ls5-meas-front" type="button" onclick="activateCard(this.closest('.ls5-meas-card').dataset.instrument,this.closest('.ls5-meas-card'))" aria-label="Select Heat Index">
             <div class="ls5-meas-title">Heat Index</div>
             <div class="ls5-meas-photo-area">
               <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
             </div>
-          </div>
+          </button>
           <div class="ls5-meas-back">
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Heat Index</div>
@@ -1003,11 +1014,11 @@ body { background: #F6F3EC !important; }
         </div><!-- /hi card -->
 
         <!-- ── Thermometer Only ── -->
-        <div class="ls5-meas-card ls5-dbt" data-instrument="dbt" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
-          <div class="ls5-meas-front">
+        <div class="ls5-meas-card ls5-dbt" data-instrument="dbt">
+          <button class="ls5-meas-front" type="button" onclick="activateCard(this.closest('.ls5-meas-card').dataset.instrument,this.closest('.ls5-meas-card'))" aria-label="Select Thermometer Only">
             <div class="ls5-meas-title">Thermometer Only</div>
             <div class="ls5-meas-photo-area" style="font-size:clamp(60px,12vh,110px);line-height:1;">🌡️</div>
-          </div>
+          </button>
           <div class="ls5-meas-back">
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Thermometer Only</div>
@@ -1098,6 +1109,7 @@ body { background: #F6F3EC !important; }
 
   // ── Card activation ───────────────────────────────────────────────────────────
   function activateCard(instrument, cardEl) {
+    if (!cardEl || cardEl.classList.contains('ls5-meas-active')) return;
     measCurrentInstrument = instrument;
     measCurrentUnit = 'F';
     wbgtMode    = 'direct';
