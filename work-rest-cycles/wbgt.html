@@ -1349,6 +1349,13 @@ main { padding: 0; max-width: none; }
       const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
       if (overflows) hi = mid - 1; else lo = mid;
     }
+    // Height constraint: text must not exceed 75% of cell height (line-height 1.15)
+    const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
+    if (rangeCells.length) {
+      const cellH = rangeCells[0].clientHeight;
+      const maxByHeight = Math.floor(cellH * 0.75 / 1.15 * 10);
+      lo = Math.min(lo, maxByHeight);
+    }
     const finalSize = Math.max(70, lo - 70) / 10 + 'px'; // ~4px smaller than max-fit
     cells.forEach(c => c.style.fontSize = finalSize);
   }

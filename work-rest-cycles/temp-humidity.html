@@ -1711,6 +1711,13 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
       if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
       else lo = mid;
     }
+    // Height constraint: text must not exceed 75% of cell height (line-height 1.15)
+    const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
+    if (rangeCells.length) {
+      const cellH = rangeCells[0].clientHeight;
+      const maxByHeight = Math.floor(cellH * 0.75 / 1.15 * 10);
+      lo = Math.min(lo, maxByHeight);
+    }
     cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
   }
 
