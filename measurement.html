@@ -42,7 +42,12 @@ body { background: #F6F3EC !important; }
   width: 100%;
 }
 @media (max-width: 600px) {
-  .ls5-meas-cards { grid-template-columns: 1fr; overflow-y: auto; }
+  .ls5-meas-cards {
+    grid-template-columns: 1fr;
+    grid-template-rows: unset;      /* don't constrain; let all 4 cards size naturally */
+    grid-auto-rows: minmax(140px, auto);
+    overflow-y: auto;
+  }
 }
 
 /* ── Desktop: sidebar label + full-height cards ── */
