@@ -85,8 +85,10 @@ body { background: #F6F3EC !important; }
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-  padding: clamp(8px, 1.5vh, 16px) clamp(10px, 1.8vw, 18px) clamp(6px, 1.2vh, 12px);
-  gap: clamp(5px, 0.9vh, 10px);
+  padding: clamp(6px, 1.2vh, 12px) clamp(10px, 1.8vw, 16px) clamp(5px, 1vh, 10px);
+  gap: clamp(4px, 0.7vh, 8px);
+  /* leave room for the X button */
+  padding-top: clamp(36px, 5vh, 44px);
 }
 .ls5-entry-fields {
   flex: 1;
@@ -94,7 +96,7 @@ body { background: #F6F3EC !important; }
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(4px, 0.8vh, 8px);
+  gap: clamp(3px, 0.5vh, 6px);
 }
 .ls5-entry-actions {
   display: flex;
@@ -103,18 +105,40 @@ body { background: #F6F3EC !important; }
   flex-shrink: 0;
 }
 .ls5-entry-back {
-  background: none;
-  border: none;
-  font-size: clamp(11px, 1.6vh, 14px);
-  color: var(--subtext);
-  cursor: pointer;
-  padding: 2px 0;
-  font-family: inherit;
-  text-align: left;
-  flex-shrink: 0;
-  transition: color 0.12s;
+  display: none; /* replaced by .ls5-entry-close-btn */
 }
-.ls5-entry-back:hover { color: var(--navy); text-decoration: underline; }
+
+/* ── Visible close X in top-right corner of active card ── */
+.ls5-entry-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--navy);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: none; /* shown only when card is active */
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  box-shadow: 0 2px 6px rgba(0,0,30,0.14);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  font-family: inherit;
+  padding: 0;
+  flex-shrink: 0;
+}
+.ls5-entry-close-btn:hover {
+  background: #D50032;
+  color: #fff;
+  border-color: #D50032;
+}
+.ls5-meas-active .ls5-entry-close-btn { display: flex; }
 
 /* ── Active state: card expands to fill grid ── */
 .ls5-meas-cards.ls5-has-active {
@@ -249,30 +273,30 @@ body { background: #F6F3EC !important; }
 }
 
 /* ── Measurement form fields ── */
-.meas-field-group { margin-bottom: 6px; }
+.meas-field-group { margin-bottom: 4px; }
 .meas-field-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--subtext);
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   display: block;
 }
 .meas-input-row {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 .meas-input {
   flex: 1;
-  height: 38px;
-  font-size: 18px;
+  height: 34px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--navy);
   border: 2px solid var(--border);
   border-radius: 6px;
-  padding: 0 9px;
+  padding: 0 8px;
   outline: none;
   transition: border-color 0.15s;
   font-family: inherit;
@@ -281,7 +305,7 @@ body { background: #F6F3EC !important; }
 .meas-input:focus { border-color: var(--navy); }
 .meas-input.error { border-color: #D50032; }
 .meas-unit-suffix {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--subtext);
   flex-shrink: 0;
@@ -294,11 +318,11 @@ body { background: #F6F3EC !important; }
   flex-shrink: 0;
 }
 .meas-toggle button {
-  padding: 0 9px;
-  height: 38px;
+  padding: 0 8px;
+  height: 34px;
   background: none;
   border: none;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--subtext);
   cursor: pointer;
@@ -311,14 +335,14 @@ body { background: #F6F3EC !important; }
 }
 .meas-error-msg {
   color: #D50032;
-  font-size: 10px;
-  margin-top: 2px;
+  font-size: 9px;
+  margin-top: 1px;
   display: none;
 }
 .meas-error-msg.visible { display: block; }
 .meas-submit-btn {
   width: 100%;
-  padding: 7px;
+  padding: 6px;
   background: var(--navy);
   color: #fff;
   border: none;
@@ -338,16 +362,16 @@ body { background: #F6F3EC !important; }
 .wbgt-mode-toggle {
   display: flex;
   border: 2px solid var(--navy);
-  border-radius: 7px;
+  border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
 }
 .wbgt-mode-toggle button {
   flex: 1;
-  padding: 6px 4px;
+  padding: 4px 4px;
   background: transparent;
   color: var(--navy);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -367,10 +391,10 @@ body { background: #F6F3EC !important; }
 }
 .wbgt-setting-toggle button {
   flex: 1;
-  padding: 5px 4px;
+  padding: 4px 4px;
   background: transparent;
   color: var(--subtext);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -384,16 +408,16 @@ body { background: #F6F3EC !important; }
 .wbgt-calc-display {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: #C8102E;
   color: #fff;
-  border-radius: 7px;
-  padding: 5px 12px;
+  border-radius: 6px;
+  padding: 4px 10px;
   margin-top: 2px;
   flex-shrink: 0;
 }
 .wbgt-calc-label {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -402,18 +426,16 @@ body { background: #F6F3EC !important; }
   white-space: nowrap;
 }
 .wbgt-calc-value {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
-/* ── Compact inputs in WBGT calc and TRH faces ── */
-#wbgt-calc-fields .meas-field-group { margin-bottom: 4px; }
-#wbgt-calc-fields .meas-input { height: 32px; font-size: 15px; }
-#wbgt-calc-fields .meas-toggle button { height: 32px; font-size: 11px; padding: 0 7px; }
-#trh-entry-fields .meas-field-group { margin-bottom: 5px; }
-#trh-entry-fields .meas-input { height: 34px; font-size: 16px; }
-#trh-entry-fields .meas-toggle button { height: 34px; font-size: 11px; padding: 0 7px; }
+/* ── Compact inputs in WBGT calc face ── */
+#wbgt-calc-fields .meas-field-group { margin-bottom: 3px; }
+#wbgt-calc-fields .meas-input { height: 30px; font-size: 14px; }
+#wbgt-calc-fields .meas-toggle button { height: 30px; font-size: 10px; padding: 0 6px; }
+#wbgt-direct-fields .meas-field-group { margin-bottom: 3px; }
 
 /* ── Small italic helper ── */
 .meas-field-sub {
@@ -427,14 +449,20 @@ body { background: #F6F3EC !important; }
   margin-top: 1px;
 }
 
+/* Title in entry face — smaller than front/back */
+.ls5-meas-entry .ls5-meas-title {
+  font-size: clamp(12px, 1.7vh, 16px);
+  margin-bottom: 0;
+}
+
 /* DBT warning */
 .meas-dbt-card-warning {
   background: #FFF3CD;
   border: 1px solid #FBBF24;
   border-radius: 6px;
-  padding: 7px 10px;
-  font-size: 12px;
-  line-height: 1.45;
+  padding: 5px 8px;
+  font-size: 11px;
+  line-height: 1.4;
   color: #78350F;
   flex-shrink: 0;
 }
@@ -656,6 +684,7 @@ body { background: #F6F3EC !important; }
           </div>
           <!-- Entry face -->
           <div class="ls5-meas-entry" id="wbgt-entry">
+            <button class="ls5-entry-close-btn" onclick="deactivateCard()" type="button" aria-label="Change method">&times;</button>
             <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
             <div class="wbgt-mode-toggle" role="group" aria-label="WBGT entry mode">
               <button id="wbgt-mode-direct" class="active" onclick="setWbgtMode('direct')" type="button">Direct WBGT reading</button>
@@ -720,7 +749,6 @@ body { background: #F6F3EC !important; }
             </div><!-- /ls5-entry-fields -->
             <div class="ls5-entry-actions">
               <button class="meas-submit-btn" onclick="submitEntry()" type="button">Find My Work-Rest Cycle →</button>
-              <button class="ls5-entry-back" onclick="deactivateCard()" type="button">← Change method</button>
             </div>
           </div><!-- /wbgt-entry -->
         </div><!-- /wbgt card -->
@@ -747,6 +775,7 @@ body { background: #F6F3EC !important; }
           </div>
           <!-- Entry face -->
           <div class="ls5-meas-entry" id="trh-entry">
+            <button class="ls5-entry-close-btn" onclick="deactivateCard()" type="button" aria-label="Change method">&times;</button>
             <div class="ls5-meas-title">Temperature + Humidity</div>
             <div class="ls5-entry-fields" id="trh-entry-fields">
               <div class="meas-field-group">
@@ -771,7 +800,6 @@ body { background: #F6F3EC !important; }
             </div>
             <div class="ls5-entry-actions">
               <button class="meas-submit-btn" onclick="submitEntry()" type="button">Find My Work-Rest Cycle →</button>
-              <button class="ls5-entry-back" onclick="deactivateCard()" type="button">← Change method</button>
             </div>
           </div><!-- /trh-entry -->
         </div><!-- /trh card -->
@@ -798,6 +826,7 @@ body { background: #F6F3EC !important; }
           </div>
           <!-- Entry face -->
           <div class="ls5-meas-entry" id="hi-entry">
+            <button class="ls5-entry-close-btn" onclick="deactivateCard()" type="button" aria-label="Change method">&times;</button>
             <div class="ls5-meas-title">Heat Index</div>
             <div class="ls5-entry-fields">
               <div class="meas-field-group">
@@ -814,7 +843,6 @@ body { background: #F6F3EC !important; }
             </div>
             <div class="ls5-entry-actions">
               <button class="meas-submit-btn" onclick="submitEntry()" type="button">Find My Work-Rest Cycle →</button>
-              <button class="ls5-entry-back" onclick="deactivateCard()" type="button">← Change method</button>
             </div>
           </div><!-- /hi-entry -->
         </div><!-- /hi card -->
@@ -839,6 +867,7 @@ body { background: #F6F3EC !important; }
           </div>
           <!-- Entry face -->
           <div class="ls5-meas-entry" id="dbt-entry">
+            <button class="ls5-entry-close-btn" onclick="deactivateCard()" type="button" aria-label="Change method">&times;</button>
             <div class="ls5-meas-title">Thermometer Only</div>
             <div class="ls5-entry-fields">
               <div class="meas-dbt-card-warning">
@@ -858,7 +887,6 @@ body { background: #F6F3EC !important; }
             </div>
             <div class="ls5-entry-actions">
               <button class="meas-submit-btn" onclick="submitEntry()" type="button">Find My Work-Rest Cycle →</button>
-              <button class="ls5-entry-back" onclick="deactivateCard()" type="button">← Change method</button>
             </div>
           </div><!-- /dbt-entry -->
         </div><!-- /dbt card -->
