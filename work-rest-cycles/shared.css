@@ -416,8 +416,12 @@
     align-items: center;
     gap: 4px;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
   }
+  .wrc-breadcrumbs::-webkit-scrollbar { display: none; } /* Chrome/Safari */
   /* selected pill — red background, white font */
   /* set pill — green: step has a value and can be revisited */
   .wrc-crumb {
@@ -888,10 +892,10 @@
 
   /* ── SHARED: HEADINGS / BACK LINKS ── */
   .ls-heading {
-    font-size: 20px;
+    font-size: clamp(15px, 2.5vh, 20px);
     font-weight: 700;
     color: var(--navy);
-    margin-bottom: 6px;
+    margin-bottom: clamp(2px, 0.6vh, 6px);
   }
   .ls-sub {
     font-size: 14px;
@@ -955,7 +959,7 @@
   }
   .ls1-header {
     flex-shrink: 0;
-    padding: 10px 12px 8px;
+    padding: clamp(4px, 1vh, 10px) 12px clamp(3px, 0.8vh, 8px);
   }
   .ls1-sector-grid {
     flex: 1;
@@ -963,8 +967,8 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 10px;
-    padding: 6px 12px 12px;
+    gap: clamp(4px, 1vh, 10px);
+    padding: clamp(4px, 0.8vh, 6px) 12px clamp(6px, 1.2vh, 12px);
     overflow: hidden;
   }
   .ls1-sector-btn {
@@ -977,7 +981,7 @@
     border: 2px solid #c5cfdd;
     border-radius: 12px;
     padding: 0;
-    min-height: 112px;
+    min-height: clamp(70px, 12vh, 112px);
     background: #001E62;
     color: white;
     font: 600 clamp(12px, 1.1vw, 16px)/1.25 inherit;
@@ -997,10 +1001,10 @@
   .ls1-sector-btn .ls1-sector-label {
     display: block;
     width: 100%;
-    padding: 10px 5px;
+    padding: clamp(4px, 1.2vh, 10px) 5px;
     background: #001E62;
     color: white;
-    font-size: clamp(12px, 1.05vw, 16px);
+    font-size: clamp(11px, 1.05vw, 16px);
     font-weight: 700;
   }
   .ls1-sector-btn:hover {
@@ -1040,7 +1044,7 @@
 
   .ls1-footer {
     flex-shrink: 0;
-    padding: 8px 12px 12px;
+    padding: clamp(4px, 0.8vh, 8px) 12px clamp(5px, 1vh, 12px);
     display: flex;
     align-items: center;
     gap: 16px;
@@ -1112,34 +1116,44 @@
     flex-direction: column;
     transition: border-color 0.15s, box-shadow 0.15s;
     min-height: 0;
+    cursor: pointer;
+    user-select: none;
   }
   .ls2-level-panel:hover {
     border-color: var(--panel-accent, var(--navy));
-    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  }
+  .ls2-level-panel:active {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .ls2-level-panel:focus-visible {
+    outline: 3px solid #005FCC;
+    outline-offset: 2px;
   }
   .ls2-level-header {
     background: var(--panel-accent, var(--navy));
-    padding: 12px 16px 10px;
+    padding: 8px 14px 7px;
     flex-shrink: 0;
     text-align: center;
   }
   .ls2-level-name {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 800;
     color: #fff;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     letter-spacing: 0.1px;
   }
   .ls2-level-kcal {
-    font-size: 11px;
+    font-size: 10px;
     color: #fff;
     font-weight: 500;
     opacity: 0.85;
     display: block;
   }
-  .ls2-level-body {
+  /* Front face: description */
+  .ls2-card-front {
     padding: 12px 16px 14px;
     flex: 1;
     display: flex;
@@ -1147,13 +1161,26 @@
     min-height: 0;
     overflow: hidden;
   }
+  /* Back face: examples — hidden until hover */
+  .ls2-card-back {
+    padding: 12px 16px 14px;
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls2-level-panel:hover .ls2-card-front { display: none; }
+  .ls2-level-panel:hover .ls2-card-back  { display: flex; }
   .ls2-level-desc {
     font-size: 15px;
     font-weight: 600;
     color: var(--navy);
     line-height: 1.5;
-    margin-bottom: 12px;
-    min-height: 6.75em;
+    margin-bottom: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
   }
   .ls2-level-examples-label {
     font-size: 11px;
@@ -1162,6 +1189,7 @@
     text-transform: uppercase;
     color: var(--mid);
     margin-bottom: 5px;
+    flex-shrink: 0;
   }
   .ls2-level-examples {
     font-size: 13px;
@@ -1170,39 +1198,13 @@
     padding-left: 14px;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     margin: 0;
   }
   .ls2-level-none {
     font-size: 13px;
     color: var(--subtext);
     font-style: italic;
-  }
-  .ls2-select-btn {
-    margin-top: 10px;
-    width: 100%;
-    padding: 10px 0;
-    border: 2px solid var(--panel-accent, var(--navy));
-    background: #fff;
-    color: var(--panel-accent, var(--navy));
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.13s, color 0.13s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .ls2-select-btn:hover {
-    background: var(--panel-accent, var(--navy));
-    color: #fff;
-  }
-  .ls2-select-btn:focus-visible {
-    outline: 3px solid #005FCC;
-    outline-offset: 2px;
   }
   @media (max-width: 900px) {
     .ls2-review-grid {
@@ -1223,13 +1225,13 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 10px 12px 12px;
+    padding: clamp(4px, 1vh, 10px) 12px clamp(4px, 1vh, 12px);
     overflow: hidden;
   }
   .ls3-acclim-cards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
+    gap: clamp(6px, 1.2vh, 16px);
     flex: 1;
     min-height: 0;
   }
@@ -1237,59 +1239,59 @@
     background: #FEF8E0;
     border: 2px solid var(--border);
     border-radius: 12px;
-    padding: 24px 24px 20px;
+    padding: clamp(12px, 2.5vh, 24px) 24px clamp(8px, 1.8vh, 20px);
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: clamp(4px, 0.8vh, 10px);
     overflow: hidden;
+    cursor: pointer;
+    user-select: none;
   }
   .ls3-acclim-yes    { border-top: 4px solid #00966C; }
   .ls3-acclim-no     { border-top: 4px solid #E65100; }
   .ls3-acclim-return { border-top: 4px solid #B45309; }
-  .ls3-acclim-icon { font-size: 28px; line-height: 1; }
+  .ls3-acclim-icon { font-size: clamp(22px, 4vh, 36px); line-height: 1; }
   .ls3-acclim-title {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 22px;
+    font-size: clamp(18px, 3vh, 26px);
     font-weight: 800;
     color: var(--navy);
   }
   .ls3-acclim-desc {
-    font-size: 14px;
+    font-size: clamp(16px, 2.8vh, 24px);
     color: var(--subtext);
-    line-height: 1.6;
+    line-height: 1.55;
   }
+  .ls3-acclim-desc strong {
+    font-size: inherit;
+  }
+  .ls3-acclim-front {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls3-acclim-back {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls3-acclim-card:hover .ls3-acclim-front { display: none; }
+  .ls3-acclim-card:hover .ls3-acclim-back  { display: flex; }
+  .ls3-acclim-card:active { transform: translateY(2px); }
+  .ls3-acclim-card:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
   .ls3-acclim-bullets {
     font-size: 15px;
     color: var(--subtext);
     line-height: 1.65;
     padding-left: 18px;
     margin: 0;
-    margin-top: -10px; /* cancel card gap so bullets sit flush under desc */
-    flex: 1; /* push CTA to bottom */
   }
-  .ls3-acclim-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 700;
-    margin-top: auto;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: 2px solid currentColor;
-    background: transparent;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    width: 100%;
-  }
-  .ls3-acclim-yes    .ls3-acclim-cta { color: #005540; }
-  .ls3-acclim-no     .ls3-acclim-cta { color: #7B2500; }
-  .ls3-acclim-return .ls3-acclim-cta { color: #92400E; }
-  .ls3-acclim-yes    .ls3-acclim-cta:hover { background: #00966C; color: #fff; border-color: #00966C; }
-  .ls3-acclim-no     .ls3-acclim-cta:hover { background: #E65100; color: #fff; border-color: #E65100; }
-  .ls3-acclim-return .ls3-acclim-cta:hover { background: #B45309; color: #fff; border-color: #B45309; }
   @media (max-width: 600px) {
     .ls3-acclim-cards { grid-template-columns: 1fr; overflow-y: auto; }
   }
@@ -2392,7 +2394,7 @@
   @media (max-width: 480px) {
     .ls-heading       { font-size: 17px !important; }
     .ls3-acclim-title { font-size: 18px !important; }
-    .ls3-acclim-desc  { font-size: 13px !important; }
+    .ls3-acclim-desc  { font-size: 15px !important; }
     .ls2-topbar-hint  { font-size: 13px !important; }
   }
 

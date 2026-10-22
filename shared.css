@@ -416,8 +416,12 @@
     align-items: center;
     gap: 4px;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
   }
+  .wrc-breadcrumbs::-webkit-scrollbar { display: none; } /* Chrome/Safari */
   /* selected pill — red background, white font */
   /* set pill — green: step has a value and can be revisited */
   .wrc-crumb {
