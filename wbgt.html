@@ -1339,13 +1339,14 @@ main { padding: 0; max-width: none; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    // Cap hi by cell height before the search so font never overflows vertically.
-    // line-height on .acc-cell is 1.15; single-line content height = fontSize * 1.15.
+    // Cap hi so font * line-height never exceeds the cell's content area (clientHeight minus padding).
     const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
     let lo = 70, hi = 340;
     if (rangeCells.length) {
-      const cellH = rangeCells[0].clientHeight;
-      hi = Math.min(hi, Math.floor(cellH / 1.15 * 10));
+      const rc = rangeCells[0];
+      const cs = getComputedStyle(rc);
+      const contentH = rc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      hi = Math.min(hi, Math.floor(contentH / 1.15 * 10));
     }
     // Binary search: largest font that fits width
     while (lo < hi) {
