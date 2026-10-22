@@ -472,10 +472,27 @@ body { background: #F6F3EC !important; }
 }
 
 /* ── Compact inputs in WBGT calc face ── */
-#wbgt-calc-fields .meas-field-group { margin-bottom: 3px; }
 #wbgt-calc-fields .meas-input { height: 30px; font-size: 14px; }
 #wbgt-calc-fields .meas-toggle button { height: 30px; font-size: 10px; padding: 0 6px; }
 #wbgt-direct-fields .meas-field-group { margin-bottom: 3px; }
+
+/* ── WBGT component fields on one row ── */
+#wbgt-component-row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+#wbgt-component-row .meas-field-group {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+#wbgt-component-row .meas-field-label { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#wbgt-component-row .meas-input { width: 100%; min-width: 0; padding: 0 4px; font-size: 13px; }
+#wbgt-component-row .meas-input-row { flex-wrap: nowrap; gap: 3px; }
+#wbgt-component-row .meas-toggle { flex-shrink: 0; }
+#wbgt-component-row .meas-toggle button { padding: 0 4px; font-size: 9px; }
+#wbgt-component-row .meas-unit-suffix { font-size: 11px; flex-shrink: 0; }
 
 /* ── Small italic helper ── */
 .meas-field-sub {
@@ -758,33 +775,35 @@ body { background: #F6F3EC !important; }
               </div>
               <!-- Component fields -->
               <div id="wbgt-calc-fields" hidden>
-                <div class="meas-field-group">
-                  <label class="meas-field-label" for="wbgt-nwb">Natural Wet Bulb</label>
-                  <div class="meas-input-row">
-                    <input class="meas-input" id="wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-nwb','wbgt-nwb-error');updateWbgtCalc()">
-                    <div class="meas-toggle">
-                      <button id="wbgt-nwb-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
-                      <button id="wbgt-nwb-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+                <div id="wbgt-component-row">
+                  <div class="meas-field-group">
+                    <label class="meas-field-label" for="wbgt-nwb">Nat. Wet Bulb</label>
+                    <div class="meas-input-row">
+                      <input class="meas-input" id="wbgt-nwb" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-nwb','wbgt-nwb-error');updateWbgtCalc()">
+                      <div class="meas-toggle">
+                        <button id="wbgt-nwb-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+                        <button id="wbgt-nwb-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+                      </div>
                     </div>
+                    <div class="meas-error-msg" id="wbgt-nwb-error">Required.</div>
                   </div>
-                  <div class="meas-error-msg" id="wbgt-nwb-error">Please enter a value.</div>
-                </div>
-                <div class="meas-field-group">
-                  <label class="meas-field-label" for="wbgt-gt">Globe Temperature</label>
-                  <div class="meas-input-row">
-                    <input class="meas-input" id="wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-gt','wbgt-gt-error');updateWbgtCalc()">
-                    <span class="meas-unit-suffix" id="wbgt-gt-unit">°F</span>
+                  <div class="meas-field-group">
+                    <label class="meas-field-label" for="wbgt-gt">Globe Temp</label>
+                    <div class="meas-input-row">
+                      <input class="meas-input" id="wbgt-gt" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-gt','wbgt-gt-error');updateWbgtCalc()">
+                      <span class="meas-unit-suffix" id="wbgt-gt-unit">°F</span>
+                    </div>
+                    <div class="meas-error-msg" id="wbgt-gt-error">Required.</div>
                   </div>
-                  <div class="meas-error-msg" id="wbgt-gt-error">Please enter a value.</div>
-                </div>
-                <div class="meas-field-group" id="wbgt-db-row" hidden>
-                  <label class="meas-field-label" for="wbgt-db">Dry Bulb</label>
-                  <div class="meas-input-row">
-                    <input class="meas-input" id="wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-db','wbgt-db-error');updateWbgtCalc()">
-                    <span class="meas-unit-suffix" id="wbgt-db-unit">°F</span>
+                  <div class="meas-field-group" id="wbgt-db-row" hidden>
+                    <label class="meas-field-label" for="wbgt-db">Dry Bulb</label>
+                    <div class="meas-input-row">
+                      <input class="meas-input" id="wbgt-db" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="clearWbgtErr('wbgt-db','wbgt-db-error');updateWbgtCalc()">
+                      <span class="meas-unit-suffix" id="wbgt-db-unit">°F</span>
+                    </div>
+                    <div class="meas-error-msg" id="wbgt-db-error">Required.</div>
                   </div>
-                  <div class="meas-error-msg" id="wbgt-db-error">Please enter a value.</div>
-                </div>
+                </div><!-- /wbgt-component-row -->
                 <!-- Calculated WBGT result as a field -->
                 <div class="wbgt-calc-display">
                   <span class="wbgt-calc-label">Calculated WBGT</span>
