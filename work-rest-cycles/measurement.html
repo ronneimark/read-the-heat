@@ -100,6 +100,7 @@ body { background: #F6F3EC !important; }
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  cursor: pointer; /* required for iOS Safari to fire click events on div elements */
 }
 .ls5-wbgt { border-top: 4px solid #001E62; }
 .ls5-trh  { border-top: 4px solid #1a3a8f; }
@@ -1590,14 +1591,21 @@ body { background: #F6F3EC !important; }
     });
 
     // Dismiss touch-flip AND deactivate active card when tapping anywhere outside all cards.
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.ls5-meas-card')) {
-        document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
-        if (document.querySelector('.ls5-meas-cards.ls5-has-active')) {
-          deactivateCard();
-        }
+    // iOS Safari doesn't fire 'click' on non-interactive elements (divs without cursor:pointer
+    // or onclick), so we listen for both 'click' and 'touchend' and guard against double-firing.
+    let _lastDismissTs = 0;
+    function _dismissOutside(e) {
+      const now = Date.now();
+      if (now - _lastDismissTs < 400) return; // de-dupe click fired after touchend
+      if (e.target.closest('.ls5-meas-card')) return;
+      _lastDismissTs = now;
+      document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+      if (document.querySelector('.ls5-meas-cards.ls5-has-active')) {
+        deactivateCard();
       }
-    });
+    }
+    document.addEventListener('click',    _dismissOutside);
+    document.addEventListener('touchend', _dismissOutside);
   });
 </script>
 <script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
