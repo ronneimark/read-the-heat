@@ -1808,14 +1808,22 @@ main { padding: 0; max-width: none; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    // Cap hi so font * line-height never exceeds the cell's content area (clientHeight minus padding).
     const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
+    const hdrCells   = cells.filter(c => c.classList.contains('acc-hdr'));
     let lo = 70, hi = 340;
+    // Cap by range cell height (single-line, line-height 1.15)
     if (rangeCells.length) {
       const rc = rangeCells[0];
       const cs = getComputedStyle(rc);
       const contentH = rc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
       hi = Math.min(hi, Math.floor(contentH / 1.15 * 10));
+    }
+    // Cap by header cell height (2-line with flex-direction:column, line-height 1.3)
+    if (hdrCells.length) {
+      const hc = hdrCells[0];
+      const cs = getComputedStyle(hc);
+      const contentH = hc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      hi = Math.min(hi, Math.floor(contentH / (2 * 1.3) * 10));
     }
     // Binary search: largest font that fits width
     while (lo < hi) {
