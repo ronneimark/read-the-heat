@@ -66,26 +66,10 @@
   box-shadow: 0 1px 0 #8b0000, 0 2px 6px rgba(180,0,0,0.3) !important;
 }
 
-/* CTA buttons: card-color background, black text, aligned at bottom */
-.ls3-acclim-card { display: flex; flex-direction: column; }
-.ls3-acclim-bullets { flex: 1; }
-.ls3-acclim-cta {
-  margin-top: auto;
-  font-size: 16px !important;
-  font-family: sans-serif !important;
-  color: #fff !important;
-  border-color: transparent !important;
-  font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
-}
-.ls3-acclim-yes    .ls3-acclim-cta { background: #007A55 !important; box-shadow: 0 5px 0 #004d36, 0 6px 12px rgba(0,0,0,0.25) !important; }
-.ls3-acclim-no     .ls3-acclim-cta { background: #C04000 !important; box-shadow: 0 5px 0 #7a2800, 0 6px 12px rgba(0,0,0,0.25) !important; }
-.ls3-acclim-return .ls3-acclim-cta { background: #B45309 !important; box-shadow: 0 5px 0 #6b3105, 0 6px 12px rgba(0,0,0,0.25) !important; }
-.ls3-acclim-cta { transform: translateY(0); transition: transform .08s, box-shadow .08s !important; }
-.ls3-acclim-yes    .ls3-acclim-cta:hover { background: #006644 !important; }
-.ls3-acclim-no     .ls3-acclim-cta:hover { background: #a03500 !important; }
-.ls3-acclim-return .ls3-acclim-cta:hover { background: #924407 !important; }
-.ls3-acclim-cta:active { transform: translateY(4px) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.15) !important; }
+/* Whole-card hover hint */
+.ls3-acclim-yes:hover    { background: #f5f0d4; }
+.ls3-acclim-no:hover     { background: #f5f0d4; }
+.ls3-acclim-return:hover { background: #f5f0d4; }
 
 /* About Acclimatization modal */
 #acclim-about-overlay {
@@ -182,40 +166,51 @@
 
       <div class="ls3-acclim-cards">
 
-        <div class="ls3-acclim-card ls3-acclim-yes" data-worker-status="acclimatized">
+        <div class="ls3-acclim-card ls3-acclim-yes" data-worker-status="acclimatized"
+             onclick="commitWorkerStatus('acclimatized')" role="button" tabindex="0" aria-label="Select Acclimatized">
           <span class="ls3-acclim-icon">&#x2705;</span>
           <div class="ls3-acclim-title">Acclimatized</div>
-          <div class="ls3-acclim-desc"><strong style="font-size:1em;font-size:calc(1em + 1px);">Has completed heat acclimatization and has not been absent from heat work for a week or more.</strong> Work-rest cycles use the NIOSH Recommended Exposure Limits (REL).</div>
-          <ul class="ls3-acclim-bullets">
-            <li>Experienced worker in continuous heat exposure</li>
-            <li>Returning worker absent fewer than 7 days</li>
-            <li>Acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload (NIOSH, 2016)</li>
-          </ul>
-          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('acclimatized')">Select Acclimatized <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="ls3-acclim-front">
+            <div class="ls3-acclim-desc"><strong>Has completed heat acclimatization and has not been absent from heat work for a week or more.</strong></div>
+          </div>
+          <div class="ls3-acclim-back">
+            <ul class="ls3-acclim-bullets">
+              <li>Experienced worker in continuous heat exposure</li>
+              <li>Returning worker absent fewer than 7 days</li>
+              <li>Acclimatization increases sweating efficiency, stabilizes circulation, and lowers core temperature and heart rate at the same workload (NIOSH, 2016)</li>
+            </ul>
+          </div>
         </div>
 
-        <div class="ls3-acclim-card ls3-acclim-no" data-worker-status="unacclimatized-new">
+        <div class="ls3-acclim-card ls3-acclim-no" data-worker-status="unacclimatized-new"
+             onclick="commitWorkerStatus('unacclimatized-new')" role="button" tabindex="0" aria-label="Select New Worker — Unacclimatized">
           <span class="ls3-acclim-icon">&#x26A0;&#xFE0F;</span>
           <div class="ls3-acclim-title">New Worker — Unacclimatized</div>
-          <div class="ls3-acclim-desc"><strong style="font-size:calc(1em + 1px);">Has not previously worked in heat or has not yet completed an acclimatization ramp.</strong> Uses the more protective NIOSH Recommended Alert Limits (RAL).</div>
-          <ul class="ls3-acclim-bullets">
-            <li>New employee starting heat work for the first time</li>
-            <li>Worker newly assigned to a hot area</li>
-            <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
-          </ul>
-          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('unacclimatized-new')">Select New Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="ls3-acclim-front">
+            <div class="ls3-acclim-desc"><strong>Has not previously worked in heat or has not yet completed an acclimatization ramp.</strong></div>
+          </div>
+          <div class="ls3-acclim-back">
+            <ul class="ls3-acclim-bullets">
+              <li>New employee starting heat work for the first time</li>
+              <li>Worker newly assigned to a hot area</li>
+              <li>Per NIOSH (2016): <em>"lack of acclimatization has been shown to be a major factor associated with worker heat-related illness and death"</em></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="ls3-acclim-card ls3-acclim-return" data-worker-status="unacclimatized-returning">
+        <div class="ls3-acclim-card ls3-acclim-return" data-worker-status="unacclimatized-returning"
+             onclick="commitWorkerStatus('unacclimatized-returning')" role="button" tabindex="0" aria-label="Select Returning Worker — Unacclimatized">
           <span class="ls3-acclim-icon">&#x1F504;</span>
           <div class="ls3-acclim-title">Returning Worker — Unacclimatized</div>
-          <div class="ls3-acclim-desc"><strong style="font-size:calc(1em + 1px);">Previously acclimatized, but absent from heat work for 7 or more days.</strong> Uses the more protective NIOSH Recommended Alert Limits (RAL).</div>
-          <ul class="ls3-acclim-bullets">
-            <li>Worker returning after 7+ days away from heat exposure</li>
-            <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
-
-          </ul>
-          <button class="ls3-acclim-cta" onclick="commitWorkerStatus('unacclimatized-returning')">Select Returning Worker <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="ls3-acclim-front">
+            <div class="ls3-acclim-desc"><strong>Previously acclimatized, but absent from heat work for 7 or more days.</strong></div>
+          </div>
+          <div class="ls3-acclim-back">
+            <ul class="ls3-acclim-bullets">
+              <li>Worker returning after 7+ days away from heat exposure</li>
+              <li>Workers with cardiovascular disease, obesity, certain medications, or prior heat illness</li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -258,6 +253,12 @@
   }
   document.addEventListener('click', e => {
     if (e.target.id === 'acclim-about-overlay') closeAcclimAbout();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('.ls3-acclim-card');
+      if (card) { e.preventDefault(); card.click(); }
+    }
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAcclimAbout();

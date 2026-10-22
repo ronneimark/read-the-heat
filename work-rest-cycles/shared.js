@@ -362,14 +362,14 @@ function ensureHealthModal() {
     <div id="health-modal-body">
 
     <div class="health-callout">
-      <strong>How to use this information:</strong> Workers with one or more of the factors below face elevated risk of heat-related illness at any temperature. If any apply, treat the next-higher acclimatization and work-rest protection tier as the baseline. When in doubt, consult a healthcare provider, occupational health nurse, or certified industrial hygienist.
+      <strong>What this means for you:</strong> Some workers overheat faster than others — even in the same conditions, doing the same job. If any of the factors below apply to you or someone on your crew, treat that person as if the temperature and workload are one level higher than the tool shows. When in doubt, take more breaks and keep a close eye on how everyone is feeling.
     </div>
 
-    <h3>Cardiovascular Disease &amp; Hypertension</h3>
-    <p>The cardiovascular system is the primary mechanism for moving heat from the body's core to the skin for dissipation. Heart disease, heart failure, and poorly controlled hypertension reduce this capacity. Many common cardiac medications (see below) also affect heat response directly.</p>
+    <h3>Heart Disease or High Blood Pressure</h3>
+    <p>Your heart pumps blood to your skin to release heat — it's how your body cools itself down. If someone has heart disease, heart failure, or high blood pressure that isn't well controlled, their body can't move heat out as effectively. Many blood pressure medications also affect how the body handles heat (see medications below).</p>
 
-    <h3>Obesity (BMI ≥ 30)</h3>
-    <p>Excess adipose tissue increases metabolic heat production during work and acts as insulation, slowing heat loss. Workers with obesity may generate significantly more heat at the same workload as leaner co-workers and have a reduced capacity to dissipate it through sweating relative to body mass.</p>
+    <h3>Larger Body Size</h3>
+    <p>Bigger bodies produce more body heat during physical work — and have a harder time releasing it through sweat. A heavier worker doing the same task as a lighter coworker may actually be working at the equivalent of the next level up (for example, "Heavy" instead of "Moderate"). If a worker is noticeably heavier than average, it's a good idea to select the next-higher activity level in this tool to be safe.</p>
 
     <h3>Body Weight &amp; Metabolic Heat Production</h3>
     <p>NIOSH activity categories (Light, Moderate, Heavy, Very Heavy) are defined in absolute kilocalories per hour — not relative to body size. The underlying conversion is straightforward:</p>
@@ -379,55 +379,55 @@ function ensureHealthModal() {
     <p style="font-size:12px;color:var(--subtext);margin-top:4px">MET values and reference weight: Ainsworth et al. (2024). <em>2024 Adult Compendium of Physical Activities</em>. Activity level assignments: NIOSH (2016), Table 5-1.</p>
 
     <h3>Diabetes</h3>
-    <p>Autonomic neuropathy — a common complication — can impair the sweating response, reducing evaporative cooling efficiency. Cardiovascular complications further limit circulatory heat transport. Blood glucose instability during heat stress can compound the physiological burden.</p>
+    <p>Diabetes can damage the nerves that control sweating, which makes it harder for the body to cool down. It can also affect the heart and blood vessels. On top of that, blood sugar can swing up or down during hot, physically demanding work, which adds to the risk.</p>
 
-    <h3>Chronic Kidney Disease</h3>
-    <p>Impaired renal function limits the body's ability to regulate electrolytes lost through sweating and to maintain fluid balance. Dehydration — which occurs rapidly under heat stress — is more dangerous and harder to correct in workers with CKD.</p>
+    <h3>Kidney Problems</h3>
+    <p>The kidneys help keep the body's fluids and salts balanced. When someone has chronic kidney disease, they get dehydrated faster and have a harder time recovering from it. Heat makes dehydration happen quickly, which is more serious for workers with kidney problems.</p>
 
-    <h3>Prior Heat Illness</h3>
-    <p>A history of heat stroke markedly increases susceptibility to future heat illness. Heat stroke can cause lasting damage to the hypothalamic temperature regulation center. Workers who have experienced heat stroke should be managed as unacclimatized even when returning to familiar conditions, and the return-to-work ramp should be supervised.</p>
+    <h3>Had Heat Stroke Before</h3>
+    <p>Heat stroke can permanently affect the part of the brain that controls body temperature. A worker who has had heat stroke in the past is at much higher risk of it happening again — even in conditions that wouldn't affect most people. They should be treated as if they're brand new to working in the heat, and their return to hot work should be gradual and supervised.</p>
 
-    <h3>Age: 55 and Older</h3>
-    <p>Cardiovascular reserve declines with age, reducing the body's ability to increase cardiac output under heat stress. Sweat gland function and thirst response also diminish. Older workers are disproportionately represented in heat-related fatality data across all industries.</p>
+    <h3>Age 55 or Older</h3>
+    <p>As people get older, the heart doesn't pump as strongly during heat stress, sweating slows down, and the sense of thirst decreases — so workers may not realize they're dehydrating. Older workers make up a disproportionate share of heat-related deaths across all industries. Take extra care.</p>
 
     <h3>Pregnancy</h3>
-    <p>Metabolic rate is elevated throughout pregnancy, increasing baseline heat production. Core body temperature rises faster during exertion, and fluid volume demands are higher. NIOSH recommends particular caution for pregnant workers in hot environments, especially during the first trimester.</p>
+    <p>Pregnant workers produce more body heat and heat up faster during exertion. They also need more fluids. NIOSH recommends extra caution for pregnant workers in hot environments, especially in the first three months.</p>
 
-    <h3>Medications That Affect Heat Stress</h3>
-    <p>Several drug classes directly impair the body's heat defense mechanisms. Workers taking any of the following should be considered at elevated risk:</p>
+    <h3>Certain Medications</h3>
+    <p>Some common prescription drugs make it much harder for the body to handle heat. Workers on any of the following should be treated as higher risk — supervisors don't need to know what someone takes, just that these types of medications exist and matter:</p>
     <div class="health-factor-grid">
       <div class="health-factor-card">
-        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Diuretics</div>
-        <p>Promote fluid and electrolyte loss, accelerating dehydration. Common for hypertension and heart failure management.</p>
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Water pills (diuretics)</div>
+        <p>These remove fluid from the body — which is useful for blood pressure and heart conditions, but speeds up dehydration in the heat. Common brand names include Lasix and hydrochlorothiazide.</p>
       </div>
       <div class="health-factor-card">
-        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Anticholinergics</div>
-        <p>Block the nerve signals that trigger sweating, severely impairing evaporative cooling. Found in allergy medications, bladder drugs, and some antidepressants (NIOSH, 2016, Ch. 7).</p>
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Allergy and bladder medications (anticholinergics)</div>
+        <p>These can block the ability to sweat — which is the main way the body cools itself. Found in some antihistamines, bladder medications, and certain antidepressants.</p>
       </div>
       <div class="health-factor-card">
-        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Beta-blockers</div>
-        <p>Limit the heart rate increase needed to pump blood to the skin for cooling. Also mask tachycardia as an early warning sign of heat strain (NIOSH, 2016, Ch. 7).</p>
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Beta-blockers (heart/blood pressure pills)</div>
+        <p>These keep the heart from beating faster — which is normally a sign the body is overheating. Workers on beta-blockers may not show the usual early warning signs of heat strain.</p>
       </div>
       <div class="health-factor-card">
-        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Antipsychotics &amp; some antidepressants</div>
-        <p>Can impair hypothalamic temperature regulation and reduce sweating. Associated with heat stroke in multiple occupational and clinical settings (NIOSH, 2016, Ch. 7).</p>
+        <div class="health-factor-card-title"><span class="hf-icon">💊</span> Antipsychotics and some antidepressants</div>
+        <p>These can reduce sweating and interfere with how the brain regulates temperature. They have been linked to heat stroke in both work and medical settings.</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Stimulants (including some ADHD medications)</div>
-        <p>Increase metabolic heat production and can raise baseline heart rate, reducing cardiovascular reserve available for heat dissipation (NIOSH, 2016, Ch. 7).</p>
+        <p>Stimulants raise the body's baseline heart rate and generate extra heat. This leaves less room for the body to respond when conditions get hot.</p>
       </div>
       <div class="health-factor-card">
         <div class="health-factor-card-title"><span class="hf-icon">💊</span> Thyroid medications</div>
-        <p>Hyperthyroid states — including over-supplementation — elevate metabolic rate and baseline body temperature, compounding heat load (NIOSH, 2016, Ch. 7).</p>
+        <p>Too much thyroid medication speeds up metabolism and raises body temperature — adding to the heat load before work even begins.</p>
       </div>
     </div>
-    <p style="font-size:12px;color:var(--subtext);margin-top:4px">Workers should not be required to disclose specific medications. Supervisors and safety personnel should be aware that common prescribed drugs significantly alter heat tolerance and plan accordingly.</p>
+    <p style="font-size:12px;color:var(--subtext);margin-top:4px"><strong>Note for supervisors:</strong> Workers don't have to tell you what medications they take. What matters is knowing that common prescriptions can significantly reduce heat tolerance — so plan accordingly and watch everyone carefully.</p>
 
-    <h3>Alcohol &amp; Substance Use</h3>
-    <p>Alcohol is a diuretic and vasodilator that disrupts the body's normal heat regulation. Working in heat after recent alcohol use increases dehydration risk and impairs judgment about early warning signs. Some stimulant substances substantially elevate core temperature independently of ambient heat.</p>
+    <h3>Recent Alcohol Use</h3>
+    <p>Alcohol causes the body to lose more fluid, which speeds up dehydration. It also disrupts the body's ability to regulate temperature and can impair a person's judgment about whether they're feeling okay. Working in heat after drinking — even the night before — increases risk.</p>
 
-    <h3>Inadequate Sleep &amp; Fatigue</h3>
-    <p>Sleep deprivation impairs cardiovascular efficiency and the perception of thermal discomfort. Fatigued workers are less likely to recognize and report early heat strain symptoms and may not self-pace appropriately during heavy exertion in heat.</p>
+    <h3>Poor Sleep or Exhaustion</h3>
+    <p>When someone is sleep-deprived or already worn out, the body doesn't handle heat as well, and the person is less likely to notice or report that something feels off. Fatigued workers may push through warning signs they would otherwise catch. Factor in fatigue when assigning heavy outdoor work.</p>
 
     <hr class="divider" style="margin:20px 0">
     <p style="font-size:12px;color:var(--subtext)"><strong>Source:</strong> National Institute for Occupational Safety and Health. (2016). <em>NIOSH criteria for a recommended standard: Occupational exposure to heat and hot environments</em> (DHHS [NIOSH] Publication No. 2016-106), Chapter 7. U.S. Department of Health and Human Services.</p>

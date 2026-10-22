@@ -81,4 +81,11 @@ Redirect 301 /work-rest-cycles/app https://workerpowerforhealth.com/work-rest-cy
   Header set X-Content-Type-Options "nosniff"
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # mockup.html embeds other pages on the same origin in an iframe.
+  # Use "always" to override any server-level X-Frame-Options on these pages.
+  <FilesMatch "^(index|activity|wbgt|heat-index|temp-humidity|clothing|acclimatization|methodology)\.html$">
+    Header always unset X-Frame-Options
+    Header always set Content-Security-Policy "frame-ancestors 'self'"
+  </FilesMatch>
 </IfModule>
