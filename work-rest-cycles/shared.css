@@ -678,14 +678,17 @@
   .wrc-banner-strip {
     background: #001E62;
     border-bottom: 1px solid rgba(255,255,255,0.12);
+    overflow: hidden;             /* never taller than its inner row */
   }
   .wrc-banner-strip-inner {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 3px 20px;
+    padding: 0 20px;
     gap: 12px;
-    min-height: 0;
+    height: 36px;                 /* fixed — never grows on wide screens */
+    flex-wrap: nowrap;
+    overflow: hidden;
   }
   .wrc-strip-label {
     font-size: 12px;
@@ -2094,7 +2097,7 @@
 
   /* ── Banner strip: compact on very narrow screens ── */
   @media (max-width: 480px) {
-    .wrc-banner-strip-inner { gap: 4px; padding: 4px 8px; }
+    .wrc-banner-strip-inner { gap: 4px; padding: 0 8px; height: 32px; }
     .strip-btn { font-size: 11px; padding: 3px 10px; }
   }
 
