@@ -42,11 +42,16 @@ body { background: #F6F3EC !important; }
   width: 100%;
 }
 @media (max-width: 600px) {
+  /* Release inner scroll — let the page body scroll instead.
+     Nested overflow-y:auto swallows touch events on card 4 (Thermometer). */
+  .ls5-meas-wrap { overflow: visible; }
   .ls5-meas-cards {
     grid-template-columns: 1fr;
-    grid-template-rows: unset;      /* don't constrain; let all 4 cards size naturally */
-    grid-auto-rows: minmax(140px, auto);
-    overflow-y: auto;
+    grid-template-rows: unset;
+    grid-auto-rows: minmax(150px, auto);
+    overflow: visible;
+    /* cards need bottom clearance for mobile nav bar */
+    padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -194,12 +199,12 @@ body { background: #F6F3EC !important; }
 .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active) {
   display: none;
 }
-/* On mobile, 1fr has no definite height to resolve against (parent is height:auto).
-   Give the active card a concrete minimum so the X button and form stay visible. */
-@media (max-width: 600px) {
+/* On mobile/tablet (≤768px) #ls4 is height:auto (shared.css), so 1fr rows
+   collapse. Override with a concrete minmax so the active card stays tall. */
+@media (max-width: 768px) {
   .ls5-meas-cards.ls5-has-active {
-    grid-template-rows: unset;
-    grid-auto-rows: minmax(320px, auto);
+    grid-template-rows: minmax(480px, auto);
+    grid-auto-rows: minmax(480px, auto);
   }
 }
 
@@ -1582,6 +1587,16 @@ body { background: #F6F3EC !important; }
         document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
         if (!wasFlipped) this.classList.add('ls5-touch-flip');
       });
+    });
+
+    // Dismiss touch-flip AND deactivate active card when tapping anywhere outside all cards.
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.ls5-meas-card')) {
+        document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+        if (document.querySelector('.ls5-meas-cards.ls5-has-active')) {
+          deactivateCard();
+        }
+      }
     });
   });
 </script>
