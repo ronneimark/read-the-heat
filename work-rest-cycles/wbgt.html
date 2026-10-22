@@ -1339,16 +1339,20 @@ main { padding: 0; max-width: none; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    // Binary search: largest font where no cell overflows width or height
+    // Cap hi by cell height before the search so font never overflows vertically.
+    // line-height on .acc-cell is 1.15; single-line content height = fontSize * 1.15.
+    const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
     let lo = 70, hi = 340;
+    if (rangeCells.length) {
+      const cellH = rangeCells[0].clientHeight;
+      hi = Math.min(hi, Math.floor(cellH / 1.15 * 10));
+    }
+    // Binary search: largest font that fits width
     while (lo < hi) {
       const mid = Math.floor((lo + hi + 1) / 2);
       const fs  = (mid / 10) + 'px';
       cells.forEach(c => c.style.fontSize = fs);
-      const overflows = cells.some(c =>
-        c.scrollWidth > c.clientWidth + 1 || c.scrollHeight > c.clientHeight + 1
-      );
-      if (overflows) hi = mid - 1; else lo = mid;
+      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1; else lo = mid;
     }
     // Width penalty for comfortable fit
     const finalTenths = Math.max(70, lo - 70); // ~4px smaller than max-fit
