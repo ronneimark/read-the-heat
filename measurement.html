@@ -798,7 +798,7 @@ body { background: #F6F3EC !important; }
       <div class="ls5-meas-cards">
 
         <!-- ── WBGT ── -->
-        <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt">
+        <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
           <div class="ls5-meas-front">
             <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
             <div class="ls5-meas-photo-area" style="max-height:170px">
@@ -899,7 +899,7 @@ body { background: #F6F3EC !important; }
         </div><!-- /wbgt card -->
 
         <!-- ── Temperature + Humidity ── -->
-        <div class="ls5-meas-card ls5-trh" data-instrument="trh">
+        <div class="ls5-meas-card ls5-trh" data-instrument="trh" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
           <div class="ls5-meas-front">
             <div class="ls5-meas-title">Temperature + Humidity</div>
             <div class="ls5-meas-photo-area">
@@ -960,7 +960,7 @@ body { background: #F6F3EC !important; }
         </div><!-- /trh card -->
 
         <!-- ── Heat Index ── -->
-        <div class="ls5-meas-card ls5-hi" data-instrument="hi">
+        <div class="ls5-meas-card ls5-hi" data-instrument="hi" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
           <div class="ls5-meas-front">
             <div class="ls5-meas-title">Heat Index</div>
             <div class="ls5-meas-photo-area">
@@ -1003,7 +1003,7 @@ body { background: #F6F3EC !important; }
         </div><!-- /hi card -->
 
         <!-- ── Thermometer Only ── -->
-        <div class="ls5-meas-card ls5-dbt" data-instrument="dbt">
+        <div class="ls5-meas-card ls5-dbt" data-instrument="dbt" onclick="if(!event.target.closest('.ls5-meas-back,.ls5-meas-entry'))activateCard(this.dataset.instrument,this)">
           <div class="ls5-meas-front">
             <div class="ls5-meas-title">Thermometer Only</div>
             <div class="ls5-meas-photo-area" style="font-size:clamp(60px,12vh,110px);line-height:1;">🌡️</div>
@@ -1580,28 +1580,9 @@ body { background: #F6F3EC !important; }
     // Single tap on any card front → activateCard directly.
     // Skips the back-face intermediate step which is unreliable on Safari iOS:
     // after scrolling to card 4, the second tap (Select button) was often eaten
-    // by Safari's momentum-scroll protection.
-    //
-    // Desktop: hover CSS already shows the back face; inline onclick on the
-    // Select button calls activateCard. No JS needed for desktop card selection.
-    //
-    // Scroll detection: compare touchstart Y to touchend Y; ignore if Δ > 10px.
-    // passive:false on touchend allows e.preventDefault() which suppresses the
-    // synthetic click (prevents double-activation if click also bubbles).
-    document.querySelectorAll('.ls5-meas-card').forEach(card => {
-      let _tapY = 0;
-      card.addEventListener('touchstart', function(e) {
-        _tapY = e.touches[0].clientY;
-      }, { passive: true });
-
-      card.addEventListener('touchend', function(e) {
-        if (this.classList.contains('ls5-meas-active')) return; // already active
-        if (e.target.closest('.ls5-meas-entry')) return;        // inside entry form
-        if (Math.abs(e.changedTouches[0].clientY - _tapY) > 10) return; // was a scroll
-        e.preventDefault(); // suppress synthetic click
-        activateCard(this.dataset.instrument, this);
-      }, { passive: false });
-    });
+    // Card activation: inline onclick on each .ls5-meas-card div handles activation
+    // (Safari fires onclick on any element that has it as an attribute, unconditionally).
+    // The guard in each onclick skips clicks inside .ls5-meas-back or .ls5-meas-entry.
 
     // Deactivate active card when tapping anywhere outside all cards.
     // Use touchstart (fires immediately, no 300ms delay, works on all elements in Safari).
