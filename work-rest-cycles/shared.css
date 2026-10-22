@@ -1221,13 +1221,13 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 10px 12px 12px;
+    padding: clamp(4px, 1vh, 10px) 12px clamp(4px, 1vh, 12px);
     overflow: hidden;
   }
   .ls3-acclim-cards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
+    gap: clamp(6px, 1.2vh, 16px);
     flex: 1;
     min-height: 0;
   }
@@ -1235,20 +1235,22 @@
     background: #FEF8E0;
     border: 2px solid var(--border);
     border-radius: 12px;
-    padding: 24px 24px 20px;
+    padding: clamp(12px, 2.5vh, 24px) 24px clamp(8px, 1.8vh, 20px);
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: clamp(4px, 0.8vh, 10px);
     overflow: hidden;
+    cursor: pointer;
+    user-select: none;
   }
   .ls3-acclim-yes    { border-top: 4px solid #00966C; }
   .ls3-acclim-no     { border-top: 4px solid #E65100; }
   .ls3-acclim-return { border-top: 4px solid #B45309; }
-  .ls3-acclim-icon { font-size: 28px; line-height: 1; }
+  .ls3-acclim-icon { font-size: clamp(20px, 3vh, 28px); line-height: 1; }
   .ls3-acclim-title {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 22px;
+    font-size: clamp(16px, 2.5vh, 22px);
     font-weight: 800;
     color: var(--navy);
   }
@@ -1257,37 +1259,31 @@
     color: var(--subtext);
     line-height: 1.6;
   }
+  .ls3-acclim-front {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls3-acclim-back {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .ls3-acclim-card:hover .ls3-acclim-front { display: none; }
+  .ls3-acclim-card:hover .ls3-acclim-back  { display: flex; }
+  .ls3-acclim-card:active { transform: translateY(2px); }
+  .ls3-acclim-card:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
   .ls3-acclim-bullets {
     font-size: 15px;
     color: var(--subtext);
     line-height: 1.65;
     padding-left: 18px;
     margin: 0;
-    margin-top: -10px; /* cancel card gap so bullets sit flush under desc */
-    flex: 1; /* push CTA to bottom */
   }
-  .ls3-acclim-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 700;
-    margin-top: auto;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: 2px solid currentColor;
-    background: transparent;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    width: 100%;
-  }
-  .ls3-acclim-yes    .ls3-acclim-cta { color: #005540; }
-  .ls3-acclim-no     .ls3-acclim-cta { color: #7B2500; }
-  .ls3-acclim-return .ls3-acclim-cta { color: #92400E; }
-  .ls3-acclim-yes    .ls3-acclim-cta:hover { background: #00966C; color: #fff; border-color: #00966C; }
-  .ls3-acclim-no     .ls3-acclim-cta:hover { background: #E65100; color: #fff; border-color: #E65100; }
-  .ls3-acclim-return .ls3-acclim-cta:hover { background: #B45309; color: #fff; border-color: #B45309; }
   @media (max-width: 600px) {
     .ls3-acclim-cards { grid-template-columns: 1fr; overflow-y: auto; }
   }
