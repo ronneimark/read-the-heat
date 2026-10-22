@@ -83,6 +83,12 @@ main { padding: 0; max-width: none; }
   background: rgba(255,255,255,0.7);
   color: var(--navy, #1A2A3A);
 }
+/* ── Compact tab bar on wide+short (landscape) screens ── */
+@media (min-width: 769px) and (max-height: 620px) {
+  .acclim-tab-btn { padding: 7px 20px 6px; }
+  .acclim-tab-btn-title { font-size: 13px; }
+  .acclim-tab-btn-sub { display: none; }
+}
 
 /* ── WBGT-specific result overrides (layout base: shared.css .result-wrap / .result-grid) ── */
 
@@ -268,7 +274,7 @@ main { padding: 0; max-width: none; }
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   display: grid;
   grid-template-columns: 22% repeat(4, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: repeat(10, minmax(0, 1fr));
   flex: 1;
   min-height: 0;
   border-radius: 0;
@@ -400,9 +406,9 @@ main { padding: 0; max-width: none; }
   font-weight: 600;
   color: #2E3A4A;
   text-align: center;
-  padding: 6px 14px;
-  line-height: 1.45;
-  margin: 6px 10px 10px;
+  padding: 3px 14px;
+  line-height: 1.4;
+  margin: 4px 10px 6px;
 }
 
 /* ── Unacclimatized 5-tab shell ── */
@@ -1333,18 +1339,25 @@ main { padding: 0; max-width: none; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
-    // Binary search in tenths of a px between 7 px and 42 px.
-    // white-space:nowrap is set in CSS, so only width overflow matters.
+    // Cap hi so font * line-height never exceeds the cell's content area (clientHeight minus padding).
+    const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
     let lo = 70, hi = 340;
+    if (rangeCells.length) {
+      const rc = rangeCells[0];
+      const cs = getComputedStyle(rc);
+      const contentH = rc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      hi = Math.min(hi, Math.floor(contentH / 1.15 * 10));
+    }
+    // Binary search: largest font that fits width
     while (lo < hi) {
       const mid = Math.floor((lo + hi + 1) / 2);
       const fs  = (mid / 10) + 'px';
       cells.forEach(c => c.style.fontSize = fs);
-      const overflows = cells.some(c => c.scrollWidth > c.clientWidth + 1);
-      if (overflows) hi = mid - 1; else lo = mid;
+      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1; else lo = mid;
     }
-    const finalSize = Math.max(70, lo - 70) / 10 + 'px'; // ~4px smaller than max-fit
-    cells.forEach(c => c.style.fontSize = finalSize);
+    // Width penalty for comfortable fit
+    const finalTenths = Math.max(70, lo - 70); // ~4px smaller than max-fit
+    cells.forEach(c => c.style.fontSize = (finalTenths / 10) + 'px');
   }
 
   // ── Size the result card to fill viewport below the header ──
