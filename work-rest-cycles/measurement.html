@@ -1578,26 +1578,38 @@ body { background: #F6F3EC !important; }
 
     // Touch-friendly card flip: tap a card's front face to reveal the back face.
     // :hover alone is unreliable on touch devices (not sticky on Android Chrome).
+    //
+    // Safari-specific: even with cursor:pointer, older iOS Safari may not fire 'click'
+    // on plain divs. We listen to 'touchend' directly on the cards AND 'click' (for
+    // desktop/mouse). A timestamp guard prevents the click from double-firing ~300ms
+    // after touchend on iOS. stopPropagation keeps the document-level dismiss from
+    // also seeing the same card tap.
+    let _lastCardTapTs = 0;
+    function _handleCardTap(e) {
+      const now = Date.now();
+      if (now - _lastCardTapTs < 500) return; // skip if touchend already handled this tap
+      _lastCardTapTs = now;
+      if (this.classList.contains('ls5-meas-active')) return; // entry face showing — ignore
+      if (e.target.closest('.ls5-meas-back'))  return; // on back face; let buttons handle it
+      if (e.target.closest('.ls5-meas-entry')) return;
+      const wasFlipped = this.classList.contains('ls5-touch-flip');
+      document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+      if (!wasFlipped) this.classList.add('ls5-touch-flip');
+      e.stopPropagation(); // prevent document dismiss handler from firing on the same event
+    }
     document.querySelectorAll('.ls5-meas-card').forEach(card => {
-      card.addEventListener('click', function(e) {
-        if (this.classList.contains('ls5-meas-active')) return; // entry face is showing — ignore
-        if (e.target.closest('.ls5-meas-back'))  return; // already on back; let buttons handle it
-        if (e.target.closest('.ls5-meas-entry')) return; // shouldn't happen, but guard anyway
-        // Flip this card; un-flip all others
-        const wasFlipped = this.classList.contains('ls5-touch-flip');
-        document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
-        if (!wasFlipped) this.classList.add('ls5-touch-flip');
-      });
+      card.addEventListener('touchend', _handleCardTap);
+      card.addEventListener('click',    _handleCardTap);
     });
 
     // Dismiss touch-flip AND deactivate active card when tapping anywhere outside all cards.
-    // iOS Safari doesn't fire 'click' on non-interactive elements (divs without cursor:pointer
-    // or onclick), so we listen for both 'click' and 'touchend' and guard against double-firing.
+    // iOS Safari doesn't fire 'click' on non-interactive background elements, so we use
+    // both 'click' and 'touchend'. Guard prevents double-firing when both events fire.
     let _lastDismissTs = 0;
     function _dismissOutside(e) {
       const now = Date.now();
       if (now - _lastDismissTs < 400) return; // de-dupe click fired after touchend
-      if (e.target.closest('.ls5-meas-card')) return;
+      if (e.target.closest('.ls5-meas-card')) return; // tap was on a card — ignore
       _lastDismissTs = now;
       document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
       if (document.querySelector('.ls5-meas-cards.ls5-has-active')) {
