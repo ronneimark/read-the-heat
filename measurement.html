@@ -891,24 +891,26 @@ body { background: #F6F3EC !important; }
             <button class="ls5-entry-close-btn" onclick="deactivateCard()" type="button" aria-label="Change method">&times;</button>
             <div class="ls5-meas-title">Temperature + Humidity</div>
             <div class="ls5-entry-fields" id="trh-entry-fields">
-              <div class="meas-field-group">
-                <label class="meas-field-label" for="trh-temp">Air Temperature</label>
-                <div class="meas-input-row">
-                  <input class="meas-input" id="trh-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
-                  <div class="meas-toggle">
-                    <button id="trh-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
-                    <button id="trh-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div class="meas-field-group" style="flex:1;min-width:0;">
+                  <label class="meas-field-label" for="trh-temp">Air Temperature</label>
+                  <div class="meas-input-row">
+                    <input class="meas-input" id="trh-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+                    <div class="meas-toggle">
+                      <button id="trh-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
+                      <button id="trh-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
+                    </div>
                   </div>
+                  <div class="meas-error-msg" id="trh-temp-error">Please enter a temperature.</div>
                 </div>
-                <div class="meas-error-msg" id="trh-temp-error">Please enter a temperature.</div>
-              </div>
-              <div class="meas-field-group">
-                <label class="meas-field-label" for="trh-rh">Relative Humidity</label>
-                <div class="meas-input-row">
-                  <input class="meas-input" id="trh-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off">
-                  <span class="meas-unit-suffix">%</span>
+                <div class="meas-field-group" style="flex:1;min-width:0;">
+                  <label class="meas-field-label" for="trh-rh">Relative Humidity</label>
+                  <div class="meas-input-row">
+                    <input class="meas-input" id="trh-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off">
+                    <span class="meas-unit-suffix">%</span>
+                  </div>
+                  <div class="meas-error-msg" id="trh-rh-error">Please enter a value between 0 and 100.</div>
                 </div>
-                <div class="meas-error-msg" id="trh-rh-error">Please enter a value between 0 and 100.</div>
               </div>
             </div>
             <div class="ls5-entry-actions">
