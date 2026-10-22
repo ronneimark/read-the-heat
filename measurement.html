@@ -78,6 +78,36 @@ body { background: #F6F3EC !important; }
     margin: 0;
     width: 100%;
   }
+
+  /* ── Desktop active state: card stays in-place, grid stays 2×2 ── */
+  .ls5-meas-cards.ls5-has-active {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  /* Non-active cards: visible but dimmed, front face locked (no hover flip) */
+  .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active) {
+    display: flex;
+    opacity: 0.45;
+  }
+  .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active) .ls5-meas-front {
+    display: flex !important;
+  }
+  .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active):hover .ls5-meas-front {
+    display: flex !important;
+  }
+  .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active) .ls5-meas-back,
+  .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active):hover .ls5-meas-back {
+    display: none !important;
+  }
+  /* WBGT: span full left column when active */
+  .ls5-meas-cards.ls5-has-active .ls5-wbgt.ls5-meas-active {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  /* Hide Heat Index when WBGT is spanning its row */
+  .ls5-meas-cards.ls5-has-active:has(.ls5-wbgt.ls5-meas-active) .ls5-hi {
+    display: none !important;
+  }
 }
 
 /* ── Cards ── */
