@@ -1247,22 +1247,23 @@
   .ls3-acclim-yes    { border-top: 4px solid #00966C; }
   .ls3-acclim-no     { border-top: 4px solid #E65100; }
   .ls3-acclim-return { border-top: 4px solid #B45309; }
-  .ls3-acclim-icon { font-size: clamp(20px, 3vh, 28px); line-height: 1; }
+  .ls3-acclim-icon { font-size: clamp(22px, 4vh, 36px); line-height: 1; }
   .ls3-acclim-title {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: clamp(16px, 2.5vh, 22px);
+    font-size: clamp(18px, 3vh, 26px);
     font-weight: 800;
     color: var(--navy);
   }
   .ls3-acclim-desc {
-    font-size: 14px;
+    font-size: clamp(14px, 2vh, 20px);
     color: var(--subtext);
-    line-height: 1.6;
+    line-height: 1.5;
   }
   .ls3-acclim-front {
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     min-height: 0;
     overflow: hidden;
   }
