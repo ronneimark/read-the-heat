@@ -52,7 +52,8 @@ body { background: #F6F3EC !important; }
   .ls5-meas-wrap {
     flex-direction: row;
     align-items: stretch;
-    padding: clamp(4px, 0.6vh, 7px) 12px clamp(4px, 0.6vh, 7px) 0;
+    justify-content: center;
+    padding: clamp(4px, 0.6vh, 7px) 12px clamp(4px, 0.6vh, 7px);
   }
   .ls5-side-label {
     display: flex;
@@ -61,21 +62,21 @@ body { background: #F6F3EC !important; }
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: clamp(24px, 2.8vw, 36px);
+    width: clamp(28px, 3vw, 40px);
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: clamp(8px, 1vh, 11px);
+    font-size: clamp(11px, 1.4vh, 15px);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--navy);
-    opacity: 0.45;
+    color: #111;
     user-select: none;
     padding: 8px 0;
   }
   .ls5-meas-cards {
     height: 100%;
+    flex: 0 1 960px;
     margin: 0;
-    max-width: 960px;
+    width: 100%;
   }
 }
 
