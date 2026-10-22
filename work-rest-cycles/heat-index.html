@@ -219,6 +219,12 @@ main { padding: 0; max-width: none; }
 .acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
 .acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
 .acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
+/* ── Compact tab bar on wide+short (landscape) screens ── */
+@media (min-width: 769px) and (max-height: 620px) {
+  .acclim-tab-btn { padding: 7px 20px 6px; }
+  .acclim-tab-btn-title { font-size: 13px; }
+  .acclim-tab-btn-sub { display: none; }
+}
 
 /* ── Result tab — 2-column viewport-fit layout ── */
 /* ── Heat-index specific (layout base: shared.css .result-wrap / .result-grid) ── */
@@ -508,7 +514,7 @@ main { padding: 0; max-width: none; }
   flex: 1;
   display: grid;
   grid-template-columns: 22% repeat(4, 1fr);
-  grid-template-rows: repeat(7, 1fr);
+  grid-template-rows: repeat(7, minmax(0, 1fr));
   min-height: 0;
   position: relative;
   border-radius: 0;
@@ -613,9 +619,9 @@ main { padding: 0; max-width: none; }
   font-weight: 600;
   color: #2E3A4A;
   text-align: center;
-  padding: 6px 14px;
-  line-height: 1.45;
-  margin: 6px 10px 10px;
+  padding: 3px 14px;
+  line-height: 1.4;
+  margin: 4px 10px 6px;
 }
 
 /* ── Notes tabs ── */
@@ -1802,15 +1808,33 @@ main { padding: 0; max-width: none; }
     if (!gridEl) return;
     const cells = [...gridEl.querySelectorAll('.acc-hdr, .acc-range')];
     if (!cells.length) return;
+    const rangeCells = cells.filter(c => c.classList.contains('acc-range'));
+    const hdrCells   = cells.filter(c => c.classList.contains('acc-hdr'));
     let lo = 70, hi = 340;
+    // Cap by range cell height (single-line, line-height 1.15)
+    if (rangeCells.length) {
+      const rc = rangeCells[0];
+      const cs = getComputedStyle(rc);
+      const contentH = rc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      hi = Math.min(hi, Math.floor(contentH / 1.15 * 10));
+    }
+    // Cap by header cell height (2-line with flex-direction:column, line-height 1.3)
+    if (hdrCells.length) {
+      const hc = hdrCells[0];
+      const cs = getComputedStyle(hc);
+      const contentH = hc.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      hi = Math.min(hi, Math.floor(contentH / (2 * 1.3) * 10));
+    }
+    // Binary search: largest font that fits width
     while (lo < hi) {
       const mid = Math.floor((lo + hi + 1) / 2);
       const fs  = (mid / 10) + 'px';
       cells.forEach(c => c.style.fontSize = fs);
-      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1;
-      else lo = mid;
+      if (cells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1; else lo = mid;
     }
-    cells.forEach(c => c.style.fontSize = (Math.max(70, lo - 10) / 10) + 'px');
+    // Width penalty for comfortable fit
+    const finalTenths = Math.max(70, lo - 10);
+    cells.forEach(c => c.style.fontSize = (finalTenths / 10) + 'px');
   }
 
   function sizeHICard() {
