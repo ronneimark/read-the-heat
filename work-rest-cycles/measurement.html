@@ -15,30 +15,186 @@
 <link rel="stylesheet" href="shared.css">
 <style>
 body { background: #F6F3EC !important; }
-.method-card { background: #FEF8E0 !important; }
 
-/* ── Full-page colored borders for the 2×2 card grid ── */
-.method-cards-full {
-  gap: 0 !important;
-  background: transparent !important;
-  border-top: 3px solid #001E62 !important;
-  position: relative !important;
+/* ── Layout: fill viewport like acclim/clothing ── */
+#ls4 {
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
 }
-/* Measured dividers — positioned by JS to avoid percentage-guessing */
-.grid-div-h, .grid-div-v {
-  position: absolute;
-  pointer-events: none;
+.ls5-meas-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(4px, 1vh, 10px) 12px clamp(4px, 1vh, 12px);
+  overflow: hidden;
 }
-.grid-div-h {
-  height: 3px;
-  left: 0; right: 0;
-  background: #D50032;
-  z-index: 2;
+.ls5-meas-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(6px, 1.2vh, 16px);
+  flex: 1;
+  min-height: 0;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
 }
-.grid-div-v {
-  width: 6px;
-  background: #00966C;
-  z-index: 2;
+@media (max-width: 600px) {
+  .ls5-meas-cards { grid-template-columns: 1fr; overflow-y: auto; }
+}
+
+/* ── Cards ── */
+.ls5-meas-card {
+  background: #FEF8E0;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.ls5-wbgt { border-top: 4px solid #001E62; }
+.ls5-trh  { border-top: 4px solid #1a3a8f; }
+.ls5-hi   { border-top: 4px solid #E05C2C; }
+.ls5-dbt  { border-top: 4px solid #6B7280; }
+
+/* ── Flip faces ── */
+.ls5-meas-front {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(8px, 1.5vh, 16px) clamp(10px, 1.8vw, 18px);
+  gap: clamp(4px, 0.8vh, 10px);
+  overflow: hidden;
+  min-height: 0;
+}
+.ls5-meas-back {
+  flex: 1;
+  display: none;
+  overflow: hidden;
+  min-height: 0;
+}
+.ls5-meas-card:hover .ls5-meas-front { display: none; }
+.ls5-meas-card:hover .ls5-meas-back  { display: flex; }
+
+/* ── Title (appears on both sides) ── */
+.ls5-meas-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(14px, 2.2vh, 21px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.15;
+  flex-shrink: 0;
+}
+.ls5-meas-title .ls5-sub {
+  font-size: 0.75em;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* ── Front: photo fills remaining space ── */
+.ls5-meas-photo-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+/* The JS-inserted imgWrap needs to fill the photo area */
+.method-card-photo-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.method-card-photo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+  display: block;
+  cursor: zoom-in;
+}
+
+/* ── Back: split layout ── */
+.ls5-back-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(8px, 1.5vh, 16px) clamp(10px, 1.5vw, 16px);
+  gap: clamp(8px, 1.5vh, 16px);
+  min-width: 0;
+  overflow: hidden;
+}
+.ls5-back-right {
+  flex: 0 0 44%;
+  display: flex;
+  border-left: 2px solid var(--border);
+}
+
+/* Info button — navy 3D */
+.ls5-btn-info {
+  width: 100%;
+  padding: clamp(8px, 1.4vh, 14px) 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: clamp(12px, 1.8vh, 16px);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(180deg, #0a2e8a 0%, #001E62 100%);
+  box-shadow: 0 4px 0 #001040, 0 5px 10px rgba(0,10,60,0.28);
+  text-shadow: 0 1px 2px rgba(0,0,50,0.3);
+  transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.ls5-btn-info:hover { background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%); }
+.ls5-btn-info:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.28);
+}
+
+/* Select button — red, fills full height of right column */
+.ls5-btn-select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  font-weight: 900;
+  font-size: clamp(13px, 2vh, 19px);
+  cursor: pointer;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(180deg, #f0003a 0%, #D50032 100%);
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 2px rgba(80,0,0,0.28);
+  line-height: 1.2;
+  transition: background 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.ls5-btn-select:hover { background: linear-gradient(180deg, #ff1a4a 0%, #e8003a 100%); }
+.ls5-btn-select:active { opacity: 0.88; }
+.ls5-btn-select svg {
+  width: clamp(18px, 2.8vh, 28px);
+  height: clamp(18px, 2.8vh, 28px);
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* ── Measurement input modal ── */
@@ -48,8 +204,8 @@ body { background: #F6F3EC !important; }
   top: 0; left: 0; width: 100%; height: 100%;
   background: transparent;
   z-index: 9100;
-  align-items: stretch;   /* modal stretches full height of overlay */
-  justify-content: flex-end; /* modal hugs the right edge */
+  align-items: stretch;
+  justify-content: flex-end;
   padding: 0;
 }
 #meas-modal-overlay.open { display: flex; }
@@ -59,7 +215,7 @@ body { background: #F6F3EC !important; }
   width: 50%;
   height: 100%;
   border: none;
-  border-left: 1px solid var(--border); /* mid-card divider only; top/right/bottom are the quadrant border */
+  border-left: 1px solid var(--border);
   box-shadow: none;
   padding: 8px 14px 12px;
   display: flex;
@@ -257,78 +413,8 @@ body { background: #F6F3EC !important; }
   font-weight: 800;
   letter-spacing: -0.02em;
 }
-/* ── Card two-column layout ── */
-.method-card-full {
-  flex-direction: row !important;
-  align-items: stretch;
-  cursor: default !important;
-  min-height: 164px;
-  gap: 14px;
-}
-.card-left {
-  flex: 0 0 54%;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 0;
-}
-.card-left h3 { margin: 0; font-size: 22px !important; }
-.card-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  min-width: 0;
-}
 
-/* Method card photo */
-.method-card-photo {
-  width: 100%;
-  max-width: 100%;
-  max-height: 114px;
-  object-fit: contain;
-  border-radius: 5px;
-  display: block;
-  background: rgba(255,255,255,0.12);
-  cursor: zoom-in;
-}
-.card-left { position: relative; }
-
-/* 3D action buttons */
-.card-btn {
-  width: 100%;
-  padding: 11px 10px;
-  border-radius: 9px;
-  font-weight: 900;
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  color: #fff;
-  transform: translateY(0);
-  transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
-}
-/* Information — navy */
-.card-btn-info {
-  background: linear-gradient(180deg, #0a2e8a 0%, #001E62 100%);
-  box-shadow: 0 5px 0 #001040, 0 6px 12px rgba(0,10,60,0.35);
-  text-shadow: 0 1px 2px rgba(0,0,50,0.3);
-}
-.card-btn-info:hover { background: linear-gradient(180deg, #1a3e9a 0%, #002a80 100%); }
-.card-btn-info:active { box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.35); }
-/* Select — site red */
-.card-btn-select {
-  background: linear-gradient(180deg, #f0003a 0%, #D50032 100%);
-  box-shadow: 0 5px 0 #8a0020, 0 6px 12px rgba(80,0,20,0.35);
-  text-shadow: 0 1px 2px rgba(80,0,0,0.3);
-}
-.card-btn-select:hover { background: linear-gradient(180deg, #ff1a4a 0%, #e8003a 100%); }
-.card-btn-select:active { box-shadow: 0 1px 0 #8a0020, 0 2px 4px rgba(80,0,20,0.35); }
-.card-btn:active { transform: translateY(4px); }
-
-/* Photo expand — overlay zoom (counter-the-cough pattern) */
+/* Photo expand — overlay zoom */
 #photo-zoom-overlay {
   position: fixed;
   inset: 0;
@@ -388,61 +474,6 @@ body { background: #F6F3EC !important; }
 @keyframes enl-bob { 0%,100%{translate:0 0} 50%{translate:0 -4px} }
 .enl-hint.is-hidden { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .enl-hint { transition: opacity 0.2s ease; } .enl-hint.is-resting { animation: none; } }
-@media (max-width: 768px) {
-  /* Suppress "(WBGT)" subtitle in the title bar — name fits on one line */
-  .method-card-full[data-instrument="wbgt"] h3 span { display: none !important; }
-  .enl-hint {
-    font-size: 9px !important;
-    padding: 3px 7px !important;
-    left: 0 !important;
-    top: 100% !important;
-    bottom: auto !important;
-    margin-top: 3px !important;
-    transform: none !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 0 #001247, 0 3px 6px rgba(0,0,0,0.3) !important;
-    animation: none !important;
-  }
-
-  /* Scroll-connected: absolute positioning scrolls with the page instead of floating fixed.
-     z-index below #fixed-top (1000) so the modal slides under the sticky header on scroll. */
-  #meas-modal-overlay {
-    position: absolute;
-    z-index: 900;
-  }
-
-  /* Condense modal padding so more vertical space is available */
-  #meas-modal {
-    padding-top: 4px !important;
-    padding-bottom: 6px !important;
-  }
-  /* Tighten the sticky header bottom gap */
-  #meas-modal .modal-sticky-header {
-    margin-bottom: 6px !important;
-  }
-  /* Compress T+RH two-field layout to fit within card height without scrolling */
-  #meas-trh-fields .meas-field-group {
-    margin-bottom: 2px;
-  }
-  #meas-trh-fields .meas-field-label {
-    font-size: 9px;
-    margin-bottom: 2px;
-  }
-  #meas-trh-fields .meas-input {
-    height: 28px;
-    font-size: 14px;
-  }
-  #meas-trh-fields .meas-toggle button {
-    height: 28px;
-    font-size: 10px;
-    padding: 0 5px;
-  }
-  /* Trim submit button vertical padding */
-  .meas-submit-btn {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    font-size: 11px;
-  }
-}
 
 /* Device info modal */
 #device-info-overlay {
@@ -467,7 +498,7 @@ body { background: #F6F3EC !important; }
   box-shadow: 0 14px 48px rgba(0,10,60,0.22);
   display: flex;
   flex-direction: column;
-  color: #000; /* explicit black — 19.9:1 contrast on #FEF8E0, exceeds WCAG AAA */
+  color: #000;
 }
 #device-info-body h4 {
   font-size: 12px;
@@ -484,7 +515,6 @@ body { background: #F6F3EC !important; }
   margin: 0 0 6px;
 }
 #device-info-body strong { color: #000; }
-/* Formula block inside device info */
 .wbgt-formula-block {
   background: #001E62;
   color: #fff;
@@ -499,7 +529,7 @@ body { background: #F6F3EC !important; }
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  color: #A7B8D8; /* solid equivalent of #fff at ~0.65 opacity on #001E62 — 4.8:1 contrast */
+  color: #A7B8D8;
   margin-bottom: 2px;
 }
 .wbgt-formula-block .formula-eq {
@@ -510,7 +540,7 @@ body { background: #F6F3EC !important; }
 }
 .wbgt-formula-block .formula-note {
   font-size: 11px;
-  color: #C0CEDF; /* solid equivalent of #fff at ~0.75 opacity on #001E62 — 6.8:1 contrast */
+  color: #C0CEDF;
   margin-top: 2px;
   font-style: italic;
 }
@@ -538,14 +568,43 @@ body { background: #F6F3EC !important; }
   color: #78350F;
   text-align: left;
 }
+
 @media (max-width: 768px) {
-  /* Ensure bottom card clears the fixed nav bar.
-     Use padding-bottom on #ls4 (the scroll root) — margin can collapse. */
   #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
-  .method-card-full:last-child { padding-bottom: 16px !important; }
+
   /* On mobile: narrower modal, top-anchored, scrollable */
   #device-info-overlay { align-items: flex-start; }
   #device-info-modal { width: min(520px, 92vw); }
+
+  /* Modal scrolls with page on mobile */
+  #meas-modal-overlay {
+    position: absolute;
+    z-index: 900;
+  }
+  #meas-modal {
+    padding-top: 4px !important;
+    padding-bottom: 6px !important;
+  }
+  #meas-modal .modal-sticky-header {
+    margin-bottom: 6px !important;
+  }
+  #meas-trh-fields .meas-field-group { margin-bottom: 2px; }
+  #meas-trh-fields .meas-field-label { font-size: 9px; margin-bottom: 2px; }
+  #meas-trh-fields .meas-input { height: 28px; font-size: 14px; }
+  #meas-trh-fields .meas-toggle button { height: 28px; font-size: 10px; padding: 0 5px; }
+  .meas-submit-btn { padding-top: 4px !important; padding-bottom: 4px !important; font-size: 11px; }
+
+  .enl-hint {
+    font-size: 9px !important;
+    padding: 3px 7px !important;
+    left: 0 !important;
+    top: 100% !important;
+    bottom: auto !important;
+    margin-top: 3px !important;
+    transform: none !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 0 #001247, 0 3px 6px rgba(0,0,0,0.3) !important;
+    animation: none !important;
+  }
 }
 </style>
 <script src="./lang-link.js" defer></script>
@@ -564,7 +623,7 @@ body { background: #F6F3EC !important; }
       </div>
     </div>
       <div class="split-pill" role="group" aria-label="Methodology and Feedback"><button class="split-pill-half split-pill-left" onclick="openMethodologyModal()" title="Sources &amp; Methodology" aria-label="Sources and Methodology"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button><button class="split-pill-half split-pill-right" onclick="openFeedbackModal()" title="Comments &amp; Suggestions" aria-label="Comments and Suggestions"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
-  <span class="revision-date">Revised October 19, 2026</span>
+  <span class="revision-date">Revised October 21, 2026</span>
   </header>
   <div class="wrc-banner-strip">
     <div class="wrc-banner-strip-inner">
@@ -576,62 +635,102 @@ body { background: #F6F3EC !important; }
 
 <div id="launcher">
   <div class="launcher-screen active" id="ls4">
+    <div class="ls5-meas-wrap">
 
-    <h1 class="ls-heading">Choose a measurement method and select temperature</h1>
-
-    <div class="method-cards method-cards-full">
-
-      <div class="method-card method-card-full" data-instrument="wbgt" style="--card-accent:#001E62">
-        <div class="card-left">
-          <h3 style="line-height:1.15">Wet Bulb Globe Thermometer<br><span style="font-size:0.72em;font-weight:600;opacity:0.75;display:block;margin-top:-2px">(WBGT)</span></h3>
-          <img class="method-card-photo" src="images/wbgt-monitors.jpg" alt="WBGT Monitors">
-        </div>
-        <div class="card-right">
-          <button class="card-btn card-btn-info" onclick="showDeviceInfo('wbgt')" aria-label="WBGT Monitor information">Information</button>
-          <button class="card-btn card-btn-select" onclick="openMeasModal('wbgt',this.closest('.method-card'))" aria-label="Select WBGT Monitor">Select</button>
-        </div>
+      <div class="launcher-step">
+        <h1 class="ls-heading">Choose a measurement method and select temperature</h1>
       </div>
 
-      <div class="method-card method-card-full" data-instrument="trh" style="--card-accent:#1a3a8f">
-        <div class="card-left">
-          <h3>Temperature + Humidity</h3>
-          <img class="method-card-photo" src="images/trh-monitors.jpg" alt="Temperature &amp; Relative Humidity Monitors">
-        </div>
-        <div class="card-right">
-          <button class="card-btn card-btn-info" onclick="showDeviceInfo('trh')" aria-label="Temperature + Humidity Monitor information">Information</button>
-          <button class="card-btn card-btn-select" onclick="openMeasModal('trh',this.closest('.method-card'))" aria-label="Select Temperature + Humidity Monitor">Select</button>
-        </div>
-      </div>
+      <div class="ls5-meas-cards">
 
-      <div class="method-card method-card-full" data-instrument="hi" style="--card-accent:#E05C2C">
-        <div class="card-left">
-          <h3>Heat Index</h3>
-          <img class="method-card-photo" src="images/heat-index-monitors.jpg" alt="Heat Index Monitors">
+        <!-- WBGT -->
+        <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt">
+          <div class="ls5-meas-front">
+            <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
+            <div class="ls5-meas-photo-area">
+              <img class="method-card-photo" src="images/wbgt-monitors.jpg" alt="WBGT Monitors">
+            </div>
+          </div>
+          <div class="ls5-meas-back">
+            <div class="ls5-back-left">
+              <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
+              <button class="ls5-btn-info" onclick="showDeviceInfo('wbgt')" aria-label="WBGT Monitor information">Information</button>
+            </div>
+            <div class="ls5-back-right">
+              <button class="ls5-btn-select" onclick="openMeasModal('wbgt', this.closest('.ls5-meas-card'))" aria-label="Select WBGT Monitor">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Select
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="card-right">
-          <button class="card-btn card-btn-info" onclick="showDeviceInfo('hi')" aria-label="Heat Index Monitor information">Information</button>
-          <button class="card-btn card-btn-select" onclick="openMeasModal('hi',this.closest('.method-card'))" aria-label="Select Heat Index Monitor">Select</button>
+
+        <!-- Temperature + Humidity -->
+        <div class="ls5-meas-card ls5-trh" data-instrument="trh">
+          <div class="ls5-meas-front">
+            <div class="ls5-meas-title">Temperature + Humidity</div>
+            <div class="ls5-meas-photo-area">
+              <img class="method-card-photo" src="images/trh-monitors.jpg" alt="Temperature &amp; Relative Humidity Monitors">
+            </div>
+          </div>
+          <div class="ls5-meas-back">
+            <div class="ls5-back-left">
+              <div class="ls5-meas-title">Temperature + Humidity</div>
+              <button class="ls5-btn-info" onclick="showDeviceInfo('trh')" aria-label="Temperature + Humidity Monitor information">Information</button>
+            </div>
+            <div class="ls5-back-right">
+              <button class="ls5-btn-select" onclick="openMeasModal('trh', this.closest('.ls5-meas-card'))" aria-label="Select Temperature + Humidity Monitor">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Select
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="method-card method-card-full" data-instrument="dbt" style="--card-accent:#6B7280">
-        <div class="card-left">
-          <h3>Thermometer Only</h3>
-          <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:96px;line-height:1;">🌡️</div>
+        <!-- Heat Index -->
+        <div class="ls5-meas-card ls5-hi" data-instrument="hi">
+          <div class="ls5-meas-front">
+            <div class="ls5-meas-title">Heat Index</div>
+            <div class="ls5-meas-photo-area">
+              <img class="method-card-photo" src="images/heat-index-monitors.jpg" alt="Heat Index Monitors">
+            </div>
+          </div>
+          <div class="ls5-meas-back">
+            <div class="ls5-back-left">
+              <div class="ls5-meas-title">Heat Index</div>
+              <button class="ls5-btn-info" onclick="showDeviceInfo('hi')" aria-label="Heat Index Monitor information">Information</button>
+            </div>
+            <div class="ls5-back-right">
+              <button class="ls5-btn-select" onclick="openMeasModal('hi', this.closest('.ls5-meas-card'))" aria-label="Select Heat Index Monitor">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Select
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="card-right">
-          <button class="card-btn card-btn-info" onclick="showDeviceInfo('dbt')" aria-label="Thermometer Only information">Information</button>
-          <button class="card-btn card-btn-select" onclick="openMeasModal('dbt',this.closest('.method-card'))" aria-label="Select Thermometer Only">Select</button>
+
+        <!-- Thermometer Only -->
+        <div class="ls5-meas-card ls5-dbt" data-instrument="dbt">
+          <div class="ls5-meas-front">
+            <div class="ls5-meas-title">Thermometer Only</div>
+            <div class="ls5-meas-photo-area" style="font-size:clamp(60px,12vh,110px);line-height:1;">🌡️</div>
+          </div>
+          <div class="ls5-meas-back">
+            <div class="ls5-back-left">
+              <div class="ls5-meas-title">Thermometer Only</div>
+              <button class="ls5-btn-info" onclick="showDeviceInfo('dbt')" aria-label="Thermometer Only information">Information</button>
+            </div>
+            <div class="ls5-back-right">
+              <button class="ls5-btn-select" onclick="openMeasModal('dbt', this.closest('.ls5-meas-card'))" aria-label="Select Thermometer Only">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Select
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Measured grid dividers — positioned by positionGridDividers() -->
-      <div class="grid-div-h" id="grid-div-h" aria-hidden="true"></div>
-      <div class="grid-div-v" id="grid-div-v-top" aria-hidden="true"></div>
-      <div class="grid-div-v" id="grid-div-v-bot" aria-hidden="true"></div>
-
-    </div>
-
+      </div><!-- /ls5-meas-cards -->
+    </div><!-- /ls5-meas-wrap -->
   </div><!-- /ls4 -->
 </div><!-- /launcher -->
 
@@ -795,7 +894,6 @@ body { background: #F6F3EC !important; }
     document.getElementById('wbgt-mode-calc').classList.toggle('active', mode === 'calc');
     document.getElementById('meas-single-fields').hidden = (mode !== 'direct');
     document.getElementById('meas-wbgt-fields').hidden   = (mode !== 'calc');
-    // Clear errors on mode switch
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible','submit-error'));
     ['meas-value','meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
       const el = document.getElementById(id);
@@ -816,10 +914,9 @@ body { background: #F6F3EC !important; }
     const inp = document.getElementById(inputId);
     const err = document.getElementById(errId);
     if (inp) inp.classList.remove('error');
-    if (err) err.classList.remove('submit-error'); // allow live warnings to re-evaluate freely
+    if (err) err.classList.remove('submit-error');
   }
 
-  // Returns {nwbHigh} — true if NWB exceeds DB (outdoor only; wind can lower GT below DB/NWB so no GT constraints).
   function _wbgtConstraintErrors(nwb, gt, db) {
     const outdoor = wbgtSetting === 'outdoor';
     return {
@@ -835,17 +932,14 @@ body { background: #F6F3EC !important; }
     const db  = parseFloat(document.getElementById('meas-wbgt-db').value);
     const errs = _wbgtConstraintErrors(nwb, gt, db);
 
-    // Live constraint warnings (don't mark .error — that's for submit; use warning text only)
     const nwbErrEl  = document.getElementById('meas-wbgt-nwb-error');
     const gtErrEl   = document.getElementById('meas-wbgt-gt-error');
-    // NWB > DB warning
     if (errs.nwbHigh) {
       nwbErrEl.textContent = 'Natural Wet Bulb cannot exceed dry bulb temperature.';
       nwbErrEl.classList.add('visible');
     } else if (!nwbErrEl.classList.contains('submit-error')) {
       nwbErrEl.classList.remove('visible');
     }
-    // GT < NWB or GT < DB warning
     const gtMsg = errs.gtLowNwb && errs.gtLowDb
       ? 'Globe temp must be ≥ both NWB and dry bulb.'
       : errs.gtLowNwb ? 'Globe temp cannot be lower than NWB.'
@@ -858,7 +952,6 @@ body { background: #F6F3EC !important; }
       gtErrEl.classList.remove('visible');
     }
 
-    // Only show a calculated result if all constraints are satisfied
     const anyErr = errs.nwbHigh || errs.gtLowNwb || errs.gtLowDb;
     let wbgt = null;
     if (!anyErr) {
@@ -879,33 +972,28 @@ body { background: #F6F3EC !important; }
     wbgtMode    = 'direct';
     wbgtSetting = 'indoor';
     WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
-    buildBreadcrumbs();   // show instrument pill immediately on card tap
+    buildBreadcrumbs();
     document.getElementById('meas-modal-title').textContent = measTitles[instrument];
     const isTrh  = instrument === 'trh';
     const isWbgt = instrument === 'wbgt';
-    // Show/hide mode toggle row for WBGT only
     document.getElementById('meas-wbgt-mode-row').hidden = !isWbgt;
-    // Reset WBGT mode buttons
     document.getElementById('wbgt-mode-direct').classList.toggle('active', true);
     document.getElementById('wbgt-mode-calc').classList.toggle('active', false);
-    // Reset env toggle
     document.getElementById('wbgt-env-indoor').classList.add('active');
     document.getElementById('wbgt-env-outdoor').classList.remove('active');
-    document.getElementById('meas-wbgt-db-row').hidden = true; // start as indoor
+    document.getElementById('meas-wbgt-db-row').hidden = true;
     document.getElementById('meas-single-fields').hidden = isTrh;
     document.getElementById('meas-trh-fields').hidden    = !isTrh;
-    document.getElementById('meas-wbgt-fields').hidden   = true; // always start in direct mode
+    document.getElementById('meas-wbgt-fields').hidden   = true;
     if (!isTrh) document.getElementById('meas-single-label').textContent = measSingleLabels[instrument];
     ['meas-unit-f','meas-unit-c','meas-trh-unit-f','meas-trh-unit-c','meas-wbgt-unit-f','meas-wbgt-unit-c'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith('-f'));
     });
-    // Reset component field unit suffixes
     ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = '°F';
     });
-    // Clear component inputs
     ['meas-wbgt-nwb','meas-wbgt-gt','meas-wbgt-db'].forEach(id => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('error'); }
@@ -922,28 +1010,17 @@ body { background: #F6F3EC !important; }
       if (el) { el.value = measDefaults[id] ?? '74'; el.classList.remove('error'); }
     });
     document.querySelectorAll('.meas-error-msg').forEach(el => el.classList.remove('visible'));
-    // Position overlay exactly within the clicked card's bounds
+
+    // Position overlay within the clicked card's bounds
     const overlay = document.getElementById('meas-modal-overlay');
     if (triggerEl) {
       const r = triggerEl.getBoundingClientRect();
-      // Offset below card's border-top + ::before accent bar (5px in full layout)
       const borderTop = parseFloat(getComputedStyle(triggerEl).borderTopWidth) || 0;
-      const BAR_H = borderTop + 5;
-      let overlayWidth = r.width;
-      // For left-column cards: clip overlay so its right edge stops at the green divider
-      const divV = document.getElementById('grid-div-v-top');
-      if (divV) {
-        const dvr = divV.getBoundingClientRect();
-        // divider falls inside this card → it's a left-column card
-        if (dvr.left > r.left && dvr.left < r.right) {
-          overlayWidth = dvr.left - r.left;
-        }
-      }
-      // On mobile the overlay uses position:absolute (scrolls with page), so offset by scrollY
+      const BAR_H = borderTop + 4;
       const scrollOffset = window.innerWidth <= 768 ? window.scrollY : 0;
       overlay.style.top    = (r.top + BAR_H + scrollOffset) + 'px';
       overlay.style.left   = r.left + 'px';
-      overlay.style.width  = overlayWidth + 'px';
+      overlay.style.width  = r.width + 'px';
       overlay.style.height = (r.height - BAR_H) + 'px';
     } else {
       overlay.style.top = overlay.style.left = overlay.style.width = overlay.style.height = '';
@@ -960,7 +1037,6 @@ body { background: #F6F3EC !important; }
 
   function closeMeasModal() {
     document.getElementById('meas-modal-overlay').classList.remove('open');
-    // Restore the hint
     if (openMeasModal._activeHint) {
       openMeasModal._activeHint.classList.remove('is-hidden');
       openMeasModal._activeHint = null;
@@ -973,18 +1049,15 @@ body { background: #F6F3EC !important; }
       const el = document.getElementById(id);
       if (el) el.classList.toggle('active', id.endsWith(unit === 'F' ? '-f' : '-c'));
     });
-    // Update suffix labels on component fields
     const suffix = unit === 'C' ? '°C' : '°F';
     ['meas-wbgt-gt-unit','meas-wbgt-db-unit'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = suffix;
     });
-    // Recalculate with new unit label
     if (wbgtMode === 'calc') updateWbgtCalc();
   }
 
   function submitMeasModal() {
-    // ── WBGT from components ────────────────────────────────────────────────
     if (measCurrentInstrument === 'wbgt' && wbgtMode === 'calc') {
       let valid = true;
       const nwbEl = document.getElementById('meas-wbgt-nwb');
@@ -1012,7 +1085,6 @@ body { background: #F6F3EC !important; }
       }
       if (!valid) return;
       const db  = parseFloat(dbEl.value);
-      // Physical constraint checks
       const errs = _wbgtConstraintErrors(nwb, gt, db);
       if (errs.nwbHigh) {
         nwbEl.classList.add('error');
@@ -1069,7 +1141,6 @@ body { background: #F6F3EC !important; }
         document.getElementById('meas-single-error').classList.add('visible');
         return;
       }
-      // Conservative ceiling: assume 100% RH and route through T+RH calculator
       _saveLastTemp(val, measCurrentUnit);
       WRC.set({ measTemp: parseFloat(val), measValue: parseFloat(val), measUnit: measCurrentUnit, measRH: 100, dbtConservative: true });
       closeMeasModal();
@@ -1090,7 +1161,7 @@ body { background: #F6F3EC !important; }
     window.location.href = measDestUrls[measCurrentInstrument];
   }
 
-  // ── Photo zoom (counter-the-cough pattern) ──
+  // ── Photo zoom ──
   (function () {
     const overlay  = document.getElementById('photo-zoom-overlay');
     const box      = document.getElementById('photo-zoom-box');
@@ -1100,9 +1171,8 @@ body { background: #F6F3EC !important; }
     const EASE_OUT = 'cubic-bezier(0.4, 0, 0.6, 1)';
     const REDUCE   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const TOUCH    = window.matchMedia('(hover: none)').matches;
-    let _srcImg = null, _closing = false, _closeRaf = 0;
+    let _srcImg = null, _closing = false;
 
-    // Compute target rect: largest centered box preserving aspect ratio within 92% viewport
     function targetRect(ratio) {
       const maxW = window.innerWidth * 0.92, maxH = window.innerHeight * 0.92;
       let w, h;
@@ -1110,8 +1180,6 @@ body { background: #F6F3EC !important; }
       else { h = maxH; w = maxH * ratio; }
       return { top: (window.innerHeight - h) / 2, left: (window.innerWidth - w) / 2, width: w, height: h };
     }
-
-    // CSS transform that maps big box → small src rect (used as animation start)
     function fromTransform(src) {
       const b = box.getBoundingClientRect();
       const sx = src.width / b.width, sy = src.height / b.height;
@@ -1119,37 +1187,26 @@ body { background: #F6F3EC !important; }
       const ty = (src.top  + src.height / 2) - (b.top  + b.height / 2);
       return `translate(${tx}px,${ty}px) scale(${sx},${sy})`;
     }
-
     function placeBox(r) {
-      box.style.left   = r.left   + 'px';
-      box.style.top    = r.top    + 'px';
-      box.style.width  = r.width  + 'px';
-      box.style.height = r.height + 'px';
+      box.style.left = r.left + 'px'; box.style.top = r.top + 'px';
+      box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
     }
-
     function placeClose() {
       const r = box.getBoundingClientRect();
       const s = closeBtn.offsetWidth || 38;
-      let left = r.right  - s / 2, top = r.top - s / 2;
+      let left = r.right - s / 2, top = r.top - s / 2;
       left = Math.min(Math.max(4, left), window.innerWidth  - s - 4);
       top  = Math.min(Math.max(4, top),  window.innerHeight - s - 4);
-      closeBtn.style.left = left + 'px';
-      closeBtn.style.top  = top  + 'px';
+      closeBtn.style.left = left + 'px'; closeBtn.style.top = top + 'px';
     }
-
     function openZoom(img) {
       if (_closing) return;
       _srcImg = img;
       const srcR  = img.getBoundingClientRect();
       const ratio = (img.naturalWidth || srcR.width) / (img.naturalHeight || srcR.height);
       const tgtR  = targetRect(ratio);
-
-      zoomImg.src = img.src;
-      zoomImg.alt = img.alt;
-      placeBox(tgtR);
-      overlay.hidden = false;
-      placeClose();
-
+      zoomImg.src = img.src; zoomImg.alt = img.alt;
+      placeBox(tgtR); overlay.hidden = false; placeClose();
       if (!REDUCE && box.animate) {
         box.animate([{ transform: fromTransform(srcR), borderRadius: '5px' },
                      { transform: 'none', borderRadius: '8px' }],
@@ -1157,7 +1214,6 @@ body { background: #F6F3EC !important; }
       }
       closeBtn.focus();
     }
-
     function closeZoom() {
       if (_closing || overlay.hidden) return;
       if (!REDUCE && box.animate && _srcImg) {
@@ -1171,7 +1227,6 @@ body { background: #F6F3EC !important; }
         overlay.hidden = true; _srcImg = null;
       }
     }
-
     overlay.addEventListener('click', e => { if (e.target === overlay || e.target === box || e.target === zoomImg) closeZoom(); });
     closeBtn.addEventListener('click', closeZoom);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeDeviceInfo(); } });
@@ -1182,8 +1237,6 @@ body { background: #F6F3EC !important; }
 
     // Wire up all method card photos
     document.querySelectorAll('.method-card-photo').forEach(img => {
-      // Wrap img in a positioned span so the hint anchors correctly even
-      // when the parent uses display:contents (mobile grid layout)
       const imgWrap = document.createElement('span');
       imgWrap.className = 'method-card-photo-wrap';
       img.parentNode.insertBefore(imgWrap, img);
@@ -1191,7 +1244,6 @@ body { background: #F6F3EC !important; }
       const wrap = imgWrap;
       img.style.cursor = 'zoom-in';
 
-      // "Click / Tap to Enlarge" hint
       const hint = document.createElement('span');
       hint.className = 'enl-hint is-resting';
       hint.setAttribute('aria-hidden', 'true');
@@ -1220,7 +1272,6 @@ body { background: #F6F3EC !important; }
       }
       window.addEventListener('resize', rest);
 
-      // Hide hint while zoom is open
       new MutationObserver(() => {
         hint.classList.toggle('is-hidden', !overlay.hidden);
         if (overlay.hidden) rest();
@@ -1303,87 +1354,13 @@ body { background: #F6F3EC !important; }
     if (_deviceInfoTrigger) { _deviceInfoTrigger.focus(); _deviceInfoTrigger = null; }
   }
 
-  function positionGridDividers() {
-    const grid = document.querySelector('.method-cards-full');
-    if (!grid) return;
-    const cards = grid.querySelectorAll('.method-card-full');
-    if (cards.length < 3) return;
-    const gridRect  = grid.getBoundingClientRect();
-    const card3Rect = cards[2].getBoundingClientRect(); // bottom-left card
-    const card2Rect = cards[1].getBoundingClientRect(); // top-right card
-    // Red horizontal: sits at the top edge of the bottom-row cards
-    const redTop = card3Rect.top - gridRect.top;
-    const redH   = 3;
-    const divH = document.getElementById('grid-div-h');
-    if (divH) divH.style.top = redTop + 'px';
-    // Green vertical: two segments that stop/start at the red line (no overlap)
-    const vLeft = (card2Rect.left - gridRect.left - 3) + 'px';
-    const gridH = grid.offsetHeight;
-    const divTop = document.getElementById('grid-div-v-top');
-    if (divTop) {
-      divTop.style.left   = vLeft;
-      divTop.style.top    = '0px';
-      divTop.style.height = redTop + 'px';
-    }
-    const divBot = document.getElementById('grid-div-v-bot');
-    if (divBot) {
-      divBot.style.left   = vLeft;
-      divBot.style.top    = (redTop + redH) + 'px';
-      divBot.style.height = (gridH - redTop - redH) + 'px';
-    }
-  }
-
   function updateLayout() {
     const fixedTop = document.getElementById('fixed-top');
     const ls4 = document.getElementById('ls4');
-    const fixedH = fixedTop.offsetHeight;
-
-    if (window.innerWidth <= 768) {
-      // On mobile #ls4 is position:static — use paddingTop, not top
-      ls4.style.top = '';
-      ls4.style.paddingTop = (fixedH + 10) + 'px';
-
-      // Equalize all four card heights to the tallest
-      const cards = ls4.querySelectorAll('.method-card-full');
-      cards.forEach(c => { c.style.height = ''; });
-      let maxH = 0;
-      cards.forEach(c => { maxH = Math.max(maxH, c.offsetHeight); });
-      if (maxH > 0) cards.forEach(c => { c.style.height = maxH + 'px'; });
-    } else {
-      ls4.style.paddingTop = '';
-      ls4.style.top = fixedH + 'px';
-    }
-
-    positionGridDividers();
+    ls4.style.paddingTop = (fixedTop.offsetHeight + 10) + 'px';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const s = WRC.get();
-    const labelEl = document.getElementById('ls4-activity-label');
-    const kcalEl  = document.getElementById('ls4-activity-kcal');
-    const badgeEl = document.getElementById('ls4-worker-status-badge');
-
-    const actLabel = s.activityLabel || 'Moderate Work';
-    const actKcal  = s.activityKcal  || '~200–350 kcal/hr';
-    const status   = s.workerStatus  || 'acclimatized';
-
-    const emojiMap = { light:'🟢', moderate:'🟡', heavy:'🔴', vh:'⛔' };
-    const act = s.activity || 'moderate';
-    if (labelEl) labelEl.textContent = (emojiMap[act] || '') + ' ' + actLabel;
-    if (kcalEl)  kcalEl.textContent  = actKcal;
-
-    if (badgeEl) {
-      if (status === 'acclimatized') {
-        badgeEl.textContent = '✅ Acclimatized';
-        badgeEl.style.background = 'var(--safe-bg)';
-        badgeEl.style.color = '#005540';
-      } else {
-        badgeEl.textContent = '⚠ Unacclimatized';
-        badgeEl.style.background = 'var(--warn-bg)';
-        badgeEl.style.color = '#7B2500';
-      }
-    }
-
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
