@@ -571,29 +571,6 @@ body { background: #F6F3EC !important; }
   box-shadow: 0 2px 8px rgba(0,0,20,0.45);
   display: flex; align-items: center; justify-content: center;
 }
-/* "Click to Enlarge" floating hint */
-.enl-hint {
-  position: absolute;
-  z-index: 5;
-  left: 0; top: 0;
-  pointer-events: none;
-  white-space: nowrap;
-  font: 700 12px/1 inherit;
-  letter-spacing: .02em;
-  color: #fff;
-  background: linear-gradient(165deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%),
-              linear-gradient(180deg, #1a3a8f 0%, #001E62 72%);
-  border: 1px solid rgba(255,255,255,0.7);
-  border-radius: 999px;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
-  padding: 5px 10px 5px 8px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 #001247, 0 4px 0 #000a26, 0 6px 10px rgba(0,0,0,0.3);
-  transition: opacity 0.2s ease;
-}
-.enl-hint.is-resting { animation: enl-bob 2.4s ease-in-out infinite; }
-@keyframes enl-bob { 0%,100%{translate:0 0} 50%{translate:0 -4px} }
-.enl-hint.is-hidden { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .enl-hint { transition: opacity 0.2s ease; } .enl-hint.is-resting { animation: none; } }
 
 /* Device info modal */
 #device-info-overlay {
@@ -680,17 +657,7 @@ body { background: #F6F3EC !important; }
   #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
   #device-info-overlay { align-items: flex-start; }
   #device-info-modal { width: min(520px, 92vw); }
-  .enl-hint {
-    font-size: 9px !important;
-    padding: 3px 7px !important;
-    left: 0 !important;
-    top: 100% !important;
-    bottom: auto !important;
-    margin-top: 3px !important;
-    transform: none !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 0 #001247, 0 3px 6px rgba(0,0,0,0.3) !important;
-    animation: none !important;
-  }
+
 }
 </style>
 <script src="./lang-link.js" defer></script>
@@ -1346,34 +1313,6 @@ body { background: #F6F3EC !important; }
       imgWrap.appendChild(img);
       const wrap = imgWrap;
       img.style.cursor = 'zoom-in';
-
-      const hint = document.createElement('span');
-      hint.className = 'enl-hint is-resting';
-      hint.setAttribute('aria-hidden', 'true');
-      hint.innerHTML = '<span style="margin-right:4px">&#128269;</span>' + (TOUCH ? 'Tap to Enlarge' : 'Click to Enlarge');
-      wrap.appendChild(hint);
-
-      function rest() {
-        const w = wrap.clientWidth, h = wrap.clientHeight;
-        const x = Math.max(6, w - hint.offsetWidth  - 10);
-        const y = Math.max(6, h - hint.offsetHeight - 10);
-        hint.style.transform = `translate(${x}px,${y}px)`;
-        hint.classList.add('is-resting');
-      }
-      function follow(e) {
-        const r = wrap.getBoundingClientRect();
-        let x = (e.clientX - r.left) + 14, y = (e.clientY - r.top) + 16;
-        x = Math.min(Math.max(4, x), r.width  - hint.offsetWidth  - 4);
-        y = Math.min(Math.max(4, y), r.height - hint.offsetHeight - 4);
-        hint.style.transform = `translate(${x}px,${y}px)`;
-        hint.classList.remove('is-resting');
-      }
-      rest();
-      if (!TOUCH) {
-        wrap.addEventListener('mousemove', follow);
-        wrap.addEventListener('mouseleave', rest);
-      }
-      window.addEventListener('resize', rest);
 
       new MutationObserver(() => {
         hint.classList.toggle('is-hidden', !overlay.hidden);
