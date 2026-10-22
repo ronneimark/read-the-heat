@@ -400,12 +400,6 @@
   margin: 0;
   text-align: left;
   grid-column: 1;
-  /* fluid font — base size before scale(2) doubles it visually;
-     scales from ~21px visual at 1025px up to ~34px at 1680px+ */
-  font-size: clamp(0.65rem, 1.1vw, 1.05rem);
-  font-weight: 700;
-  transform: scale(2);
-  transform-origin: left center;
 }
 .intro-anchor {
   grid-column: 2;
@@ -884,8 +878,6 @@
     text-align: left !important;
     justify-self: start !important;
     grid-column: 1 !important;
-    /* direct size (no transform) — scales from ~16px on phone to ~29px on 1024px tablet */
-    font-size: clamp(1rem, 3.5vw, 1.8rem) !important;
     transform: none !important;
     line-height: 1.25 !important;
     padding-right: 0 !important;   /* button is above, not beside */
