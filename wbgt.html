@@ -83,6 +83,12 @@ main { padding: 0; max-width: none; }
   background: rgba(255,255,255,0.7);
   color: var(--navy, #1A2A3A);
 }
+/* ── Compact tab bar on wide+short (landscape) screens ── */
+@media (min-width: 769px) and (max-height: 620px) {
+  .acclim-tab-btn { padding: 7px 20px 6px; }
+  .acclim-tab-btn-title { font-size: 13px; }
+  .acclim-tab-btn-sub { display: none; }
+}
 
 /* ── WBGT-specific result overrides (layout base: shared.css .result-wrap / .result-grid) ── */
 
