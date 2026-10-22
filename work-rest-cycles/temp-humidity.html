@@ -149,6 +149,12 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 .acclim-tab-btn.active .acclim-tab-btn-sub { opacity: 0.75; }
 .acclim-tab-btn:not(.active):hover { background: rgba(255,255,255,0.7); color: var(--navy, #1A2A3A); }
 .acclim-tab-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; z-index: 1; }
+/* ── Compact tab bar on wide+short (landscape) screens ── */
+@media (min-width: 769px) and (max-height: 620px) {
+  .acclim-tab-btn { padding: 7px 20px 6px; }
+  .acclim-tab-btn-title { font-size: 13px; }
+  .acclim-tab-btn-sub { display: none; }
+}
 
 /* ── Result tab — padding ── */
 #trh-tab-result-wrap,
