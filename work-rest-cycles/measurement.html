@@ -127,6 +127,9 @@ body { background: #F6F3EC !important; }
   font: inherit;
   cursor: pointer;
   width: 100%;
+  /* Prevent Safari iOS from intercepting taps as text-selection gestures */
+  -webkit-user-select: none;
+  user-select: none;
 }
 .ls5-meas-back {
   flex: 1;
@@ -1110,30 +1113,18 @@ body { background: #F6F3EC !important; }
   // ── Card activation ───────────────────────────────────────────────────────────
   function activateCard(instrument, cardEl) {
     if (!cardEl || cardEl.classList.contains('ls5-meas-active')) return;
-    // DIAGNOSTIC: turn card border red immediately — if this appears, onclick fired and we got here
-    cardEl.style.outline = '4px solid red';
-    try {
-      measCurrentInstrument = instrument;
-      measCurrentUnit = 'F';
-      wbgtMode    = 'direct';
-      wbgtSetting = 'indoor';
-      WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
-      buildBreadcrumbs();
-      _resetEntryFace(instrument);
-      const grid = document.querySelector('.ls5-meas-cards');
-      document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
-      grid.classList.add('ls5-has-active');
-      cardEl.classList.add('ls5-meas-active');
-      cardEl.style.outline = ''; // clear diagnostic on success
-      setTimeout(() => cardEl.querySelector('.ls5-meas-entry input')?.focus(), 80);
-    } catch(err) {
-      // Show error text on card so we can see what failed
-      cardEl.style.outline = '4px solid orange';
-      var dbg = document.createElement('div');
-      dbg.style = 'position:absolute;top:0;left:0;right:0;background:orange;color:#000;font-size:11px;padding:4px;z-index:9999;word-break:break-all';
-      dbg.textContent = 'ERR: ' + err.message;
-      cardEl.appendChild(dbg);
-    }
+    measCurrentInstrument = instrument;
+    measCurrentUnit = 'F';
+    wbgtMode    = 'direct';
+    wbgtSetting = 'indoor';
+    WRC.set({ instrument, measValue: null, measTemp: null, measRH: null, measUnit: null });
+    buildBreadcrumbs();
+    _resetEntryFace(instrument);
+    const grid = document.querySelector('.ls5-meas-cards');
+    document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+    grid.classList.add('ls5-has-active');
+    cardEl.classList.add('ls5-meas-active');
+    setTimeout(() => cardEl.querySelector('.ls5-meas-entry input')?.focus(), 80);
   }
 
   function deactivateCard() {
