@@ -130,6 +130,11 @@ body { background: #F6F3EC !important; }
   /* Prevent Safari iOS from intercepting taps as text-selection gestures */
   -webkit-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Children transparent to pointer events so every tap lands on the button itself */
+.ls5-meas-front > * {
+  pointer-events: none;
 }
 .ls5-meas-back {
   flex: 1;
