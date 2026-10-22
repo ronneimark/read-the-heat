@@ -132,8 +132,9 @@ body { background: #F6F3EC !important; }
   user-select: none;
   -webkit-touch-callout: none;
 }
-/* Children transparent to pointer events so every tap lands on the button itself */
-.ls5-meas-front > * {
+/* ALL descendants transparent to pointer events — taps land directly on the button.
+   Use * not > * to also cover nested spans like .ls5-sub inside .ls5-meas-title */
+.ls5-meas-front * {
   pointer-events: none;
 }
 .ls5-meas-back {
@@ -263,6 +264,24 @@ body { background: #F6F3EC !important; }
   }
   /* Hide DBT when TRH is spanning its row */
   .ls5-meas-cards.ls5-has-active:has(.ls5-trh.ls5-meas-active) .ls5-dbt {
+    display: none !important;
+  }
+  /* Heat Index spans full left column (same as WBGT) */
+  .ls5-meas-cards.ls5-has-active .ls5-hi.ls5-meas-active {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  /* Hide WBGT when Heat Index is spanning its column */
+  .ls5-meas-cards.ls5-has-active:has(.ls5-hi.ls5-meas-active) .ls5-wbgt {
+    display: none !important;
+  }
+  /* Thermometer Only spans full right column (same as TRH) */
+  .ls5-meas-cards.ls5-has-active .ls5-dbt.ls5-meas-active {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  /* Hide TRH when Thermometer is spanning its column */
+  .ls5-meas-cards.ls5-has-active:has(.ls5-dbt.ls5-meas-active) .ls5-trh {
     display: none !important;
   }
 }
@@ -1602,6 +1621,24 @@ body { background: #F6F3EC !important; }
     // Card activation: inline onclick on each .ls5-meas-card div handles activation
     // (Safari fires onclick on any element that has it as an attribute, unconditionally).
     // The guard in each onclick skips clicks inside .ls5-meas-back or .ls5-meas-entry.
+
+    // Safari iOS: onclick on a <button> doesn't fire when the tap lands on a text
+    // node, because iOS intercepts it for text-selection before the click fires.
+    // touchend fires BEFORE that interception, so we handle activation there too.
+    // pointer-events:none on all button descendants means the touchend target is
+    // always the button itself, guaranteeing consistent behaviour.
+    document.querySelectorAll('.ls5-meas-front').forEach(function(btn) {
+      var _tapStartY = 0;
+      btn.addEventListener('touchstart', function(e) {
+        _tapStartY = e.touches[0].clientY;
+      }, { passive: true });
+      btn.addEventListener('touchend', function(e) {
+        if (Math.abs(e.changedTouches[0].clientY - _tapStartY) > 10) return; // scroll, not tap
+        e.preventDefault(); // suppress subsequent synthetic click (avoids double-fire)
+        var card = btn.closest('.ls5-meas-card');
+        if (card) activateCard(card.dataset.instrument, card);
+      }, { passive: false });
+    });
 
     // Deactivate active card when tapping anywhere outside all cards.
     // Use touchstart (fires immediately, no 300ms delay, works on all elements in Safari).
