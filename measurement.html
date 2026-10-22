@@ -214,6 +214,15 @@ body { background: #F6F3EC !important; }
   .ls5-meas-cards.ls5-has-active:has(.ls5-wbgt.ls5-meas-active) .ls5-hi {
     display: none !important;
   }
+  /* TRH spans full right column */
+  .ls5-meas-cards.ls5-has-active .ls5-trh.ls5-meas-active {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  /* Hide DBT when TRH is spanning its row */
+  .ls5-meas-cards.ls5-has-active:has(.ls5-trh.ls5-meas-active) .ls5-dbt {
+    display: none !important;
+  }
 }
 .ls5-meas-active .ls5-meas-front,
 .ls5-meas-active:hover .ls5-meas-front { display: none !important; }
@@ -895,7 +904,7 @@ body { background: #F6F3EC !important; }
                 <div class="meas-field-group" style="flex:1;min-width:0;">
                   <label class="meas-field-label" for="trh-temp">Air Temperature</label>
                   <div class="meas-input-row">
-                    <input class="meas-input" id="trh-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off">
+                    <input class="meas-input" id="trh-temp" type="number" min="-20" max="250" step="0.1" placeholder="—" inputmode="decimal" autocomplete="off" oninput="updateTrhHiCalc()">
                     <div class="meas-toggle">
                       <button id="trh-unit-f" class="active" onclick="setMeasUnit('F')" type="button">°F</button>
                       <button id="trh-unit-c" onclick="setMeasUnit('C')" type="button">°C</button>
@@ -906,11 +915,19 @@ body { background: #F6F3EC !important; }
                 <div class="meas-field-group" style="flex:1;min-width:0;">
                   <label class="meas-field-label" for="trh-rh">Relative Humidity</label>
                   <div class="meas-input-row">
-                    <input class="meas-input" id="trh-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off">
+                    <input class="meas-input" id="trh-rh" type="number" min="0" max="100" step="1" placeholder="—" inputmode="numeric" autocomplete="off" oninput="updateTrhHiCalc()">
                     <span class="meas-unit-suffix">%</span>
                   </div>
                   <div class="meas-error-msg" id="trh-rh-error">Please enter a value between 0 and 100.</div>
                 </div>
+              </div>
+            </div>
+            <!-- Calculated Heat Index display -->
+            <div class="wbgt-calc-display" id="trh-hi-display">
+              <span class="wbgt-calc-label">Calculated Heat Index</span>
+              <div class="wbgt-calc-value-row">
+                <span class="wbgt-calc-value" id="trh-hi-value">—</span>
+                <span class="wbgt-calc-unit" id="trh-hi-unit"></span>
               </div>
             </div>
             <div class="ls5-entry-actions">
@@ -1103,6 +1120,10 @@ body { background: #F6F3EC !important; }
       if (t) { t.value = last.tempF ?? '74'; t.classList.remove('error'); }
       if (r) { r.value = last.rh    ?? '50'; r.classList.remove('error'); }
       document.querySelectorAll('#trh-entry .meas-error-msg').forEach(el => el.classList.remove('visible','submit-error'));
+      const hiVal = document.getElementById('trh-hi-value');
+      const hiUnit = document.getElementById('trh-hi-unit');
+      if (hiVal)  hiVal.textContent  = '—';
+      if (hiUnit) hiUnit.textContent = '';
     } else if (instrument === 'hi') {
       const v = document.getElementById('hi-value');
       if (v) { v.value = last.tempF ?? '74'; v.classList.remove('error'); }
@@ -1135,6 +1156,63 @@ body { background: #F6F3EC !important; }
     if (nwbFBtn) nwbFBtn.classList.toggle('active', unit === 'F');
     if (nwbCBtn) nwbCBtn.classList.toggle('active', unit === 'C');
     if (wbgtMode === 'calc') updateWbgtCalc();
+    updateTrhHiCalc();
+  }
+
+  // ── TRH Heat Index calculation ────────────────────────────────────────────────
+  function updateTrhHiCalc() {
+    const tempRaw = parseFloat(document.getElementById('trh-temp').value);
+    const rh      = parseFloat(document.getElementById('trh-rh').value);
+    const valEl   = document.getElementById('trh-hi-value');
+    const unitEl  = document.getElementById('trh-hi-unit');
+    if (!valEl) return;
+
+    if (isNaN(tempRaw) || isNaN(rh) || rh < 0 || rh > 100) {
+      valEl.textContent  = '—';
+      unitEl.textContent = '';
+      return;
+    }
+
+    // Work in °F for the NWS Rothfusz regression
+    const T = measCurrentUnit === 'C' ? tempRaw * 9 / 5 + 32 : tempRaw;
+
+    let hi;
+    // Simple formula first (valid when T < 80 or result < 80)
+    const simple = 0.5 * (T + 61.0 + (T - 68.0) * 1.2 + rh * 0.094);
+    if (simple < 80) {
+      hi = simple;
+    } else {
+      // Full Rothfusz regression
+      hi = -42.379
+        + 2.04901523  * T
+        + 10.14333127 * rh
+        - 0.22475541  * T * rh
+        - 0.00683783  * T * T
+        - 0.05481717  * rh * rh
+        + 0.00122874  * T * T * rh
+        + 0.00085282  * T * rh * rh
+        - 0.00000199  * T * T * rh * rh;
+      // Low-humidity adjustment
+      if (rh < 13 && T >= 80 && T <= 112) {
+        hi -= ((13 - rh) / 4) * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+      }
+      // High-humidity adjustment
+      if (rh > 85 && T >= 80 && T <= 87) {
+        hi += ((rh - 85) / 10) * ((87 - T) / 5);
+      }
+    }
+
+    // Convert back to user's unit
+    let display, unit;
+    if (measCurrentUnit === 'C') {
+      display = (hi - 32) * 5 / 9;
+      unit    = '°C';
+    } else {
+      display = hi;
+      unit    = '°F';
+    }
+    valEl.textContent  = Math.round(display * 10) / 10;
+    unitEl.textContent = unit;
   }
 
   // ── WBGT mode / setting ───────────────────────────────────────────────────────
