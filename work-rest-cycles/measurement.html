@@ -1616,17 +1616,12 @@ body { background: #F6F3EC !important; }
     updateLayout();
     window.addEventListener('resize', updateLayout);
 
-    // ── Mobile card selection (touch devices only) ──────────────────────────────
-    // Single tap on any card front → activateCard directly.
-    // Skips the back-face intermediate step which is unreliable on Safari iOS:
-    // after scrolling to card 4, the second tap (Select button) was often eaten
-    // Card activation: inline onclick on each .ls5-meas-card div handles activation
-    // (Safari fires onclick on any element that has it as an attribute, unconditionally).
-    // The guard in each onclick skips clicks inside .ls5-meas-back or .ls5-meas-entry.
-
+    // ── Mobile card flip (touch devices only) ──────────────────────────────────
     // Safari iOS: onclick on a <button> doesn't fire when the tap lands on a text
     // node, because iOS intercepts it for text-selection before the click fires.
-    // touchend fires BEFORE that interception, so we handle activation there too.
+    // touchend fires BEFORE that interception, so we use it to flip the card to
+    // its back face (showing description + Select button). The Select button's own
+    // onclick then calls activateCard() as normal.
     // pointer-events:none on all button descendants means the touchend target is
     // always the button itself, guaranteeing consistent behaviour.
     document.querySelectorAll('.ls5-meas-front').forEach(function(btn) {
@@ -1636,9 +1631,14 @@ body { background: #F6F3EC !important; }
       }, { passive: true });
       btn.addEventListener('touchend', function(e) {
         if (Math.abs(e.changedTouches[0].clientY - _tapStartY) > 10) return; // scroll, not tap
-        e.preventDefault(); // suppress subsequent synthetic click (avoids double-fire)
+        e.preventDefault(); // suppress synthetic click so we don't double-fire
         var card = btn.closest('.ls5-meas-card');
-        if (card) activateCard(card.dataset.instrument, card);
+        if (!card || card.classList.contains('ls5-meas-active')) return;
+        // Flip to back face so user sees description + Select button
+        document.querySelectorAll('.ls5-meas-card').forEach(function(c) {
+          c.classList.remove('ls5-touch-flip');
+        });
+        card.classList.add('ls5-touch-flip');
       }, { passive: false });
     });
 
