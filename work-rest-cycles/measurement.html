@@ -182,6 +182,10 @@ body { background: #F6F3EC !important; }
 }
 .ls5-meas-active .ls5-entry-close-btn { display: flex; }
 
+/* ── Touch-flip: tap card front on mobile to reveal back ── */
+.ls5-meas-card.ls5-touch-flip .ls5-meas-front { display: none; }
+.ls5-meas-card.ls5-touch-flip .ls5-meas-back  { display: flex; }
+
 /* ── Active state: card expands to fill grid (mobile default) ── */
 .ls5-meas-cards.ls5-has-active {
   grid-template-columns: 1fr;
@@ -189,6 +193,14 @@ body { background: #F6F3EC !important; }
 }
 .ls5-meas-cards.ls5-has-active .ls5-meas-card:not(.ls5-meas-active) {
   display: none;
+}
+/* On mobile, 1fr has no definite height to resolve against (parent is height:auto).
+   Give the active card a concrete minimum so the X button and form stay visible. */
+@media (max-width: 600px) {
+  .ls5-meas-cards.ls5-has-active {
+    grid-template-rows: unset;
+    grid-auto-rows: minmax(320px, auto);
+  }
 }
 
 /* ── Desktop: override active state — card stays in-place ── */
@@ -1088,6 +1100,8 @@ body { background: #F6F3EC !important; }
     buildBreadcrumbs();
     _resetEntryFace(instrument);
     const grid = document.querySelector('.ls5-meas-cards');
+    // Clear any touch-flip state before switching to entry face
+    document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
     grid.classList.add('ls5-has-active');
     cardEl.classList.add('ls5-meas-active');
     setTimeout(() => cardEl.querySelector('.ls5-meas-entry input')?.focus(), 80);
@@ -1096,7 +1110,10 @@ body { background: #F6F3EC !important; }
   function deactivateCard() {
     const grid = document.querySelector('.ls5-meas-cards');
     grid.classList.remove('ls5-has-active');
-    document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-meas-active'));
+    document.querySelectorAll('.ls5-meas-card').forEach(c => {
+      c.classList.remove('ls5-meas-active');
+      c.classList.remove('ls5-touch-flip');
+    });
   }
 
   function _resetEntryFace(instrument) {
@@ -1552,6 +1569,20 @@ body { background: #F6F3EC !important; }
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
+
+    // Touch-friendly card flip: tap a card's front face to reveal the back face.
+    // :hover alone is unreliable on touch devices (not sticky on Android Chrome).
+    document.querySelectorAll('.ls5-meas-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        if (this.classList.contains('ls5-meas-active')) return; // entry face is showing — ignore
+        if (e.target.closest('.ls5-meas-back'))  return; // already on back; let buttons handle it
+        if (e.target.closest('.ls5-meas-entry')) return; // shouldn't happen, but guard anyway
+        // Flip this card; un-flip all others
+        const wasFlipped = this.classList.contains('ls5-touch-flip');
+        document.querySelectorAll('.ls5-meas-card').forEach(c => c.classList.remove('ls5-touch-flip'));
+        if (!wasFlipped) this.classList.add('ls5-touch-flip');
+      });
+    });
   });
 </script>
 <script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
