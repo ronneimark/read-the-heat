@@ -33,6 +33,7 @@ body { background: #F6F3EC !important; }
 .ls5-meas-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: clamp(6px, 1.2vh, 16px);
   flex: 1;
   min-height: 0;
@@ -1311,13 +1312,7 @@ body { background: #F6F3EC !important; }
       imgWrap.className = 'method-card-photo-wrap';
       img.parentNode.insertBefore(imgWrap, img);
       imgWrap.appendChild(img);
-      const wrap = imgWrap;
       img.style.cursor = 'zoom-in';
-
-      new MutationObserver(() => {
-        hint.classList.toggle('is-hidden', !overlay.hidden);
-        if (overlay.hidden) rest();
-      }).observe(overlay, { attributes: true, attributeFilter: ['hidden'] });
 
       img.addEventListener('click', () => openZoom(img));
     });
