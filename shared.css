@@ -33,13 +33,12 @@
 
   /* ── HEADER ── */
   .hazard-bar {
-    height: 10px;
-    background: var(--navy);
+    display: none;
   }
   header {
     background: #D50032;
-    height: 191px;
-    max-height: 191px;            /* never grows on any screen width */
+    height: 201px;
+    max-height: 201px;            /* never grows on any screen width */
     padding: 0;
     display: grid;
     grid-template-columns: auto 1fr auto;
