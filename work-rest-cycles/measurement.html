@@ -860,6 +860,7 @@ body { background: #F6F3EC !important; }
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
               <button class="ls5-btn-info" onclick="showDeviceInfo('wbgt')" aria-label="WBGT Monitor information">Information</button>
+              <p class="ls5-hi-note"><strong>NOTE:</strong> WBGT is the gold standard of heat stress assessment. Measurement should be near work station.</p>
             </div>
             <div class="ls5-back-right">
               <button class="ls5-btn-select" onclick="activateCard('wbgt', this.closest('.ls5-meas-card'))" aria-label="Select WBGT Monitor">
@@ -961,6 +962,7 @@ body { background: #F6F3EC !important; }
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Temperature + Humidity</div>
               <button class="ls5-btn-info" onclick="showDeviceInfo('trh')" aria-label="Temperature + Humidity Monitor information">Information</button>
+              <p class="ls5-hi-note"><strong>NOTE:</strong> This measurement does not account for effect of heat sources on heat stress. If work station is near oven, furnace or hot machine, this will be an underestimate.</p>
             </div>
             <div class="ls5-back-right">
               <button class="ls5-btn-select" onclick="activateCard('trh', this.closest('.ls5-meas-card'))" aria-label="Select Temperature + Humidity Monitor">
@@ -1066,6 +1068,7 @@ body { background: #F6F3EC !important; }
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Thermometer Only</div>
               <button class="ls5-btn-info" onclick="showDeviceInfo('dbt')" aria-label="Thermometer Only information">Information</button>
+              <p class="ls5-hi-note"><strong>NOTE:</strong> This measurement assumes 100% Relative Humidity to avoid underestimate. Radiant heat sources not considered.</p>
             </div>
             <div class="ls5-back-right">
               <button class="ls5-btn-select" onclick="activateCard('dbt', this.closest('.ls5-meas-card'))" aria-label="Select Thermometer Only">
