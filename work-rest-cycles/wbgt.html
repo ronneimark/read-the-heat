@@ -361,30 +361,17 @@ main { padding: 0; max-width: none; }
 }
 
 /* User's column: navy header + subtle tint on data cells */
-.acc-user-col.acc-hdr {
-  background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
-  color: #fff;
-  border-left: 3px solid rgba(255,255,255,0.35);
-  border-right: 3px solid rgba(255,255,255,0.35);
+/* User's exact cell: bold ring + pulse — row/col tinting removed */
+@keyframes acc-cell-pulse {
+  0%, 100% { box-shadow: 0 0 0 0px rgba(26,42,58,0.55); }
+  50%       { box-shadow: 0 0 0 10px rgba(26,42,58,0); }
 }
-.acc-user-col:not(.acc-hdr) {
-  background-image: linear-gradient(rgba(26,42,58,0.08), rgba(26,42,58,0.08));
-}
-/* User's row: stronger tint on range label */
-.acc-range.acc-user-row {
-  background: #C8D9EC;
-  color: #1A2A3A;
-  font-weight: 800;
-  border-left: 4px solid var(--navy, #1A2A3A);
-}
-/* User's row data cells */
-.acc-user-row:not(.acc-range) { background-image: linear-gradient(rgba(26,42,58,0.10), rgba(26,42,58,0.10)); }
-/* User's exact cell: ring highlight */
 .acc-user-cell {
-  outline: 6px solid var(--navy, #1A2A3A);
-  outline-offset: -6px;
+  outline: 9px solid var(--navy, #1A2A3A);
+  outline-offset: -9px;
   position: relative;
   z-index: 1;
+  animation: acc-cell-pulse 2s ease-out infinite;
 }
 
 /* ── Work/rest cell content ── */
@@ -1444,7 +1431,7 @@ main { padding: 0; max-width: none; }
 
       // Sub fills remainder: remainH = contentH - title line (titleFz * 1.3) - margin-top (3px)
       const remainH = Math.max(0, contentH - titleFz * 1.3 - 3);
-      const subFz = Math.max(6, remainH / 1.3);
+      const subFz = Math.max(6, Math.min(titleFz, remainH / 1.3));
       hdrCells.forEach(c => {
         const sub = c.querySelector('.acc-sub');
         if (sub) sub.style.fontSize = subFz.toFixed(1) + 'px';
