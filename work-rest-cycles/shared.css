@@ -1149,7 +1149,7 @@
   }
   .ls2-level-name {
     font-family: 'Theinhardt', Arial, sans-serif;
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 800;
     color: #fff;
     display: block;
@@ -1160,7 +1160,6 @@
     font-size: 10px;
     color: #fff;
     font-weight: 500;
-    opacity: 0.85;
     display: block;
   }
   /* Front face: description */
@@ -2392,7 +2391,7 @@
     .ls2-level-examples { overflow: visible !important; max-height: none !important; }
     .ls2-level-body    { padding: 10px 12px 12px !important; }
     .ls2-level-header  { padding: 10px 12px 8px !important; }
-    .ls2-level-name    { font-size: 18px !important; }
+    .ls2-level-name    { font-size: 20px !important; }
     .ls2-level-kcal    { font-size: 12px !important; }
   }
 
