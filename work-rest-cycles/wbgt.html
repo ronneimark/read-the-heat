@@ -208,7 +208,7 @@ main { padding: 0; max-width: none; }
 
 /* ── Tab panels (shared base) ── */
 #acclim-tab-chart, #unacclim-tab-chart {
-  overflow: hidden; display: none; flex-direction: column; padding: 0 10%; box-sizing: border-box;
+  overflow: hidden; display: none; flex-direction: column; padding: 0 12.5%; box-sizing: border-box;
 }
 /* ── Desktop result card ── */
 @media (min-width: 769px) {
@@ -360,7 +360,6 @@ main { padding: 0; max-width: none; }
   outline-offset: -6px;
   position: relative;
   z-index: 1;
-  font-size: clamp(16px, 3.5vh, 44px) !important;
 }
 
 /* ── Work/rest cell content ── */
@@ -393,9 +392,7 @@ main { padding: 0; max-width: none; }
   font-weight: 900;
   letter-spacing: 0.04em;
 }
-/* Larger nums for user's exact cell */
-.acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
-.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
+/* User cell font size set at runtime by fitDataCellSize() */
 /* ── Chart caption / legend ── */
 .chart-caption {
   flex: 0 0 auto;
@@ -1393,13 +1390,12 @@ main { padding: 0; max-width: none; }
     return rangeFz;
   }
 
-  // ── Fit data cells to 80% of the range column font size ──
+  // ── Fit data cells to 80% of the range column font size; active cell at 100% ──
   function fitDataCellSize(gridEl, rangeFz) {
     if (!gridEl || window.innerWidth <= 768) return;
     const dataCells = [...gridEl.querySelectorAll(
       '.acc-cell:not(.acc-hdr):not(.acc-range):not(.acc-user-cell)'
     )];
-    if (!dataCells.length) return;
     // wr-nums + wr-unit sized relative to range column font size
     const numsFz   = Math.max(8, rangeFz * 0.80);
     const unitFz   = Math.max(6, numsFz * 0.60);
@@ -1415,6 +1411,19 @@ main { padding: 0; max-width: none; }
       if (unitEl)   unitEl.style.fontSize   = unitFz.toFixed(1)   + 'px';
       if (contEl)   contEl.style.fontSize   = singleFz.toFixed(1) + 'px';
       if (dangerEl) dangerEl.style.fontSize = singleFz.toFixed(1) + 'px';
+    });
+
+    // Active cell: wr-nums at rangeFz, wr-unit scaled same as other cells
+    const userUnitFz = Math.max(6, rangeFz * 0.60);
+    gridEl.querySelectorAll('.acc-user-cell').forEach(cell => {
+      const numsEl   = cell.querySelector('.wr-nums');
+      const unitEl   = cell.querySelector('.wr-unit');
+      const contEl   = cell.querySelector('.wr-continuous');
+      const dangerEl = cell.querySelector('.wr-danger');
+      if (numsEl)   numsEl.style.fontSize   = rangeFz.toFixed(1)   + 'px';
+      if (unitEl)   unitEl.style.fontSize   = userUnitFz.toFixed(1) + 'px';
+      if (contEl)   contEl.style.fontSize   = rangeFz.toFixed(1)   + 'px';
+      if (dangerEl) dangerEl.style.fontSize = rangeFz.toFixed(1)   + 'px';
     });
   }
 

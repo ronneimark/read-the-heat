@@ -263,7 +263,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 /* ── Chart tabs (shared base) ── */
 #trh-tab-chart,
 #trh-utab-chart {
-  overflow: hidden; display: none; flex-direction: column; padding: 0 10%; box-sizing: border-box;
+  overflow: hidden; display: none; flex-direction: column; padding: 0 12.5%; box-sizing: border-box;
 }
 /* ── Desktop result card ── */
 @media (min-width: 769px) {
@@ -426,8 +426,7 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   position: relative;
   z-index: 1;
 }
-.acc-user-cell .wr-nums { font-size: clamp(16px, 3.5vh, 44px) !important; }
-.acc-user-cell .wr-unit { font-size: clamp(10px, 1.6vh, 19px) !important; }
+/* User cell font size set at runtime by fitDataCellSize() */
 
 /* Work/rest cell content */
 .wr-nums {
@@ -1757,13 +1756,12 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
     return rangeFz;
   }
 
-  // ── Fit data cells to 80% of the range column font size ──
+  // ── Fit data cells to 80% of the range column font size; active cell at 100% ──
   function fitDataCellSize(gridEl, rangeFz) {
     if (!gridEl || window.innerWidth <= 768) return;
     const dataCells = [...gridEl.querySelectorAll(
       '.acc-cell:not(.acc-hdr):not(.acc-range):not(.acc-user-cell)'
     )];
-    if (!dataCells.length) return;
     // wr-nums + wr-unit sized relative to range column font size
     const numsFz   = Math.max(8, rangeFz * 0.80);
     const unitFz   = Math.max(6, numsFz * 0.60);
@@ -1779,6 +1777,19 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
       if (unitEl)   unitEl.style.fontSize   = unitFz.toFixed(1)   + 'px';
       if (contEl)   contEl.style.fontSize   = singleFz.toFixed(1) + 'px';
       if (dangerEl) dangerEl.style.fontSize = singleFz.toFixed(1) + 'px';
+    });
+
+    // Active cell: wr-nums at rangeFz, wr-unit scaled same as other cells
+    const userUnitFz = Math.max(6, rangeFz * 0.60);
+    gridEl.querySelectorAll('.acc-user-cell').forEach(cell => {
+      const numsEl   = cell.querySelector('.wr-nums');
+      const unitEl   = cell.querySelector('.wr-unit');
+      const contEl   = cell.querySelector('.wr-continuous');
+      const dangerEl = cell.querySelector('.wr-danger');
+      if (numsEl)   numsEl.style.fontSize   = rangeFz.toFixed(1)    + 'px';
+      if (unitEl)   unitEl.style.fontSize   = userUnitFz.toFixed(1) + 'px';
+      if (contEl)   contEl.style.fontSize   = rangeFz.toFixed(1)    + 'px';
+      if (dangerEl) dangerEl.style.fontSize = rangeFz.toFixed(1)    + 'px';
     });
   }
 
