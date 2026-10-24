@@ -1762,15 +1762,15 @@ main { padding: 0; max-width: none; }
   function fitGridHeaderSize(gridEl) {
     if (!gridEl) return;
 
-    // ── Range column cells → single line, 64% of content height ──
+    // ── Range column cells → single line, 90% of content height ──
     const rangeCells = [...gridEl.querySelectorAll('.acc-range')];
     let rangeFzTenths = 70;
     if (rangeCells.length) {
       const rc = rangeCells[0];
       const cs = getComputedStyle(rc);
       const contentH = rc.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-      // Single line (line-height 1.15): fontSize * 1.15 = 0.64 * contentH
-      const maxByH = Math.max(70, Math.floor(0.64 * contentH / 1.15 * 10));
+      // Single line (line-height 1.15): fontSize * 1.15 = 0.90 * contentH
+      const maxByH = Math.max(70, Math.floor(0.90 * contentH / 1.15 * 10));
       let lo = 70, hi = Math.min(340, maxByH);
       while (lo < hi) {
         const mid = Math.floor((lo + hi + 1) / 2);
@@ -1781,6 +1781,7 @@ main { padding: 0; max-width: none; }
       rangeFzTenths = Math.max(70, lo - 70);
       rangeCells.forEach(c => c.style.fontSize = (rangeFzTenths / 10) + 'px');
     }
+    const rangeFz = rangeFzTenths / 10;
 
     // ── Header row cells (.acc-hdr-sub): title = range font size; sub fills remainder ──
     const hdrCells = [...gridEl.querySelectorAll('.acc-hdr-sub')];
@@ -1812,25 +1813,22 @@ main { padding: 0; max-width: none; }
         if (sub) sub.style.fontSize = subFz.toFixed(1) + 'px';
       });
     }
+
+    return rangeFz;
   }
 
-  // ── Fit data cells so text fills 55% of content height ──
-  function fitDataCellSize(gridEl) {
+  // ── Fit data cells to 80% of the range column font size ──
+  function fitDataCellSize(gridEl, rangeFz) {
     if (!gridEl || window.innerWidth <= 768) return;
     const dataCells = [...gridEl.querySelectorAll(
       '.acc-cell:not(.acc-hdr):not(.acc-range):not(.acc-user-cell)'
     )];
     if (!dataCells.length) return;
-    const dc = dataCells[0];
-    const cs = getComputedStyle(dc);
-    const contentH = dc.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    if (contentH <= 0) return;
-    // wr-nums (line-height:1) + wr-unit (~0.60× wr-nums, line-height:1) + 1px gap:
-    // textH = numsFz * (1 + 0.60) + 1 = numsFz * 1.60 + 1 = 0.55 * contentH
-    const numsFz   = Math.max(8, (0.55 * contentH - 1) / 1.60);
+    // wr-nums + wr-unit sized relative to range column font size
+    const numsFz   = Math.max(8, rangeFz * 0.80);
     const unitFz   = Math.max(6, numsFz * 0.60);
-    // wr-continuous / wr-danger (single line, line-height ~1.1):
-    const singleFz = Math.max(8, 0.55 * contentH / 1.1);
+    // wr-continuous / wr-danger use the same base
+    const singleFz = Math.max(8, rangeFz * 0.80);
 
     dataCells.forEach(cell => {
       const numsEl   = cell.querySelector('.wr-nums');
@@ -1854,8 +1852,8 @@ main { padding: 0; max-width: none; }
     requestAnimationFrame(() => {
       const g1 = document.getElementById('hi-tab-chart')?.querySelector('.acclim-chart-grid');
       const g2 = document.getElementById('hi-utab-chart')?.querySelector('.acclim-chart-grid');
-      if (g1) { fitGridHeaderSize(g1); fitDataCellSize(g1); }
-      if (g2) { fitGridHeaderSize(g2); fitDataCellSize(g2); }
+      if (g1) { const rfz = fitGridHeaderSize(g1); fitDataCellSize(g1, rfz); }
+      if (g2) { const rfz = fitGridHeaderSize(g2); fitDataCellSize(g2, rfz); }
     });
   }
 
