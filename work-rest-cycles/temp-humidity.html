@@ -391,29 +391,55 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   padding-bottom: 0;
   border-bottom: 3px solid rgba(0,0,0,0.30) !important;
   box-shadow: none;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 .acc-range-hdr { align-items: flex-start; justify-content: center; padding-left: 14px; text-align: left; }
 .acc-range {
   font-size: 12px;
   font-weight: 600;
-  color: var(--navy, #1A2A3A);
+  color: #fff;
   align-items: flex-start;
   justify-content: center;
   text-align: left;
   padding-left: 12px;
-  background: linear-gradient(to right, #E4EBF3 0%, #F0F4F8 100%);
-  box-shadow: inset -2px 0 0 rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.60);
+  background: linear-gradient(to right, #3B5A7A 0%, #2C4760 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+  border-right: 2px solid rgba(0,0,0,0.30) !important;
   white-space: nowrap;
   overflow: hidden;
 }
+/* Row banding on range label column */
+.acc-range:nth-child(10n+11),
+.acc-range:nth-child(10n+21) { background: linear-gradient(to right, #344F6B 0%, #263D55 100%); }
+
+/* Zebra striping: even data rows */
+.acc-cell:not(.acc-hdr):not(.acc-range):nth-child(10n+12),
+.acc-cell:not(.acc-hdr):not(.acc-range):nth-child(10n+13),
+.acc-cell:not(.acc-hdr):not(.acc-range):nth-child(10n+14),
+.acc-cell:not(.acc-hdr):not(.acc-range):nth-child(10n+15) {
+  filter: brightness(0.955);
+}
+
 .acclim-chart-grid .c-safe,
 .acclim-chart-grid .c-low,
 .acclim-chart-grid .c-caution,
 .acclim-chart-grid .c-warn,
 .acclim-chart-grid .c-high,
 .acclim-chart-grid .c-stop { font-size: inherit; }
-/* Dark stop cells get a lighter inset shimmer */
-.acclim-chart-grid .c-stop { box-shadow: inset 0 1px 0 rgba(255,255,255,0.18); border-right-color: rgba(255,255,255,0.12); }
+/* DANGER cells: diagonal stripe + border highlight */
+.acclim-chart-grid .c-stop {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.20) 0px, rgba(0,0,0,0.20) 3px,
+      transparent 3px, transparent 11px
+    ),
+    #8B0000 !important;
+  border: 2px solid #CC3333 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
 .acc-user-col.acc-hdr {
   background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%);
   border-left: 3px solid rgba(255,255,255,0.35);
@@ -432,10 +458,17 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 
 /* Work/rest cell content */
 .wr-nums {
-  display: flex; align-items: baseline; gap: 0.18em;
-  font-size: clamp(13px, 2.5vh, 32px); font-weight: 700; line-height: 1;
+  display: grid;
+  grid-template-columns: 1.8em 0.7em 1.8em;
+  align-items: baseline;
+  font-size: clamp(13px, 2.5vh, 32px);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
-.wr-slash { font-weight: 400; opacity: 0.5; font-size: 0.8em; }
+.wr-w    { text-align: right; }
+.wr-slash { text-align: center; font-weight: 400; opacity: 0.45; font-size: 0.8em; }
+.wr-r    { text-align: left; }
 .wr-unit {
   font-size: clamp(9px, 1.5vh, 17px); font-weight: 500; opacity: 0.8;
   letter-spacing: 0.1px; text-transform: none; line-height: 1; white-space: nowrap;
@@ -443,19 +476,42 @@ body.trh-result-active .hi-formula-footnote { display: none; }
 .wr-continuous { font-size: clamp(11px, 2vh, 26px); font-weight: 700; }
 .wr-danger { font-size: clamp(11px, 2vh, 24px); font-weight: 900; letter-spacing: 0.04em; }
 
-/* ── Chart caption / legend ── */
+/* ── Chart legend ── */
+.chart-legend {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: center;
+  background: rgba(240,244,248,0.97);
+  border-top: 1px solid rgba(0,0,0,0.12);
+  padding: 6px 12px;
+  font-size: clamp(10px, 1.4vh, 12px);
+}
+.chart-legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-weight: 600; color: #2E3A4A; white-space: nowrap;
+}
+.chart-legend-swatch {
+  width: 11px; height: 11px; border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
+}
+.chart-legend-swatch.danger-swatch {
+  background: repeating-linear-gradient(-45deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 2px, transparent 2px, transparent 6px), #8B0000;
+  border-color: #CC3333;
+}
+
+/* ── Chart caption ── */
 .chart-caption {
   flex: 0 0 auto;
   background: rgba(240,244,248,0.97);
-  border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 6px;
-  font-size: clamp(11px, 1.55vh, 14px);
-  font-weight: 600;
-  color: #2E3A4A;
-  text-align: center;
-  padding: 3px 14px;
-  line-height: 1.4;
-  margin: 4px 10px 6px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: clamp(10px, 1.35vh, 12px);
+  font-weight: 500;
+  color: #556070;
+  text-align: left;
+  padding: 5px 12px;
+  line-height: 1.5;
 }
 
 /* ── Notes tabs ── */
@@ -1441,6 +1497,8 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
     const actSubs  = ['< 200 kcal/hr', '201–300 kcal/hr', '301–400 kcal/hr', '401–500 kcal/hr'];
     const existingGrid = pane.querySelector('.acclim-chart-grid');
     if (existingGrid) existingGrid.remove();
+    const existingLegend = pane.querySelector('.chart-legend');
+    if (existingLegend) existingLegend.remove();
     const existingCaption = pane.querySelector('.chart-caption');
     if (existingCaption) existingCaption.remove();
 
@@ -1470,7 +1528,13 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
       html += '</div>';
     }
     html += '</div>';
-    html += '<div class="chart-caption">Work-rest cycles per hour. &nbsp;* Continuous work approaches the hourly exposure limit; ensure acclimatization and close monitoring.</div>';
+    html += '<div class="chart-legend">'
+      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#EAF4EE"></span>Safe / Continuous</span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#FFF8E1"></span>Caution</span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#FFF0E0"></span>Warning</span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-swatch danger-swatch"></span>DANGER — eng. controls required</span>'
+      + '</div>';
+    html += '<div class="chart-caption">Work-rest cycles per 60-minute period. Source: NIOSH (2016), Table 5-1. * Continuous work approaches the hourly REL; ensure acclimatization and close monitoring.</div>';
     pane.insertAdjacentHTML('beforeend', html);
   }
 
