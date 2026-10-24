@@ -385,6 +385,19 @@ body { background: #F6F3EC !important; }
   box-shadow: 0 1px 0 #001040, 0 2px 4px rgba(0,10,60,0.28);
 }
 
+/* Heat Index hover note */
+.ls5-hi-note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #7B4A00;
+  background: #FFF8E1;
+  border-left: 3px solid #E65100;
+  border-radius: 3px;
+  padding: 5px 7px;
+}
+.ls5-hi-note strong { color: #E65100; }
+
 /* Select button — red, fills full height of right column */
 .ls5-btn-select {
   width: 100%;
@@ -1009,6 +1022,7 @@ body { background: #F6F3EC !important; }
             <div class="ls5-back-left">
               <div class="ls5-meas-title">Heat Index</div>
               <button class="ls5-btn-info" onclick="showDeviceInfo('hi')" aria-label="Heat Index Monitor information">Information</button>
+              <p class="ls5-hi-note"><strong>NOTE:</strong> If you have access to the Temperature and Relative Humidity values, it is better to use the Temperature and Humidity calculator</p>
             </div>
             <div class="ls5-back-right">
               <button class="ls5-btn-select" onclick="activateCard('hi', this.closest('.ls5-meas-card'))" aria-label="Select Heat Index Monitor">
