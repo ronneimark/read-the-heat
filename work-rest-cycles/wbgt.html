@@ -1338,28 +1338,9 @@ main { padding: 0; max-width: none; }
   function fitGridHeaderSize(gridEl) {
     if (!gridEl) return;
 
-    // ── Header row cells → text occupies 80% of content height ──
-    const hdrCells = [...gridEl.querySelectorAll('.acc-hdr')];
-    if (hdrCells.length) {
-      const hc = hdrCells[0];
-      const cs = getComputedStyle(hc);
-      const contentH = hc.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-      // 2-line layout (title + 0.68em sub, line-height 1.3, 3px gap):
-      // textH ≈ fontSize * 1.3 * (1 + 0.68) + 3 = fontSize * 2.184 + 3 = 0.80 * contentH
-      const maxByH = Math.max(70, Math.floor((0.80 * contentH - 3) / 2.184 * 10));
-      let lo = 70, hi = Math.min(340, maxByH);
-      while (lo < hi) {
-        const mid = Math.floor((lo + hi + 1) / 2);
-        const fs  = (mid / 10) + 'px';
-        hdrCells.forEach(c => c.style.fontSize = fs);
-        if (hdrCells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1; else lo = mid;
-      }
-      const finalTenths = Math.max(70, lo - 70);
-      hdrCells.forEach(c => c.style.fontSize = (finalTenths / 10) + 'px');
-    }
-
-    // ── Range column cells → text occupies 64% of content height ──
+    // ── Range column cells → single line, 64% of content height ──
     const rangeCells = [...gridEl.querySelectorAll('.acc-range')];
+    let rangeFzTenths = 70;
     if (rangeCells.length) {
       const rc = rangeCells[0];
       const cs = getComputedStyle(rc);
@@ -1373,8 +1354,39 @@ main { padding: 0; max-width: none; }
         rangeCells.forEach(c => c.style.fontSize = fs);
         if (rangeCells.some(c => c.scrollWidth > c.clientWidth + 1)) hi = mid - 1; else lo = mid;
       }
-      const finalTenths = Math.max(70, lo - 70);
-      rangeCells.forEach(c => c.style.fontSize = (finalTenths / 10) + 'px');
+      rangeFzTenths = Math.max(70, lo - 70);
+      rangeCells.forEach(c => c.style.fontSize = (rangeFzTenths / 10) + 'px');
+    }
+
+    // ── Header row cells (.acc-hdr-sub): title = range font size; sub fills remainder ──
+    const hdrCells = [...gridEl.querySelectorAll('.acc-hdr-sub')];
+    if (hdrCells.length) {
+      const hc = hdrCells[0];
+      const cs = getComputedStyle(hc);
+      const contentH = hc.offsetHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+
+      // Hide sub spans so width check reflects title text only
+      hdrCells.forEach(c => { const s = c.querySelector('.acc-sub'); if (s) s.style.display = 'none'; });
+
+      // Start title at rangeFz, reduce if title text overflows cell width
+      let titleTenths = rangeFzTenths;
+      hdrCells.forEach(c => c.style.fontSize = (titleTenths / 10) + 'px');
+      while (titleTenths > 70 && hdrCells.some(c => c.scrollWidth > c.clientWidth + 1)) {
+        titleTenths--;
+        hdrCells.forEach(c => c.style.fontSize = (titleTenths / 10) + 'px');
+      }
+      const titleFz = titleTenths / 10;
+
+      // Restore sub spans
+      hdrCells.forEach(c => { const s = c.querySelector('.acc-sub'); if (s) s.style.display = ''; });
+
+      // Sub fills remainder: remainH = contentH - title line (titleFz * 1.3) - margin-top (3px)
+      const remainH = Math.max(0, contentH - titleFz * 1.3 - 3);
+      const subFz = Math.max(6, remainH / 1.3);
+      hdrCells.forEach(c => {
+        const sub = c.querySelector('.acc-sub');
+        if (sub) sub.style.fontSize = subFz.toFixed(1) + 'px';
+      });
     }
   }
 
