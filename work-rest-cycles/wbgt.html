@@ -209,12 +209,17 @@ main { padding: 0; max-width: none; }
 /* ── Tab panels (shared base) ── */
 #acclim-tab-chart, #unacclim-tab-chart {
   overflow: hidden; display: none; flex-direction: column; padding: 0; box-sizing: border-box;
+  align-items: center;
 }
+#acclim-tab-chart .acclim-chart-grid,
+#unacclim-tab-chart .acclim-chart-grid { width: 80%; }
+#acclim-tab-chart .chart-caption,
+#unacclim-tab-chart .chart-caption { width: 80%; }
 /* ── Desktop result card ── */
 @media (min-width: 769px) {
   #wbgt-result-card {
     position: fixed;
-    left: 10%; right: 10%; bottom: 35px;
+    left: 35px; right: 35px; bottom: 35px;
     background: var(--bg, #FFFFFF);
     border-radius: 14px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.15), 0 12px 48px rgba(0,0,0,0.10);
