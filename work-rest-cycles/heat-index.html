@@ -318,8 +318,8 @@ main { padding: 0; max-width: none; }
   #hi-unacclim-tab-bar-wrap { display: none !important; }
 
   /* Force non-result panes hidden */
-  #hi-tab-chart, #hi-tab-notes, #hi-tab-formula, #hi-tab-hitable,
-  #hi-utab-chart, #hi-utab-notes, #hi-utab-formula, #hi-utab-hitable,
+  #hi-tab-chart, #hi-tab-notes, #hi-tab-hitable,
+  #hi-utab-chart, #hi-utab-notes, #hi-utab-hitable,
   #hi-formula-footnote { display: none !important; }
 
   /* Release result panes from fixed/viewport-height sizing */
@@ -422,8 +422,6 @@ main { padding: 0; max-width: none; }
   }
   #hi-tab-result-wrap,
   #hi-utab-result-wrap,
-  #hi-tab-formula,
-  #hi-utab-formula,
   #hi-tab-hitable,
   #hi-utab-hitable {
     flex: 1;
@@ -788,33 +786,6 @@ main { padding: 0; max-width: none; }
     </div>
   </div>
 
-  <!-- T+RH input strip (shared; border-bottom separates header from content) -->
-  <div id="hi-trh-strip">
-    <span class="trh-strip-label">Input Method:</span>
-    <div class="trh-mode-toggle" role="group" aria-label="Heat index input method">
-      <button class="trh-mode-btn active" id="trh-btn-hi" aria-pressed="true"
-              onclick="setHiInputMode('hi')">Heat Index</button>
-      <button class="trh-mode-btn" id="trh-btn-trh" aria-pressed="false"
-              onclick="setHiInputMode('trh')">Temp + RH</button>
-    </div>
-    <div class="trh-inputs-row" id="hi-trh-inputs-row" style="display:none" aria-live="polite">
-      <div class="trh-field">
-        <label for="hi-trh-temp">Temperature (<span id="hi-trh-unit-label">°F</span>)</label>
-        <input type="number" id="hi-trh-temp" min="-50" max="200" step="0.1"
-               placeholder="e.g. 95" aria-label="Air temperature" oninput="onTrhInput()">
-      </div>
-      <div class="trh-field">
-        <label for="hi-trh-rh">Relative Humidity (%)</label>
-        <input type="number" id="hi-trh-rh" min="0" max="100" step="1"
-               placeholder="e.g. 60" aria-label="Relative humidity percent" oninput="onTrhInput()">
-      </div>
-      <div class="trh-arrow" aria-hidden="true">→</div>
-      <div class="trh-hi-result">
-        <div class="trh-hi-result-label">Calculated Heat Index</div>
-        <div class="trh-hi-result-value" id="hi-trh-calc-display" aria-live="polite">—</div>
-      </div>
-    </div>
-  </div>
 </div><!-- /fixed-top -->
 
 <!-- ── Desktop result card (tab bars + content, 35px from all edges) ── -->
@@ -840,12 +811,6 @@ main { padding: 0; max-width: none; }
               onclick="switchHITab('notes')">
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
         <span class="acclim-tab-btn-sub">Hydration &amp; limitations</span>
-      </button>
-      <button class="acclim-tab-btn" id="hi-tab-btn-formula" role="tab"
-              aria-selected="false" aria-controls="hi-tab-formula" tabindex="-1"
-              onclick="switchHITab('formula')">
-        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
-        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
       </button>
       <button class="acclim-tab-btn" id="hi-tab-btn-hitable" role="tab"
               aria-selected="false" aria-controls="hi-tab-hitable" tabindex="-1"
@@ -877,12 +842,6 @@ main { padding: 0; max-width: none; }
         <span class="acclim-tab-btn-title"><span aria-hidden="true">📝 </span>Notes</span>
         <span class="acclim-tab-btn-sub">Guidance &amp; limitations</span>
       </button>
-      <button class="acclim-tab-btn" id="hi-utab-btn-formula" role="tab"
-              aria-selected="false" aria-controls="hi-utab-formula" tabindex="-1"
-              onclick="switchHIUnacclimTab('formula')">
-        <span class="acclim-tab-btn-title"><span aria-hidden="true">🔬 </span>Formula Check</span>
-        <span class="acclim-tab-btn-sub">Verify T+RH calculation (temp)</span>
-      </button>
       <button class="acclim-tab-btn" id="hi-utab-btn-hitable" role="tab"
               aria-selected="false" aria-controls="hi-utab-hitable" tabindex="-1"
               onclick="switchHIUnacclimTab('hitable')">
@@ -902,7 +861,6 @@ main { padding: 0; max-width: none; }
       </div>
       <div id="hi-tab-chart" role="tabpanel" aria-labelledby="hi-tab-btn-chart" tabindex="0"></div>
       <div id="hi-tab-notes" role="tabpanel" aria-labelledby="hi-tab-btn-notes" tabindex="0"></div>
-      <div id="hi-tab-formula" role="tabpanel" aria-labelledby="hi-tab-btn-formula" tabindex="0"></div>
       <div id="hi-tab-hitable" role="tabpanel" aria-labelledby="hi-tab-btn-hitable" tabindex="0"></div>
     </div><!-- /hi-acclim-tabs -->
 
@@ -913,7 +871,6 @@ main { padding: 0; max-width: none; }
       </div>
       <div id="hi-utab-chart" role="tabpanel" aria-labelledby="hi-utab-btn-chart" tabindex="0"></div>
       <div id="hi-utab-notes" role="tabpanel" aria-labelledby="hi-utab-btn-notes" tabindex="0"></div>
-      <div id="hi-utab-formula" role="tabpanel" aria-labelledby="hi-utab-btn-formula" tabindex="0"></div>
       <div id="hi-utab-hitable" role="tabpanel" aria-labelledby="hi-utab-btn-hitable" tabindex="0"></div>
     </div><!-- /hi-unacclim-tabs -->
 
@@ -1177,8 +1134,6 @@ main { padding: 0; max-width: none; }
     } else {
       onTrhInput();
     }
-    buildHIFormulaTab();
-    buildHIUnacclimFormulaTab();
   }
 
   // ── Mobile: place T+RH strip inline right after the tapped card ─────────────
@@ -2110,11 +2065,9 @@ main { padding: 0; max-width: none; }
     buildHIResultTab(s);
     buildHIChartTab();
     buildHINotesTab();
-    buildHIFormulaTab();
     buildHIUnacclimResultTab(s);
     buildHIUnacclimChartTab();
     buildHIUnacclimNotesTab();
-    buildHIUnacclimFormulaTab();
 
     // Activate first tab in each section
     switchHITab('result');
@@ -2122,7 +2075,7 @@ main { padding: 0; max-width: none; }
 
     // Keyboard nav — acclimatized tablist
     document.getElementById('hi-acclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula','hitable'];
+      const tabs = ['result','chart','notes','hitable'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-tab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
@@ -2136,7 +2089,7 @@ main { padding: 0; max-width: none; }
 
     // Keyboard nav — unacclimatized tablist
     document.getElementById('hi-unacclim-tab-bar').addEventListener('keydown', e => {
-      const tabs = ['result','chart','notes','formula','hitable'];
+      const tabs = ['result','chart','notes','hitable'];
       const cur  = tabs.findIndex(t => document.getElementById('hi-utab-btn-' + t).getAttribute('aria-selected') === 'true');
       let next = cur;
       if      (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (cur + 1) % tabs.length; }
