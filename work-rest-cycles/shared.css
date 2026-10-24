@@ -1193,7 +1193,7 @@
     overflow-y: auto;
   }
   .ls2-level-examples-label {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.8px;
     text-transform: uppercase;
@@ -1202,7 +1202,7 @@
     flex-shrink: 0;
   }
   .ls2-level-examples {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--subtext);
     line-height: 1.65;
     padding-left: 14px;
@@ -1212,7 +1212,7 @@
     margin: 0;
   }
   .ls2-level-none {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--subtext);
     font-style: italic;
   }
