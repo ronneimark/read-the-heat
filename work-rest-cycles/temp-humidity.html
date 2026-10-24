@@ -481,24 +481,24 @@ body.trh-result-active .hi-formula-footnote { display: none; }
   flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  gap: 5px 8px;
   align-items: center;
   background: rgba(240,244,248,0.97);
   border-top: 1px solid rgba(0,0,0,0.12);
-  padding: 6px 12px;
-  font-size: clamp(10px, 1.4vh, 12px);
+  padding: 7px 12px;
+  font-size: clamp(9px, 1.3vh, 11px);
+}
+.chart-legend-label {
+  font-size: inherit; font-weight: 600; color: #556070;
+  margin-right: 2px; white-space: nowrap;
 }
 .chart-legend-item {
-  display: flex; align-items: center; gap: 5px;
-  font-weight: 600; color: #2E3A4A; white-space: nowrap;
+  display: flex; align-items: center; white-space: nowrap;
 }
-.chart-legend-swatch {
-  width: 11px; height: 11px; border-radius: 3px;
-  border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
-}
-.chart-legend-swatch.danger-swatch {
-  background: repeating-linear-gradient(-45deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 2px, transparent 2px, transparent 6px), #8B0000;
-  border-color: #CC3333;
+.chart-legend-chip {
+  display: inline-flex; align-items: center; padding: 2px 8px 2px 6px;
+  border-radius: 3px; font-weight: 700; font-size: inherit;
+  border: 1px solid rgba(0,0,0,0.18); border-left-width: 4px; line-height: 1.5;
 }
 
 /* ── Chart caption ── */
@@ -1528,11 +1528,13 @@ tr.ewbgt-tbl-rec-row td:first-child  { color: #2E7D32; font-weight: 700; }
       html += '</div>';
     }
     html += '</div>';
-    html += '<div class="chart-legend">'
-      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#EAF4EE"></span>Safe / Continuous</span>'
-      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#FFF8E1"></span>Caution</span>'
-      + '<span class="chart-legend-item"><span class="chart-legend-swatch" style="background:#FFF0E0"></span>Warning</span>'
-      + '<span class="chart-legend-item"><span class="chart-legend-swatch danger-swatch"></span>DANGER — eng. controls required</span>'
+    html += '<div class="chart-legend" role="img" aria-label="Risk level key">'
+      + '<span class="chart-legend-label">Key:</span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-chip" style="background:#E0F5EE;color:#005540;border-left-color:#005540">Safe / Continuous</span></span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-chip" style="background:#FFFDE7;color:#5D3A00;border-left-color:#5D3A00">Caution</span></span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-chip" style="background:#FFF3E0;color:#7B2500;border-left-color:#7B2500">Warning</span></span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-chip" style="background:#FFEBEE;color:#8B0000;border-left-color:#8B0000">High Risk</span></span>'
+      + '<span class="chart-legend-item"><span class="chart-legend-chip" style="background:repeating-linear-gradient(-45deg,rgba(0,0,0,0.20) 0px,rgba(0,0,0,0.20) 3px,transparent 3px,transparent 11px),#AE1515;color:#fff;border-color:rgba(255,255,255,0.25);border-left-color:#EF9A9A">DANGER</span></span>'
       + '</div>';
     html += '<div class="chart-caption">Work-rest cycles per 60-minute period. Source: NIOSH (2016), Table 5-1. * Continuous work approaches the hourly REL; ensure acclimatization and close monitoring.</div>';
     pane.insertAdjacentHTML('beforeend', html);
