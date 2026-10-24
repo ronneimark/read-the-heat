@@ -1157,7 +1157,7 @@
     letter-spacing: 0.1px;
   }
   .ls2-level-kcal {
-    font-size: 10px;
+    font-size: 14px;
     color: #fff;
     font-weight: 500;
     display: block;
@@ -2392,7 +2392,7 @@
     .ls2-level-body    { padding: 10px 12px 12px !important; }
     .ls2-level-header  { padding: 10px 12px 8px !important; }
     .ls2-level-name    { font-size: 20px !important; }
-    .ls2-level-kcal    { font-size: 12px !important; }
+    .ls2-level-kcal    { font-size: 16px !important; }
   }
 
   /* ── Work-rest key box: drop the 560px cap so it fills the phone screen ── */
