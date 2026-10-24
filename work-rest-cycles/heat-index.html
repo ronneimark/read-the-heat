@@ -31,7 +31,7 @@ main { padding: 0; max-width: none; }
   background: #EBF0F5;
   border-bottom: 4px solid var(--navy, #1A2A3A);
   padding: 8px 16px;
-  display: flex;
+  display: none !important;  /* hidden on desktop; mobile inline still works via .mobile-trh-inline */
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
@@ -393,9 +393,9 @@ main { padding: 0; max-width: none; }
   align-items: center;
 }
 #hi-tab-chart .acclim-chart-grid,
-#hi-utab-chart .acclim-chart-grid { width: 80%; }
+#hi-utab-chart .acclim-chart-grid { width: 80% !important; align-self: center; margin: 0 auto; }
 #hi-tab-chart .chart-caption,
-#hi-utab-chart .chart-caption { width: 80%; }
+#hi-utab-chart .chart-caption { width: 80%; margin: 0 auto; }
 
 /* ── Desktop result card ── */
 @media (min-width: 769px) {
