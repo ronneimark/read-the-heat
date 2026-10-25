@@ -1998,6 +1998,7 @@
       display: flex !important;
       overflow: visible !important;
       padding-top: 0 !important;
+      padding-bottom: 14px !important;
     }
     .ls2-card-front { padding-bottom: 4px !important; }
     .ls2-level-panel:hover .ls2-card-front { display: flex !important; }
