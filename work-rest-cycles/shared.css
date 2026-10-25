@@ -2002,7 +2002,7 @@
     .ls2-card-back {
       display: flex !important;
       flex: none !important;
-      padding-top: 0 !important;
+      padding-top: 6px !important;
       padding-bottom: 14px !important;
       overflow: visible !important;
     }

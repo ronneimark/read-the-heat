@@ -179,7 +179,11 @@
       }
     });
     const nameEl = document.getElementById('ls2-sector-name');
-    if (nameEl) nameEl.textContent = sectorLabels[sector] || sector;
+    const sectorLabel = sectorLabels[sector] || sector;
+    if (nameEl) nameEl.textContent = sectorLabel;
+    document.querySelectorAll('.ls2-level-examples-label').forEach(el => {
+      el.textContent = 'Examples: ' + sectorLabel;
+    });
     buildBreadcrumbs();
     updateLayout();
     window.addEventListener('resize', updateLayout);
