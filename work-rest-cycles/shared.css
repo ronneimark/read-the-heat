@@ -1993,6 +1993,12 @@
       overflow: visible !important;
       height: auto !important;
     }
+    /* Always show examples on mobile — no hover available */
+    .ls2-card-back {
+      display: flex !important;
+      overflow: visible !important;
+    }
+    .ls2-level-panel:hover .ls2-card-front { display: flex !important; }
 
     /* Acclimatization wrap + cards: flow freely */
     .ls3-acclim-wrap {
