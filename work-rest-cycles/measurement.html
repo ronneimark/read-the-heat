@@ -317,33 +317,33 @@ body { background: #F6F3EC !important; }
   align-self: center;
   font-size: clamp(20px, 2.8vh, 27px);
 }
+/* Photo area bleeds to the card's right, top and bottom edges.
+   Negative margins offset the front's padding so the image runs
+   flush; border-radius matches the card corner (12px radius − 2px border). */
 .ls5-meas-photo-area {
-  flex: 0 0 44%;
-  max-width: 44%;
+  flex: 0 0 50%;
+  max-width: 50%;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   overflow: hidden;
-}
-.method-card-photo-wrap {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  border-radius: 0 10px 10px 0;
+  margin-top:    calc(-1 * clamp(8px, 1.5vh, 16px));
+  margin-bottom: calc(-1 * clamp(8px, 1.5vh, 16px));
+  margin-right:  calc(-1 * clamp(10px, 1.8vw, 18px));
 }
 .method-card-photo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
   display: block;
-  cursor: zoom-in;
+}
+/* WBGT: show globe at top of the frame */
+.ls5-wbgt .method-card-photo {
+  object-position: center top;
+}
+/* Heat index: crop to just the heat index reading, not temp/humidity below */
+.ls5-hi .method-card-photo {
+  object-position: center top;
 }
 
 /* ── Back: split layout ── */
@@ -863,8 +863,8 @@ body { background: #F6F3EC !important; }
         <div class="ls5-meas-card ls5-wbgt" data-instrument="wbgt">
           <button class="ls5-meas-front" type="button" aria-label="Select Wet Bulb Globe Thermometer">
             <div class="ls5-meas-title">Wet Bulb Globe Thermometer <span class="ls5-sub">(WBGT)</span></div>
-            <div class="ls5-meas-photo-area" style="max-height:170px">
-              <img class="method-card-photo" src="images/wbgt-monitors.png" alt="WBGT Monitors">
+            <div class="ls5-meas-photo-area">
+              <img class="method-card-photo" src="images/wbgt-single.jpg" alt="WBGT Monitor Display">
             </div>
           </button>
           <div class="ls5-meas-back">
@@ -966,7 +966,7 @@ body { background: #F6F3EC !important; }
           <button class="ls5-meas-front" type="button" aria-label="Select Temperature + Humidity">
             <div class="ls5-meas-title">Temperature + Humidity</div>
             <div class="ls5-meas-photo-area">
-              <img class="method-card-photo" src="images/trh-monitors.png" alt="Temperature &amp; Relative Humidity Monitors">
+              <img class="method-card-photo" src="images/trh-single.jpg" alt="Temperature &amp; Relative Humidity Monitor Display">
             </div>
           </button>
           <div class="ls5-meas-back">
@@ -1028,7 +1028,7 @@ body { background: #F6F3EC !important; }
           <button class="ls5-meas-front" type="button" aria-label="Select Heat Index">
             <div class="ls5-meas-title">Heat Index</div>
             <div class="ls5-meas-photo-area">
-              <img class="method-card-photo" src="images/heat-index-monitors.png" alt="Heat Index Monitors">
+              <img class="method-card-photo" src="images/heat-index-single.jpg" alt="Heat Index Monitor Display">
             </div>
           </button>
           <div class="ls5-meas-back">
@@ -1071,8 +1071,8 @@ body { background: #F6F3EC !important; }
         <div class="ls5-meas-card ls5-dbt" data-instrument="dbt">
           <button class="ls5-meas-front" type="button" aria-label="Select Thermometer Only">
             <div class="ls5-meas-title">Thermometer Only</div>
-            <div class="ls5-meas-photo-area" style="max-height:170px">
-                <img class="method-card-photo" src="images/thermometer-only.png" alt="Digital Thermometer">
+            <div class="ls5-meas-photo-area">
+                <img class="method-card-photo" src="images/thermometer-only.png" alt="Digital Thermometer Display">
               </div>
           </button>
           <div class="ls5-meas-back">
