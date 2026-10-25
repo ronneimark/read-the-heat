@@ -309,34 +309,31 @@ body { background: #F6F3EC !important; }
 /* ── Front: title left, photo right ── */
 .ls5-meas-front {
   flex-direction: row !important;
-  align-items: stretch;
+  align-items: center;
+  position: relative; /* photo area positions absolutely within front face */
 }
 .ls5-meas-front .ls5-meas-title {
   flex: 1;
   min-width: 0;
+  max-width: 50%; /* keep text in left half, away from photo */
   align-self: center;
   font-size: clamp(20px, 2.8vh, 27px);
 }
-/* Photo area bleeds to the card's right, top and bottom edges.
-   Negative margins offset the front's padding so the image runs
-   flush; border-radius matches the card corner (12px radius − 2px border). */
+/* Photo area absolutely fills the right half of the card from top to bottom.
+   Positioned relative to front face padding-box (top/bottom = card content edges).
+   Card overflow:hidden clips cleanly at border-radius. */
 .ls5-meas-photo-area {
-  flex: 0 0 50%;
-  max-width: 50%;
-  align-self: stretch;
-  display: flex;
-  align-items: stretch;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
   overflow: hidden;
   border-radius: 0 10px 10px 0;
-  margin-top:    calc(-1 * clamp(8px, 1.5vh, 16px));
-  margin-bottom: calc(-1 * clamp(8px, 1.5vh, 16px));
-  margin-right:  calc(-1 * clamp(10px, 1.8vw, 18px));
 }
 .method-card-photo {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
   width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center center;
   display: block;
