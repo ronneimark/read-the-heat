@@ -1645,24 +1645,45 @@ body { background: #F6F3EC !important; }
     window.addEventListener('resize', updateLayout);
 
     // ── Mobile card flip (touch devices only) ──────────────────────────────────
-    // Safari iOS: onclick on a <button> doesn't fire when the tap lands on a text
-    // node, because iOS intercepts it for text-selection before the click fires.
-    // touchend fires BEFORE that interception, so we use it to flip the card to
-    // its back face (showing description + Select button). The Select button's own
-    // onclick then calls activateCard() as normal.
-    // pointer-events:none on all button descendants means the touchend target is
-    // always the button itself, guaranteeing consistent behaviour.
-    // Shared scroll-detection state: track start position and whether finger moved too far.
-    // Used by both the card-flip handlers and the outside-tap dismiss handler.
-    var _touchStartX = 0, _touchStartY = 0, _touchStartTime = 0, _touchMoved = false, _touchJustFired = false;
-    var TAP_THRESHOLD = 12;   // px; finger must stay within this box to count as a tap
-    var MIN_TAP_MS    = 120;  // ms; touch must be held at least this long — filters scroll brushes
+    // Two-pass tap detection:
+    //   CLOSE  — any clean tap on a card front closes/switches; no hold required.
+    //   OPEN   — a new card only opens if the finger held ≥ MIN_TAP_MS ms
+    //            AND didn't move more than TAP_THRESHOLD px
+    //            AND the page didn't scroll more than SCROLL_THRESHOLD px.
+    // The scroll-position check (_touchStartScrollY) catches the common iOS case
+    // where touchmove events are delayed/batched during native momentum scrolling.
+    // _touchJustFired suppresses the iOS synthetic 'click' that fires on <button>
+    // even after e.preventDefault() on touchend.
+    var _touchStartX = 0, _touchStartY = 0, _touchStartTime = 0;
+    var _touchStartScrollY = 0, _touchMoved = false, _touchJustFired = false;
+    var TAP_THRESHOLD    = 12;  // px — finger movement limit
+    var SCROLL_THRESHOLD = 6;   // px — page-scroll limit (catches iOS batched moves)
+    var MIN_TAP_MS       = 120; // ms — minimum hold to OPEN a card (not needed to close)
+
+    function _cardsScrollParent() {
+      // The scrollable ancestor of the card grid (may be window or an inner container)
+      var el = document.querySelector('.ls5-meas-cards');
+      while (el && el !== document.body) {
+        var s = getComputedStyle(el);
+        if (/auto|scroll/.test(s.overflowY)) return el;
+        el = el.parentElement;
+      }
+      return null; // falls back to window.scrollY
+    }
+    var _scrollParent = null; // resolved after DOM ready
+
+    function _currentScrollY() {
+      return _scrollParent ? _scrollParent.scrollTop : window.scrollY;
+    }
+
     document.addEventListener('touchstart', function(e) {
-      _touchStartX    = e.touches[0].clientX;
-      _touchStartY    = e.touches[0].clientY;
-      _touchStartTime = Date.now();
-      _touchMoved     = false;
+      _touchStartX       = e.touches[0].clientX;
+      _touchStartY       = e.touches[0].clientY;
+      _touchStartTime    = Date.now();
+      _touchStartScrollY = _currentScrollY();
+      _touchMoved        = false;
     }, { passive: true });
+
     document.addEventListener('touchmove', function(e) {
       if (_touchMoved) return;
       var dx = Math.abs(e.touches[0].clientX - _touchStartX);
@@ -1670,45 +1691,67 @@ body { background: #F6F3EC !important; }
       if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) _touchMoved = true;
     }, { passive: true });
 
+    function _clearAllFlips() {
+      deactivateCard();
+      document.querySelectorAll('.ls5-meas-card').forEach(function(c) {
+        c.classList.remove('ls5-touch-flip');
+      });
+    }
+
     document.querySelectorAll('.ls5-meas-front').forEach(function(btn) {
-      // Touch: flip card on clean tap; set flag so synthetic click is ignored
       btn.addEventListener('touchend', function(e) {
         e.preventDefault();
         _touchJustFired = true;
         setTimeout(function() { _touchJustFired = false; }, 500);
+
+        // Bail if finger clearly moved (scroll gesture)
         if (_touchMoved) return;
-        if (Date.now() - _touchStartTime < MIN_TAP_MS) return; // too brief — scroll brush
+        // Bail if the page scrolled (catches iOS batched touchmove)
+        if (Math.abs(_currentScrollY() - _touchStartScrollY) > SCROLL_THRESHOLD) return;
+
         var card = btn.closest('.ls5-meas-card');
         if (!card || card.classList.contains('ls5-meas-active')) return;
-        deactivateCard();
-        document.querySelectorAll('.ls5-meas-card').forEach(function(c) {
-          c.classList.remove('ls5-touch-flip');
-        });
-        card.classList.add('ls5-touch-flip');
+
+        var anyOpen = document.querySelector('.ls5-meas-card.ls5-touch-flip') ||
+                      document.querySelector('.ls5-meas-cards.ls5-has-active');
+
+        if (anyOpen) {
+          // CLOSE path: always instant — clears the open card,
+          // then opens the new one only if the hold was long enough.
+          _clearAllFlips();
+          if (Date.now() - _touchStartTime >= MIN_TAP_MS) {
+            card.classList.add('ls5-touch-flip');
+          }
+        } else {
+          // OPEN path: require deliberate hold
+          if (Date.now() - _touchStartTime < MIN_TAP_MS) return;
+          _clearAllFlips();
+          card.classList.add('ls5-touch-flip');
+        }
       }, { passive: false });
 
-      // Mouse/desktop only: onclick removed from HTML; _touchJustFired blocks iOS synthetic click
+      // Mouse/desktop only — _touchJustFired blocks iOS synthetic click
       btn.addEventListener('click', function(e) {
         if (_touchJustFired || _touchMoved) return;
         var card = btn.closest('.ls5-meas-card');
         if (!card || card.classList.contains('ls5-meas-active')) return;
-        var instrument = card.dataset.instrument;
-        activateCard(instrument, card);
+        activateCard(card.dataset.instrument, card);
       });
     });
 
-    // Deactivate active card when tapping anywhere outside all cards.
+    // Deactivate when tapping outside all cards (no hold requirement)
     document.addEventListener('touchend', function(e) {
-      if (_touchMoved) return; // was a scroll
+      if (_touchMoved) return;
+      if (Math.abs(_currentScrollY() - _touchStartScrollY) > SCROLL_THRESHOLD) return;
       if (e.target.closest('.ls5-meas-card')) return;
       if (document.querySelector('.ls5-meas-cards.ls5-has-active') ||
           document.querySelector('.ls5-meas-card.ls5-touch-flip')) {
-        deactivateCard();
-        document.querySelectorAll('.ls5-meas-card').forEach(function(c) {
-          c.classList.remove('ls5-touch-flip');
-        });
+        _clearAllFlips();
       }
     }, { passive: true });
+
+    // Resolve scroll parent after DOM is ready
+    _scrollParent = _cardsScrollParent();
   });
 </script>
 <script>if("serviceWorker"in navigator&&window.matchMedia("(max-width:860px)").matches&&window.self===window.top){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
