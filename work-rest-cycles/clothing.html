@@ -117,6 +117,12 @@ body { background: #F6F3EC !important; }
 .ls4-standard    .ls4-clothing-adjust { background: #e8f5e9; color: #1b5e20; }
 .ls4-impermeable .ls4-clothing-adjust { background: #fff3e0; color: #bf360c; }
 
+/* ── Mobile: shrink body text, keep title + adjust unchanged ── */
+@media (max-width: 600px) {
+  .ls4-clothing-desc     { font-size: clamp(12px, 2.2vh, 20px); }
+  .ls4-clothing-examples { font-size: clamp(11px, 1.6vh, 14px); }
+}
+
 @media (max-width: 768px) {
   #ls4 { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)) !important; }
 }
