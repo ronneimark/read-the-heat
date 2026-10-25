@@ -1670,8 +1670,8 @@ body { background: #F6F3EC !important; }
 
     document.querySelectorAll('.ls5-meas-front').forEach(function(btn) {
       btn.addEventListener('touchend', function(e) {
+        e.preventDefault(); // always suppress synthetic click (prevents scroll-then-click bug)
         if (_touchMoved) return; // finger moved — was a scroll, not a tap
-        e.preventDefault(); // suppress synthetic click so we don't double-fire
         var card = btn.closest('.ls5-meas-card');
         if (!card || card.classList.contains('ls5-meas-active')) return;
         // Close any active card before flipping to a new one
