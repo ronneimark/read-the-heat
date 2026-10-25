@@ -2254,23 +2254,32 @@
 
   /* ── Modals: better mobile sizing ── */
   @media (max-width: 640px) {
-    /* All modal overlays: respect dynamic island / notch at top */
-    [id$="-modal-overlay"] {
-      padding: max(12px, env(safe-area-inset-top, 12px)) 12px 12px !important;
-      align-items: flex-start !important;
-      -webkit-overflow-scrolling: touch;
+    /* Overlays: stop scrolling here — body scrolls inside the modal instead.
+       Push modal below dynamic island / notch with safe-area padding. */
+    #activity-modal-overlay,
+    #methodology-modal-overlay,
+    #health-modal-overlay,
+    #feedback-modal-overlay {
+      overflow-y: hidden;
+      align-items: flex-start;
+      padding: max(14px, env(safe-area-inset-top, 14px)) 12px 12px;
     }
-    /* All modals */
-    [id$="-modal"] {
+    /* Modals: fill available height, clip internally */
+    #activity-modal,
+    #methodology-modal,
+    #health-modal,
+    #feedback-modal {
       padding: 0;
-      max-height: calc(100dvh - max(12px, env(safe-area-inset-top, 12px)) - 12px);
+      max-height: calc(100dvh - max(14px, env(safe-area-inset-top, 14px)) - 12px);
       border-radius: 10px;
-      -webkit-overflow-scrolling: touch;
       margin-top: 0;
+      overflow: hidden;
     }
     #activity-modal-body, #methodology-modal-body,
     #health-modal-body, #feedback-modal-body {
       padding: 16px 16px 24px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     #activity-modal h2, #methodology-modal h2,
     #health-modal h2, #feedback-modal h2 { font-size: 17px; }
