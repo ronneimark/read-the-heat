@@ -331,14 +331,15 @@ body { background: #F6F3EC !important; }
   overflow: hidden;
   border-radius: 0 10px 10px 0;
 }
-.method-card-photo-wrap {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+/* Img fills the absolutely-positioned photo area directly */
 .method-card-photo {
-  width: 100%;
-  height: 100%;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain;
   object-position: center center;
   display: block;
@@ -1548,12 +1549,7 @@ body { background: #F6F3EC !important; }
 
     // Wire up all method card photos
     document.querySelectorAll('.method-card-photo').forEach(img => {
-      const imgWrap = document.createElement('span');
-      imgWrap.className = 'method-card-photo-wrap';
-      img.parentNode.insertBefore(imgWrap, img);
-      imgWrap.appendChild(img);
       img.style.cursor = 'zoom-in';
-
       img.addEventListener('click', () => openZoom(img));
     });
   })();
