@@ -603,6 +603,9 @@
   .modal-close-btn:focus-visible { outline: 3px solid #005FCC; outline-offset: 2px; }
   .modal-sticky-header {
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
     background: #fff;
     display: flex;
     align-items: center;
@@ -2251,22 +2254,27 @@
 
   /* ── Modals: better mobile sizing ── */
   @media (max-width: 640px) {
-    #activity-modal, #methodology-modal {
+    /* All modal overlays: respect dynamic island / notch at top */
+    [id$="-modal-overlay"] {
+      padding: max(12px, env(safe-area-inset-top, 12px)) 12px 12px !important;
+      align-items: flex-start !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* All modals */
+    [id$="-modal"] {
       padding: 0;
-      max-height: 92vh;
+      max-height: calc(100dvh - max(12px, env(safe-area-inset-top, 12px)) - 12px);
       border-radius: 10px;
       -webkit-overflow-scrolling: touch;
+      margin-top: 0;
     }
-    #activity-modal-body, #methodology-modal-body {
+    #activity-modal-body, #methodology-modal-body,
+    #health-modal-body, #feedback-modal-body {
       padding: 16px 16px 24px;
     }
-    #activity-modal-overlay,
-    #methodology-modal-overlay {
-      padding: 12px;
-      -webkit-overflow-scrolling: touch;
-    }
-    #activity-modal h2, #methodology-modal h2 { font-size: 17px; }
-    .modal-sticky-header { padding: 16px 16px 12px; }
+    #activity-modal h2, #methodology-modal h2,
+    #health-modal h2, #feedback-modal h2 { font-size: 17px; }
+    .modal-sticky-header { padding: 14px 16px 12px; }
   }
 
   /* ── Acclimatization schedule grid: single column on mobile ── */
