@@ -323,7 +323,7 @@ body { background: #F6F3EC !important; }
 .ls5-meas-photo-area {
   flex: 0 0 50%;
   max-width: 50%;
-  min-height: 0;
+  align-self: stretch;
   overflow: hidden;
   border-radius: 0 10px 10px 0;
   margin-top:    calc(-1 * clamp(8px, 1.5vh, 16px));
@@ -333,17 +333,9 @@ body { background: #F6F3EC !important; }
 .method-card-photo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   display: block;
-}
-/* WBGT: show globe at top of the frame */
-.ls5-wbgt .method-card-photo {
-  object-position: center top;
-}
-/* Heat index: crop to just the heat index reading, not temp/humidity below */
-.ls5-hi .method-card-photo {
-  object-position: center top;
 }
 
 /* ── Back: split layout ── */
@@ -1028,7 +1020,7 @@ body { background: #F6F3EC !important; }
           <button class="ls5-meas-front" type="button" aria-label="Select Heat Index">
             <div class="ls5-meas-title">Heat Index</div>
             <div class="ls5-meas-photo-area">
-              <img class="method-card-photo" src="images/heat-index-display.jpg" alt="Heat Index Monitor Display">
+              <img class="method-card-photo" src="images/heat-index-display.png" alt="Heat Index Monitor Display">
             </div>
           </button>
           <div class="ls5-meas-back">
