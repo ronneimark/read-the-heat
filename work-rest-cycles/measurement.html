@@ -324,6 +324,8 @@ body { background: #F6F3EC !important; }
   flex: 0 0 50%;
   max-width: 50%;
   align-self: stretch;
+  display: flex;
+  align-items: stretch;
   overflow: hidden;
   border-radius: 0 10px 10px 0;
   margin-top:    calc(-1 * clamp(8px, 1.5vh, 16px));
@@ -331,8 +333,10 @@ body { background: #F6F3EC !important; }
   margin-right:  calc(-1 * clamp(10px, 1.8vw, 18px));
 }
 .method-card-photo {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   object-fit: contain;
   object-position: center center;
   display: block;
