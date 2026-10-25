@@ -1990,22 +1990,26 @@
       min-height: 0 !important;
     }
     .ls2-level-panel {
-      overflow: visible !important;
-      height: auto !important;
-    }
-    /* Always show examples on mobile — no hover available */
-    .ls2-card-back {
-      display: flex !important;
-      padding-top: 0 !important;
-    }
-    .ls2-card-front { padding-bottom: 4px !important; }
-    .ls2-level-panel {
       overflow: hidden !important;
       height: auto !important;
     }
-    .ls2-level-examples {
+    /* Always show both desc + examples on mobile */
+    .ls2-card-front {
+      flex: none !important;
+      padding-bottom: 4px !important;
       overflow: visible !important;
-      padding-bottom: 14px;
+    }
+    .ls2-card-back {
+      display: flex !important;
+      flex: none !important;
+      padding-top: 0 !important;
+      padding-bottom: 14px !important;
+      overflow: visible !important;
+    }
+    .ls2-level-examples {
+      flex: none !important;
+      overflow: visible !important;
+      min-height: 0 !important;
     }
     .ls2-level-panel:hover .ls2-card-front { display: flex !important; }
 
