@@ -1654,12 +1654,14 @@ body { background: #F6F3EC !important; }
     // always the button itself, guaranteeing consistent behaviour.
     // Shared scroll-detection state: track start position and whether finger moved too far.
     // Used by both the card-flip handlers and the outside-tap dismiss handler.
-    var _touchStartX = 0, _touchStartY = 0, _touchMoved = false, _touchJustFired = false;
-    var TAP_THRESHOLD = 12; // px; finger must stay within this box to count as a tap
+    var _touchStartX = 0, _touchStartY = 0, _touchStartTime = 0, _touchMoved = false, _touchJustFired = false;
+    var TAP_THRESHOLD = 12;   // px; finger must stay within this box to count as a tap
+    var MIN_TAP_MS    = 120;  // ms; touch must be held at least this long — filters scroll brushes
     document.addEventListener('touchstart', function(e) {
-      _touchStartX = e.touches[0].clientX;
-      _touchStartY = e.touches[0].clientY;
-      _touchMoved  = false;
+      _touchStartX    = e.touches[0].clientX;
+      _touchStartY    = e.touches[0].clientY;
+      _touchStartTime = Date.now();
+      _touchMoved     = false;
     }, { passive: true });
     document.addEventListener('touchmove', function(e) {
       if (_touchMoved) return;
@@ -1675,6 +1677,7 @@ body { background: #F6F3EC !important; }
         _touchJustFired = true;
         setTimeout(function() { _touchJustFired = false; }, 500);
         if (_touchMoved) return;
+        if (Date.now() - _touchStartTime < MIN_TAP_MS) return; // too brief — scroll brush
         var card = btn.closest('.ls5-meas-card');
         if (!card || card.classList.contains('ls5-meas-active')) return;
         deactivateCard();
