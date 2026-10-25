@@ -1996,11 +1996,17 @@
     /* Always show examples on mobile — no hover available */
     .ls2-card-back {
       display: flex !important;
-      overflow: visible !important;
       padding-top: 0 !important;
-      padding-bottom: 14px !important;
     }
     .ls2-card-front { padding-bottom: 4px !important; }
+    .ls2-level-panel {
+      overflow: hidden !important;
+      height: auto !important;
+    }
+    .ls2-level-examples {
+      overflow: visible !important;
+      padding-bottom: 14px;
+    }
     .ls2-level-panel:hover .ls2-card-front { display: flex !important; }
 
     /* Acclimatization wrap + cards: flow freely */
